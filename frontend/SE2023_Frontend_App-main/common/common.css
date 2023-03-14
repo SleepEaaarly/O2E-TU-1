@@ -1,0 +1,25 @@
+/* flex布局 */
+
+/* O2E迭代开发：一些属性的含义参考了 https://www.jianshu.com/p/228c15d588d6 */
+
+.u-f,.u-f-ac,.u-f-ajc{
+	display: flex;
+}
+.u-f-ac,.u-f-ajc{
+	align-items: center;	/* 定义项目在交叉轴上如何对齐 */
+}
+.u-f-ajc{
+	justify-content: center;	/* 居中 */
+}
+.u-f-jsb{
+	justify-content: space-between;	/* 两端对齐，项目之间的间隔都相等 */
+}
+.u-f-end{
+	justify-content: end;	/* 右侧对齐 */
+}
+.u-f1{
+	flex: 1;
+}
+.u-f-column{
+	flex-direction: column;	/* 决定主轴的方向（即项目的排列方向） */
+}

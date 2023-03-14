@@ -1,0 +1,22 @@
+{
+  "name": "paperDaily",
+  "version": "2.0.0",
+  "description": "| 简体中文 |",
+  "main": "main.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SE-MCDB/SE2022_Frontend_App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SE-MCDB/SE2022_Frontend_App.git"
+  },
+  "homepage": "https://github.com/SE-MCDB/SE2022_Frontend_App#readme"
+}

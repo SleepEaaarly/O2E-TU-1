@@ -1,0 +1,733 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": false//禁用原生导航栏
+				}
+			}
+		}, 
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"scrollIndicator": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/news/news",
+			"style": {
+				"navigationBarTitleText": "最近动态",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none" //关闭反弹效果
+				}
+			}
+		},
+		{
+		    "path" : "pages/platform/platform",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "需求平台",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"bounce": "none",
+					"titleNView": {
+						"titleSize":"36upx"
+						// "buttons": [
+						// 	// 右边
+						// 	{
+						// 		"color": "#000000",
+						// 		"colorPressed": "#FFFFFF",
+						// 		"float": "right",
+						// 		"fontSize": "50upx",
+						// 		"fontSrc": "/static/font/icon.ttf",
+						// 		"text": "\ue684",
+						// 		"fontWeight":"bold"
+						// 	}
+						// ]
+					}
+				},
+				"enablePullDownRefresh": true
+		    }
+		},
+		{
+			"path": "pages/paper/paper",
+			"style": {
+				"enablePullDownRefresh": true, //开启下拉刷新功能
+				"navigationBarTitleText": "消息",
+				"app-plus": {
+					"titleNView": {
+						"titleSize":"36upx",
+						"buttons": [
+							// 左边
+							{
+								"color": "#000000",
+								"colorPressed": "#BBBBBB",
+								"float": "left",
+								"fontSize": "60upx",
+								"fontSrc": "/static/font/icon.ttf",
+								"text": "\ue845"
+							},
+							// 右边
+							{
+								"color": "#000000",
+								"colorPressed": "#BBBBBB",
+								"float": "right",
+								"fontSize": "60upx",
+								"fontSrc": "/static/font/icon.ttf",
+								"text": "\ue684"
+							}
+						]
+					}
+				}
+			}
+		}, {
+			"path": "pages/home/home",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"enablePullDownRefresh": true, //开启下拉刷新功能
+				"app-plus": {
+					"scrollIndicator": "none",
+					"bounce": "none",
+					"titleNView": {
+						"titleSize":"36upx",
+						"buttons": [{
+							"type": "menu",
+							"fontSize":"44upx"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/search/search",
+			"style": {
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": false,
+						// 搜索框配置
+						"searchInput": {
+							"align": "center",
+							"backgroundColor": "#F7F7F7",
+							"borderRadius": "8upx",
+							"placeholder": "搜索",
+							"placeholderColor": "#CCCCCC",
+							"disabled": false
+						},
+						//配置按钮
+						"buttons": [
+							// 右边
+							{
+								"color": "#000000",
+								"colorPressed": "#BBBBBB",
+								"float": "right",
+								"fontSize": "32upx",
+								"text": "取消"
+							}
+						]
+					}
+				}
+			}
+		}, {
+			"path": "pages/search-need/search-need",
+			"style": {
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": false,
+						// 搜索框配置
+						"searchInput": {
+							"align": "center",
+							"backgroundColor": "#F7F7F7",
+							"borderRadius": "8upx",
+							"placeholder": "搜索",
+							"placeholderColor": "#CCCCCC",
+							"disabled": false
+						},
+						//配置按钮
+						"buttons": [
+							// 右边
+							{
+								"color": "#000000",
+								"colorPressed": "#BBBBBB",
+								"float": "right",
+								"fontSize": "32upx",
+								"text": "取消"
+							}
+						]
+					}
+				}
+			}
+		}, 
+		{
+			"path": "pages/add-input/add-input",
+			"style": {
+				"app-plus": {
+					"animationType": "slide-in-bottom",
+					"animationDuration": 200,
+					// 禁止原生导航
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "pages/add-title/add-title",
+			"style": {
+				"app-plus": {
+					"animationType": "slide-in-bottom",
+					"animationDuration": 200,
+					// 禁止原生导航
+					"titleNView": false
+				}
+			}
+		}, {
+			"path": "pages/topic-nav/topic-nav",
+			"style": {
+				"navigationBarTitleText": "话题分类",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		}, {
+			"path": "pages/topic-detail/topic-detail",
+			"style": {
+				"enablePullDownRefresh": true, //开启下拉刷新
+				"app-plus": {
+					"animationType": "slide-in-bottom",
+					"animationDuration": 200,
+					"scrollIndicator": "none", //隐藏滚动条
+					"titleNView": {
+						"type": "transparent", //渐变
+						"buttons": [{
+							"type": "menu",
+							"fontSize":"32upx"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/user-list/user-list",
+			"style": {
+				"app-plus": {
+					"animationType": "slide-in-left", //进场动画
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": false,
+						// 搜索框配置
+						"searchInput": {
+							"align": "left",
+							"backgroundColor": "#F7F7F7",
+							"borderRadius": "8upx",
+							"placeholder": "搜索",
+							"placeholderColor": "#CCCCCC",
+							"disabled": false
+						},
+						//配置按钮
+						"buttons": [
+							// 右边
+							{
+								"color": "#000000",
+								"colorPressed": "#BBBBBB",
+								"float": "right",
+								"fontSize": "32upx",
+								"text": "取消"
+							}
+						]
+					}
+				}
+			}
+		}, {
+			"path": "pages/user-chat/user-chat",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "聊天页",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							// 标题栏右侧图标
+							{
+								"color": "#000000",
+								"colorPressed": "#BBBBBB",
+								"float": "right",
+								"fontSize": "44upx",
+								"fontSrc": "/static/font/icon.ttf",
+								"text": "\ue628"
+							}
+						]
+					}
+				}
+			}
+		}, {
+			"path": "pages/detail/detail",
+			"style": {
+				"navigationBarTitleText": "详情",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"bounce": "none",
+					"titleNView": {
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/user-set/user-set",
+			"style": {
+				"navigationBarTitleText": "设置",
+				"app-plus":{
+					"titleNView":{
+						"titleSize":"36upx"
+					}
+				}
+			}
+		}, {
+			"path": "pages/user-set-repassword/user-set-repassword",
+			"style": {
+				"navigationBarTitleText": "修改密码",
+				"app-plus": {
+					"scrollIndicator": "none"
+				}
+			}
+		}, {
+			"path": "pages/user-set-email/user-set-email",
+			"style": {
+				"navigationBarTitleText": "修改邮箱",
+				"app-plus": {
+					"scrollIndicator": "none"
+				}
+			}
+		}
+
+		, {
+			"path": "pages/user-set-userinfo/user-set-userinfo",
+			"style": {
+				"navigationBarTitleText": "修改资料",
+				"app-plus": {
+					"scrollIndicator": "none"
+				}
+			}
+		}, {
+			"path": "pages/user-set-help/user-set-help",
+			"style": {
+				"navigationBarTitleText": "意见反馈",
+				"app-plus": {
+					"scrollIndicator": "none"
+				}
+			}
+		}, {
+			"path": "pages/user-set-about/user-set-about",
+			"style": {
+				"navigationBarTitleText": "关于PaperDaily",
+				"app-plus": {
+					"scrollIndicator": "none"
+				}
+			}
+		}, {
+			"path": "pages/user-space/user-space",
+			"style": {
+				"navigationBarTitleText": "个人空间",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"titleNView": {
+						"type": "transparent",
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/user-space/user-space-null",
+			"style": {
+				"navigationBarTitleText": "个人空间",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"titleNView": {
+						"type": "transparent",
+						"buttons": [{
+							"type": "menu"
+						}]
+					}
+				}
+			}
+		}, {
+			"path": "pages/register/register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"navigationStyle": "custom",
+				"app-plus": {
+					"titleNView": false,
+					"animationType": "slide-in-bottom"
+				}
+			}
+		}, {
+			"path": "pages/user-history/user-history",
+			"style": {
+				"navigationBarTitleText": "浏览历史"
+			}
+		}, {
+			"path": "pages/user-search/user-search",
+			"style": {
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": false,
+						// 搜索框配置
+						"searchInput": {
+							"align": "center",
+							"backgroundColor": "#F7F7F7",
+							"borderRadius": "8upx",
+							"placeholder": "搜索用户",
+							"placeholderColor": "#CCCCCC",
+							"disabled": false
+						},
+						//配置按钮
+						"buttons": [
+							// 右边
+							{
+								"color": "#000000",
+								"colorPressed": "#BBBBBB",
+								"float": "right",
+								"fontSize": "32upx",
+								"text": "取消"
+							}
+						]
+					}
+				}
+			}
+		}, 
+		
+		{
+			"path": "pages/add-need/need",
+			"style": {
+				"navigationBarTitleText": "需求发布",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": true
+					}
+				}
+			}
+		}, 
+		
+		{
+			"path": "pages/manage-need/manage-need",
+			"style": {
+				"navigationBarTitleText": "需求管理",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": true
+					}
+				},
+				"enablePullDownRefresh": true
+			}
+		}, 
+		{
+			"path": "pages/manage-need/manageunfinishedneed",
+			"style": {
+				"navigationBarTitleText": "需求管理（已发布）",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": true
+					}
+				},
+				"enablePullDownRefresh": true
+			}
+		}, 
+		{
+			"path": "pages/manage-need/managefinishedneed",
+			"style": {
+				"navigationBarTitleText": "需求管理（已完成）",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": true
+					}
+				},
+				"enablePullDownRefresh": true
+			}
+		}, 
+		{
+			"path": "pages/manage-need/manageunissuedneed",
+			"style": {
+				"navigationBarTitleText": "需求管理（未发布）",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": true
+					}
+				},
+				"enablePullDownRefresh": true
+			}
+		}, 
+		{
+			"path": "pages/manage-order/manage-order",
+			"style": {
+				"navigationBarTitleText": "订单管理",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": true
+					}
+				},
+				"enablePullDownRefresh": true
+			}
+		}, 
+		
+		{
+			"path": "pages/edit-need/edit-need",
+			"style": {
+				"navigationBarTitleText": "编辑需求",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": true
+					}
+				}
+			}
+		}, 
+		
+		{
+			"path": "pages/need-detail/detail",
+			"style": {
+				"navigationBarTitleText": "需求详情",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"bounce": "none",
+					"titleNView": {
+						"autoBackButton": true
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/order-detail/order-detail",
+			"style": {
+				"enablePullDownRefresh": true,
+				"navigationBarTitleText": "订单详情",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"bounce": "none",
+					"titleNView": {
+						"autoBackButton": true
+					}
+				}
+			}
+		},
+		
+		{
+			"path": "pages/recommend/expert-recommend",
+			"style": {
+				"navigationBarTitleText": "专家推荐",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": true
+					}
+				}
+			}
+		}, 
+		{
+			"path": "pages/user-collect/user-collect",
+			"style": {}
+		}
+	    ,{
+            "path" : "pages/select-title/select-title",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/forgetPwd/forgetPwd",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/select-category/select-category",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/check-in/check-in",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/user-face/user-face",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/user-comment/user-comment",
+			"style": {
+				"navigationBarTitleText": "我的评论"
+			}
+        }
+        ,{
+            "path" : "pages/certificate-enterprise/certificate-enterprise",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }      
+        }
+        ,{
+            "path" : "pages/certificate-expert/certificate-expert",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+        }
+        ,{
+            "path" : "pages/feedback/feedback",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "问题反馈",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+		{
+			"path":"pages/feedback/feedback_return",
+			"style":
+			{
+				"navigationBarTitleText":"反馈信息",
+				"enablePullDownRefresh": false
+			}
+		},{
+            "path" : "pages/aboutus/aboutus",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "关于我们",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/my-feedbacks/my-feedbacks",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的反馈",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/postEvaluation/postEvaluation",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "发表评价",
+                "enablePullDownRefresh": false
+				
+				
+            }
+        }
+        ,{
+            "path" : "pages/my-evaluations/my-evaluations",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "最近评价",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/user-space/wordCloud",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "反馈查收",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+		{
+			"path":"pages/common_question/common_question",
+			"style":
+			{
+				"navigationBarTitleText":"常见问题",
+				"enablePullDownRefresh": false
+			}
+		}
+    ],
+	"permission": {
+	    "scope.userLocation": {
+	      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+	    }
+	  },
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"tui-(.*)": "@/components/thorui/tui-$1/tui-$1.vue"
+		}
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "PaperDaily",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF"
+
+	},
+	// 配色方案：https://www.colorhunt.co/palette/f7fd04f9b208f98404fc5404
+	"tabBar": {
+		"color": "#B5B5B5",
+		"selectedColor": "#FEE42B",
+		"borderStyle": "black",
+		"backgroundColor": "#FFFFFF",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "/static/images/tabbar/index.png",
+				"selectedIconPath": "/static/images/tabbar/indexed.png"
+			},
+			{
+				"pagePath": "pages/paper/paper",
+				"text": "消息",
+				"iconPath": "/static/images/tabbar/xiaoxi.png",
+				"selectedIconPath": "/static/images/tabbar/xiaoxied.png"
+			},
+			{
+				"pagePath": "pages/platform/platform",
+				"text": "平台",
+				"iconPath": "/static/images/tabbar/platform.png",
+				"selectedIconPath": "/static/images/tabbar/platformed.png"
+			},
+			{
+				"pagePath": "pages/home/home",
+				"text": "我的",
+				"iconPath": "/static/images/tabbar/home.png",
+				"selectedIconPath": "/static/images/tabbar/homeed.png"
+			}
+		]
+	},
+	"condition" : { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [
+			{
+				"name": "", //模式名称
+				"path": "", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			}
+		]
+	}
+}
