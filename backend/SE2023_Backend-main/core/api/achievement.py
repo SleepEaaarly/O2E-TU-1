@@ -39,7 +39,7 @@ def add_paper(request: HttpRequest):
 
     title = data.get('title')
     cites = data.get('cites')
-    pyear = data.get('pyear')
+    pyear = data.get('pyear').split('-')[0]
     isEI = data.get('isEI')
     isSCI = data.get('isSCI')
     url = data.get('url')
@@ -52,9 +52,9 @@ def add_paper(request: HttpRequest):
 
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
-
+    
     expert = Expert.objects.get(id=expert_id)
-    expert.papers.add(expert_id=expert_id, paper_id=paper.id)
+    expert.papers.add(paper)
     expert.save()
 
     return success_api_response({})
@@ -88,7 +88,7 @@ def add_patent(request: HttpRequest):
     print(data)
 
     title = data.get('title')
-    pyear = data.get('pyear')
+    pyear = data.get('pyear').split('-')[0]
     url = data.get('url')
     scholars = data.get('scholars')
 
@@ -99,7 +99,7 @@ def add_patent(request: HttpRequest):
     expert_id = user.expert_info_id
 
     expert = Expert.objects.get(id=expert_id)
-    expert.patents.add(expert_id=expert_id, patent_id=patent.id)
+    expert.patents.add(patent)
     expert.save()
 
     return success_api_response({})
@@ -137,23 +137,21 @@ def add_project(request: HttpRequest):
     print(data)
 
     title = data.get('title')
-    start_year = data.get('start_year')
-    end_year = data.get('end_year')
+    start_year = data.get('start_time').split('-')[0]
+    end_year = data.get('end_time').split('-')[0]
     type_first = data.get('type_first', None)
     type_second = data.get('type_second', None)
     type_third = data.get('type_third', None)
     url = data.get('url')
     scholars = data.get('scholars')
 
-    project = Projects(title=title, start_year=start_year, end_year=end_year, type_first=type_first,
-                       type_second=type_second, type_third=type_third, url=url, scholars=scholars)
-    project.save()
 
+    project = Projects(title=title, startYear=start_year, endYear=end_year, url=url, scholars=scholars)
+    project.save()
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
-
     expert = Expert.objects.get(id=expert_id)
-    expert.projects.add(expert_id=expert_id, project_id=project.id)
+    expert.projects.add(project)
     expert.save()
-
+    
     return success_api_response({})
