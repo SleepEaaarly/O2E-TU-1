@@ -98,6 +98,7 @@ def set_info(request:HttpRequest):
     return success_api_response("enterprise register successfully")
 
 
+'''
 @jwt_auth()
 @response_wrapper
 @require_http_methods('POST')
@@ -119,6 +120,7 @@ def get_info(request:HttpRequest):
         "field": enterprise_info.field,
     }
     return success_api_response(dic)
+'''
 
 
 """

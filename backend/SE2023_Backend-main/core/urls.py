@@ -115,7 +115,7 @@ urlpatterns = [
     path('chat/list', get_chat_list),
     path('chat/delete', delete_chat),
     path('chat/read', message_read),
-    path('chat/push',push_message),
+    path('chat/push', push_message),
 
     #search - web PAGE
     path('user/search/<int:uid>',search_user_list),

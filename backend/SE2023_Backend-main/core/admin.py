@@ -1,11 +1,8 @@
 from core.models.user import User
-from core.models.user import AdminUser
 from core.models.chat import Chatroom
 from core.models.message import Message
 from core.models.pap_model import PapModel
-from core.models.notation import Notation
 from core.models.interpretation import Interpretation
-from core.models.updating import Updating
 from core.models.notification import Notification
 
 from django.contrib import admin
@@ -22,7 +19,6 @@ from django.contrib.auth.models import Group
 # Register your models here.
 # for test
 admin.site.register([User])
-admin.site.register([AdminUser])
 admin.site.register([Enterprise_info])
 admin.site.register([Need])
 admin.site.register([Order])

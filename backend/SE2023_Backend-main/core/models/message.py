@@ -13,6 +13,7 @@ READ_STATE_CHIOCES = (
     (1, 'Read'),
 )
 
+
 class Message(models.Model):
     """
     Field:
@@ -64,7 +65,6 @@ class Message(models.Model):
             'read_state': self.read_state,
             'content': self.content
         }
-
 
     @classmethod
     def new_message(cls,

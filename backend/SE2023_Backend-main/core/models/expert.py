@@ -3,6 +3,7 @@ from .papers import Papers
 from .patents import Patents
 from .projects import Projects
 
+
 class Expert(models.Model):
     create_time = models.DateTimeField(auto_now=True, null=True)
     #知兔平台唯一的学者号

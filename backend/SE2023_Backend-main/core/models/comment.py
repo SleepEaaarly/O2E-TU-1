@@ -7,6 +7,7 @@ from .user import User
 from .tag import Tag
 from .interpretation import Interpretation
 
+
 class Comment(models.Model):
     """comment
 

@@ -9,6 +9,7 @@ from core.models.pap_model import PapModel
 from core.models.user import User
 import json
 
+
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')

@@ -18,6 +18,7 @@ def _safe_content(content: str):
         return ERRORMESSAGE
     return ret
 
+
 class Interpretation(PapModel):
     
     citation = models.CharField(max_length=100)

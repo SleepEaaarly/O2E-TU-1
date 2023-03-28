@@ -57,10 +57,10 @@ def create_chat(request: HttpRequest):
 
 
     if tu.chatroom_list.filter(to_user_id = fr_id).exists():
-        return success_api_response({'id':tu.chatroom_list.filter(to_user_id = fr_id).get().id})
+        return success_api_response({'id': tu.chatroom_list.filter(to_user_id = fr_id).get().id})
     
     if fr.chatroom_list.filter(to_user_id = tu_id).exists():
-        return success_api_response({'id':fr.chatroom_list.filter(to_user_id = tu_id).get().id})
+        return success_api_response({'id': fr.chatroom_list.filter(to_user_id = tu_id).get().id})
 
     chatroom = Chatroom(name=chat_name, owner=fr, to_user=tu)
     chatroom.save()
@@ -126,12 +126,13 @@ def get_chat(request: HttpRequest, id: int):
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Chatroom ID.")
     ret_data = chatroom.to_dict()
-   
+
     if chatroom.owner.state == 4:
         ret_data['from_user'] = chatroom.owner.expert_info.name
     elif chatroom.owner.state == 5:
         ret_data['from_user'] = chatroom.owner.enterprise_info.name
     else:
+        # todo change
         ret_data['from_user'] = ''
 
     if chatroom.to_user.state == 4:
@@ -139,8 +140,9 @@ def get_chat(request: HttpRequest, id: int):
     elif chatroom.to_user.state == 5:
         ret_data['to_user'] = chatroom.to_user.enterprise_info.name
     else:
+        # todo change
         ret_data['to_user'] = ''
-    
+
     return success_api_response(ret_data)
 
 

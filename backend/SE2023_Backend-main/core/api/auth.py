@@ -18,10 +18,10 @@ from django.views.decorators.http import require_GET, require_POST
 from core.api.utils import (ErrorCode, failed_api_response, response_wrapper,
                             success_api_response,parse_data)
 from core.models.auth_record import AuthRecord
-from core.models.auth_record import AuthRecord2
+# from core.models.auth_record import AuthRecord2
 
 from core.models.user import User
-from core.models.user import AdminUser
+# from core.models.user import AdminUser
 #from core.models.user import super_authenticate
 
 def auth_failed(message: str):
@@ -69,7 +69,7 @@ def generate_refresh_token(user: User, refresh_token_delta: int = 6 * 24) -> str
 
     return jwt.encode(
         refresh_token_payload, settings.SECRET_KEY, algorithm="HS256")
-
+'''
 def generate_refresh_token2(user: User, refresh_token_delta: int = 6 * 24) -> str:
     """generate jwt
 
@@ -91,7 +91,7 @@ def generate_refresh_token2(user: User, refresh_token_delta: int = 6 * 24) -> st
 
     return jwt.encode(
         refresh_token_payload, settings.SECRET_KEY, algorithm="HS256")
-
+'''
 
 
 def verify_jwt_token(request: HttpRequest) -> (bool, str, int):
@@ -127,6 +127,7 @@ def verify_jwt_token(request: HttpRequest) -> (bool, str, int):
         flag, message = False, "Invalid token."
     return (flag, message, user_id)
 
+'''
 def verify_jwt_token2(request: HttpRequest) -> (bool, str, int):
     """[summary]
     """
@@ -158,6 +159,8 @@ def verify_jwt_token2(request: HttpRequest) -> (bool, str, int):
     except jwt.InvalidTokenError:
         flag, message = False, "Invalid token."
     return (flag, message, user_id)
+'''
+
 
 @response_wrapper
 @require_POST
@@ -174,17 +177,22 @@ def obtain_jwt_token(request: HttpRequest):
 
     user = authenticate(username=data.get('username'), password=data.get('password'))
 
+    '''
     if not user:
-        user = super_authenticate(data.get('username'),data.get('password'))
+        user = super_authenticate(data.get('username'), data.get('password'))
         if not user:
             return failed_api_response(ErrorCode.UNAUTHORIZED, "Login or superuser Login required.")
         userInfo = getAdminUserInfo(user)
+        
         result = {
             "userInfo":userInfo,
             "access_token": generate_access_token(user.id),
             "refresh_token": generate_refresh_token2(user),
         }
+        
         return failed_api_response(ErrorCode.UNAUTHORIZED, "Login required.")
+    '''
+
     userInfo = getUserInfo(user)
     result = {
         "userInfo":userInfo,
@@ -231,6 +239,7 @@ def refresh_jwt_token(request: HttpRequest):
     except jwt.InvalidTokenError:
         return auth_failed("Invalid token.")
 
+'''
 @response_wrapper
 @require_GET
 def refresh_jwt_token2(request: HttpRequest):
@@ -268,7 +277,7 @@ def refresh_jwt_token2(request: HttpRequest):
         return auth_failed("Token expired.")
     except jwt.InvalidTokenError:
         return auth_failed("Invalid token.")
-
+'''
 
 
 def jwt_auth():
@@ -365,7 +374,7 @@ def getAdminUserInfo(user):
     }
     return userInfo
 
-
+'''
 def super_authenticate(nickname,password):
     user = AdminUser.objects.filter(nick_name=nickname).first()
     if not user:
@@ -373,3 +382,4 @@ def super_authenticate(nickname,password):
     if user.super_authenticate(nickname, password) is False:
         return None
     return user
+'''
