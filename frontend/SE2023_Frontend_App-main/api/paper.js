@@ -10,9 +10,10 @@ export const getChatList = async (userInfo) => {
 	axios.setLoading(true);
 	let room = await axios.get('chat/list',{},headers);
 	let data = room.chatroom_list
-	if(data&&data.length==0){
+	if(data && data.length==0){
 		return []
 	}
+	console.log(room)
 	axios.setLoading(false);
 	if (data && data.length) {
 		let chatList = data.map((item) => {
@@ -31,6 +32,7 @@ export const getChatList = async (userInfo) => {
 			let message = item.message_list[len] ? item.message_list[len].content :
 				''
 			let day = 0;
+		
 			let msgList = item.message_list.map((mItem,index,arr) => {
 				if(index==0){
 					day=0

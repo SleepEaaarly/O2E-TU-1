@@ -426,6 +426,33 @@
 				}
 			}
 		}, 
+		{
+			"path": "pages/add-achievement/achievement",
+			"style": {
+				"navigationBarTitleText": "成果发布",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": true
+					}
+				}
+			}
+		}, 
+		{
+			"path": "pages/manage-achievement/manage-achievement",
+			"style": {
+				"navigationBarTitleText": "成果管理",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": true
+					}
+				},
+				"enablePullDownRefresh": true
+			}
+		}, 
 		
 		{
 			"path": "pages/manage-need/manage-need",
@@ -502,6 +529,19 @@
 			"path": "pages/edit-need/edit-need",
 			"style": {
 				"navigationBarTitleText": "编辑需求",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": {
+						"autoBackButton": true
+					}
+				}
+			}
+		}, 
+		{
+			"path": "pages/edit-achievement/edit-achievement",
+			"style": {
+				"navigationBarTitleText": "编辑成果(未发布)",
 				"app-plus": {
 					"scrollIndicator": "none", //隐藏滚动条
 					"bounce": "none", //关闭反弹效果
