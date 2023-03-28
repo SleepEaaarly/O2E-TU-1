@@ -5,7 +5,7 @@ from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 
-from core.models import Papers, Patents, Projects
+from core.models import Papers, Patents, Projects, User, Expert
 
 '''
     add paper
@@ -31,32 +31,31 @@ from core.models import Papers, Patents, Projects
 @response_wrapper
 def add_paper(request: HttpRequest):
     # 审核过程 TODO
-    title = request.POST.get('title', None)
-    if title is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid title")
-    cites = request.POST.get('cites', None)
-    if cites is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid cites")
-    pyear = request.POST.get('pyear', None)
-    if pyear is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid publish_year")
-    isEI = request.POST.get('isEI', None)
-    if isEI is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid isEI")
-    isSCI = request.POST.get('isSCI', None)
-    if isSCI is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid isSCI")
-    url = request.POST.get('url', None)
-    if url is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid url")
-    scholars = request.POST.get('scholars', None)
-    if scholars is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid scholars")
+    data: dict = parse_data(request)
+    if not data:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
+                                   "Invalid request args.")
+    print(data)
+
+    title = data.get('title')
+    cites = data.get('cites')
+    pyear = data.get('pyear')
+    isEI = data.get('isEI')
+    isSCI = data.get('isSCI')
+    url = data.get('url')
+    scholars = data.get('scholars')
+    id = data.get('id')
 
     paper = Papers(title=title, cites=cites, pyear=pyear, isEI=isEI, isSCI=isSCI,
                    url=url, scholars=scholars)
-
     paper.save()
+
+    user = User.objects.get(id=id)
+    expert_id = user.expert_info_id
+
+    expert = Expert.objects.get(id=expert_id)
+    expert.papers.add(expert_id=expert_id, paper_id=paper.id)
+    expert.save()
 
     return success_api_response({})
 
@@ -82,22 +81,26 @@ def add_paper(request: HttpRequest):
 @response_wrapper
 def add_patent(request: HttpRequest):
     # 审核过程 TODO
+    data: dict = parse_data(request)
+    if not data:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
+                                   "Invalid request args.")
+    print(data)
 
-    title = request.POST.get('title', None)
-    if title is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid title")
-    pyear = request.POST.get('pyear', None)
-    if pyear is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid publish_year")
-    url = request.POST.get('url', None)
-    if url is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid url")
-    scholars = request.POST.get('scholars', None)
-    if scholars is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid scholars")
+    title = data.get('title')
+    pyear = data.get('pyear')
+    url = data.get('url')
+    scholars = data.get('scholars')
 
     patent = Patents(title=title, pyear=pyear, url=url, scholars=scholars)
     patent.save()
+
+    user = User.objects.get(id=id)
+    expert_id = user.expert_info_id
+
+    expert = Expert.objects.get(id=expert_id)
+    expert.patents.add(expert_id=expert_id, patent_id=patent.id)
+    expert.save()
 
     return success_api_response({})
 
@@ -127,28 +130,30 @@ def add_patent(request: HttpRequest):
 @response_wrapper
 def add_project(request: HttpRequest):
     # 审核过程 TODO
+    data: dict = parse_data(request)
+    if not data:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
+                                   "Invalid request args.")
+    print(data)
 
-    title = request.POST.get('title')
-    if title is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid title")
-    start_year = request.POST.get('start_year')
-    if start_year is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid start_year")
-    end_year = request.POST.get('end_year')
-    if end_year is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid end_year")
-    type_first = request.POST.get('type_first', None)
-    type_second = request.POST.get('type_second', None)
-    type_third = request.POST.get('type_third', None)
-    url = request.POST.get('url')
-    if url is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid url")
-    scholars = request.POST.get('scholars')
-    if scholars is None:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid scholars")
+    title = data.get('title')
+    start_year = data.get('start_year')
+    end_year = data.get('end_year')
+    type_first = data.get('type_first', None)
+    type_second = data.get('type_second', None)
+    type_third = data.get('type_third', None)
+    url = data.get('url')
+    scholars = data.get('scholars')
 
     project = Projects(title=title, start_year=start_year, end_year=end_year, type_first=type_first,
                        type_second=type_second, type_third=type_third, url=url, scholars=scholars)
     project.save()
+
+    user = User.objects.get(id=id)
+    expert_id = user.expert_info_id
+
+    expert = Expert.objects.get(id=expert_id)
+    expert.projects.add(expert_id=expert_id, project_id=project.id)
+    expert.save()
 
     return success_api_response({})

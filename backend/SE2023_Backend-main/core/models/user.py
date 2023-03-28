@@ -13,6 +13,7 @@ USER_TYPE_CHOICES = (
     (2, 'Company'),
 )
 
+
 #用户状态
 USER_STATE_CHOICES = (
     (0, '普通用户'),

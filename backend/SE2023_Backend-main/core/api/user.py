@@ -50,7 +50,7 @@ def unfollow(request: HttpRequest, pid: int):
     if _success:
         return success_api_response({})
     else:
-        return failed_api_response({"code":0})
+        return failed_api_response({"code": 0})
 
 
 """ 
