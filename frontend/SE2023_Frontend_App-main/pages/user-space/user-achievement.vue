@@ -34,6 +34,8 @@
 				</uni-col>
 			</uni-row>
 		</uni-card>
+		<expert-create-achievement v-if="userInfo.type=='4'" :show="show" @hide="hidepopup" @addachievement="addachievement" @manageachievement="manageachievement">
+		</expert-create-achievement>
 	</view>
 </template>
 
@@ -44,11 +46,13 @@
 	import uniCol from '@/components/uni-row/components/uni-col/uni-col.vue'
 	import uniFav from '@/components/uni-fav/uni-fav.vue'
 	import uniCard from '@/components/uni-card/uni-card.vue'
+	import expertCreateAchievement from '@/components/user-space/expert-create-achievement.vue'
 	
 	export default{
 		components:{
 			uniRow,
 			uniCol,
+			expertCreateAchievement,
 		},
 		computed:{ ...mapState(['userInfo']) },
 		mounted() {		//页面显示,每次打开页面都会调用一次
@@ -62,6 +66,7 @@
 				patentlist:[],	//专利列表
 				projectlist:[],	//项目列表
 				datalist:[],	//最终呈现数据的总列表
+				show: false,
 				
 				checkbox: [0, 1, 2],	//筛选标签的初始值=全选
 				outcome: [{
@@ -82,6 +87,20 @@
 				this.patentlist = await getExpertInfo(this.id, 'patents')
 				this.projectlist = await getExpertInfo(this.id, 'projects')
 				this.generateDList()
+			},
+			hidepopup() {
+				this.show = false
+			},
+			showpopup() {
+				this.show = true
+			},
+			addachievement() {
+				uni.navigateTo({ url: '../add-achievement/achievement' })
+				this.hidepopup()
+			},
+			manageachievement() {
+				uni.navigateTo({ url: '../manage-achievement/manage-achievement' })
+				// this.hidepopup()
 			},
 			generateDList(){	//刷新datalist
 				this.datalist = []

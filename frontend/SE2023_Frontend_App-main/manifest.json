@@ -25,8 +25,8 @@
             "disableHostCheck" : true,
             "proxy" : {
                 "/dpc" : {
-                    // "target" : "http://122.9.14.73:8000",
                     "target" : "http://127.0.0.1:8000",
+                    // "target" : "http://122.9.14.73:8000",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {

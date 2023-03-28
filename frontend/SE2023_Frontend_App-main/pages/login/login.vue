@@ -221,7 +221,9 @@
 				//调用聊天记录
 				let token=uni.getStorageSync('token')
 				let chatList = await getChatList(this.userInfo)
+				console.log('chatlist')
 				this.setChatList(chatList)
+				console.log(chatList)
 				this.sortChatList()
 				uni.setStorageSync('chatList', JSON.stringify(this.chatList))
 				

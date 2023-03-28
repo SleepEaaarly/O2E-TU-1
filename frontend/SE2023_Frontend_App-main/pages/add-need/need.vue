@@ -253,7 +253,6 @@
 				if (validate_answer) {
 					console.log("validate_success!")
 					let result = await addneed(data)
-					console.log("after!")
 					if (result&&result.code) {
 						console.log("submit_fail!!")
 						this.$http.toast('需求创建失败！')
