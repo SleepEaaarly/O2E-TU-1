@@ -324,7 +324,7 @@ export default {
             if (validate_answer) {
                 console.log("validate_success!")
                 let result = await addachievement(data)
-                if (result && result.code) {
+                if (!result) {
                     console.log("submit_fail!!")
                     this.$http.toast('成果发布失败！')
                 } else {
