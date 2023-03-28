@@ -48,6 +48,8 @@ from core.api.platform.rate import rate_order, get_order_rate, get_user_rate
 
 from core.tests.generate_avatar import avatar, get_user_num
 
+from core.api.achievement import add_paper, add_patent, add_project
+
 urlpatterns = [
 
     #user apis
@@ -228,6 +230,12 @@ urlpatterns = [
 
     # 管理端获取用户数
     path('user/all', get_user_num),
+
+    # 成果发布
+    path('paper/add', add_paper),
+    path('patent/add', add_patent),
+    path('project/add', add_project),
+
 
 ]
 
