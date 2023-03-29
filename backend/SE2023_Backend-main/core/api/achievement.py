@@ -52,7 +52,7 @@ def add_paper(request: HttpRequest):
 
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
-    
+
     expert = Expert.objects.get(id=expert_id)
     expert.papers.add(paper)
     expert.save()
@@ -91,6 +91,7 @@ def add_patent(request: HttpRequest):
     pyear = data.get('pyear').split('-')[0]
     url = data.get('url')
     scholars = data.get('scholars')
+    id = data.get('id')
 
     patent = Patents(title=title, pyear=pyear, url=url, scholars=scholars)
     patent.save()
@@ -144,14 +145,19 @@ def add_project(request: HttpRequest):
     type_third = data.get('type_third', None)
     url = data.get('url')
     scholars = data.get('scholars')
+    id = data.get('id')
 
+    print("2")
 
-    project = Projects(title=title, startYear=start_year, endYear=end_year, url=url, scholars=scholars)
+    project = Projects(title=title, startYear=start_year, endYear=end_year, url=url, scholars=scholars,
+                       typeFirst=type_first, typeSecond=type_second, typeThird=type_third)
+
+    print("3")
     project.save()
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
     expert = Expert.objects.get(id=expert_id)
     expert.projects.add(project)
     expert.save()
-    
+
     return success_api_response({})
