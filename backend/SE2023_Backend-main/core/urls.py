@@ -50,6 +50,8 @@ from core.tests.generate_avatar import avatar, get_user_num
 
 from core.api.achievement import add_paper, add_patent, add_project
 
+from core.api.result_pic_pdf import RES_PIC_API, read_pic, read_default_pic, RES_PDF_API
+
 urlpatterns = [
 
     #user apis
@@ -64,7 +66,12 @@ urlpatterns = [
     path('user/<int:type>/all/<int:page>',get_all_user_info),
     path('user/delete', delete_user),
     path('user/changeinfo', change_user_info),
-    
+
+    # results pic and pdf
+    path('res/pic', RES_PIC_API),
+    path('images/<str:year>/<str:day>/res_pic/<str:file_name>', read_pic),
+    path('images/default_result_pic.jfif', read_default_pic),
+    path('res/pdf', RES_PDF_API),
 
     # comment apis
     path('comment/create', create_comment),

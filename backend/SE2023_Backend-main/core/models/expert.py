@@ -2,6 +2,7 @@ from django.db import models
 from .papers import Papers
 from .patents import Patents
 from .projects import Projects
+from .results import Results
 
 
 class Expert(models.Model):
@@ -36,6 +37,8 @@ class Expert(models.Model):
     patents = models.ManyToManyField(Patents, related_name="expert_patents")
     #所有项目
     projects = models.ManyToManyField(Projects, related_name="expert_projects")
+    #所有成果
+    results = models.ManyToManyField(Results, related_name="expert_results")
     #称号
     title = models.CharField(max_length=300, blank=True, null=True)
 

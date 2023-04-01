@@ -5,7 +5,7 @@ from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 
-from core.models import Papers, Patents, Projects, User, Expert
+from core.models import Papers, Patents, Projects, User, Expert, Results
 
 '''
     add paper
@@ -158,6 +158,44 @@ def add_project(request: HttpRequest):
     expert_id = user.expert_info_id
     expert = Expert.objects.get(id=expert_id)
     expert.projects.add(project)
+    expert.save()
+
+    return success_api_response({})
+
+
+@jwt_auth()
+@require_POST
+@response_wrapper
+def add_result(request: HttpRequest):
+
+    data: dict = parse_data(request)
+    if not data:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
+                                   "Invalid request args.")
+    print(data)
+
+    title = data.get('title')
+    abstract = data.get('abstract')
+    scholars = data.get('scholars')
+    pyear = data.get('pyear').split('-')[0]
+    field = data.get('field')
+    period = data.get('period')
+    picture = data.get('picture')
+    content = data.get('content')
+    file = data.get('file')
+    id = data.get('id')
+
+    print("2")
+
+    result = Results(title=title, abstract=abstract, scholars=scholars, pyear=pyear, field=field,
+                     period=period, picture=picture, content=content, file=file, state=0)
+
+    print("3")
+    result.save()
+    user = User.objects.get(id=id)
+    expert_id = user.expert_info_id
+    expert = Expert.objects.get(id=expert_id)
+    expert.results.add(result)
     expert.save()
 
     return success_api_response({})

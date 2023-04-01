@@ -53,6 +53,12 @@ def get_expert_info(request: HttpRequest, uid: int):
         for patent in patents:
             res.append(patent.to_dict())
         return success_api_response({"data": res})
+    elif tab == "results":
+        results = user.expert_info.results.all()
+        res = []
+        for result in results:
+            res.append(result.to_dict())
+        return success_api_response({"data": res})
     else:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "not a useful tab")
     
