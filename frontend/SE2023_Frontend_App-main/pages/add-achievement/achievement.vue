@@ -21,7 +21,11 @@
                 <uni-section title="成果链接" subTitle="给出您的成果链接" type="line" padding>
                     <uni-easyinput v-model="url" focus placeholder="请输入链接" @input="inputUrl"></uni-easyinput>
                 </uni-section>
-
+                <uni-section title="成果发布日期" subTitle="请选择成果发布日期" type="line" padding>
+                    <view class="date-set">
+                        <uni-datetime-picker type="datetime" v-model="start_time" @change="changeLogStart" />
+                    </view>
+                </uni-section>
                 <uni-section title="关键词" subTitle="推荐您输入3个以内英文关键词, 并以英文分号分开" type="line" padding>
                     <uni-easyinput v-model="key_word" placeholder="请输入关键词" @input="inputKeyword"></uni-easyinput>
                 </uni-section>
@@ -51,21 +55,6 @@
 							</label>
 						</radio-group>
 					</view>
-				</uni-section>
-				<uni-section v-if="type=='0'||type=='1'" title="成果发布时间" subTitle="请选择成果发布时间" type="line" padding>
-				    <view class="date-set">
-				        <uni-datetime-picker type="datetime" v-model="pyear" @change="changeLogStart" />
-				    </view>
-				</uni-section>
-				<uni-section v-if="type=='2'" title="项目开始时间" subTitle="请选择项目开始时间" type="line" padding>
-				    <view class="date-set">
-				        <uni-datetime-picker type="datetime" v-model="start_time" @change="changeLogStart" />
-				    </view>
-				</uni-section>
-				<uni-section v-if="type=='2'" title="项目完成时间" subTitle="请选择项目完成时间" type="line" padding>
-				    <view class="date-set">
-				        <uni-datetime-picker type="datetime" v-model="end_time" @change="changeLogStart" />
-				    </view>
 				</uni-section>
 				<!-- 论文分支 -->
                 <uni-section v-if="type=='0'" title="论文引用量" subTitle="请输入该论文的引用量" type="line" padding>
@@ -119,7 +108,7 @@ export default {
     },
     data() {
         return {
-            id: '',
+            company_id: '',
             title: '',
             description: '',
             money: '',
@@ -135,14 +124,11 @@ export default {
             index: 0,
 			url: '',
 			scholars: '',
-			pyear: '',
+			pyear: 2020,
 			isEI: false,
 			isSCI: false,
 			cites: '',
 			paperKind: '',
-			type_first: '',
-			type_second: '',
-			type_third: '',
             field_items: [
                 '信息技术', '装备制造', '新材料', '新能源', '节能环保', '生物医药', '科学创意', '检验检测', '其他'
             ],
@@ -201,8 +187,8 @@ export default {
     onLoad(data) {
         //this.userID = data.uid;
 
-        this.id = this.userInfo.id
-        console.log('onLoad in certification ' + this.id)
+        this.company_id = this.userInfo.id
+        console.log('onLoad in certification ' + this.userID)
     },
     methods: {
         back() {
@@ -289,8 +275,7 @@ export default {
             } else if (data.scholars === '') {
                 this.$http.toast('请输入成果作者！')
                 validate_answer = false
-            } else if (data.type == '2' && (data.start_time === '' || data.end_time === '') ||
-						(data.type == '0' || data.type == '1') && data.pyear === '') {
+            } else if (data.start_time === '') {
                 this.$http.toast('请输入正确的时间！')
                 validate_answer = false
                 // } else if (!isKeyword(data.key_word)) {
@@ -316,7 +301,7 @@ export default {
         async submit() {
             console.log("start_submit")
             let data = {
-                'id': this.id,
+                'company_id': this.company_id,
                 'title': this.title,
                 'description': this.description,
                 'money': this.money,
@@ -333,9 +318,6 @@ export default {
 				'isEI': this.isEI,
 				'isSCI': this.isSCI,
 				'cites': this.cites,
-				'type_first': '',
-				'type_second': '',
-				'type_third': '',
             }
             let validate_answer = this.validate(data)
 			console.log(data.type)
@@ -355,7 +337,7 @@ export default {
             }
         },
         reset: function (e) {
-				this.title = '',
+            this.title = '',
                 this.description = '',
                 this.money = '',
                 this.start_time = '',
@@ -368,17 +350,14 @@ export default {
                 this.index = 0,
 				this.cites = '',
 				this.scholars = '',
-				this.pyear = this.pyear,
+				this.pyear = 2020,
 				this.url = '',
 				this.isEI = false,
-				this.isSCI = false,
-				this.type_first = '',
-				this.type_second = '',
-				this.type_third = ''
+				this.isSCI = false
         },
         async saveAchievement() {
             let data = {
-                'id': this.id,
+                'company_id': this.company_id,
                 'title': this.title,
                 'description': this.description,
                 'money': this.money,
@@ -395,9 +374,6 @@ export default {
 				'isEI': this.isEI,
 				'isSCI': this.isSCI,
 				'cites': this.cites,
-				'type_first': '',
-				'type_second': '',
-				'type_third': '',
             }
             let validate_answer = this.validate(data)
             if (validate_answer) {

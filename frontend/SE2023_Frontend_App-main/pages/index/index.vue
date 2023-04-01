@@ -1,61 +1,13 @@
 <template>
 	<view class="index-icontainer">
-		<!-- #ifdef MP-WEIXIN -->
-		<!-- 		<view class="search-wrp">
-			<view class="iconfont icon-icon_A font-x" @tap="checkIn"></view>
-			<view class="iconfont icon-sousuo serach">
-			</view>
-			<input class="uni-input" type="text" placeholder="PaperDaily" @focus="searchInfo" />
-			<view class="iconfont icon-fabiao font-x" @tap="publish"></view>
-		</view> -->
-		<!-- #endif -->
+
 		<myNavBar @signIn="signIn"></myNavBar>
 		<!-- <tui-fab bgColor="#FFE933" :width="98" :height="98" :bottom="150" :right="50" @click="publish"></tui-fab> -->
 		
 		<!-- "推荐-热榜"滑动tabbar -->
 		<swiper-tab-head :tabBars="tabBars" :tabIndex="tabIndex" @tabtap="tabtap">
 		</swiper-tab-head>
-		
-		<!-- 导致chrome不兼容的罪魁祸首 -->
-		<!-- <view class="uni-tab-bar">
-			<! 单个文章内的上下滑块功能 -->
-			<!-- <swiper class="swiper-box" :style="{height:swiperheight+'px'}" :current="tabIndex" >
-				<! <swiper-item v-for="(items,index) in newslist" :key="index"> -->
-				<!-- <swiper-item >
-					<scroll-view 
-					@scroll="handleScroll"
-					 scroll-y class="list" refresher-enabled :refresher-triggered="refreshing" refresher-background="#fafafa"
-					 enable-back-to-top :refresher-threshold="100" @refresherrefresh="onrefresh" >
-						
-						<! 推荐：图文列表 -->
-						<!-- <template v-if="recommendList.list.length > 0 && tabIndex == 0">
-							<block v-for="(item, index1) in recommendList.list" :key="index1">
-								<index-list 
-								@likeOrTread="likeOrTread" @opendDetail="opendDetail" @share="share" :item="item" :userInfo="userInfo"
-								 :index="index1"></index-list>
-							</block> 
-							<load-more :loadtext="recommendList.loadtext"></load-more>
-						</template>
-						
-						<! 热榜 -->
-						<!-- <template v-if="hotList.list.length > 0 && tabIndex == 1">
-							<view class="topic-list">
-								<block v-for="(list, index1) in hotList.list" :key="index1">
-									<card @opendDetail="opendDetail" :cardinfo="list" :index="index1"></card>
-								</block>
-							</view>
-						</template>
-						
-						<template v-if="shoNo">
-							无内容默认 
-							<no-thing></no-thing>
-						</template>
-					</scroll-view>
-				</swiper-item>
-			</swiper>
-		</view> -->
-		
-		<!-- 推荐：图文列表 -->
+
 		<template v-if="recommendList.list.length > 0 && tabIndex == 0">
 			<block v-for="(item, index1) in recommendList.list" :key="index1">
 				<index-list 
@@ -243,24 +195,7 @@
 					return Math.min(item.list.length - this.end, this.remain)
 				})
 			},
-			// newsVlist(){
-			// 	return this.recommendList.map((item,index)=>{
-			// 		const start = this.start - this.preCount(this.recommendList)[index];
-			// 		const end = this.end + this.nextCount(this.recommendList)[index];
-			// 		console.log(start, end)
-			// 		item.list = item.list.slice(start, end);
-			// 		return item
-			// 	})
-			// },
-			// Hot(){
-			// 	return this.hotList.map((item,index)=>{
-			// 		const start = this.start - this.preCount(this.hotList)[index];
-			// 		const end = this.end + this.nextCount(this.hotList)[index];
-			// 		console.log(start, end)
-			// 		item.list =  item.list.slice(start, end);
-			// 		return item
-			// 	})
-			// },
+
 		},
 		
 		methods: {
