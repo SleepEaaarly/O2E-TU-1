@@ -32,13 +32,13 @@
 				<u-grid-item>
 					<view style="background-color:#F0E4F8;border-radius: 30px;height: 110px;width: 110px;">
 						<u-row style="margin-bottom: 0%">
-							<image class="logo" @click="navToNeeds"
+							<image class="logo" @click="navToCompanies"
 							src="/static//company.png" 
 							style = "height: 90px;width: 90px;margin-left: 10px;">
 						</image>
 						</u-row>
 						<u-row style="margin-bottom: 10px;">
-							<text class="grid-text">需求库</text>
+							<text class="grid-text">企业库</text>
 							
 						</u-row>
 						
@@ -76,7 +76,7 @@
 			<template>
 				<block v-for="(item, index1) in recommendList.list" :key="index1">
 					<work-card
-					@click.native="workDetail"  
+					@click.native="workDetail(item)"  
 					:authorLogoPath="item['authorLogoPath']" 
 					:author="item['author']"
 					:date="item['date']" 
@@ -86,7 +86,7 @@
 					:workLogoPath="item['workLogoPath']"
 					:index="index1"></work-card>
 				</block> 
-				<load-more :loadtext="recommendList.loadtext"></load-more>
+				<uni-load-more :loadtext="recommendList.loadtext"></uni-load-more>
 			</template>
 		</view>
 		
@@ -144,20 +144,27 @@
 			}
 		},
 		methods: {
-			workDetail() {
+			workDetail(work) {
+				console.log(work['title'])
 				console.log('Jump to detail of the work')
 			},
 			navToExperts() {
 				console.log('Jump to detail of the Experts')
 				uni.navigateTo({
-					url: '../../expert_store/expert_store/',
+					url: '../expert_store/expert_store',
 				})
 			},
 			navToWorks() {
 				console.log('Jump to detail of the Works')
+				uni.navigateTo({
+					url: '../work_store/work_store',
+				})
 			},
-			navToNeeds() {
-				console.log('Jump to detail of the Needs')
+			navToCompanies() {
+				console.log('Jump to detail of the companies')
+				uni.navigateTo({
+					url: '../company_store/company_store',
+				})
 			}
 		},
 		components : {

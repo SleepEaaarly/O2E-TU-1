@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<u-row style="margin-top: 10rpx;margin-left: 5px;margin-right: 20px;margin-bottom: 10px;">
-			<u-icon name="arrow-left" size="28" ></u-icon>
+			<u-icon @click="navToEntry" name="arrow-left" size="28" ></u-icon>
 			<text style="margin: auto;font-size: 20px;">企业库</text>
 			<!-- <u-search placeholder="请输入搜索内容" :showAction = "false" ></u-search> -->
 		</u-row>
@@ -31,7 +31,12 @@
 			}
 		},
 		methods: {
-			
+			navToEntry(){
+				console.log('back to entry')
+				uni.switchTab({
+					url: '../entry/entry',
+				})
+			}
 		},
 		components : {
 			companyCard

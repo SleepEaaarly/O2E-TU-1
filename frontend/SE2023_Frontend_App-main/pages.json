@@ -1,9 +1,9 @@
 {
 	"pages": [
 		{
-			"path": "pages/index/index",
+			"path": "pages/entry/entry",
 			"style": {
-				"navigationBarTitleText": "社区",
+				"navigationBarTitleText": "主页",
 				"app-plus": {
 					"scrollIndicator": "none", //隐藏滚动条
 					"bounce": "none", //关闭反弹效果
@@ -11,10 +11,10 @@
 				}
 			}
 		}, 
-				{
-			"path": "pages/entry/entry",
+		{
+			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "主页",
+				"navigationBarTitleText": "社区",
 				"app-plus": {
 					"scrollIndicator": "none", //隐藏滚动条
 					"bounce": "none", //关闭反弹效果
@@ -48,6 +48,17 @@
 			"path": "pages/work_store/work_store",
 			"style": {
 				"navigationBarTitleText": "成果库",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"scrollIndicator": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/company_store/company_store",
+			"style": {
+				"navigationBarTitleText": "企业库",
 				"app-plus": {
 					"titleNView": false,
 					"bounce": "none",
@@ -751,6 +762,12 @@
 			{
 				"navigationBarTitleText":"常见问题",
 				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "uni_modules/uni-combox/components/uni-combox/uni-combox",
+			"style": {
+			"navigationBarTitleText": "带输入的下拉菜单"
 			}
 		}
     ],
