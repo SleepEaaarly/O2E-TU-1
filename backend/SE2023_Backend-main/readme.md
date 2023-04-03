@@ -10,7 +10,7 @@ This is the backend code of the `PaperDaily` project based on [`django2.2`](http
 
 ## Quick Start
 
-1. Install `python3.7` or later
+1. Install `python3.7` or later（python3.8也行）
 
 2. Copy [`model.pt`](https://drive.google.com/file/d/1iORaaGlxte-r2JrN650ccDe-VEivYBnA/view?usp=sharing) to the root directory
 
