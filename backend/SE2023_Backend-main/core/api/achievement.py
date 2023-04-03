@@ -237,7 +237,7 @@ def refuse_result(request:HttpRequest, id:int):
 #@jwt_auth()
 @response_wrapper
 @require_http_methods('GET')
-def get_resultInfo(request: HttpRequest, id:int):
+def get_resultInfo(request: HttpRequest, id: int):
     result = Results.objects.get(id=id)
     if result.state == 1:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid user state")

@@ -48,11 +48,11 @@ from core.api.platform.rate import rate_order, get_order_rate, get_user_rate
 
 from core.tests.generate_avatar import avatar, get_user_num
 
-from core.api.achievement import add_paper, add_patent, add_project, add_result, agree_result, refuse_result
+from core.api.achievement import add_paper, add_patent, add_project, add_result, agree_result, refuse_result, get_resultInfo
 
 from core.api.result_pic_pdf import RES_PIC_API, read_pic, read_default_pic, RES_PDF_API
 
-from core.api.search_api import search_expert
+from core.api.search_api import search_expert, search_enterprise, search_result, search_mixture
 
 urlpatterns = [
 
@@ -244,7 +244,11 @@ urlpatterns = [
     path('result/add', add_result),
 
     # search
+    path('result/getinfo/<int:id>', get_resultInfo),
     path('search/expert', search_expert),
+    path('search/enterprise', search_enterprise),
+    path('search/result', search_result),
+    path('search/mixture', search_mixture),
 
 ]
 
