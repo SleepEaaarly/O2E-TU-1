@@ -37,7 +37,7 @@ from core.api.platform.order_api import get_pending_order, get_cooperating_order
 
 from core.api.enterprise import set_info, agree_enterprise, refuse_enterprise, get_enterpriseInfo, get_all_enterprise
 
-from core.api.expert import setinfo, agree_expert, refuse_expert, get_expertInfo, get_all_expert, get_json, add_papers, add_patents, add_projects, \
+from core.api.expert import search_expert, setinfo, agree_expert, refuse_expert, get_expertInfo, get_all_expert, get_json, add_papers, add_patents, add_projects, \
   get_expert_info, add_patents_scholars, add_papers_scholars, add_projects_scholars
 
 from core.api.feedback import get_feedback, make_feedback, reply_feedback, get_user_unreplied_feedback, get_user_replied_feedback
@@ -47,6 +47,10 @@ from core.api.ai_recommend import recommend, need_recommend
 from core.api.platform.rate import rate_order, get_order_rate, get_user_rate
 
 from core.tests.generate_avatar import avatar, get_user_num
+
+from core.api.achievement import add_paper, add_patent, add_project
+
+from core.api.result_pic_pdf import RES_PIC_API, read_pic, read_default_pic, RES_PDF_API
 
 urlpatterns = [
 
@@ -62,7 +66,12 @@ urlpatterns = [
     path('user/<int:type>/all/<int:page>',get_all_user_info),
     path('user/delete', delete_user),
     path('user/changeinfo', change_user_info),
-    
+
+    # results pic and pdf
+    path('res/pic', RES_PIC_API),
+    path('images/<str:year>/<str:day>/res_pic/<str:file_name>', read_pic),
+    path('images/default_result_pic.jfif', read_default_pic),
+    path('res/pdf', RES_PDF_API),
 
     # comment apis
     path('comment/create', create_comment),
@@ -115,12 +124,14 @@ urlpatterns = [
     path('chat/list', get_chat_list),
     path('chat/delete', delete_chat),
     path('chat/read', message_read),
-    path('chat/push',push_message),
+    path('chat/push', push_message),
 
     #search - web PAGE
     path('user/search/<int:uid>',search_user_list),
     # search - app ROLL
     path('user/search/roll',search_user_full_list),
+
+    path('expert/search', search_expert),
 
     # interpretations
     path('Interpretation', createInterpretation),
@@ -228,6 +239,12 @@ urlpatterns = [
 
     # 管理端获取用户数
     path('user/all', get_user_num),
+
+    # 成果发布
+    path('paper/add', add_paper),
+    path('patent/add', add_patent),
+    path('project/add', add_project),
+
 
 ]
 

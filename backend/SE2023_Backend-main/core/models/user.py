@@ -24,8 +24,9 @@ USER_STATE_CHOICES = (
     (5, '认证企业')
 )
 
-BASE_DIR = 'http://127.0.0.1:8000/api/' 
+BASE_DIR = 'http://127.0.0.1:8000/api/'
 
+'''
 class AdminUser(models.Model):
     nick_name = models.CharField(max_length=20)
     email = models.CharField(max_length=30)
@@ -34,6 +35,7 @@ class AdminUser(models.Model):
 
     def super_authenticate(self,name,password):
         return self.nick_name == name and self.password == password
+'''
 
 
 class User(AbstractUser):

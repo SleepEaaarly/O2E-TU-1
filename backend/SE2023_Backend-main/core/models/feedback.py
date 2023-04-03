@@ -5,6 +5,12 @@ FLAG = (
     (0, '未回复'),
     (1, '已回复'),
 )
+
+
+'''
+管理员和用户的反馈消息
+
+'''
 class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_feedback", default=19)
     # enterprise = models.ForeignKey(User, on_delete=models.CASCADE, related_name="enterprise_need")

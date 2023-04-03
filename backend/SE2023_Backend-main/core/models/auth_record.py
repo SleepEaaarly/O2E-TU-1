@@ -2,7 +2,7 @@
 """
 from django.db import models
 from .user import User
-from .user import AdminUser
+# from .user import AdminUser
 
 # Create your models here
 class AuthRecord(models.Model):
@@ -12,6 +12,7 @@ class AuthRecord(models.Model):
     login_at = models.DateTimeField()
     expires_by = models.DateTimeField()
 
+'''
 # Create your models here
 class AuthRecord2(models.Model):
     """This model describes a user auth record
@@ -19,3 +20,4 @@ class AuthRecord2(models.Model):
     user = models.ForeignKey(AdminUser, on_delete=models.CASCADE)
     login_at = models.DateTimeField()
     expires_by = models.DateTimeField()
+'''

@@ -24,7 +24,7 @@ class Chatroom(models.Model):
     #created_at = models.DateTimeField(auto_now_add=True)
     message = models.ManyToManyField('Message', related_name='message_list')
     #TODO: change the mode to CASCADE, but may have problems.
-    to_user = models.ForeignKey('User', on_delete=models.CASCADE, null=True,
+    to_user = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True,
                                 related_name="joined_chatroom_list")
 
     
