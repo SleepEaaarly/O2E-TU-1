@@ -199,3 +199,38 @@ def add_result(request: HttpRequest):
     expert.save()
 
     return success_api_response({})
+
+
+"""
+应该添加一个认证成功提示
+"""
+#@jwt_auth()
+@response_wrapper
+@require_http_methods('GET')
+def agree_result(request:HttpRequest, id:int):
+    print(id)
+    result = Results.objects.get(id=id)
+    if result.state != 0:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
+    result.state = 1
+    result.save()
+    return success_api_response("success")
+
+
+"""
+应该添加一个认证失败提示
+"""
+#@jwt_auth()
+@response_wrapper
+@require_http_methods('GET')
+def refuse_result(request:HttpRequest, id:int):
+    result = Results.objects.get(id=id)
+    print(1)
+    if result.state != 0:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
+    result.state = 2
+    result.save()
+    print(4)
+    return success_api_response("success")
+
+

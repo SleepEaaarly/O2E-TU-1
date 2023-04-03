@@ -48,7 +48,7 @@ from core.api.platform.rate import rate_order, get_order_rate, get_user_rate
 
 from core.tests.generate_avatar import avatar, get_user_num
 
-from core.api.achievement import add_paper, add_patent, add_project
+from core.api.achievement import add_paper, add_patent, add_project, add_result, agree_result, refuse_result
 
 from core.api.result_pic_pdf import RES_PIC_API, read_pic, read_default_pic, RES_PDF_API
 
@@ -67,11 +67,13 @@ urlpatterns = [
     path('user/delete', delete_user),
     path('user/changeinfo', change_user_info),
 
-    # results pic and pdf
+    # results
     path('res/pic', RES_PIC_API),
     path('images/<str:year>/<str:day>/res_pic/<str:file_name>', read_pic),
     path('images/default_result_pic.jfif', read_default_pic),
     path('res/pdf', RES_PDF_API),
+    path('result/agree/<int:id>', agree_result),
+    path('result/refuse/<int:id>', refuse_result),
 
     # comment apis
     path('comment/create', create_comment),
@@ -126,7 +128,7 @@ urlpatterns = [
     path('chat/read', message_read),
     path('chat/push', push_message),
 
-    #search - web PAGE
+    # search - web PAGE
     path('user/search/<int:uid>',search_user_list),
     # search - app ROLL
     path('user/search/roll',search_user_full_list),
@@ -146,7 +148,7 @@ urlpatterns = [
     path('Interpretation/getkeywords', queryKeywordTops),
     path('Interpretation/gettags', queryTagRatio),
 
-    #image
+    # image
     path('images/<str:year>/<str:day>/icons/<str:file_name>',read_img),
     path('images/default_user_icon.jpg',read_default_img),
 
@@ -158,7 +160,7 @@ urlpatterns = [
 
     # platform<---需求平台
 
-    ## need
+    # need
     path('need', create_need), # 发布新的需求
     path('need/all', get_all_need), # 获取全部待解决需求
     path('need/<int:id>', get_need_info), # 获取某个需求的信息
@@ -178,7 +180,7 @@ urlpatterns = [
     path('need/<int:id>/allexperts', get_oneneed_allexperts),  # 获取需求已对接全部专家id与头像url
     path('need/<int:id>/delete', admin_delete_need),    #管理端删除需求
 
-    ## order
+    # order
     path('order', create_order),  # 企业创建新订单
     path('order/<int:id>', get_order_info), # 获取某个订单的信息
     path('user/<int:uid>/order/<int:id>/refuse', refuse_order), # 专家拒绝订单
@@ -197,27 +199,20 @@ urlpatterns = [
     path('admin/order/getall', admin_get_all_order),
     path('admin/order/<int:id>', admin_delete_order), 
 
-    #enterprise
+    # enterprise
     path('enterprise/setinfo', set_info),      ## 企业设置认证信息，进行认证
     path('enterprise/getinfo/<int:id>', get_enterpriseInfo), ## 管理端获取企业认证信息
     path('enterprise/agree/<int:id>', agree_enterprise),    ## 接受企业认证
     path('enterprise/refuse/<int:id>', refuse_enterprise),  ## 拒绝企业认证
     path('enterprise/getall', get_all_enterprise),   ## 获取待认证的企业
 
-    #expert
+    # expert
     path('expert/setinfo', setinfo),                  ## 专家设置信息，进行专家认证
     path('expert/getinfo/<int:id>', get_expertInfo),  ## 管理端获取专家认证信息
     path('expert/agree/<int:id>', agree_expert),      ## 接受专家认证
     path('expert/refuse/<int:id>', refuse_expert),    ## 拒绝专家认证
     path('expert/getall', get_all_expert),            ## 获取待认证的专家
     path('expert/<int:uid>', get_expert_info), ## 获取专家信息，通过 ?tab = project, paper, patent等获取信息
-    #path('expert/experiment', get_json),
-    #path('expert/experiment1', add_papers),
-    #path('expert/experiment2', add_patents),
-    #path('expert/experiment3', add_projects),
-    #path('expert/test1', add_patents_scholars),
-    #path('expert/test2', add_papers_scholars),
-    #path('expert/test3', add_projects_scholars),
 
     # Feedback
     path('feedback/getall', get_feedback),
@@ -244,7 +239,7 @@ urlpatterns = [
     path('paper/add', add_paper),
     path('patent/add', add_patent),
     path('project/add', add_project),
-
+    path('result/add', add_result),
 
 ]
 
