@@ -39,7 +39,8 @@
 </template>
 
 <script>
-	import expertCard from "@/components/expert_display_card.vue"
+import expertCard from "@/components/expert_display_card.vue"
+import { getExpertList } from "@/api/expert_store.js"
 	export default {
 		props: {
 			chosen_institution: String,
@@ -83,6 +84,20 @@
 				},
 			}
 		},
+		onShow() {		//页面加载,一个页面只会调用一次
+			console.log('experts-onShow()')
+			this.requestData()
+		},
+		onLoad() {		//页面显示,每次打开页面都会调用一次
+			console.log('experts-onLoad()')
+			// uni.getSystemInfo({
+			// 	success: res => {
+			// 		let height = res.windowHeight - uni.upx2px(100)
+			// 		this.swiperheight = height
+			// 	}
+			// })
+			//this.requestData() 不能刷新，防止点进文章再出来跳飞了
+		},
 		methods: {
 			navToEntry(){
 				console.log('back to entry')
@@ -92,7 +107,15 @@
 			},
 			expertDetail(expert){
 				console.log(expert['author'])
-			}
+			},
+			async requestData() {
+				try {
+					this.recommendList.list = await getExpertList()
+				} catch (e) {
+					console.log(e)
+					return
+				}
+			},
 		},
 		components : {
 			expertCard

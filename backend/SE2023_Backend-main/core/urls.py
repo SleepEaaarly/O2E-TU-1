@@ -37,7 +37,7 @@ from core.api.platform.order_api import get_pending_order, get_cooperating_order
 
 from core.api.enterprise import set_info, agree_enterprise, refuse_enterprise, get_enterpriseInfo, get_all_enterprise
 
-from core.api.expert import setinfo, agree_expert, refuse_expert, get_expertInfo, get_all_expert, get_json, add_papers, add_patents, add_projects, \
+from core.api.expert import search_expert, setinfo, agree_expert, refuse_expert, get_expertInfo, get_all_expert, get_json, add_papers, add_patents, add_projects, \
   get_expert_info, add_patents_scholars, add_papers_scholars, add_projects_scholars
 
 from core.api.feedback import get_feedback, make_feedback, reply_feedback, get_user_unreplied_feedback, get_user_replied_feedback
@@ -130,6 +130,8 @@ urlpatterns = [
     path('user/search/<int:uid>',search_user_list),
     # search - app ROLL
     path('user/search/roll',search_user_full_list),
+
+    path('expert/search', search_expert),
 
     # interpretations
     path('Interpretation', createInterpretation),
