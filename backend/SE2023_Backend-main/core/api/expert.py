@@ -194,6 +194,7 @@ def get_expertInfo(request:HttpRequest, id:int):
         "patent": expert_info.patent
     })
 
+
 """
 获取全部申请专家的用户基本信息
 """
