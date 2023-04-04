@@ -22,11 +22,11 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     organization = data.get('organization')
     field = data.get('field')
     title = data.get('title')
-    print(key_word)
-    print(organization)
-    print(field)
-    print(title)
-    print('debug')
+    # print(key_word)
+    # print(organization)
+    # print(field)
+    # print(title)
+    # print('debug')
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
@@ -78,19 +78,18 @@ def search_expert(request: HttpRequest, *args, **kwargs):
 
 @response_wrapper
 # @jwt_auth()
-@require_POST
-def search_enterprise(request: HttpRequest):
-    data = parse_data(request)
+@require_http_methods('GET')
+def search_enterprise(request: HttpRequest, *args, **kwargs):
+    data = request.GET.dict()
     key_word = data.get('key_word')
-    address = data.get('address')
     field = data.get('field')
-    if key_word is None or key_word == '':  # not key_word 是判空，也可以判None
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "none key word")
-
-    key_words = key_word.split()
+    address = data.get('address')
+    key_words = ''
+    if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
+        key_words = key_word.split()
 
     data_results = []
-    enterprises = Enterprise_info.objects.none()
+    enterprises = Enterprise_info.objects.all()
     for key_word in key_words:
         enterprises = Enterprise_info.union(Enterprise_info.objects.filter(Q(name__icontains=key_word) | Q(address__icontains=key_word)
                                                       | Q(website__icontains=key_word)
@@ -108,23 +107,27 @@ def search_enterprise(request: HttpRequest):
             if not fields.__contains__(field):
                 continue
 
-        user = Enterprise_info.objects.get(enterprise_info_id=enterprise.id)
+        user = User.objects.get(enterprise_info_id=enterprise.id)
         enterprise_info = {
             "user_id": user.id,
-            "enterprise_id": enterprise.id,
-            "name": enterprise.name,
+            "enterprise_id": user.enterprise_info_id,
+            "name": user.enterprise_info.name,
             "address": enterprise.address,
             "website": enterprise.website,
             "instruction": enterprise.instruction,
             "phone": enterprise.phone,
             "legal_representative": enterprise.legal_representative,
             "register_capital": enterprise.register_capital,
-            "field": enterprise.field,
+            "field": user.enterprise_info.field,
             "business_license": str(enterprise.business_license),
-            "legal_person_ID": str(enterprise.legal_person_ID)
+            "legal_person_ID": str(enterprise.legal_person_ID),
+            "userpic": str(user.icon)
         }
         data_results.append(enterprise_info)
     data_results = data_results[:10]
+    print('data-company')
+    print(len(data_results))
+    print(data_results)
     return success_api_response({"data": data_results})
 
 

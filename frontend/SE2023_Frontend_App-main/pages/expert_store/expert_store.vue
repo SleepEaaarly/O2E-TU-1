@@ -49,36 +49,40 @@ import { getExpertList } from "@/api/expert_store.js"
 				chosen_title: '',
 				searchText: '',
 				institution_list: [
-					'北航'
+					'北航',
+					'复旦大学'
 				],
 				area_list: [
-					'信息技术'
+					"信息技术", "装备制造", "新材料", "新能源", "节能环保", "生物医药", "科学创意", "检验检测", "其他"
 				],
 				title_list: [
-					'副教授'
+					'教授',
+					'副教授',
+					'博导',
+					'硕导'
 				],
 				recommendList: {
 					loadtext: '没有更多数据了',
 					id: 'recommend',
 					list: [
-						{
-							'userpic': '/static/head.jpg',
-							'author': 'Expert1',
-							'mail': 'iszry@foxmail.com',
-							'title': '副教授',
-							'institution': '北京航空航天大学',
-							'intro': '一种线型结构的具有优异综合性能的热塑性工程塑料',
-							'workLogoPath': '/static//logo.png',
-						},
-						{
-							'userpic': '/static/head.jpg',
-							'author': 'Expert2',
-							'mail': 'iszry@foxmail.com',
-							'title': '副教授',
-							'institution': '北京航空航天大学',
-							'intro': '该项目通过与其他生物可降解材料的共混，以及与纳米粒子的复合来得到廉价、加工性能良好、力学及防水性能改善的大豆蛋白质环境友好材料。',
-							'workLogoPath': '/static//logo.png',
-						}
+					// 	{
+					// 		'userpic': '/static/head.jpg',
+					// 		'author': 'Expert1',
+					// 		'mail': 'iszry@foxmail.com',
+					// 		'title': '副教授',
+					// 		'institution': '北京航空航天大学',
+					// 		'intro': '一种线型结构的具有优异综合性能的热塑性工程塑料',
+					// 		'workLogoPath': '/static//logo.png',
+					// 	},
+					// 	{
+					// 		'userpic': '/static/head.jpg',
+					// 		'author': 'Expert2',
+					// 		'mail': 'iszry@foxmail.com',
+					// 		'title': '副教授',
+					// 		'institution': '北京航空航天大学',
+					// 		'intro': '该项目通过与其他生物可降解材料的共混，以及与纳米粒子的复合来得到廉价、加工性能良好、力学及防水性能改善的大豆蛋白质环境友好材料。',
+					// 		'workLogoPath': '/static//logo.png',
+					// 	}
 					]
 				},
 			}
