@@ -268,6 +268,7 @@
 		onLoad() {
 			// console.log(this.userInfo.enterprise_name)
 			//this.tabIndex=1
+			console.log(this.userInfo.type)
 			if (this.userInfo.type === 4) {
 				this.tabBars[0].name = '订单'
 			} else {
@@ -286,7 +287,7 @@
 		},
 		
 		onShow() {
-			
+			console.log(this.userInfo)
 			if (this.userInfo.type === 4) {
 				this.tabIndex=1
 				this.tabBars[0].name = '订单'
@@ -314,7 +315,7 @@
 		methods: {
 			//获取需求数据
 			async requestData(GoPage, Gotype) {
-				
+				console.log(this.userInfo)
 				let type = this.tabBars[this.tabIndex].id
 				try {
 					if(this.tabIndex === 1){
@@ -328,6 +329,7 @@
 						// 	that.needRefresh = false
 						// }, 500)
 						this.items = items
+						console.log(items)
 					}
 				} catch (e) {
 					console.log(e)

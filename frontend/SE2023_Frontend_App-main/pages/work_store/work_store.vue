@@ -9,8 +9,8 @@
 			<u-search placeholder="请输入搜索内容" :showAction = "false" ></u-search>
 		</u-row>
 		<u-row style="margin-top: 10px;margin-left: 10px;">
-			<uni-combox :candidates="area_list" placeholder="领域" v-model="area" class="work_combox" :border="false"></uni-combox>
-			<uni-combox :candidates="period_list" placeholder="技术成熟度" v-model="period" class="work_combox" :border="false"></uni-combox>
+			<uni-combox :candidates="area_list" placeholder="领域" v-model="chosen_area" class="work_combox" :border="false"></uni-combox>
+			<uni-combox :candidates="period_list" placeholder="技术成熟度" v-model="chosen_period" class="work_combox" :border="false"></uni-combox>
 		</u-row>
 		
 		<block v-for="(item, index1) in recommendList.list" :key="index1">
