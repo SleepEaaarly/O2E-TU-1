@@ -15,29 +15,38 @@ from core.models.results import Results
 
 @response_wrapper
 # @jwt_auth()
-@require_POST
-def search_expert(request: HttpRequest):
-    data = parse_data(request)
+@require_http_methods('GET')
+def search_expert(request: HttpRequest, *args, **kwargs):
+    data = request.GET.dict()
     key_word = data.get('key_word')
     organization = data.get('organization')
     field = data.get('field')
     title = data.get('title')
-    if key_word is None or key_word == '':  # not key_word 是判空，也可以判None
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "none key word")
-
-    key_words = key_word.split()
-
+    print(key_word)
+    print(organization)
+    print(field)
+    print(title)
+    print('debug')
+    key_words = ''
+    if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
+        key_words = key_word.split()
     data_results = []
-    experts = Expert.objects.none()
-    for key_word in key_words:
-        experts = experts.union(Expert.objects.filter(Q(name__icontains=key_word) | Q(organization__icontains=key_word)
-                                                | Q(field__icontains=key_word)
-                                                | Q(self_profile__icontains=key_word) | Q(phone__icontains=key_word)
-                                                | Q(patent__icontains=key_word) | Q(paper__icontains=key_word) |
-                                                      Q(title__icontains=key_word)).all().filter(state=0))
-        print(experts.count())
-
+    experts = Expert.objects.all()
+    if key_words != '':
+        for key_word in key_words:
+            experts = experts.union(Expert.objects.filter(Q(name__icontains=key_word) | Q(organization__icontains=key_word)
+                                                    | Q(field__icontains=key_word)
+                                                    | Q(self_profile__icontains=key_word) | Q(phone__icontains=key_word)
+                                                    | Q(patent__icontains=key_word) | Q(paper__icontains=key_word) |
+                                                            Q(title__icontains=key_word)).all().filter(state=0))
+            print(experts.count())
+    count_down = 12
+    # 专家库有脏数据， 下面这个循环全部遍历会报错
     for expert in experts:
+        if count_down == 0:
+            break
+        else:
+            count_down-=1
         if not (organization is None or organization == ''):
             if expert.organization != organization:
                 continue
@@ -50,22 +59,20 @@ def search_expert(request: HttpRequest):
             if not titles.__contains__(title):
                 continue
 
-        user = Expert.objects.get(expert_info_id=expert.id)
+        user = User.objects.get(expert_info_id=expert.id)
         expert_info = {
             "user_id": user.id,
-            "expert_id": expert.id,
-            "name": expert.name,
-            "ID_num": expert.ID_num,
-            "organization": expert.organization,
-            "field": field_decode(expert.field),
-            "self_profile": expert.self_profile,
-            "phone": expert.phone,
-            "ID_pic": str(expert.ID_pic),
-            "paper": expert.paper,
-            "patent": expert.patent
+            "expert_id": user.expert_info_id,
+            "name": user.expert_info.name,
+            "organization": user.expert_info.organization,
+            "field": user.expert_info.field,
+            "self_profile": user.expert_info.self_profile,
+            "title": user.expert_info.title,
+            "userpic": str(user.icon)
         }
         data_results.append(expert_info)
     data_results = data_results[:10]
+    # print(data_results)
     return success_api_response({"data": data_results})
 
 

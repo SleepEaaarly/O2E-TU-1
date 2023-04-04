@@ -10,24 +10,20 @@
                 <uni-section title="成果标题" subTitle="为您的成果总结一个标题" type="line" padding>
                     <uni-easyinput v-model="title" focus placeholder="请输入内容" @input="inputTitle"></uni-easyinput>
                 </uni-section>
-                <uni-section title="成果描述" subTitle="详细描述您的成果" type="line" padding>
+                <uni-section title="摘要" subTitle="描述您的成果" type="line" padding>
                     <uni-easyinput type="textarea" v-model="description" placeholder="请输入内容"
                         @input="inputDescription"></uni-easyinput>
                 </uni-section>
-                <uni-section title="成果作者" subTitle="多个作者用英文分号分隔" type="line" padding>
+                <uni-section title="成果作者" subTitle="多个作者用英文逗号分隔" type="line" padding>
                     <uni-easyinput v-model="scholars" focus placeholder="请输入作者" @input="inputScholars"></uni-easyinput>
                 </uni-section>
-                </uni-section>
-                <uni-section title="成果链接" subTitle="给出您的成果链接" type="line" padding>
-                    <uni-easyinput v-model="url" focus placeholder="请输入链接" @input="inputUrl"></uni-easyinput>
-                </uni-section>
+                <!-- <uni-section title="成果链接" subTitle="给出您的成果链接" type="line" padding>
+                    <uni-easyinput v-model="achievement_url" focus placeholder="请输入链接" @input="inputachievement_url"></uni-easyinput>
+                </uni-section> -->
                 <uni-section title="成果发布日期" subTitle="请选择成果发布日期" type="line" padding>
                     <view class="date-set">
                         <uni-datetime-picker type="datetime" v-model="start_time" @change="changeLogStart" />
                     </view>
-                </uni-section>
-                <uni-section title="关键词" subTitle="推荐您输入3个以内英文关键词, 并以英文分号分开" type="line" padding>
-                    <uni-easyinput v-model="key_word" placeholder="请输入关键词" @input="inputKeyword"></uni-easyinput>
                 </uni-section>
                 <uni-section title="领域" subTitle="请为您的成果确定一个领域方向" type="line" padding>
                     <view class="uni-list">
@@ -43,7 +39,7 @@
                         </view>
                     </view>
                 </uni-section>
-                <uni-section title="成果类型" subTitle="请选择您的成果类型" type="line" padding>
+                <uni-section title="成果阶段" subTitle="请选择成果阶段" type="line" padding>
 					<view class="uni-list">
 						<radio-group @change="radioChange">
 							<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in achTypes"
@@ -56,27 +52,11 @@
 						</radio-group>
 					</view>
 				</uni-section>
-				<!-- 论文分支 -->
-                <uni-section v-if="type=='0'" title="论文引用量" subTitle="请输入该论文的引用量" type="line" padding>
-                    <uni-easyinput v-model="cites" focus placeholder="请输入内容" @input="inputCite"></uni-easyinput>
+                <uni-section title="成果示意图" subTitle="请选择图片展示成果" type="line" padding>
+                    <view>
+                        <uploadWorkPic @getWorkPic="getWorkPic"></uploadWorkPic>
+                    </view>
                 </uni-section>
-                <uni-section v-if="type=='0'" title="论文类型" subTitle="请选择您的论文类型" type="line" padding>
-					<view class="uni-list">
-						<radio-group @change="kindChange">
-							<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in paperType"
-								:key="item.value">
-								<view class="type-evaluate">
-									<radio :value="item.value" :checked="index === paperKind" />
-								</view>
-								<view>{{ item.name }}</view>
-							</label>
-						</radio-group>
-					</view>
-				</uni-section>
-                <!-- <uni-section title="预估人数" subTitle="为您的需求商定所需人数" type="line" padding>
-					<uni-easyinput type="digit" v-model="predict" placeholder="请输入内容" @input="inputPredict"></uni-easyinput>
-				</uni-section> -->
-
                 <view class="uni-btn-v">
                     <button type="primary" form-type="submit">直接发布</button>
                     <button type="primary" @click="saveAchievement">保存</button>
@@ -95,6 +75,7 @@ import {
     addachievement,
     saveachievement
 } from '@/api/add-achievement.js'
+import uploadWorkPic from '../../components/uploadImages/uploadWorkPic.vue'
 import uniCard from '@/components/uni_easyinput/uni-card/components/uni-card/uni-card.vue'
 import uniEasyinput from '@/components/uni_easyinput/uni-easyinput/components/uni-easyinput/uni-easyinput.vue'
 import uniSection from '@/components/uni-section/uni-section.vue'
@@ -104,7 +85,8 @@ export default {
         uniCard,
         uniEasyinput,
         uniSection,
-        uniDatetimePicker
+        uniDatetimePicker,
+        uploadWorkPic
     },
     data() {
         return {
@@ -122,7 +104,7 @@ export default {
             predict: 0,
             real: 0,
             index: 0,
-			url: '',
+			achievement_url: '',
 			scholars: '',
 			pyear: 2020,
 			isEI: false,
@@ -135,15 +117,19 @@ export default {
             achTypes: [
                 {
                     value: '0',
-                    name: '论文'
+                    name: '实验室'
                 },
                 {
                     value: '1',
-                    name: '专利'
+                    name: '样品'
                 },
                 {
                     value: '2',
-                    name: '项目'
+                    name: '中试'
+                },
+                {
+                    value: '3',
+                    name: '产业化'
                 }
             ],
 			paperType: [
@@ -191,6 +177,9 @@ export default {
         console.log('onLoad in certification ' + this.userID)
     },
     methods: {
+        getWorkPic() {
+            
+        },
         back() {
             uni.navigateBack()
         },
@@ -203,8 +192,8 @@ export default {
 		inputScholars(e){
 			this.scholars = e.detail
 		},
-		inputUrl(e){
-			this.url = e.detail
+		inputachievement_url(e){
+			this.achievement_url = e.detail
 		},
         inputMoney(e) {
             this.money = e.detail
@@ -281,7 +270,7 @@ export default {
                 // } else if (!isKeyword(data.key_word)) {
                 // 	this.$http.toast("请按照格式输入！")
                 // 	validate_answer = false
-            } else if (data.url === '') {
+            } else if (data.achievement_url === '') {
                 this.$http.toast('请给出您的成果链接！')
                 validate_answer = false
             } else if (data.type === '') {
@@ -312,7 +301,7 @@ export default {
                 'address': this.address,
                 'state': this.state,
                 'type': this.type,
-				'url': this.url,
+				'achievement_url': this.achievement_url,
 				'scholars': this.scholars,
 				'pyear': this.pyear,
 				'isEI': this.isEI,
@@ -351,7 +340,7 @@ export default {
 				this.cites = '',
 				this.scholars = '',
 				this.pyear = 2020,
-				this.url = '',
+				this.achievement_url = '',
 				this.isEI = false,
 				this.isSCI = false
         },
@@ -368,7 +357,7 @@ export default {
                 'address': this.address,
                 'state': 2,
                 'type': this.type,
-				'url': this.url,
+				'achievement_url': this.achievement_url,
 				'scholars': this.scholars,
 				'pyear': this.pyear,
 				'isEI': this.isEI,

@@ -6,28 +6,44 @@ import {
 
 
 //获取 专家-搜索
-export const getExpertList = async (searchText = '') => {
+export const getExpertList = async (paras) => {
     console.log("getExpertList OK.")
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
-    let result = await axios.get('expert/search?key_word=' + searchText, {}, headers)
-	console.log('Experts:')
-	console.log(result)
+    let ret = await axios.get('search/expert?key_word=' + paras.key_word,
+        paras,
+        headers)
+	let result = ret.data
     if (result && result.length) {
         result = result.map((item) => {
             return {
-                "id": item.id,
-                "userpic":  '', //picUrl + item.userpic,
+                "uid": item.user_id,
+                "id": item.expert_id,
+                "userpic": picUrl + item.userpic, //picUrl + item.userpic,
                 "tags": item.field,
                 'authorLogoPath': '', //picUrl + item.authorLogoPath,
-                'author': item.author,
+                'author': item.name,
                 'title': item.title,
-                'institution': item.institution,
-                'intro': item.intro,
+                'institution': item.organization,
+                'intro': item.self_profile,
             }
         })
     }
     console.log(result)
+    return result
+}
+
+
+export const getExpertByID = async (uid) => {
+    console.log('getExpertByID')
+    let headers = { 'Authorization': 'Bearer ' + uni.getStorageSync('token') }
+
+    // console.log(uid)
+
+    let result = await axios.get('expert/' + uid, headers)
+
+    result = result.data
+
     return result
 }

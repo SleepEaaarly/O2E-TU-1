@@ -1,13 +1,13 @@
 <template>
 	<view>
-		<!-- 选择筛选内容 -->
+		<!-- 选择筛选内容
 		<view class="sameline uni-px-5 uni-pb-5">
 			筛选标签：
 			<uni-data-checkbox class="sameline" mode="tag" multiple 
 			v-model="checkbox" 
 			:localdata="outcome"
 			@change="generateDList()"></uni-data-checkbox>
-		</view>
+		</view> -->
 		
 		<!-- 具体数据卡片 -->
 		<uni-card v-for="(item, index) in datalist" :key="index" @click="openResultDetail()">
@@ -64,7 +64,8 @@
 			return {
 				paperlist:[],	//论文列表
 				patentlist:[],	//专利列表
-				projectlist:[],	//项目列表
+				projectlist: [],	//项目列表
+				achievementList: [], //成果列表
 				datalist:[],	//最终呈现数据的总列表
 				show: false,
 				
@@ -86,6 +87,7 @@
 				this.paperlist = await getExpertInfo(this.id, 'papers')
 				this.patentlist = await getExpertInfo(this.id, 'patents')
 				this.projectlist = await getExpertInfo(this.id, 'projects')
+				this.achievementList = await getExpertInfo(this.id, 'results')
 				this.generateDList()
 			},
 			hidepopup() {
@@ -104,15 +106,10 @@
 			},
 			generateDList(){	//刷新datalist
 				this.datalist = []
-				if(this.checkbox.indexOf(0) !== -1){
-					this.datalist.push.apply(this.datalist, this.paperlist)
-				}
-				if(this.checkbox.indexOf(1) !== -1){
-					this.datalist.push.apply(this.datalist, this.patentlist)
-				}
-				if(this.checkbox.indexOf(2) !== -1){
-					this.datalist.push.apply(this.datalist, this.projectlist)
-				}
+				this.datalist.push.apply(this.datalist, this.paperlist)
+
+				// TODO 获取成果列表
+				// this.datalist.push.apply(this.datalist, this.achievementList)
 				console.log(this.datalist)
 			},
 			openResultDetail(){

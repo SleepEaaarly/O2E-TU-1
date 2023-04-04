@@ -6,7 +6,7 @@
 			<!-- <u-search placeholder="请输入搜索内容" :showAction = "false" ></u-search> -->
 		</u-row>
 		<u-row style="margin-left: 10px;margin-right: 10px;">
-			<u-search placeholder="请输入搜索内容" :showAction = "false" ></u-search>
+			<u-search placeholder="请输入搜索内容" v-model="searchText" :showAction = "false" ></u-search>
 		</u-row>
 		<u-row style="margin-top: 10px;margin-left: 10px;">
 			<uni-combox :candidates="institution_list" placeholder="请选择机构" v-model="chosen_institution" class="expert_combox" :border="false"></uni-combox>
@@ -20,14 +20,14 @@
 			:mail="'duansangni@hhhhh.com'"
 			:logoPath="'/static//logo.png'"></expert-card>
 		</view> -->
-		<expert-card :name="'段姐废物'"
-		:title="'小废物'" :institution="'北京航空航天大学'"
-		:mail="'duansangni@hhhhh.com'"
-		:logoPath="'/static//logo.png'"></expert-card>
+		<!-- <expert-card :name="'名字'"
+		:title="'职称'" :institution="'机构'"
+		:mail="'邮箱'"
+		:logoPath="'/static//logo.png'"></expert-card> -->
 		<block v-for="(item, index1) in recommendList.list" :key="index1">
 			<expert-card
 			@click.native="expertDetail(item)"  
-			:logoPath="item['authorLogoPath']" 
+			:logoPath="item['userpic']" 
 			:name="item['author']"
 			:title="item['title']"
 			:mail="item['mail']"
@@ -42,13 +42,12 @@
 import expertCard from "@/components/expert_display_card.vue"
 import { getExpertList } from "@/api/expert_store.js"
 	export default {
-		props: {
-			chosen_institution: String,
-			chosen_area: String,
-			chosen_title: String
-		},
 		data() {
 			return {
+				chosen_institution: '',
+				chosen_area: '',
+				chosen_title: '',
+				searchText: '',
 				institution_list: [
 					'北航'
 				],
@@ -63,7 +62,7 @@ import { getExpertList } from "@/api/expert_store.js"
 					id: 'recommend',
 					list: [
 						{
-							'authorLogoPath': '/static/head.jpg',
+							'userpic': '/static/head.jpg',
 							'author': 'Expert1',
 							'mail': 'iszry@foxmail.com',
 							'title': '副教授',
@@ -72,7 +71,7 @@ import { getExpertList } from "@/api/expert_store.js"
 							'workLogoPath': '/static//logo.png',
 						},
 						{
-							'authorLogoPath': '/static/head.jpg',
+							'userpic': '/static/head.jpg',
 							'author': 'Expert2',
 							'mail': 'iszry@foxmail.com',
 							'title': '副教授',
@@ -98,6 +97,20 @@ import { getExpertList } from "@/api/expert_store.js"
 			// })
 			//this.requestData() 不能刷新，防止点进文章再出来跳飞了
 		},
+		watch: {
+			chosen_institution(newVal, oldVal) {
+				this.requestData()
+			},
+			chosen_area(newVal, oldVal) {
+				this.requestData()
+			},
+			chosen_title(newVal, oldVal) {
+				this.requestData()
+			},
+			searchText(newVal, oldVal) {
+				this.requestData()
+			}
+		},
 		methods: {
 			navToEntry(){
 				console.log('back to entry')
@@ -107,10 +120,23 @@ import { getExpertList } from "@/api/expert_store.js"
 			},
 			expertDetail(expert){
 				console.log(expert['author'])
+				console.log(expert['uid'])
+				console.log(expert['id'])
+				// getExpertByID
+				uni.navigateTo({
+					url: '../../pages/user-space/user-space?uid=' + expert['uid'],
+				})
+				// pages/user-space/user-space?uid=10
 			},
 			async requestData() {
 				try {
-					this.recommendList.list = await getExpertList()
+					let paras = {
+						"organization": this.chosen_institution,
+						"field": this.chosen_area,
+						"title": this.chosen_title,
+						"key_word": this.searchText
+					}
+					this.recommendList.list = await getExpertList(paras)
 				} catch (e) {
 					console.log(e)
 					return
