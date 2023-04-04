@@ -3,7 +3,6 @@ from django.views.decorators.http import require_http_methods, require_POST, req
 from django.http import HttpRequest
 from django.db.models import Q
 
-from core.api.expert import field_decode
 from core.api.utils import (failed_api_response, ErrorCode,
                             success_api_response, parse_data,
                             wrapped_api, response_wrapper)
@@ -22,31 +21,37 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     organization = data.get('organization')
     field = data.get('field')
     title = data.get('title')
-    print(key_word)
-    print(organization)
-    print(field)
-    print(title)
-    print('debug')
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
+    print(key_words)
     data_results = []
-    experts = Expert.objects.all()
+    experts = Expert.objects.none()
     if key_words != '':
         for key_word in key_words:
+            print(key_word)
+            '''
             experts = experts.union(Expert.objects.filter(Q(name__icontains=key_word) | Q(organization__icontains=key_word)
                                                     | Q(field__icontains=key_word)
                                                     | Q(self_profile__icontains=key_word) | Q(phone__icontains=key_word)
                                                     | Q(patent__icontains=key_word) | Q(paper__icontains=key_word) |
                                                             Q(title__icontains=key_word)).all().filter(state=0))
-            print(experts.count())
-    count_down = 12
-    # 专家库有脏数据， 下面这个循环全部遍历会报错
+            '''
+            experts = experts.union(Expert.objects.filter(
+                Q(name__icontains=key_word) | Q(organization__icontains=key_word) |
+                Q(field__icontains=key_word) | Q(self_profile__icontains=key_word) |
+                Q(phone__icontains=key_word) | Q(patent__icontains=key_word) |
+                Q(paper__icontains=key_word) | Q(title__icontains=key_word)
+            )
+            )
+        print(experts.count())
+    else:
+        experts = Expert.objects.all()
+    count = 0
+#    print(experts)
+    # 专家库有脏数据，下面这个循环全部遍历会报错
     for expert in experts:
-        if count_down == 0:
-            break
-        else:
-            count_down-=1
+
         if not (organization is None or organization == ''):
             if expert.organization != organization:
                 continue
@@ -55,48 +60,55 @@ def search_expert(request: HttpRequest, *args, **kwargs):
             if not fields.__contains__(field):
                 continue
         if not (title is None or title == ''):
-            titles = expert.title.split()
-            if not titles.__contains__(title):
+            if not expert.title != title:
                 continue
 
-        user = User.objects.get(expert_info_id=expert.id)
+        # print(expert)
+        user = User.objects.get(expert_info=expert.id)
         expert_info = {
             "user_id": user.id,
-            "expert_id": user.expert_info_id,
-            "name": user.expert_info.name,
-            "organization": user.expert_info.organization,
-            "field": user.expert_info.field,
-            "self_profile": user.expert_info.self_profile,
-            "title": user.expert_info.title,
+            "expert_id": expert.id,
+            "name": expert.name,
+            "organization": expert.organization,
+            "field": expert.field,
+            "self_profile": expert.self_profile,
+            "title": expert.title,
             "userpic": str(user.icon)
         }
+    #    print(expert.id)
         data_results.append(expert_info)
+
     data_results = data_results[:10]
-    # print(data_results)
+    print(data_results)
     return success_api_response({"data": data_results})
 
 
 @response_wrapper
 # @jwt_auth()
-@require_POST
-def search_enterprise(request: HttpRequest):
-    data = parse_data(request)
+@require_http_methods('GET')
+def search_enterprise(request: HttpRequest, *args, **kwargs):
+    data = request.GET.dict()
     key_word = data.get('key_word')
     address = data.get('address')
     field = data.get('field')
-    if key_word is None or key_word == '':  # not key_word 是判空，也可以判None
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "none key word")
+
+    key_words = ''
+    if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
+        key_words = key_word.split()
+    print(key_words)
 
     key_words = key_word.split()
 
     data_results = []
     enterprises = Enterprise_info.objects.none()
     for key_word in key_words:
-        enterprises = Enterprise_info.union(Enterprise_info.objects.filter(Q(name__icontains=key_word) | Q(address__icontains=key_word)
-                                                      | Q(website__icontains=key_word)
-                                                      | Q(instruction__icontains=key_word) | Q(legal_representative__icontains=key_word)
-                                                      | Q(field__icontains=key_word) |
-                                                      Q(title__icontains=key_word)).all().filter(state=0))
+        enterprises = Enterprise_info.union(Enterprise_info.objects.filter(
+            Q(name__icontains=key_word) | Q(address__icontains=key_word) |
+            Q(website__icontains=key_word) | Q(instruction__icontains=key_word) |
+            Q(legal_representative__icontains=key_word) | Q(field__icontains=key_word) |
+            Q(title__icontains=key_word)
+        )
+        )
         print(enterprises.count())
 
     for enterprise in enterprises:
@@ -270,7 +282,7 @@ def search_mixture(request: HttpRequest):
             "name": expert.name,
             "ID_num": expert.ID_num,
             "organization": expert.organization,
-            "field": field_decode(expert.field),
+            "field": expert.field,
             "self_profile": expert.self_profile,
             "phone": expert.phone,
             "ID_pic": str(expert.ID_pic),

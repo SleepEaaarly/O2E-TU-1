@@ -186,7 +186,7 @@ def get_expertInfo(request:HttpRequest, id:int):
         "name": expert_info.name,
         "ID_num": expert_info.ID_num,
         "organization": expert_info.organization,
-        "field": field_decode(expert_info.field),
+        "field": expert_info.field,
         "self_profile": expert_info.self_profile,
         "phone": expert_info.phone,
         "ID_pic": str(expert_info.ID_pic),
@@ -213,6 +213,7 @@ def get_all_expert(request:HttpRequest):
     return success_api_response(data)
 
 
+'''
 def field_decode(field):
     ans = []
     dic = {
@@ -234,6 +235,28 @@ def field_decode(field):
     return ans
 
 
+def field_encode(field):
+    field_list = [
+        '信息技术',
+        '装备制造',
+        '新材料',
+        '新能源',
+        '节能环保',
+        '生物医药',
+        '科学创意',
+        '检验检测',
+        '其他'
+    ]
+    fields = field.split()
+    rst = ''
+    for f in field_list:
+        if fields.__contains__(f):
+            rst += '1'
+        else:
+            rst += '0'
+
+    return rst
+'''
 
 
 """
@@ -316,6 +339,7 @@ def add_expert(dic):
             new_user.state = 5
             new_user.expert_info = expert_info
             new_user.save()
+
 
 @response_wrapper
 @require_http_methods('GET')
