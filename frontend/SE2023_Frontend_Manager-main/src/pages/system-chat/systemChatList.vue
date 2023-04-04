@@ -1,0 +1,355 @@
+<template>
+	<!-- <div>
+		<el-row >
+			<el-scrollbar style="height: 100%;">
+			<el-col :span="6" style="height: 600px; overflow: auto;">
+				<el-row v-for="(o, index) in 10" :key="o">
+					<el-card >
+						<el-row>
+							<el-col :span="4">
+								<el-avatar :size="100" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" rel="external nofollow"></el-avatar>
+								<el-avatar icon="el-icon-user-solid"></el-avatar>
+							</el-col>
+							
+							<el-col :span="18">
+								<h2>小明同学{{index}}</h2>
+								<h2></h2>
+							</el-col>
+						</el-row>
+					</el-card>
+				</el-row>
+				 <div v-for="fit in fits" :key="fit">
+					<el-ava
+				</div>
+			</el-col>
+			</el-scrollbar>
+			
+			<el-col :span="18">
+				<router-view>
+					
+				</router-view>
+			</el-col>
+		</el-row>
+	</div> -->
+	
+	<a-card :bordered="false">
+		<a-table :data-source="data" :columns="columns">
+			<template slot="operation" slot-scope="text, record">
+				<div>
+					<span>
+						<a @click="showSystemChat(record)" >回复</a>
+						<a-modal v-model="showDetail" title="客服聊天" width="750px" footer="">
+							
+							<a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 600px;" >
+								<!-- <div v-for="(item, index) in record.messages" :key="index">abc</div> -->
+								<!-- <div v-show="false">{{selectData.messages[0].message}}</div>
+								<div v-show="false">{{ selectData.messages[1].message }}</div> -->
+								<span v-for="(item, index) in selectData.messages" :key="index" v-if="showDetail">
+									<a-row v-if="item.gstime" class="system-chat-item">{{item.gstime}}</a-row>
+									<!-- 提示转换信息 -->
+									<a-row v-if="item.type == 'switch_info'" class="system-chat-time">对方已转换为{{item.message}}服务</a-row>
+									<div v-if="item.type !== 'switch_info'" class="system-chat-list" :class="{'system-chat-me': item.isme}">
+										<!-- 显示管理员/AI头像 -->
+										<Image v-if="!item.isme" :src="item.userpic" mode="widthFix" lazy-load></Image> 
+										<!-- 消息 -->
+										<a-row class="system-chat-list-body">
+											<!-- 文字 -->
+											<a-row v-if="item.type == 'text'">{{item.message}}</a-row>
+											<!-- 图像 -->
+											<a-row v-if="item.type == 'img'" :src="item.message" mode="widthFix" lazy-load></a-row>
+											<!-- 卡片 -->
+											<!-- 待会实现 -->
+											
+										</a-row>
+									</div>
+								</span>
+							</a-card>
+							<a-card>
+								<a-row>
+									<a-col :span="20">
+										<a-textarea
+										v-model:value="reply"
+										placeholder="请输入回复"
+										:auto-size="{ minRows: 2, maxRows: 5 }"
+										/>
+									</a-col>
+									<a-col :span="4">
+										<a-button>发送</a-button>
+									</a-col>
+								</a-row>
+							</a-card>
+							</a-modal>
+					</span>
+				</div>
+			</template>
+			<template #expandedRowRender="record, index" class="ant-table-thead">
+				<p>{{record.description}}</p>
+			</template>
+		</a-table>
+	</a-card>
+</template>
+
+<script>
+import {getSystemChatAll} from "../../services/systemChat";
+
+// 写一下获取所有聊天的接口
+const columns = [{
+		title: "姓名",
+		dataIndex: "name",
+		scopedSlots: {customRender: "name"},
+		width: 100,
+	}, {
+		title: "性别",
+		dataIndex: "sex",
+		scopedSlots: {customRender: "sex"},
+		width: 100,
+	}, {
+		title: "邮箱",
+		dataIndex: "email",
+		scopedSlots: {customRender: "email"},
+		width: 150
+	}, {
+		title: "时间",
+		dataIndex: "time",
+		scopedSlots: {customRender: "time"},
+		width: 150
+	}, {
+		title: "最新消息",
+		dataIndex: "message",
+		scopedSlots: {customRender: "message"},
+		width: 150
+	}, {
+		title: "操作",
+		dataIndex: "operation",
+		scopedSlots: {customRender: "operation"},
+		width: 150,
+		render: () => <a>回复</a>
+	}
+];
+const data = [
+	{
+		name: "usr1",
+		sex: "男",
+		email: "123@qq.com",
+		time: "4/3",
+		message: "你好你好",
+		messages: [
+			{
+				isme: false,
+				userpic: "usrpiclink",
+				type: 'text',
+				message: "sdfadfadfadfadfa",
+				gstime: "text gstime",
+				create_at: "test created"
+			},
+			{
+				isme: true,
+				userpic: "usrpiclink",
+				type: 'text',
+				message: "msg2",
+				gstime: null,
+				create_at: "test created"
+			},
+			{
+				isme: false,
+				userpic: "usrpiclink",
+				type: 'text',
+				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
+				gstime: null,
+				create_at: "test created"
+			},
+			{
+				isme: false,
+				userpic: "usrpiclink",
+				type: 'text',
+				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
+				gstime: null,
+				create_at: "test created"
+			},
+			{
+				isme: false,
+				userpic: "usrpiclink",
+				type: 'text',
+				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
+				gstime: null,
+				create_at: "test created"
+			},
+			{
+				isme: false,
+				userpic: "usrpiclink",
+				type: 'text',
+				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
+				gstime: null,
+				create_at: "test created"
+			},
+			{
+				isme: true,
+				userpic: "usrpiclink",
+				type: 'text',
+				message: "回复回复回复回复",
+				gstime: null,
+				create_at: "test created"
+			},
+			{
+				isme: false,
+				userpic: "usrpiclink",
+				type: 'text',
+				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
+				gstime: null,
+				create_at: "test created"
+			},{
+				isme: false,
+				userpic: "usrpiclink",
+				type: 'text',
+				message: "你好你好",
+				gstime: null,
+				create_at: "test created"
+			}
+		],
+	}, 
+	{
+		name: "usr2",
+		sex: "女",
+		email: "456@qq.com",
+		time: "4/2",
+		message: "你好你好",
+		messages: [{
+				isme: false,
+				userpic: "usrpiclink",
+				type: 'text',
+				message: "sdfadfadfadfadfa",
+				gstime: "text gstime",
+				create_at: "test created"
+			}],
+	},
+	{
+		name: "usr3",
+		sex: "武装直升机",
+		email: "abc@buaa.edu.cn",
+		time: "4/3",
+		message: "测试长消息测试长消息测试长消息测试长消息测试长消息测试长消息测试长消息",
+		messages: [{
+				isme: false,
+				userpic: "usrpiclink",
+				type: 'text',
+				message: "sdfadfadfadfadfa",
+				gstime: "text gstime",
+				create_at: "test created"
+			}],
+	}
+];
+export default {
+	name: "systemChatList",
+	inject: ['reload'],
+	components: {},
+	data() {
+		return {
+			data,
+			columns,
+			showDetail: false,
+			reply: '',
+			selectData: {},
+		}
+	},
+	mounted() {
+		// this.init();
+	},
+	methods: {
+		init: async function() {
+			// this.loadAllChat();
+		},
+		loadAllChat: function() {
+			data.length = 0;
+			getSystemChatAll().then((res) => {
+				console.log(res);
+				// TODO：这部分需要看后端返回的数据是什么
+				// let d = res.data.data
+			}).catch((error) => {
+				console.log(error);	
+			})
+		},
+		handleSubmit() {
+			console.log(this.selectData)
+			// 发送回复的 submit 函数，需要确定数据类型
+		},
+		showSystemChat(record) {
+			// 感觉这里record只需要用户id这类的值
+			this.showDetail = true;
+			this.selectData = record;
+			console.log(record)
+		}
+	},
+
+}
+
+</script>
+
+<style>
+.el-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.highlight {
+	background-color: rgb(255, 192, 105);
+	padding: 0px;
+}
+.editable-row-operations a {
+	margin-right: 8px;
+}
+
+.system-chat-list {
+    padding: 20px 0;
+}
+
+.system-chat-list>image {
+    width: 80px !important;
+    height: 80px !important;
+    flex-shrink: 0;
+    margin: 0 10px;
+}
+
+.system-chat-list-body {
+    position: relative;
+    background: #f4f4f4;
+    padding: 25px;
+    margin-left: 20px;
+    border-radius: 20px;
+    margin-right: 100px;
+}
+.system-chat-list-body:after {
+    position: absolute;
+    left: -30px;
+    right: 0;
+    top: 30px;
+    content: '';
+	width: 0;
+	height: 0;
+	border: 16px solid #F4F4F4;
+	border-color: transparent #F4F4F4 transparent transparent;
+}
+.system-chat-me {
+    justify-content: flex-end;
+}
+.system-chat-me .system-chat-list-body:after {
+    left: auto;
+	right: -30px;
+	border-color: transparent transparent transparent #F4F4F4;
+}
+
+.system-chat-list-body>image {
+    max-width: 150px;
+	max-height: 200px;
+}
+
+.system-chat-list-body>system-chat-card {
+    padding: 0;
+    max-width: 150px;
+	max-height: 200px;
+}
+
+.system-chat-time {
+    padding: 50px 0;
+	color: #a2a2a2;
+	font-size: 24px;
+}
+</style>
