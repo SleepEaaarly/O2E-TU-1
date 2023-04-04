@@ -5,6 +5,7 @@
 			        <u-col span="3">
 			            <image class="logo" :src="logoPath" 
 						style = "height: 70px;width: 70px;margin-left: 10px;margin-top: 15px;border-radius: 20px;">
+						</image>
 			        </u-col>
 			        <u-col span="9">
 						<u-row style="margin-top: 20px;">

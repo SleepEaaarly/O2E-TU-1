@@ -192,12 +192,14 @@ def add_result(request: HttpRequest):
 
     print("3")
     result.save()
+    print("4")
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
     expert = Expert.objects.get(id=expert_id)
+    print("5")
     expert.results.add(result)
     expert.save()
-
+    print("6")
     return success_api_response({})
 
 
