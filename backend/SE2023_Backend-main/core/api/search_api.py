@@ -139,13 +139,12 @@ def search_result(request: HttpRequest):
     key_word = data.get('key_word')
     period = data.get('period')
     field = data.get('field')
-    if key_word is None or key_word == '':  # not key_word 是判空，也可以判None
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "none key word")
-
-    key_words = key_word.split()
+    key_words = ''
+    if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
+        key_words = key_word.split()
 
     data_results = []
-    results = Results.objects.none()
+    results = Results.objects.all()
     for key_word in key_words:
         results = Results.union(Results.objects.filter(Q(title__icontains=key_word) | Q(abstract__icontains=key_word)
                                                       | Q(scholars__icontains=key_word)
@@ -164,6 +163,7 @@ def search_result(request: HttpRequest):
                 continue
 
         expert = Expert.object.filter(result__id=result.id)[0]
+        user = User.objects.get(expert_info_id=expert.id)
 
         result_info = {
             "result_id": result.id,
@@ -175,7 +175,9 @@ def search_result(request: HttpRequest):
             "field": result.field,
             "period": result.period,
             "content": result.content,
-            "state": result.state
+            "state": result.state,
+            "result_pic": result.get_pic(),
+            "expert_icon": str(user.icon)
         }
         data_results.append(result_info)
     data_results = data_results[:10]

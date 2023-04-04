@@ -9,9 +9,9 @@
 			<u-search placeholder="请输入搜索内容" v-model="searchText" :showAction = "false" ></u-search>
 		</u-row>
 		<u-row style="margin-top: 10px;margin-left: 10px;">
-			<uni-combox :candidates="institution_list" placeholder="请选择机构" v-model="chosen_institution" class="expert_combox" :border="false"></uni-combox>
-			<uni-combox :candidates="area_list" placeholder="请选择领域" v-model="chosen_area" class="expert_combox" :border="false"></uni-combox>
-			<uni-combox :candidates="title_list" placeholder="请选择职称" v-model="chosen_title" class="expert_combox" :border="false"></uni-combox>
+			<uni-combox :candidates="institution_list" placeholder="机构" v-model="chosen_institution" class="expert_combox" :border="false"></uni-combox>
+			<uni-combox :candidates="area_list" placeholder="领域" v-model="chosen_area" class="expert_combox" :border="false"></uni-combox>
+			<uni-combox :candidates="title_list" placeholder="职称" v-model="chosen_title" class="expert_combox" :border="false"></uni-combox>
 		</u-row>
 		
 <!-- 		<view style="background-color: #f2f2f2;margin-top: 10px;padding-top: 10px;padding-bottom: 10px;">
@@ -125,12 +125,10 @@ import { getExpertList } from "@/api/expert_store.js"
 			expertDetail(expert){
 				console.log(expert['author'])
 				console.log(expert['uid'])
-				console.log(expert['id'])
 				// getExpertByID
 				uni.navigateTo({
 					url: '../../pages/user-space/user-space?uid=' + expert['uid'],
 				})
-				// pages/user-space/user-space?uid=10
 			},
 			async requestData() {
 				try {

@@ -9,15 +9,15 @@
 			<u-search placeholder="请输入搜索内容" :showAction = "false" ></u-search>
 		</u-row>
 		<u-row style="margin-top: 10px;margin-left: 10px;">
-			<uni-combox :candidates="address_list" placeholder="请选择地区" v-model="chosen_address" class="company_combox" :border="false"></uni-combox>
-			<uni-combox :candidates="area_list" placeholder="请选择领域" v-model="chosen_area" class="company_combox" :border="false"></uni-combox>
+			<uni-combox :candidates="address_list" placeholder="地区" v-model="chosen_address" class="company_combox" :border="false"></uni-combox>
+			<uni-combox :candidates="area_list" placeholder="领域" v-model="chosen_area" class="company_combox" :border="false"></uni-combox>
 			
 		</u-row>
 		
 <!-- 		<view style="background-color: #f2f2f2;margin-top: 10px;padding-top: 10px;padding-bottom: 10px;">
-			<!-- <expert-card></expert-card> </view> -->
+			 <expert-card></expert-card> </view> -->
 		<block v-for="(item, index1) in recommendList.list" :key="index1">
-			<company-card click.native="companyDetail(item)"
+			<company-card @click.native="companyDetail(item)"
 			:title="item['title']"
 			:address="item['address']" 
 			:logoPath="item['logoPath']"
@@ -46,24 +46,11 @@
 					loadtext: '没有更多数据了',
 					id: 'recommend',
 					list: [
-						{
-					// 		'userpic': '/static/head.jpg',
-					 		'area': '信息技术',
-					 		'address': '北京市朝阳区',
-					 		'title': '中航工业'
-					// 		'institution': '北京航空航天大学',
-					// 		'intro': '一种线型结构的具有优异综合性能的热塑性工程塑料',
-					// 		'workLogoPath': '/static//logo.png',
-						}
-					// 	{
-					// 		'userpic': '/static/head.jpg',
-					// 		'author': 'Expert2',
-					// 		'mail': 'iszry@foxmail.com',
-					// 		'title': '副教授',
-					// 		'institution': '北京航空航天大学',
-					// 		'intro': '该项目通过与其他生物可降解材料的共混，以及与纳米粒子的复合来得到廉价、加工性能良好、力学及防水性能改善的大豆蛋白质环境友好材料。',
-					// 		'workLogoPath': '/static//logo.png',
-					// 	}
+							//{
+					 		// 'area': '信息技术',
+					 		// 'address': '北京市朝阳区',
+					 		// 'title': '中航工业'
+							//}
 					]
 				},
 			}
