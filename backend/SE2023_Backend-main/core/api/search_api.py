@@ -44,17 +44,21 @@ def search_expert(request: HttpRequest, *args, **kwargs):
         experts = Expert.objects.all()
 #    print(experts)
     # 专家库有脏数据，下面这个循环全部遍历会报错
+    print(field)
     for expert in experts:
-
+        print(expert.field)
         if not (organization is None or organization == ''):
             if expert.organization != organization:
                 continue
         if not (field is None or field == ''):
-            fields = expert.field.split()
-            if not fields.__contains__(field):
+            if expert.field is None or expert.field == '':
+                continue
+            if field not in expert.field:
                 continue
         if not (title is None or title == ''):
-            if not expert.title != title:
+            if expert.title is None or expert.title == '':
+                continue
+            if title not in expert.title:
                 continue
 
         # print(expert)
@@ -90,32 +94,34 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
     print(key_words)
-    key_words = key_word.split()
 
 
     data_results = []
     enterprises = Enterprise_info.objects.none()
-
+    
     if key_words != '':
         for key_word in key_words:
+            print('in branch')
             enterprises = enterprises.union(Enterprise_info.objects.filter(
                 Q(name__icontains=key_word) | Q(address__icontains=key_word) |
                 Q(website__icontains=key_word) | Q(instruction__icontains=key_word) |
-                Q(legal_representative__icontains=key_word) | Q(field__icontains=key_word) |
-                Q(title__icontains=key_word)
+                Q(legal_representative__icontains=key_word) | Q(field__icontains=key_word)
             )
             )
         print(enterprises.count())
     else:
         enterprises = Enterprise_info.objects.all()
-
+    
     for enterprise in enterprises:
         if not (address is None or address == ''):
-            if enterprise.address != address:
+            if enterprise.address is None or enterprise.address == '':
+                continue
+            if address not in enterprise.address:
                 continue
         if not (field is None or field == ''):
-            fields = enterprise.field.split()
-            if not fields.__contains__(field):
+            if enterprise.field is None or enterprise.field == '':
+                continue
+            if field not in enterprise.field:
                 continue
 
         user = User.objects.get(enterprise_info=enterprise.id)
@@ -136,7 +142,6 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
         }
         data_results.append(enterprise_info)
     data_results = data_results[:10]
-    print(data_results)
     return success_api_response({"data": data_results})
 
 

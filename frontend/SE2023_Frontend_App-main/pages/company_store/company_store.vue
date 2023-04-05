@@ -6,7 +6,7 @@
 			<!-- <u-search placeholder="请输入搜索内容" :showAction = "false" ></u-search> -->
 		</u-row>
 		<u-row style="margin-left: 10px;margin-right: 10px;">
-			<u-search placeholder="请输入搜索内容" :showAction = "false" ></u-search>
+			<u-search placeholder="请输入搜索内容" :showAction = "false" v-model="searchText"></u-search>
 		</u-row>
 		<u-row style="margin-top: 10px;margin-left: 10px;">
 			<uni-combox :candidates="address_list" placeholder="地区" v-model="chosen_address" class="company_combox" :border="false"></uni-combox>
@@ -36,6 +36,7 @@
 			return {
 				chosen_area: '',
 				chosen_address: '',
+				searchText: '',
 				address_list: [
 					'北京','上海','深圳'
 				],
@@ -70,6 +71,7 @@
 				this.requestData()
 			},
 			searchText(newVal, oldVal) {
+				console.log('searchText->',this.searchText)
 				this.requestData()
 			}
 		},
