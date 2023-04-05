@@ -57,7 +57,7 @@
                         <uploadWorkPic @getWorkPic="getWorkPic"></uploadWorkPic>
                     </view>
                 </uni-section>
-				<uni-section title="成果示意图" subTitle="请选择图片展示成果" type="line" padding>
+				<uni-section title="成果详情" subTitle="请选择附件" type="line" padding>
 					<view class="add-btn">
 					   <u-button @click="openFile" v-model="achievementFile">
 						   上传PDF添加附件
