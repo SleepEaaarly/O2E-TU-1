@@ -163,36 +163,35 @@ def add_project(request: HttpRequest):
     return success_api_response({})
 
 
-@jwt_auth()
 @require_POST
 @response_wrapper
 def add_result(request: HttpRequest):
-
+    print('in func')
     print(request.FILES)
 
-    data: dict = parse_data(request)
-    if not data:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
-                                   "Invalid request args.")
-    print(data)
+    # data: dict = parse_data(request)
+    # if not data:
+    #     return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
+    #                                "Invalid request args.")
+    # print(data)
 
-    title = data.get('title')
-    abstract = data.get('abstract')
-    scholars = data.get('scholars')
-    pyear = data.get('pyear').split('-')[0]
-    field = data.get('field')
-    period = data.get('period')
+    title = request.POST.get('title')
+    abstract = request.POST.get('abstract')
+    scholars = request.POST.get('scholars')
+    pyear = request.POST.get('pyear').split('-')[0]
+    field = request.POST.get('field')
+    period = request.POST.get('period')
     picture = request.FILES.get('picture')
-    content = data.get('content')
+    content = request.POST.get('content')
     file = request.FILES.get('file')
-    id = data.get('id')
+    id = request.POST.get('id')
 
     print("2")
 
     print(file)
     print(picture)
     result = Results(title=title, abstract=abstract, scholars=scholars, pyear=pyear, field=field,
-                     period=period, picture=picture, content=content, file=file, state=0)
+                     period=period, picture=picture, content=content, file=file, state=0, relate_expert_id = id)
 
     print("3")
     result.save()
@@ -255,6 +254,7 @@ def get_resultInfo(request: HttpRequest, id: int):
         "field": result.field,
         "period": result.period,
         "content": result.content,
-        "state": result.state
+        "state": result.state,
+        "relate_expert_id": result.relate_expert_id
     })
 

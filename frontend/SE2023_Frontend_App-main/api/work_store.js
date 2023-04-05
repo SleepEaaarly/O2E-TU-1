@@ -11,7 +11,7 @@ export const getWorkList = async (paras) => {
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
-    let ret = await axios.get('search/work?key_word=' + paras.key_word,
+    let ret = await axios.get('search/result?key_word=' + paras.key_word,
         paras,
         headers)
     let result = ret.data

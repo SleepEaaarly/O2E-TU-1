@@ -326,42 +326,81 @@ export default {
             return mPattern.test(key_word)
         },
         async submit() {
-            console.log("start_submit")
-            let data = {
-                'title': this.title,
-                'abstract': this.description,
-                'start_time': this.start_time,
-                'end_time': this.end_time,
-                'period': this.period,
-                'field': this.field,
-                'address': this.address,
-                'state': this.state,
-                'type': this.type,
-				'achievement_url': this.achievement_url,
-				'scholars': this.scholars,
-                'pyear': this.pyear,
-                'content': "Unnecessary Content",
-                'file': this.achievementFile,
-                'picture': this.picture,
-				'id': this.id
-            }
-            console.log(data)
-            let validate_answer = this.validate(data)
-			console.log(data.type)
-            if (validate_answer) {
-                console.log("validate_success!")
-                let result = await addachievement(data)
-                if (!result) {
-                    console.log("submit_fail!!")
-                    this.$http.toast('成果发布失败！')
-                } else {
-                    console.log("submit_success!")
-                    this.$http.toast('成果发布成功！')
-                    this.back()
-                }
-            } else {
-                this.$http.toast('成果创建失败！')
-            }
+				let data = {
+					'title': this.title,
+					'abstract': this.description,
+					'start_time': this.start_time,
+					'end_time': this.end_time,
+					'period': this.period,
+					'field': this.field,
+					'address': this.address,
+					'state': this.state,
+					'type': this.type,
+					'achievement_url': this.achievement_url,
+					'scholars': this.scholars,
+					'pyear': this.pyear,
+					'content': "Unnecessary Content",
+					'id': this.id
+				}
+				console.log(data)
+				let validate_answer = this.validate(data)
+				console.log(data.type)
+				if (validate_answer) {
+					console.log("validate_success!")
+				}
+				console.log("start_submit")
+				uni.uploadFile({
+					url: 'http://127.0.0.1:8000/api/result/add',
+				// url: 'http://122.9.14.73:8000/api/enterprise/setinfo',
+					files: [{
+						url: this.picture,
+						name: 'picture'
+					},
+					{
+						url: this.achievementFile,
+						name: 'file'
+					}],
+					formData:{
+						'title': this.title,
+						'abstract': this.description,
+						'start_time': this.start_time,
+						'end_time': this.end_time,
+						'period': this.period,
+						'field': this.field,
+						'address': this.address,
+						'state': this.state,
+						'type': this.type,
+						'achievement_url': this.achievement_url,
+						'scholars': this.scholars,
+						'pyear': this.pyear,
+						'content': "Unnecessary Content",
+						'id': this.id
+					},
+					success: uploadFileRes => {
+						uni.showToast({
+							success: '',
+							title: '发布成功'
+						})
+						// uni.$emit('certificateSuccess')
+						setTimeout(function () {
+							uni.navigateBack({
+								delta: 1
+							})
+						}, 1000)
+						console.log(uploadFileRes.data)
+						console.log('成果发布申请已发送')
+					},
+					fail: err => {
+						uni.showToast({
+							fail: '',
+							title: '申请失败',
+							duration: 1000
+						}).then(
+							this.$refs.popup.open()
+						)
+						console.log('发布失败')
+					}
+				})
         },
         reset: function (e) {
                 this.title = '',

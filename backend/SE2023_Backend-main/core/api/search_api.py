@@ -147,16 +147,15 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
 
 @response_wrapper
 # @jwt_auth()
-@require_POST
+@require_http_methods('GET')
 def search_result(request: HttpRequest):
-    data = parse_data(request)
+    data = request.GET.dict()
     key_word = data.get('key_word')
     period = data.get('period')
     field = data.get('field')
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
-
     data_results = []
     results = Results.objects.none()
     if key_words != '':
@@ -170,18 +169,24 @@ def search_result(request: HttpRequest):
         print(results.count())
     else:
         results = Results.objects.all()
-
+    print('debug 1')
+    print(results)
+    print('debug 2')
     for result in results:
         if not (period is None or period == ''):
-            if result.address != result:
+            if result.period != period:
                 continue
         if not (field is None or field == ''):
-            fields = result.field.split()
-            if not fields.__contains__(field):
+            if result.field is None or result.field == '':
                 continue
-
-        expert = Expert.objects.filter(expert_results=result.id)[0]
-        user = User.objects.get(expert_info=expert.id)
+            if field not in result.field:
+                continue
+        print(result.relate_expert_id)
+        user = User.objects.get(id=result.relate_expert_id)
+        print(user.expert_info)
+        print(user.expert_info.id)
+        expert = Expert.objects.get(id=user.expert_info.id)
+        
 
         result_info = {
             "result_id": result.id,
@@ -198,6 +203,7 @@ def search_result(request: HttpRequest):
             "expert_icon": str(user.icon)
         }
         data_results.append(result_info)
+    print('debug 6')
     data_results = data_results[:10]
     return success_api_response({"data": data_results})
 

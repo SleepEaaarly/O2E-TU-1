@@ -132,7 +132,7 @@ import { getWorkList } from "@/api/work_store.js"
 						"period": this.chosen_period,
 						"key_word": this.searchText
 					}
-					//this.recommendList.list = await getWorkList(paras)
+					this.recommendList.list = await getWorkList(paras)
 				} catch (e) {
 					console.log(e)
 					return

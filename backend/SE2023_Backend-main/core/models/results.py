@@ -9,6 +9,7 @@ RES_STATE_CHOICES = (
 
 
 class Results(models.Model):
+    results_id = models.AutoField(primary_key=True)
     title = models.TextField()
     abstract = models.TextField(blank=True, null=True)
     scholars = models.TextField(blank=True, null=True)
@@ -19,6 +20,7 @@ class Results(models.Model):
     content = models.TextField(blank=True, null=True)
     file = models.FileField(upload_to="pdf/%Y%m/%d/res_pdf")
     state = models.IntegerField(choices=RES_STATE_CHOICES, default=0)
+    relate_expert_id = models.IntegerField(blank=False, null=False)
 
     def get_pic(self):
         return str(self.picture)
@@ -29,4 +31,4 @@ class Results(models.Model):
     def to_dict(self) -> dict:
         return {"title": self.title, "abstract": self.abstract, "scholars": self.scholars,
                 "pyear": self.pyear, "field": self.field, "period": self.period, "picture": self.picture,
-                "content": self.content, "file": self.file, "state": self.state}
+                "content": self.content, "file": self.file, "state": self.state, "relate_expert_id": self.relate_expert_id}
