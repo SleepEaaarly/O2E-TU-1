@@ -32,13 +32,13 @@ class Expert(models.Model):
     #论文
     paper = models.CharField(max_length=2000, blank=True, null=True)
     #所有论文
-    papers = models.ManyToManyField(Papers, related_name="expert_papers")
+    papers = models.ManyToManyField(to=Papers, related_name="expert_papers")
     #所有专利
-    patents = models.ManyToManyField(Patents, related_name="expert_patents")
+    patents = models.ManyToManyField(to=Patents, related_name="expert_patents")
     #所有项目
-    projects = models.ManyToManyField(Projects, related_name="expert_projects")
+    projects = models.ManyToManyField(to=Projects, related_name="expert_projects")
     #所有成果
-    results = models.ManyToManyField(Results, related_name="expert_results")
+    results = models.ManyToManyField(to=Results, related_name="expert_results")
     #称号
     title = models.CharField(max_length=300, blank=True, null=True)
 
