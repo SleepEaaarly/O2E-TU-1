@@ -163,39 +163,98 @@ def add_project(request: HttpRequest):
     return success_api_response({})
 
 
-@jwt_auth()
 @require_POST
 @response_wrapper
 def add_result(request: HttpRequest):
+    print('in func')
+    print(request.FILES)
 
-    data: dict = parse_data(request)
-    if not data:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
-                                   "Invalid request args.")
-    print(data)
+    # data: dict = parse_data(request)
+    # if not data:
+    #     return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
+    #                                "Invalid request args.")
+    # print(data)
 
-    title = data.get('title')
-    abstract = data.get('abstract')
-    scholars = data.get('scholars')
-    pyear = data.get('pyear').split('-')[0]
-    field = data.get('field')
-    period = data.get('period')
-    picture = data.get('picture')
-    content = data.get('content')
-    file = data.get('file')
-    id = data.get('id')
+    title = request.POST.get('title')
+    abstract = request.POST.get('abstract')
+    scholars = request.POST.get('scholars')
+    pyear = request.POST.get('pyear').split('-')[0]
+    field = request.POST.get('field')
+    period = request.POST.get('period')
+    picture = request.FILES.get('picture')
+    content = request.POST.get('content')
+    file = request.FILES.get('file')
+    id = request.POST.get('id')
 
     print("2")
 
+    print(file)
+    print(picture)
     result = Results(title=title, abstract=abstract, scholars=scholars, pyear=pyear, field=field,
-                     period=period, picture=picture, content=content, file=file, state=0)
+                     period=period, picture=picture, content=content, file=file, state=0, relate_expert_id = id)
 
     print("3")
     result.save()
+    print("4")
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
     expert = Expert.objects.get(id=expert_id)
+    print("5")
     expert.results.add(result)
     expert.save()
-
+    print("6")
     return success_api_response({})
+
+
+"""
+应该添加一个认证成功提示
+"""
+#@jwt_auth()
+@response_wrapper
+@require_http_methods('GET')
+def agree_result(request:HttpRequest, id:int):
+    print(id)
+    result = Results.objects.get(id=id)
+    if result.state != 0:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
+    result.state = 1
+    result.save()
+    return success_api_response("success")
+
+
+"""
+应该添加一个认证失败提示
+"""
+#@jwt_auth()
+@response_wrapper
+@require_http_methods('GET')
+def refuse_result(request:HttpRequest, id:int):
+    result = Results.objects.get(id=id)
+    print(1)
+    if result.state != 0:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
+    result.state = 2
+    result.save()
+    print(4)
+    return success_api_response("success")
+
+
+#@jwt_auth()
+@response_wrapper
+@require_http_methods('GET')
+def get_resultInfo(request: HttpRequest, id: int):
+    result = Results.objects.get(id=id)
+    if result.state == 1:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid user state")
+    return success_api_response({
+        "title": result.title,
+        "abstract": result.abstract,
+        "scholars": result.scholars,
+        "pyear": result.pyear,
+        "field": result.field,
+        "period": result.period,
+        "content": result.content,
+        "state": result.state,
+        "relate_expert_id": result.relate_expert_id
+    })
+

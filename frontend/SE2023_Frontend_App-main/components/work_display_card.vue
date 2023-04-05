@@ -6,7 +6,7 @@
 				
 				<text class = "workTitle">{{title}}</text>
 				<u-tag :text="area" plain plainFill size="mini" style="margin-left: 10px;"> </u-tag>
-				
+				<u-tag :text="period" plain plainFill size="mini" type="success" style="margin-left: 10px;"> </u-tag>
 			</u-row>
 			
 			<u-row style="margin-bottom: 10px;">
@@ -33,7 +33,7 @@
 				
 			};
 		},
-	props:['authorLogoPath','author','date','title','area','intro','workLogoPath']
+	props:['authorLogoPath','author','date','title','area','intro','workLogoPath', 'period']
 	}
 </script>
 

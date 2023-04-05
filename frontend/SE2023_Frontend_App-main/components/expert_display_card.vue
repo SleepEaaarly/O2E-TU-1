@@ -3,22 +3,26 @@
 		<fui-card :footer-line="false" style ="height: 100px;">
 			 <u-row style="margin-bottom: 0%;">
 			        <u-col span="3">
-			            <image class="logo" :src="logoPath" 
+			            <image v-if="logoPath" class="logo" :src="logoPath" 
 						style = "height: 70px;width: 70px;margin-left: 10px;margin-top: 15px;border-radius: 20px;">
-			        </u-col>
+						</image>
+						<image v-else class="logo" :src="defaultPicPath"
+						style = "height: 70px;width: 70px;margin-left: 10px;margin-top: 15px;border-radius: 20px;">
+						</image>
+					</u-col>
 			        <u-col span="9">
 						<u-row style="margin-top: 20px;">
 							<u-col span="7">
 								<u-row>
 									<text class = "expertTitle">{{name}}</text>
-								<u-tag :text="title" plain plainFill type="warning"  shape="circle" size = "mini" style="margin-left: 10px;"> </u-tag>
+								<u-tag v-if="title" :text="title" plain plainFill type="warning"  shape="circle" size = "mini" style="margin-left: 10px;"> </u-tag>
 							
 									
 								</u-row>
 								
 							</u-col>
 							<u-col span="5">
-								<u-button type="primary" text="查看详情" size = "mini" style = "width: 90px;height: 28px;"></u-button>
+								<u-button @click="expertDetail" type="primary" text="查看详情" size = "mini" style = "width: 90px;height: 28px;"></u-button>
 							
 							</u-col>
 							
@@ -30,7 +34,6 @@
 							text-overflow:ellipsis;
 							overflow:hidden;
 							white-space:nowrap;">
-							
 							{{mail}}</text>
 						</u-row>
 			        </u-col>
@@ -52,10 +55,17 @@
 		name:"expert_display_card",
 		data() {
 			return {
-				
+				defaultPicPath: '/static//logo.png'
 			};
 		},
-		props:['name','title','institution','mail','logoPath']
+		methods: {
+			expertDetail() {
+				console.log('expert-card show')
+				this.$emit('expertDetail', this.id)
+			}
+
+		},
+		props:['id', 'name','title','institution','mail','logoPath']
 	}
 </script>
 

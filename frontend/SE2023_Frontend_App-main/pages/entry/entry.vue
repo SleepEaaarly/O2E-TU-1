@@ -2,7 +2,7 @@
 	
 	<view>
 		<!-- 搜索栏 -->
-		<view class = "search_view" style="margin-top: 10rpx;margin-left: 20px;margin-right: 20px;">
+		<view class = "search_view" style="margin-top: 10rpx;margin-left: 20px;margin-right: 20px;margin-top: 30px;">
 			<u-search placeholder="请输入搜索内容" :showAction = "false" ></u-search>
 		</view>
 		
@@ -11,7 +11,7 @@
 			<u-grid
 			:border="false"
 			col="3"
-			style="margin-top: 10px;"
+			style="margin-top: 20px;"
 			>
 			    <u-grid-item>
 					<view style="background-color: aliceblue;border-radius: 30px;height: 110px;width: 110px;">
@@ -83,6 +83,7 @@
 					:title="item['title']"
 					:area="item['area']"
 					:intro="item['intro']"
+					:period="item['period']"
 					:workLogoPath="item['workLogoPath']"
 					:index="index1"></work-card>
 				</block> 
@@ -122,22 +123,41 @@
 					id: 'recommend',
 					list: [
 						{
-							'authorLogoPath': '/static/head.jpg',
+							'authorLogoPath': '/static/expert_test_head_logo (2).png',
 							'author': 'Expert1',
 							'date': '2023-3-30 21:41',
 							'title': '超高分子量聚乙烯的研发制备',
 							'area': '新材料',
 							'intro': '一种线型结构的具有优异综合性能的热塑性工程塑料',
-							'workLogoPath': '/static//logo.png',
+							'workLogoPath': '/static/super_quantity_material.png',
+							"period": "中试",
 						},
 						{
-							'authorLogoPath': '/static/head.jpg',
+							'authorLogoPath': '/static/expert_test_head_logo (1).png',
 							'author': 'Expert2',
-							'date': '2023-3-30 21:41',
+							'date': '2023-3-30 21:50',
 							'title': '环境友好大豆蛋白质材料改性开发',
 							'area': '生物医药',
 							'intro': '该项目通过与其他生物可降解材料的共混，以及与纳米粒子的复合来得到廉价、加工性能良好、力学及防水性能改善的大豆蛋白质环境友好材料。',
-							'workLogoPath': '/static//logo.png',
+							'workLogoPath': '/static/soybean_improvement.png',
+							"period": "产业化",
+						},
+						{
+							"title": 'A Summary of ML',
+							"author": '占瑞乙',
+							'area': '科学创意',
+							"expert_title": '本科生',
+							"intro": 'Here is a summary of some of the most commonly used methods in machine learning.',
+							"expert_organization": '北京航空航天大学',
+							"authorLogoPath": '/static/head_zry_fox.jpg',
+							"work_id": '',
+							"expert_id": '',
+							"user_id": '',
+							'workLogoPath': '/static/work_logo_test_zry.png',
+							"work_pic": '/static/ML_Notes.png' ,
+							"expert_mail": "iszry@foxmail.com",
+							'date': '2023-4-4 16:32',
+							"period": "实验室",
 						}
 					]
 				},

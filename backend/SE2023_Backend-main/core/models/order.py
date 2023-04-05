@@ -23,7 +23,7 @@ class Order(models.Model):
     # 订单创建时间，自动填充
     create_time = models.DateTimeField(auto_now_add=True)
     # 接单时间 TODO IN VIEW
-    receive_time = models.DateTimeField(blank=True, null=True)
+    # receive_time = models.DateTimeField(blank=True, null=True)
     # 订单结束时间
     end_time = models.DateTimeField(blank=True, null=True)
 
@@ -34,7 +34,7 @@ class Order(models.Model):
         return {
                 "order_id": self.id,
                 "create_time": format_time(self.create_time),
-                "receive_time": format_time(self.receive_time),
+                # "receive_time": format_time(self.receive_time),
                 "end_time": format_time(self.end_time),
                 "address": self.need.address,
                 "description": self.need.description,

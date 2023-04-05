@@ -40,7 +40,9 @@ def change_res_pic(request):
     res.picture = pic
     res.save()
 
-    return HttpResponse(str(res.picture))
+    return success_api_response({
+        "pic": str(res.picture),
+    })
 
 
 @jwt_auth()
@@ -75,25 +77,27 @@ def change_res_pdf(request):
     res.file = pdf
     res.save()
 
-    return HttpResponse(str(res.file))
+    return success_api_response({
+        "pdf": str(res.file),
+    })
 
 
 @response_wrapper
 @require_http_methods('GET')
-def read_pic(request:HttpRequest, year, day, file_name):
-    imagepath=os.path.join(BASE_DIR,"static/images/{}/{}/res_pic/{}".format(year, day, file_name))
-    with open(imagepath,'rb') as f:
-        image_data=f.read()
-    return HttpResponse(image_data,content_type="image/png")
+def read_pic(request: HttpRequest, year, day, file_name):
+    imagepath = os.path.join(BASE_DIR, "static/images/{}/{}/res_pic/{}".format(year, day, file_name))
+    with open(imagepath, 'rb') as f:
+        image_data = f.read()
+    return HttpResponse(image_data, content_type="image/png")
 
 
 @response_wrapper
 @require_http_methods('GET')
-def read_default_pic(request:HttpRequest):
-    imagepath=os.path.join(BASE_DIR,"static/images/default_result_pic.jfif")
-    with open(imagepath,'rb') as f:
-        image_data=f.read()
-    return HttpResponse(image_data,content_type="image/png")
+def read_default_pic(request: HttpRequest):
+    imagepath=os.path.join(BASE_DIR, "static/images/default_result_pic.jfif")
+    with open(imagepath, 'rb') as f:
+        image_data = f.read()
+    return HttpResponse(image_data, content_type="image/png")
 
 
 RES_PIC_API = wrapped_api({

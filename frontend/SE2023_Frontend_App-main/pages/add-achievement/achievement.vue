@@ -10,24 +10,20 @@
                 <uni-section title="成果标题" subTitle="为您的成果总结一个标题" type="line" padding>
                     <uni-easyinput v-model="title" focus placeholder="请输入内容" @input="inputTitle"></uni-easyinput>
                 </uni-section>
-                <uni-section title="成果描述" subTitle="详细描述您的成果" type="line" padding>
+                <uni-section title="摘要" subTitle="描述您的成果" type="line" padding>
                     <uni-easyinput type="textarea" v-model="description" placeholder="请输入内容"
                         @input="inputDescription"></uni-easyinput>
                 </uni-section>
-                <uni-section title="成果作者" subTitle="多个作者用英文分号分隔" type="line" padding>
+                <uni-section title="成果作者" subTitle="多个作者用英文逗号分隔" type="line" padding>
                     <uni-easyinput v-model="scholars" focus placeholder="请输入作者" @input="inputScholars"></uni-easyinput>
                 </uni-section>
-                </uni-section>
-                <uni-section title="成果链接" subTitle="给出您的成果链接" type="line" padding>
-                    <uni-easyinput v-model="url" focus placeholder="请输入链接" @input="inputUrl"></uni-easyinput>
-                </uni-section>
+                <!-- <uni-section title="成果链接" subTitle="给出您的成果链接" type="line" padding>
+                    <uni-easyinput v-model="achievement_url" focus placeholder="请输入链接" @input="inputachievement_url"></uni-easyinput>
+                </uni-section> -->
                 <uni-section title="成果发布日期" subTitle="请选择成果发布日期" type="line" padding>
                     <view class="date-set">
-                        <uni-datetime-picker type="datetime" v-model="start_time" @change="changeLogStart" />
+                        <uni-datetime-picker type="datetime" v-model="pyear" @change="changeLogStart" />
                     </view>
-                </uni-section>
-                <uni-section title="关键词" subTitle="推荐您输入3个以内英文关键词, 并以英文分号分开" type="line" padding>
-                    <uni-easyinput v-model="key_word" placeholder="请输入关键词" @input="inputKeyword"></uni-easyinput>
                 </uni-section>
                 <uni-section title="领域" subTitle="请为您的成果确定一个领域方向" type="line" padding>
                     <view class="uni-list">
@@ -43,39 +39,32 @@
                         </view>
                     </view>
                 </uni-section>
-                <uni-section title="成果类型" subTitle="请选择您的成果类型" type="line" padding>
+                <uni-section title="成果阶段" subTitle="请选择成果阶段" type="line" padding>
 					<view class="uni-list">
 						<radio-group @change="radioChange">
 							<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in achTypes"
 								:key="item.value">
 								<view class="type-evaluate">
-									<radio :value="item.value" :checked="index === type" />
+									<radio :value="item.value" :checked="index === period" />
 								</view>
 								<view>{{ item.name }}</view>
 							</label>
 						</radio-group>
 					</view>
 				</uni-section>
-				<!-- 论文分支 -->
-                <uni-section v-if="type=='0'" title="论文引用量" subTitle="请输入该论文的引用量" type="line" padding>
-                    <uni-easyinput v-model="cites" focus placeholder="请输入内容" @input="inputCite"></uni-easyinput>
+                <uni-section title="成果示意图" subTitle="请选择图片展示成果" type="line" padding>
+                    <view>
+                        <uploadWorkPic @getWorkPic="getWorkPic"></uploadWorkPic>
+                    </view>
                 </uni-section>
-                <uni-section v-if="type=='0'" title="论文类型" subTitle="请选择您的论文类型" type="line" padding>
-					<view class="uni-list">
-						<radio-group @change="kindChange">
-							<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in paperType"
-								:key="item.value">
-								<view class="type-evaluate">
-									<radio :value="item.value" :checked="index === paperKind" />
-								</view>
-								<view>{{ item.name }}</view>
-							</label>
-						</radio-group>
-					</view>
+				<uni-section title="成果示意图" subTitle="请选择图片展示成果" type="line" padding>
+					<view class="add-btn">
+					   <u-button @click="openFile" v-model="achievementFile">
+						   上传PDF添加附件
+					   </u-button>
+					</view>			
 				</uni-section>
-                <!-- <uni-section title="预估人数" subTitle="为您的需求商定所需人数" type="line" padding>
-					<uni-easyinput type="digit" v-model="predict" placeholder="请输入内容" @input="inputPredict"></uni-easyinput>
-				</uni-section> -->
+
 
                 <view class="uni-btn-v">
                     <button type="primary" form-type="submit">直接发布</button>
@@ -95,6 +84,7 @@ import {
     addachievement,
     saveachievement
 } from '@/api/add-achievement.js'
+import uploadWorkPic from '../../components/uploadImages/uploadWorkPic.vue'
 import uniCard from '@/components/uni_easyinput/uni-card/components/uni-card/uni-card.vue'
 import uniEasyinput from '@/components/uni_easyinput/uni-easyinput/components/uni-easyinput/uni-easyinput.vue'
 import uniSection from '@/components/uni-section/uni-section.vue'
@@ -104,11 +94,12 @@ export default {
         uniCard,
         uniEasyinput,
         uniSection,
-        uniDatetimePicker
+        uniDatetimePicker,
+        uploadWorkPic
     },
     data() {
         return {
-            company_id: '',
+			id: '',
             title: '',
             description: '',
             money: '',
@@ -122,44 +113,50 @@ export default {
             predict: 0,
             real: 0,
             index: 0,
-			url: '',
+			achievement_url: '',
 			scholars: '',
-			pyear: 2020,
+			pyear: '',
 			isEI: false,
 			isSCI: false,
 			cites: '',
 			paperKind: '',
+            achievementFile: null,
+            period: '',
             field_items: [
                 '信息技术', '装备制造', '新材料', '新能源', '节能环保', '生物医药', '科学创意', '检验检测', '其他'
             ],
             achTypes: [
                 {
                     value: '0',
-                    name: '论文'
+                    name: '实验室'
                 },
                 {
                     value: '1',
-                    name: '专利'
+                    name: '样品'
                 },
                 {
                     value: '2',
-                    name: '项目'
+                    name: '中试'
+                },
+                {
+                    value: '3',
+                    name: '产业化'
                 }
-            ],
-			paperType: [
-                {
-                    value: '0',
-                    name: 'EI'
-                },
-                {
-                    value: '1',
-                    name: 'SCI'
-                },
-                {
-                    value: '2',
-                    name: '均不是'
-                }				
-			]
+            ]
+			// paperType: [
+   //              {
+   //                  value: '0',
+   //                  name: 'EI'
+   //              },
+   //              {
+   //                  value: '1',
+   //                  name: 'SCI'
+   //              },
+   //              {
+   //                  value: '2',
+   //                  name: '均不是'
+   //              }				
+			// ]
         }
     },
     watch: {
@@ -187,10 +184,38 @@ export default {
     onLoad(data) {
         //this.userID = data.uid;
 
-        this.company_id = this.userInfo.id
-        console.log('onLoad in certification ' + this.userID)
+        this.id = this.userInfo.id
+        console.log('onLoad in certification ' + this.id)
     },
     methods: {
+		// 打开文件选择器
+		openFile(){
+			uni.chooseFile({
+				count: 1, //默认100
+                // extension: ['.zip', '.doc', '.xls', '.pdf', 'docx', '.rar', '.7z', '.jpg', '.png', '.jpeg'],
+                extension: ['.pdf'],
+				success: (res) =>{
+					console.log(res);
+					if(res.tempFiles[0].size / 1024 / 1024 > 20){
+						this.$refs.uToast.show({
+							title: '附件大小不能超过20M',
+							type: 'warning',
+						})
+						return;
+                    }
+                    this.achievementFile = res.tempFilePaths[0]
+				}
+			});
+		},
+        getWorkPic(val) {
+            if (val.length > 0) {
+                this.picture = val[0]
+            } else {
+                this.picture = ''
+            }
+            console.log('result picture!')
+            console.log(this.picture)
+        },
         back() {
             uni.navigateBack()
         },
@@ -203,8 +228,8 @@ export default {
 		inputScholars(e){
 			this.scholars = e.detail
 		},
-		inputUrl(e){
-			this.url = e.detail
+		inputachievement_url(e){
+			this.achievement_url = e.detail
 		},
         inputMoney(e) {
             this.money = e.detail
@@ -241,29 +266,30 @@ export default {
         radioChange: function (evt) {
             for (let i = 0; i < this.achTypes.length; i++) {
                 if (this.achTypes[i].value === evt.detail.value) {
-                    this.type = i
+                    console.log(this.achTypes[i])
+                    this.period = this.achTypes[i].name
                     break
                 }
             }
         },
-		kindChange: function (evt) {
-		    for (let i = 0; i < this.paperType.length; i++) {
-		        if (this.paperType[i].value === evt.detail.value) {
-		            this.paperKind = i
-					if (0 == i - 0){
-						this.isSCI = true
-						this.isEI = false
-					} else if (1 == i - 0){
-						this.isEI = true
-						this.isSCI = false
-					} else {
-						this.isSCI = false
-						this.isEI = false
-					}
-		            break
-		        }
-		    }
-		},
+		// kindChange: function (evt) {
+		//     for (let i = 0; i < this.paperType.length; i++) {
+		//         if (this.paperType[i].value === evt.detail.value) {
+		//             this.paperKind = i
+		// 			if (0 == i - 0){
+		// 				this.isSCI = true
+		// 				this.isEI = false
+		// 			} else if (1 == i - 0){
+		// 				this.isEI = true
+		// 				this.isSCI = false
+		// 			} else {
+		// 				this.isSCI = false
+		// 				this.isEI = false
+		// 			}
+		//             break
+		//         }
+		//     }
+		// },
         validate: function (data) {
             let validate_answer = true
             if (data.title === '') {
@@ -275,18 +301,19 @@ export default {
             } else if (data.scholars === '') {
                 this.$http.toast('请输入成果作者！')
                 validate_answer = false
-            } else if (data.start_time === '') {
+            } else if (data.pyear === '') {
                 this.$http.toast('请输入正确的时间！')
                 validate_answer = false
                 // } else if (!isKeyword(data.key_word)) {
                 // 	this.$http.toast("请按照格式输入！")
                 // 	validate_answer = false
-            } else if (data.url === '') {
-                this.$http.toast('请给出您的成果链接！')
+            } else if (data.period === '') {
+                this.$http.toast('请选择成果阶段')
                 validate_answer = false
-            } else if (data.type === '') {
-                this.$http.toast('请选择成果类型！')
-                validate_answer = false
+            } else if (data.achievementFile == null) {
+                // PDF为可选项   
+            } else if (data.picture == null) {
+                // Pic为可选项
             }
             // } else if (data.predict === '0' || data.predict === 0) {
             // 	this.$http.toast('预估人数必须大于0！')
@@ -299,45 +326,84 @@ export default {
             return mPattern.test(key_word)
         },
         async submit() {
-            console.log("start_submit")
-            let data = {
-                'company_id': this.company_id,
-                'title': this.title,
-                'description': this.description,
-                'money': this.money,
-                'start_time': this.start_time,
-                'end_time': this.end_time,
-                'key_word': this.key_word,
-                'field': this.field,
-                'address': this.address,
-                'state': this.state,
-                'type': this.type,
-				'url': this.url,
-				'scholars': this.scholars,
-				'pyear': this.pyear,
-				'isEI': this.isEI,
-				'isSCI': this.isSCI,
-				'cites': this.cites,
-            }
-            let validate_answer = this.validate(data)
-			console.log(data.type)
-            if (validate_answer) {
-                console.log("validate_success!")
-                let result = await addachievement(data)
-                if (!result) {
-                    console.log("submit_fail!!")
-                    this.$http.toast('成果发布失败！')
-                } else {
-                    console.log("submit_success!")
-                    this.$http.toast('成果发布成功！')
-                    this.back()
-                }
-            } else {
-                this.$http.toast('成果创建失败！')
-            }
+				let data = {
+					'title': this.title,
+					'abstract': this.description,
+					'start_time': this.start_time,
+					'end_time': this.end_time,
+					'period': this.period,
+					'field': this.field,
+					'address': this.address,
+					'state': this.state,
+					'type': this.type,
+					'achievement_url': this.achievement_url,
+					'scholars': this.scholars,
+					'pyear': this.pyear,
+					'content': "Unnecessary Content",
+					'id': this.id
+				}
+				console.log(data)
+				let validate_answer = this.validate(data)
+				console.log(data.type)
+				if (validate_answer) {
+					console.log("validate_success!")
+				}
+				console.log("start_submit")
+				uni.uploadFile({
+					url: 'http://127.0.0.1:8000/api/result/add',
+				// url: 'http://122.9.14.73:8000/api/enterprise/setinfo',
+					files: [{
+						url: this.picture,
+						name: 'picture'
+					},
+					{
+						url: this.achievementFile,
+						name: 'file'
+					}],
+					formData:{
+						'title': this.title,
+						'abstract': this.description,
+						'start_time': this.start_time,
+						'end_time': this.end_time,
+						'period': this.period,
+						'field': this.field,
+						'address': this.address,
+						'state': this.state,
+						'type': this.type,
+						'achievement_url': this.achievement_url,
+						'scholars': this.scholars,
+						'pyear': this.pyear,
+						'content': "Unnecessary Content",
+						'id': this.id
+					},
+					success: uploadFileRes => {
+						uni.showToast({
+							success: '',
+							title: '发布成功'
+						})
+						// uni.$emit('certificateSuccess')
+						setTimeout(function () {
+							uni.navigateBack({
+								delta: 1
+							})
+						}, 1000)
+						console.log(uploadFileRes.data)
+						console.log('成果发布申请已发送')
+					},
+					fail: err => {
+						uni.showToast({
+							fail: '',
+							title: '申请失败',
+							duration: 1000
+						}).then(
+							this.$refs.popup.open()
+						)
+						console.log('发布失败')
+					}
+				})
         },
         reset: function (e) {
-            this.title = '',
+                this.title = '',
                 this.description = '',
                 this.money = '',
                 this.start_time = '',
@@ -351,29 +417,31 @@ export default {
 				this.cites = '',
 				this.scholars = '',
 				this.pyear = 2020,
-				this.url = '',
+				this.achievement_url = '',
 				this.isEI = false,
-				this.isSCI = false
+                this.isSCI = false,
+                this.picture = null,
+                this.achievementFile = null,
+                this.period = ''
         },
         async saveAchievement() {
             let data = {
-                'company_id': this.company_id,
                 'title': this.title,
-                'description': this.description,
-                'money': this.money,
+                'abstract': this.description,
                 'start_time': this.start_time,
                 'end_time': this.end_time,
-                'key_word': this.key_word,
+                'period': this.period,
                 'field': this.field,
                 'address': this.address,
-                'state': 2,
+                'state': this.state,
                 'type': this.type,
-				'url': this.url,
-				'scholars': this.scholars,
-				'pyear': this.pyear,
-				'isEI': this.isEI,
-				'isSCI': this.isSCI,
-				'cites': this.cites,
+                'achievement_url': this.achievement_url,
+                'scholars': this.scholars,
+                'pyear': this.pyear,
+                'content': "Unnecessary Content",
+                'file': this.achievementFile,
+                'picture': this.picture,
+				'id': this.id
             }
             let validate_answer = this.validate(data)
             if (validate_answer) {

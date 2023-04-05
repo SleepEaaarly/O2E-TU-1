@@ -3,7 +3,6 @@ Nowadays, it locates at {workspace}/core/api/
 Maybe someday it will be moved to {workspace}/auth/
 """
 
-#added admin user
 
 from datetime import timedelta
 
@@ -22,7 +21,8 @@ from core.models.auth_record import AuthRecord
 
 from core.models.user import User
 # from core.models.user import AdminUser
-#from core.models.user import super_authenticate
+# from core.models.user import super_authenticate
+
 
 def auth_failed(message: str):
     """shorten

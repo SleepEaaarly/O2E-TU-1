@@ -157,10 +157,11 @@ def refuse_enterprise(request:HttpRequest, id: int):
 """
 通过id获得相应用户申请成为企业的信息
 """
+
 #@jwt_auth()
 @response_wrapper
 @require_http_methods('GET')
-def get_enterpriseInfo(request:HttpRequest, id:int):
+def get_enterpriseInfo(request: HttpRequest, id: int):
     user = User.objects.get(id=id)
     if user.state != 2:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "wrong user state")

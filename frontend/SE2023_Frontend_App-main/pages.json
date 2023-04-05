@@ -606,7 +606,19 @@
 				}
 			}
 		}, 
-		
+		{
+			"path": "pages/work_detail/work_detail",
+			"style": {
+				"navigationBarTitleText": "成果详情",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"bounce": "none",
+					"titleNView": {
+						"autoBackButton": true
+					}
+				}
+			}
+		},
 		{
 			"path": "pages/need-detail/detail",
 			"style": {
