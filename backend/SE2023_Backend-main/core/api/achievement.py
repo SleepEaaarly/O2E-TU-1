@@ -168,6 +168,8 @@ def add_project(request: HttpRequest):
 @response_wrapper
 def add_result(request: HttpRequest):
 
+    print(request.FILES)
+
     data: dict = parse_data(request)
     if not data:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
@@ -180,13 +182,15 @@ def add_result(request: HttpRequest):
     pyear = data.get('pyear').split('-')[0]
     field = data.get('field')
     period = data.get('period')
-    picture = data.get('picture')
+    picture = request.FILES.get('picture')
     content = data.get('content')
-    file = data.get('file')
+    file = request.FILES.get('file')
     id = data.get('id')
 
     print("2")
 
+    print(file)
+    print(picture)
     result = Results(title=title, abstract=abstract, scholars=scholars, pyear=pyear, field=field,
                      period=period, picture=picture, content=content, file=file, state=0)
 
