@@ -22,19 +22,18 @@ export const getWorkList = async (paras) => {
                 "expert_id": item.expert_id,
                 "userpic": picUrl + item.expert_icon, //picUrl + item.userpic,
                 "field": item.field,
-                'authorLogoPath': '', //picUrl + item.authorLogoPath,
                 'author': item.scholars,
                 'title': item.title,
                 'abstract': item.abstract,
-                'intro': item.self_profile,
-                'date': item.pyear,
+                'date': item.pyear + "",
                 'period': item.period,
                 'content': item.content,
-                'state': item.state,
-                'workpic': picUrl + result_pic
+                'state': item.state
+                // 'workpic': picUrl + result_pic
             }
         })
     }
+	console.log('ret result is')
     console.log(result)
     return result
 }

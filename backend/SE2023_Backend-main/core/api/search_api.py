@@ -168,7 +168,9 @@ def search_result(request: HttpRequest):
             )
         print(results.count())
     else:
+        print(results)
         results = Results.objects.all()
+        print(results)
     print('debug 1')
     print(results)
     print('debug 2')
@@ -181,14 +183,11 @@ def search_result(request: HttpRequest):
                 continue
             if field not in result.field:
                 continue
-        print(result.relate_expert_id)
-        user = User.objects.get(id=result.relate_expert_id)
-        print(user.expert_info)
-        print(user.expert_info.id)
-        expert = Expert.objects.get(id=user.expert_info.id)
-        
+        expert = Expert.objects.filter(results__id=result.id)[0]
+        user = User.objects.get(expert_info__id=expert.id)
 
         result_info = {
+            "user_id": user.id,
             "result_id": result.id,
             "expert_id": expert.id,
             "title": result.title,
