@@ -75,7 +75,7 @@ def create_system_chat(request: HttpRequest):
 @require_GET
 @response_wrapper
 def get_system_chat(request: HttpRequest):
-    data = parse_data(request)
+    data = request.GET.dict()
     user_id = data.get('uId')
     try:
         owner = User.objects.get(id=user_id)
@@ -143,14 +143,15 @@ def push_system_message(request: HttpRequest):
             owner=user)
         if(data.get('isme') == 0):
             from_user = user
-            to_user = None
+            to_user = User.objects.get(id=0)
         else:
-            from_user = None
+            from_user = User.objects.get(id=0)
             to_user = user
         message_id = Message.new_message(
             from_user=from_user,
             to_user=to_user,
             content=content)
+        print(message_id)
         if system_chatroom.add_message(message_id) is False:
             return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Add message failed.")
         system_chatroom.save()
@@ -307,6 +308,8 @@ def get_all_system_chatrooms(request: HttpRequest):
         - 成功信息
     
 """
+
+
 @jwt_auth()
 @require_POST
 @response_wrapper

@@ -12,6 +12,7 @@ from core.api.utils import response_wrapper, success_api_response, failed_api_re
 from core.api.auth import jwt_auth
 from core.api.query_utils import query_page
 
+
 @response_wrapper
 @jwt_auth()
 @require_GET
