@@ -24,6 +24,8 @@
 			
 			<uni-section title="探索" type="circle">
 				<uni-list :border="false">
+					<uni-list-item class="explore" :border="false" :show-extra-icon="false" clickable :extra-icon="rateIcon" title="测试页面" link @click="goToTest" />
+					<uni-list-item class="explore" :border="false" :show-extra-icon="false" clickable :extra-icon="rateIcon" title="AI/人工客服" link @click="goToSystemChat" />
 					<uni-list-item class="explore" v-if='userInfo.type==4' :border="false" :show-extra-icon="true" clickable :extra-icon="rateIcon" title="最近收到的评价" link @click="clickRate" />
 					<uni-list-item class="explore" v-else-if='userInfo.type==5' :border="false" :show-extra-icon="true" clickable :extra-icon="rateIcon" title="最近评价" link @click="clickRate" />
 					
@@ -216,6 +218,19 @@
 			},
 			print(){
 				console.log(this.userInfo.id)
+			},
+			goToTest() {
+				uni.navigateTo({
+					url: '../try-system-camera/try-system-camera',
+				})
+			},
+			goToSystemChat() {
+				console.log("进入AI/人工客服聊天界面")
+				console.log("debug")
+				uni.navigateTo({
+					url: '../system-chat/system-chat?uid=' + this.userInfo.id
+				})
+				console.log("debug")
 			},
 			goToSpace(index) {
 				switch (index) {

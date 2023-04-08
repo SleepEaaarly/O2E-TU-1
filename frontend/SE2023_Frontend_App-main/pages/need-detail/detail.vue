@@ -93,6 +93,9 @@
 				</uni-col>
 			</view>
 		</uni-row>
+		<!-- 悬浮按钮 -->
+		<uni-fab ref="fab" :pattern="pattern" :content="content" :horizontal="horizontal" :vertical="vertical"
+					:direction="direction" @trigger="trigger" @fabClick="fabClick" />
 	</view>
 </template>
 
@@ -105,6 +108,9 @@
 		getNeedDetail,
 		createContact
 	} from '@/api/need-detail.js'
+	import {
+		sendNeedInfoToGenerateReport
+	} from '@/api/detail.js'
 	import tuiCard from '@/components/thorui/tui-card/tui-card.vue'
 	import tuiListView from '@/components/thorui/tui-list-view/tui-list-view'
 	import tuiListCell from '@/components/thorui/tui-list-cell/tui-list-cell'
@@ -163,6 +169,33 @@
 				sum:0,
 				detail: { id: 10 },
 				sponsor: {},
+				title: 'uni-fab',		//此部分设置uni-fab悬浮按钮的属性
+				directionStr: '垂直',
+				horizontal: 'right',	//水平对齐方式。left:左对齐，right：右对齐
+				vertical: 'bottom',		//垂直对齐方式。bottom:下对齐，top：上对齐
+				direction: 'vertical',	//展开菜单显示方式。horizontal:水平显示，vertical：垂直显示
+				is_color_type: false,
+				pattern: {
+					//color: '#7A7E83',
+					color: '#000000',			//文字默认颜色
+					backgroundColor: '#fff',	//背景色
+					selectedColor: '#030c4f',	//文字选中时的颜色
+					buttonColor: '#030c4f',		//按钮背景色
+					iconColor: '#fff'
+				},
+				content: [{	//展开菜单内容配置项
+						iconPath: '/static/images/icon/post.png',
+						selectedIconPath: '/static/images/icon/post-active.png',
+						text: '报告',
+						active: false
+					},
+					// {
+					// 	iconPath: '/static/images/icon/manage.png',
+					// 	selectedIconPath: '/static/images/icon/manage-active.png',
+					// 	text: '管理',
+					// 	active: false
+					// },
+				]
 			}
 		},
 		onLoad(data) {
@@ -186,6 +219,32 @@
 		},
 		computed: { ...mapState(['userInfo']) },
 		methods: {
+			// 生成报告
+			async generateNeedReport() {
+				let result = await sendNeedInfoToGenerateReport(item.title, item.description, this.field_items[item.field], item.key_word)
+				// TODO: 检查 result
+			},
+			//点击fab后的动作
+			trigger(e) {
+				console.log(e)
+				switch(e.index){
+					case 0:	//报告
+						this.generateNeedReport();
+						break;
+					// case 1:	//管理
+					// 	this.$emit('manageachievement');
+					// 	break;
+					default:
+						break;
+				}
+			},
+			//点击fab悬浮按钮
+			fabClick() {
+				// uni.showToast({
+				// 	title: '点击了悬浮按钮',
+				// 	icon: 'none'
+				// })
+			},
 			//初始化数据
 			async initData(id) {
 				if (!id) {
@@ -196,6 +255,7 @@
 				console.log('the id is ' + id)
 				let detail = await getNeedDetail(id)
 				this.item = detail
+				console.log(this.item)
 				this.detail.id = detail.need_id
 				this.$nextTick(()=>{
 					this.item = detail

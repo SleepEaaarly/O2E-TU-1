@@ -17,7 +17,7 @@ export const getChatList = async (userInfo) => {
 	axios.setLoading(false);
 	if (data && data.length) {
 		let chatList = data.map((item) => {
-			let count = item.message_list.reduce((prev, item) => {
+			let count = item.message_list.reduce((prev, item) => {	// 计算的是未读消息的数量
 				if (item.read_state == 0 && item.to_user_id == userInfo.id) {
 					return prev + 1
 				} else {
@@ -33,7 +33,7 @@ export const getChatList = async (userInfo) => {
 				''
 			let day = 0;
 		
-			let msgList = item.message_list.map((mItem,index,arr) => {
+			let msgList = item.message_list.map((mItem,index,arr) => {	// map的语法：第一个参数是element，第二个参数是index，第三个参数是数组本身
 				if(index==0){
 					day=0
 				}else{

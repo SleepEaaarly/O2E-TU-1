@@ -10,6 +10,8 @@
 				<text v-if="item.type=='text'">{{item.message}}</text>
 				<!-- 图片 -->
 				<image v-if="item.type=='img'" :src="item.message" mode="widthFix" lazy-load></image>
+				<!-- 卡片 -->
+				
 			</view>
 			<!-- 点击头像跳转到自己主页 -->
 			<image v-if="item.isme" :src="item.userpic" @tap="navUserInfo" mode="widthFix" lazy-load></image>
