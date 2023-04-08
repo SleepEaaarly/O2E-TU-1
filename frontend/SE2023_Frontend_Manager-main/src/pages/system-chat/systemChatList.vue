@@ -35,32 +35,36 @@
 	<a-card :bordered="false">
 		<a-table :data-source="data" :columns="columns">
 			<template slot="operation" slot-scope="text, record">
-				<div>
+				<div >
 					<span>
 						<a @click="showSystemChat(record)" >回复</a>
-						<a-modal v-model="showDetail" title="客服聊天" width="750px" footer="">
+						<a-modal v-model="showDetail" title="客服聊天" width="750px" footer="" ref="chatContent" >
 							
 							<a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 600px;" >
 								<!-- <div v-for="(item, index) in record.messages" :key="index">abc</div> -->
 								<!-- <div v-show="false">{{selectData.messages[0].message}}</div>
 								<div v-show="false">{{ selectData.messages[1].message }}</div> -->
-								<span v-for="(item, index) in selectData.messages" :key="index" v-if="showDetail">
-									<a-row v-if="item.gstime" class="system-chat-item">{{item.gstime}}</a-row>
-									<!-- 提示转换信息 -->
-									<a-row v-if="item.type == 'switch_info'" class="system-chat-time">对方已转换为{{item.message}}服务</a-row>
-									<div v-if="item.type !== 'switch_info'" class="system-chat-list" :class="{'system-chat-me': item.isme}">
-										<!-- 显示管理员/AI头像 -->
-										<Image v-if="!item.isme" :src="item.userpic" mode="widthFix" lazy-load></Image> 
-										<!-- 消息 -->
-										<a-row class="system-chat-list-body">
-											<!-- 文字 -->
-											<a-row v-if="item.type == 'text'">{{item.message}}</a-row>
-											<!-- 图像 -->
-											<a-row v-if="item.type == 'img'" :src="item.message" mode="widthFix" lazy-load></a-row>
-											<!-- 卡片 -->
-											<!-- 待会实现 -->
-											
-										</a-row>
+								<span v-for="(item, index) in selectData.messages" :key="index" v-if="showDetail"  >
+									<div class="chat-item">
+
+									
+										<a-row v-if="item.gstime" class="system-chat-item">{{item.gstime}}</a-row>
+										<!-- 提示转换信息 -->
+										<a-row v-if="item.type == 'switch_info'" class="system-chat-time">对方已转换为{{item.message}}服务</a-row>
+										<div v-if="item.type !== 'switch_info'" class="system-chat-list" :class="{'system-chat-me': item.isme}">
+											<!-- 显示管理员/AI头像 -->
+											<Image v-if="!item.isme" :src="item.userpic" mode="widthFix" lazy-load></Image> 
+											<!-- 消息 -->
+											<a-row class="system-chat-list-body">
+												<!-- 文字 -->
+												<a-row v-if="item.type == 'text'">{{item.message}}</a-row>
+												<!-- 图像 -->
+												<a-row v-if="item.type == 'img'" :src="item.message" mode="widthFix" lazy-load></a-row>
+												<!-- 卡片 -->
+												<!-- 待会实现 -->
+												
+											</a-row>
+										</div>
 									</div>
 								</span>
 							</a-card>
@@ -69,12 +73,13 @@
 									<a-col :span="20">
 										<a-textarea
 										v-model:value="reply"
-										placeholder="请输入回复"
+										placeholder="请输入回复，shift+回车换行"
 										:auto-size="{ minRows: 2, maxRows: 5 }"
+										@keydown.native="handleKeyCode($event)"
 										/>
 									</a-col>
 									<a-col :span="4">
-										<a-button>发送</a-button>
+										<a-button @click="handleSubmit(selectData)" >发送</a-button>
 									</a-col>
 								</a-row>
 							</a-card>
@@ -90,7 +95,7 @@
 </template>
 
 <script>
-import {getSystemChatAll} from "../../services/systemChat";
+import {getSystemChatAll, pushSystemChat} from "../../services/systemChat";
 
 // 写一下获取所有聊天的接口
 const columns = [{
@@ -249,16 +254,66 @@ export default {
 			showDetail: false,
 			reply: '',
 			selectData: {},
+			style: {
+				contentH: 0,
+				itemH: 0
+			}
 		}
 	},
 	mounted() {
-		// this.init();
+		this.init();
+		this.pageToBottom()
+	},
+	updated() {
+		this.pageToBottom()
 	},
 	methods: {
 		init: async function() {
-			// this.loadAllChat();
+			console.log("init")
+			this.loadAllChat();
 		},
-		loadAllChat: function() {
+		async initdata() {	// 获得当前页面的高度
+			try {
+				const windowHeight = window.innerHeight
+				let t = 200
+				// this.style.contentH = windowHeight - uni.upx2px(t)
+				this.style.contentH = windowHeight - 2 * t
+				// uni.stopPullDownRefresh()
+			} catch(e) { console.log(e) }
+		},
+		pageToBottom() {	// 将聊天界面固定在新聊天底部，目前未实现
+			console.log("page to bottom")
+			console.log(this)
+			// let q = uni.createSelectorQuery().in(this)
+			// let itemH = q.selectAll('.chat-item')   // TODO: 不确定这个是否可行
+			// console.log(this.currentSystemChatMsgs)
+			// if (this.currentSystemChatMsgs.length !== 0) {
+			// 	this.$nextTick(() => {
+			// 		itemH.fields({size: true}, data => {
+			// 			console.log("data is")
+			// 			console.log(data)
+			// 			if (data) {
+			// 				if (isfirst) {
+			// 					for (let i = 0; i < data.length; i++) {
+			// 						this.style.itemH += data[i].height
+			// 					}
+			// 					console.log(this.style.itemH)
+			// 				} else {
+			// 					this.style.itemH += data[data.length - 1].height
+			// 				}
+			// 				this.scrollTop = (this.style.itemH > this.style.contentH) ? this.style.itemH : 0
+			// 			}
+			// 		}).exec()
+			// 	})
+			// }
+
+			// this.$nextTick(() =>{
+			// 	console.log(this.$refs.chatContent)
+            //     this.$refs.chatContent.scrollTop = this.$refs.chatContent.scrollHeight;
+            // })
+		},
+		loadAllChat: function() {	// 从后端获取所有数据
+			console.log("load all chat")
 			data.length = 0;
 			getSystemChatAll().then((res) => {
 				console.log(res);
@@ -268,15 +323,38 @@ export default {
 				console.log(error);	
 			})
 		},
-		handleSubmit() {
-			console.log(this.selectData)
+		handleSubmit(selectData) {	// 用户选择提交之后，将信息数据提交给后端
+			// console.log(this.selectData)
+			console.log("abc")
 			// 发送回复的 submit 函数，需要确定数据类型
+			pushSystemChat({
+				"uId": selectData.userinfo.uId,
+				"content": reply, 
+			}).then((res) => {
+				console.log(res);
+				// let d = res.data.data
+				// if res.data.recode == 200 | 500
+			}).catch((error) => {
+				console.log(error)
+			})
 		},
-		showSystemChat(record) {
+		showSystemChat(record) {	// 页面中展示聊天框，没有实际作用
 			// 感觉这里record只需要用户id这类的值
 			this.showDetail = true;
 			this.selectData = record;
 			console.log(record)
+		}, 
+		handleKeyCode(event) {
+			console.log(event)
+			if (event.keyCode == 13) {
+				if (!event.shiftKey) {
+					event.preventDefault();
+					this.handleSubmit(this.reply);
+				} else {
+					this.reply = this.reply + "\n";
+					event.preventDefault();
+				}
+			}
 		}
 	},
 

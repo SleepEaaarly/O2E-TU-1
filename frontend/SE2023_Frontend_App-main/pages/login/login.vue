@@ -79,6 +79,7 @@
 		userLoginCode,
 		login,
 	} from '@/api/login.js'
+	import { getSystemChat } from '@/api/system-chat.js'
 	import {
 		getChatList,
 		deleteChat,
@@ -89,7 +90,7 @@
 	import{ picUrl } from '@/api/common.js'
 	export default {
 		computed: {
-			...mapState(['chatList', 'msgIndex', 'userInfo']),
+			...mapState(['chatList', 'msgIndex', 'userInfo', 'system_chat']),
 			...mapGetters(['currentChatMsgs']),
 			disabled: function() {
 				let bool = true
@@ -129,6 +130,7 @@
 				'addChatMessage',
 				'addNoreadMessage',
 				'setUserInfo',
+				'setSystemChat'
 			]),
 			
 			// 验证手机号码
@@ -226,7 +228,11 @@
 				console.log(chatList)
 				this.sortChatList()
 				uni.setStorageSync('chatList', JSON.stringify(this.chatList))
-				
+				console.log("test get system chat")
+				let system_chat = await getSystemChat(this.userInfo)
+				console.log(system_chat)
+				console.log("test end get system chat")
+				this.setSystemChat(system_chat)
 				uni.switchTab({ url: '/pages/home/home' })
 				return
 			}
