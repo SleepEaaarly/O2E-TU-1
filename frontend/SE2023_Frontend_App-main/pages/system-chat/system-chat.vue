@@ -312,13 +312,13 @@
                     "isme": 1
                 })
                 console.log(msg)
-                if (msg.code && msg.code !== 0) {
-                    uni.showToast({
-                        title: "消息发送失败！",
-                        icon: 'none'
-                    })
-                    return
-                }
+                // if (msg.code && msg.code !== 0) {
+                //     uni.showToast({
+                //         title: "消息发送失败！",
+                //         icon: 'none'
+                //     })
+                //     return
+                // }
 
                 let obj = { // 插入前端列表的数据
                     // fromId: this.userInfo.id,
