@@ -96,7 +96,7 @@
 
 <script>
 import {getSystemChatAll, pushSystemChat} from "../../services/systemChat";
-
+import {time} from "../../utils/time.js"
 // 写一下获取所有聊天的接口
 const columns = [{
 		title: "姓名",
@@ -264,13 +264,16 @@ export default {
 		this.init();
 		this.pageToBottom()
 	},
+	onload() {
+		this.init()
+	},
 	updated() {
 		this.pageToBottom()
 	},
 	methods: {
 		init: async function() {
 			console.log("init")
-			this.loadAllChat();
+			// this.loadAllChat();
 		},
 		async initdata() {	// 获得当前页面的高度
 			try {
@@ -319,6 +322,31 @@ export default {
 				console.log(res);
 				// TODO：这部分需要看后端返回的数据是什么
 				// let d = res.data.data
+				for (item in res.system_chat_list) {
+					let data_item = {}
+					// data_item.name = // TODO: 这块看看用户名称能不能传一下，或者我获取再获取一下用户信息
+					data_item.email = item.userInfo.email
+					let bef_time = null
+					for (res_message in res.messages) {
+						let data_message = {}
+						data_message.isme = res_message.isme
+						data_message.userpic = res_message.userpic
+						data_message.type = res_message.type
+						data_message.message = res_message.message
+						data_message.cardInfo = res_message.cardInfo
+						data_message.create_at = res_message.create_at
+						if (bef_time === null) {
+							data_message.gstime = time.gettime.gettime(data_message.create_at, 0)
+							bef_time = data_message.create_at
+						} else {
+							data_message.gstime = 
+								time.gettime.gettime(data_message.create_at, bef_time)
+							bef_time = data_message.create_at
+						}
+						data_item.messages.push(data_message)
+					}
+					data.push(data_item)
+				}
 			}).catch((error) => {
 				console.log(error);	
 			})
@@ -329,14 +357,25 @@ export default {
 			// 发送回复的 submit 函数，需要确定数据类型
 			pushSystemChat({
 				"uId": selectData.userinfo.uId,
-				"content": reply, 
+				"content": this.reply, 
 			}).then((res) => {
 				console.log(res);
 				// let d = res.data.data
 				// if res.data.recode == 200 | 500
+				let now = new Date().getTime()
+				let obj = {
+					isme: false,
+					userpic: "",
+					type: "text",
+					message: this.reply,
+					gstime: time.gettime.gettime(now, selectData.messages[selectData.messages.length - 1].create_at),
+					create_at: now
+				}
+				selectData.messages.push(obj)
 			}).catch((error) => {
 				console.log(error)
 			})
+			this.reply = ""
 		},
 		showSystemChat(record) {	// 页面中展示聊天框，没有实际作用
 			// 感觉这里record只需要用户id这类的值
