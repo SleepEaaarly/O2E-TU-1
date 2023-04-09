@@ -55,8 +55,9 @@ export const createSystemChat = async (data) => {   // 创建一个客服聊天�
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
+
     let result = await axios.post('system_chat/create', data, headers)
-	console.log(result)
+    console.log(result)
     return result
 }
 
