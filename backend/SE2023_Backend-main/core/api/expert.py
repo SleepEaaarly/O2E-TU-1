@@ -53,6 +53,12 @@ def get_expert_info(request: HttpRequest, uid: int):
         for patent in patents:
             res.append(patent.to_dict())
         return success_api_response({"data": res})
+    elif tab == "results":
+        results = user.expert_info.results.all()
+        res = []
+        for result in results:
+            res.append(result.to_dict())
+        return success_api_response({"data": res})
     else:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "not a useful tab")
     
@@ -180,13 +186,14 @@ def get_expertInfo(request:HttpRequest, id:int):
         "name": expert_info.name,
         "ID_num": expert_info.ID_num,
         "organization": expert_info.organization,
-        "field": field_decode(expert_info.field),
+        "field": expert_info.field,
         "self_profile": expert_info.self_profile,
         "phone": expert_info.phone,
         "ID_pic": str(expert_info.ID_pic),
         "paper": expert_info.paper,
         "patent": expert_info.patent
     })
+
 
 """
 获取全部申请专家的用户基本信息
@@ -206,6 +213,7 @@ def get_all_expert(request:HttpRequest):
     return success_api_response(data)
 
 
+'''
 def field_decode(field):
     ans = []
     dic = {
@@ -222,12 +230,33 @@ def field_decode(field):
     i = 0
     while i < 9:
         if field[i] == '1':
-            print(dic[i])
             ans.append(dic[i])
         i = i + 1
     return ans
 
 
+def field_encode(field):
+    field_list = [
+        '信息技术',
+        '装备制造',
+        '新材料',
+        '新能源',
+        '节能环保',
+        '生物医药',
+        '科学创意',
+        '检验检测',
+        '其他'
+    ]
+    fields = field.split()
+    rst = ''
+    for f in field_list:
+        if fields.__contains__(f):
+            rst += '1'
+        else:
+            rst += '0'
+
+    return rst
+'''
 
 
 """
@@ -310,6 +339,7 @@ def add_expert(dic):
             new_user.state = 5
             new_user.expert_info = expert_info
             new_user.save()
+
 
 @response_wrapper
 @require_http_methods('GET')
@@ -467,3 +497,43 @@ def add_projects_scholars(request:HttpRequest):
         project.scholars = expert.name
         project.save()
     return success_api_response("success")
+
+
+@response_wrapper
+# @jwt_auth()
+@require_http_methods('GET')
+def search_expert(request: HttpRequest, *args, **kwargs):
+    data = request.GET.dict()
+    key_word = data.get('key_word')
+    # if key_word is None or key_word == '':  # not key_word 是判空，也可以判None
+    #     return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "none key word")
+    # key_words = key_word.split()
+
+    # results = []
+    # experts = Expert.objects.all()
+    # for expert in experts:
+    #     expert_info = {"id": expert.id, "title": expert.title, "intro": expert.self_profile,
+    #                    "institution": expert.organization, "author": expert.name, "field": field,
+    #                    "userpic": '',
+    #                    'authorLogoPath': ''}
+    #     print(expert_info)
+    #     results.append(expert_info)
+    users = User.objects.filter(state=4)
+    data = []
+    page_count = 10
+    for user in users:
+        if page_count == 0:
+            break
+        else: page_count-=1
+        expert_info = {
+            "id": user.expert_info_id,
+            "title": user.expert_info.title,
+            "intro": user.expert_info.self_profile,
+            "institution": user.expert_info.organization, 
+            "author": user.expert_info.name,
+            "field": user.expert_info.field,
+            "userpic": '',
+            'authorLogoPath': ''}
+        data.append(expert_info)
+    print(data)
+    return success_api_response({"data": data})
