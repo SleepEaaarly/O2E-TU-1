@@ -10,7 +10,7 @@ from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 from core.api.platform.utils import get_now_time
-from core.models import User, Chatroom, Message, SystemChatroom, CardMessage
+from core.models import User, SystemMessage, SystemChatroom, CardMessage
 from core.models import SwitchMessage, ImageMessage
 
 
@@ -38,7 +38,6 @@ def create_system_chat(request: HttpRequest):
                                    "Invalid request args.")
     # username = data.get('username')
     uid = data.get('uId')
-
     try:
         user = User.objects.get(id=uid)
     except ObjectDoesNotExist:
@@ -86,7 +85,8 @@ def get_system_chat(request: HttpRequest):
     messages = []
     for m in system_chatroom.messages.all():
         a_message = {}
-        if(m.from_user is owner):
+        print(m)
+        if(m.is_to_system == 1):
             a_message['isme'] = True
             a_message['user_pic'] = owner.icon
         else:
@@ -110,6 +110,7 @@ def get_system_chat(request: HttpRequest):
         messages.append(a_message)
     ret_data['messages'] = messages
     ret_data['noreadnum'] = system_chatroom.unread_message_num
+    print(ret_data)
     return success_api_response(ret_data)
 
 
@@ -142,16 +143,13 @@ def push_system_message(request: HttpRequest):
         system_chatroom: SystemChatroom = SystemChatroom.objects.get(
             owner=user)
         if(data.get('isme') == 0):
-            from_user = user
-            to_user = User.objects.get(id=0)
+            is_to_system = 0
         else:
-            from_user = User.objects.get(id=0)
-            to_user = user
-        message_id = Message.new_message(
-            from_user=from_user,
-            to_user=to_user,
+            is_to_system = 1
+        message_id = SystemMessage.new_message(
+            is_to_system=is_to_system,
+            owner=user,
             content=content)
-        print(message_id)
         if system_chatroom.add_message(message_id) is False:
             return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Add message failed.")
         system_chatroom.save()

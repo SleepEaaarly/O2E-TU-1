@@ -57,6 +57,7 @@ class SystemMessage(models.Model):
                                         is_to_system=is_to_system,
                                         read_state=UNREAD)
             new_message.save()
+            print(new_message.id)
             return new_message.id
         except Exception:
             return -1

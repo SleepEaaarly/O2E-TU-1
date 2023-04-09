@@ -100,10 +100,10 @@ DATABASES = {
         #  'ENGINE': 'django.db.backends.sqlite3',
         #  'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'se2022',
-        'HOST': 'rm-2zeu3f7e1n5yt10v0co.mysql.rds.aliyuncs.com',
+        'NAME': 'se2023',
+        'HOST': '116.63.14.146',
         'USER': 'root',
-        'PASSWORD': 'myja&*$4X579cKr',
+        'PASSWORD': 'O2E-TH-1!',
         'PORT': 3306,
         'OPTIONS': {
             'init_command': 'SET sql_mode="STRICT_TRANS_TABLES"',
