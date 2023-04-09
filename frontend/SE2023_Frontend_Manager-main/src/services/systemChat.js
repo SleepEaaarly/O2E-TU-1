@@ -2,7 +2,7 @@ import { request, METHOD } from "../utils/request";
 import { BASE_URL_IP } from "./api";
 
 export const getSystemChatAll = () => {
-    const url = `${BASE_URL_IP}/api/system_chat/getall`;
+    const url = `${BASE_URL_IP}/api/system_chat/getAll`;
     return request(url, METHOD.GET);
 }
 
