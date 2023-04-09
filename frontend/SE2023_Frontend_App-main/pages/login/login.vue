@@ -228,11 +228,11 @@
 				console.log(chatList)
 				this.sortChatList()
 				uni.setStorageSync('chatList', JSON.stringify(this.chatList))
-				console.log("test get system chat")
-				let system_chat = await getSystemChat(this.userInfo)
-				console.log(system_chat)
-				console.log("test end get system chat")
-				this.setSystemChat(system_chat)
+				// console.log("test get system chat")
+				// let system_chat = await getSystemChat(this.userInfo)
+				// console.log(system_chat)
+				// console.log("test end get system chat")
+				// this.setSystemChat(system_chat)
 				uni.switchTab({ url: '/pages/home/home' })
 				return
 			}

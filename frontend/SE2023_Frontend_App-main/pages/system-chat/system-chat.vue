@@ -166,7 +166,8 @@
         methods: {
             ...mapMutations([
                 'addSystemChatMessage',
-                'addSystemNoReadMessage']),
+                'addSystemNoReadMessage',
+                'setSystemChat']),
             // 监听chat bottom子组件中 isHuman 的变化
             getHuman(isHuman) {
                 let now = new Date().getTime()
@@ -289,7 +290,25 @@
                     uId: this.userInfo.id
                 })
                 let result = await getSystemChat(this.userInfo)
-                
+                console.log(result)
+                let load_system_chat = {}
+                load_system_chat.noreadnum = result.noreadnum
+                load_system_chat.messages = []
+                let last_time = 0
+                for (var i = 0; i < result.messages.length; i++) {
+                    let message = {}
+                    message.message = result.messages[i].message
+                    message.isme = result.messages[i].isme
+                    message.userpic = result.messages[i].user_pic
+                    message.type = result.messages[i].type
+                    message.gstime = time.gettime.getChatTime(result.messages[i].created_at, last_time)
+                    last_time = result.messages[i].created_at
+                    load_system_chat.messages.push(message)
+                    console.log(message)
+                }
+                console.log(load_system_chat)
+                this.setSystemChat(load_system_chat)
+                console.log(this.currentSystemChatMsgs)
             },
             async submit(data) {    // 提交（发送）信息
                 console.log("submit data")
@@ -326,9 +345,9 @@
                     // index
                     isme: 1,
                     userpic: this.userInfo.userpic,
-                    type: 'pic',
-                    // message: data,
-                    message: "http://127.0.0.1:8000/api/images/202205/07/icons/1651921131602.png",
+                    type: 'text',
+                    message: data,
+                    // message: "http://127.0.0.1:8000/api/images/202205/07/icons/1651921131602.png",
                     time: time.gettime.gettime(now),
                     cardInfo: {},
                     gstime: now,

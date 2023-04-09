@@ -69,7 +69,6 @@ def create_system_chat(request: HttpRequest):
         - noreadnum: int 未读信息数
 """
 
-
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -85,10 +84,10 @@ def get_system_chat(request: HttpRequest):
     messages = []
     for m in system_chatroom.messages.all():
         a_message = {}
-        print(m)
         if(m.is_to_system == 1):
             a_message['isme'] = True
-            a_message['user_pic'] = owner.icon
+            print(type(owner.icon))
+            a_message['user_pic'] = owner.icon.path
         else:
             a_message['isme'] = False
             a_message['user_pic'] = ''
@@ -106,11 +105,10 @@ def get_system_chat(request: HttpRequest):
             a_message['type'] = 'text'
             a_message['message'] = m.content
         # created_at
-        a_message['created_at'] = m.created_at
+        a_message['created_at'] = m.get_create_time()
         messages.append(a_message)
     ret_data['messages'] = messages
     ret_data['noreadnum'] = system_chatroom.unread_message_num
-    print(ret_data)
     return success_api_response(ret_data)
 
 
