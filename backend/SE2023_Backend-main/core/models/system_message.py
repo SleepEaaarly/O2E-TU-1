@@ -4,6 +4,7 @@ message: 文字消息
 from django.db import models
 from django.contrib.auth import get_user_model
 from .user import User
+from datetime import datetime
 
 UNREAD = 0
 READ = 1
@@ -61,3 +62,6 @@ class SystemMessage(models.Model):
             return new_message.id
         except Exception:
             return -1
+    
+    def get_create_time(self):
+        return self.created_at.strftime("%Y-%m-%d, %H:%M:%S")
