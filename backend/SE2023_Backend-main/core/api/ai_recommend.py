@@ -303,6 +303,7 @@ def generate_requirement_book(request: HttpRequest,require):
     demand2 = "报告首先有一个总标题，但是不用写引言、不用写总结、不用写参考文献。总字数不超过2000字，请对内容进行精炼。报告生成结束请回复完毕二字。"
     msg = demand1+prompt+format+demand2
 
+    
     # Create the request headers and body
     data=[]
     data['model']="gpt-3.5-turbo"
@@ -313,3 +314,4 @@ def generate_requirement_book(request: HttpRequest,require):
     response = requests.post(url, headers=headers, data=data)
     print(response.content.decode('utf-8'))
     return success_api_response({"requirement_book":response.content.decode('utf-8')})
+    
