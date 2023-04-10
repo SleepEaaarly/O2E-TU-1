@@ -195,6 +195,7 @@ def add_result(request: HttpRequest):
 
     print("3")
     result.save()
+    # insert_result(rid=id)
     print("4")
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
