@@ -232,13 +232,46 @@ def need_recommend(request:HttpRequest, id:int):
 @require_GET
 @response_wrapper
 def result_recommend_for_expert(request:HttpRequest, id:int):
-    # todo
     get_milvus_connection()
     user = User.objects.get(id=id)
     papers = user.expert_info.papers.all()
     titles = []
     for paper in papers:
         titles.append(paper.title)
+    key_vector = model.get_embeds(titles)
+    key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
+    key_vector = key_vector.detach().numpy().tolist()
+    id_lists = milvus_search("O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
+    ids = '['
+    for id_list in id_lists:
+        for milvus_id in id_list:
+            ids += str(milvus_id) + ','
+    ids = ids[:-1] + ']'
+    query = "milvus_id in "+ ids
+    result_ids = milvus_query_result_by_id(query)
+    result_infos = []
+    for result_id in result_ids:
+        result = Results.objects.get(pk=result_id['result_id'])
+        if result.state == 1:
+            result_info = {
+                "result_id": result.id, "title": result.title, "abstract": result.abstract, 
+                "scholars": result.scholars, "pyear": result.pyear, "field": result.field, 
+                "period": result.period, "picture": result.picture, "content": result.content,
+                "file": result.file, "state": result.state
+            }
+            result_infos.append(result_info)
+
+    return success_api_response({"results": result_infos})
+
+
+@require_GET
+@response_wrapper
+def result_recommend_for_enterprise(request:HttpRequest, id:int):
+    get_milvus_connection()
+    needs = Need.objects.filter(enterprise_id=id)
+    titles = []
+    for need in needs:
+        titles.append(need.title)
     key_vector = model.get_embeds(titles)
     key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
