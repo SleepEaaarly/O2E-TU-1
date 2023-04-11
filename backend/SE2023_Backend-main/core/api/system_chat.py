@@ -257,7 +257,7 @@ def get_all_system_chatrooms(request: HttpRequest):
             owner = sys_chat.owner
             user_info = {
                 "uId": owner.id,
-                "name": owner.nick_name,
+                "name": owner.username,
                 "email": owner.email
             }
             for m in sys_chat.messages.all():
@@ -315,15 +315,14 @@ def push_system_message_by_admin(request: HttpRequest):
     data: dict = parse_data(request)
     user: User = User.objects.get(id=data.get('uId'))
     content = data.get('content')
-    # 暂时约定平台方为None
     try:
         system_chatroom: SystemChatroom = SystemChatroom.objects.get(
             owner=user)
         from_user = None
         to_user = user
         message_id = SystemMessage.new_message(
-            from_user=from_user,
-            to_user=to_user,
+            is_to_system=0,
+            owner=user,
             content=content)
         if system_chatroom.add_message(message_id) is False:
             return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Add message failed.")
