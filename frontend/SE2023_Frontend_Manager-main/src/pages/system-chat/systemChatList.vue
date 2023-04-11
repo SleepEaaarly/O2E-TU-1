@@ -365,7 +365,7 @@ export default {
 			console.log("abc")
 			// 发送回复的 submit 函数，需要确定数据类型
 			pushSystemChat({
-				"uId": selectData.uId,
+				"uId": this.selectData.uId,
 				"content": this.reply, 
 			}).then((res) => {
 				console.log(res);
