@@ -8,7 +8,6 @@ RES_STATE_CHOICES = (
 )
 
 
-
 class Multipic(models.Model):
     picture = models.ImageField(upload_to="images/%Y%m/%d/res_pic")
 

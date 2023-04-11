@@ -31,7 +31,6 @@ CARD_TYPE = (
 )
 
 
-
 class CardMessage(SystemMessage):
 
     """

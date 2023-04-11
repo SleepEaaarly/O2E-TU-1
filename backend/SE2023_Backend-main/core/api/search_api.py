@@ -95,7 +95,6 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
         key_words = key_word.split()
     print(key_words)
 
-
     data_results = []
     enterprises = Enterprise_info.objects.none()
     
