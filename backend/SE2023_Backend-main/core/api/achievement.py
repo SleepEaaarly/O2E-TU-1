@@ -195,6 +195,7 @@ def add_result(request: HttpRequest):
 
     print("3")
     result.save()
+    # insert_result(rid=id)
     print("4")
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
@@ -242,12 +243,14 @@ def refuse_result(request:HttpRequest, id:int):
 
 #@jwt_auth()
 @response_wrapper
-@require_http_methods('GET')
+@require_GET
 def get_resultInfo(request: HttpRequest, id: int):
+    print('get result info')
     result = Results.objects.get(id=id)
     if result.state == 1:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid user state")
-    expert_id = Expert.objects.filter(results=id)[0].id
+    expert = Expert.objects.filter(results=id)[0]
+    user = User.objects.get(expert_info=expert.id)
     return success_api_response({
         "title": result.title,
         "abstract": result.abstract,
@@ -257,6 +260,13 @@ def get_resultInfo(request: HttpRequest, id: int):
         "period": result.period,
         "content": result.content,
         "state": result.state,
-        "relate_expert_id": expert_id
+        "relate_expert_id": expert.id,
+        "expert_name": expert.name,
+        "expert_title": expert.title,
+        "expert_organization": expert.organization,
+        "expert_logo": user.get_icon(),
+        "uid": user.id,
+        "result_pic": result.get_pic(),
+        "expert_email": user.email
     })
 

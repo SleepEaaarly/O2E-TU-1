@@ -7,13 +7,20 @@ from core.api.utils import (response_wrapper, success_api_response)
 from core.models.papers import Papers
 from core.models.need import Need
 from core.models.user import User
+from core.models.results import Results
 import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModel
 from core.api.auth import getUserInfo
-from core.api.milvus_utils import get_milvus_connection, milvus_search, milvus_query_paper_by_id, milvus_query_need_by_id, milvus_insert
+from core.api.milvus_utils import {
+    get_milvus_connection, 
+    milvus_search, milvus_insert
+    milvus_query_paper_by_id, 
+    milvus_query_need_by_id, 
+    milvus_query_result_by_id, 
+}
 from core.api.zhitu_utils import get_expertInfo_by_expertId, search_expertID_by_paperID
-
+import requests
 
 class ContrastiveSciBERT(nn.Module):
     def __init__(self, out_dim, tau, device='cpu'):
@@ -222,6 +229,75 @@ def need_recommend(request:HttpRequest, id:int):
     return success_api_response({"needs": need_infos[:3]})
 
 
+@require_GET
+@response_wrapper
+def result_recommend_for_expert(request:HttpRequest, id:int):
+    get_milvus_connection()
+    user = User.objects.get(id=id)
+    papers = user.expert_info.papers.all()
+    titles = []
+    for paper in papers:
+        titles.append(paper.title)
+    key_vector = model.get_embeds(titles)
+    key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
+    key_vector = key_vector.detach().numpy().tolist()
+    id_lists = milvus_search("O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
+    ids = '['
+    for id_list in id_lists:
+        for milvus_id in id_list:
+            ids += str(milvus_id) + ','
+    ids = ids[:-1] + ']'
+    query = "milvus_id in "+ ids
+    result_ids = milvus_query_result_by_id(query)
+    result_infos = []
+    for result_id in result_ids:
+        result = Results.objects.get(pk=result_id['result_id'])
+        if result.state == 1:
+            result_info = {
+                "result_id": result.id, "title": result.title, "abstract": result.abstract, 
+                "scholars": result.scholars, "pyear": result.pyear, "field": result.field, 
+                "period": result.period, "picture": result.picture, "content": result.content,
+                "file": result.file, "state": result.state
+            }
+            result_infos.append(result_info)
+
+    return success_api_response({"results": result_infos})
+
+
+@require_GET
+@response_wrapper
+def result_recommend_for_enterprise(request:HttpRequest, id:int):
+    get_milvus_connection()
+    needs = Need.objects.filter(enterprise_id=id)
+    titles = []
+    for need in needs:
+        titles.append(need.title)
+    key_vector = model.get_embeds(titles)
+    key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
+    key_vector = key_vector.detach().numpy().tolist()
+    id_lists = milvus_search("O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
+    ids = '['
+    for id_list in id_lists:
+        for milvus_id in id_list:
+            ids += str(milvus_id) + ','
+    ids = ids[:-1] + ']'
+    query = "milvus_id in "+ ids
+    result_ids = milvus_query_result_by_id(query)
+    result_infos = []
+    for result_id in result_ids:
+        result = Results.objects.get(pk=result_id['result_id'])
+        if result.state == 1:
+            result_info = {
+                "result_id": result.id, "title": result.title, "abstract": result.abstract, 
+                "scholars": result.scholars, "pyear": result.pyear, "field": result.field, 
+                "period": result.period, "picture": result.picture, "content": result.content,
+                "file": result.file, "state": result.state
+            }
+            result_infos.append(result_info)
+
+    return success_api_response({"results": result_infos})
+
+
 def insert_need(nid: int):
     get_milvus_connection()
     need = Need.objects.get(pk=nid)
@@ -232,3 +308,43 @@ def insert_need(nid: int):
     milvus_id = milvus_insert("O2E_NEED", [key_vector, [nid]])
     print(milvus_id)
     return True
+
+
+def insert_result(rid: int):
+    get_milvus_connection()
+    result = Results.objects.get(pk=rid)
+    keyword = [result.title, result.abstract]
+    key_vector = model.get_embeds(keyword)
+    key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
+    key_vector = key_vector.detach().numpy().tolist()
+    milvus_id = milvus_insert("O2E_RESULT", [key_vector, [rid]])
+    print(milvus_id)
+    return True
+
+
+@require_GET
+@response_wrapper
+def generate_requirement_book(request: HttpRequest,require):
+    # start a new conversation
+    headers = {"Content-Type": "application/json","Authorization":"Bearer $OPEN_API_KEY"}
+    # start to ask
+    url = f"https://api.openai.com/v1/chat/completions"
+
+    demand1 = "请将以下的企业需求转化成一份详细的需求报告，包括功能点的划分，每个功能点的形式化表述、详细描述以及其参考技术路线。"
+    prompt = require
+    format = "报告采用markdown格式，设三级标题。对于每个功能点，形式化表述、详细描述和参考技术路线，请分条叙述。"
+    demand2 = "报告首先有一个总标题，但是不用写引言、不用写总结、不用写参考文献。总字数不超过2000字，请对内容进行精炼。报告生成结束请回复完毕二字。"
+    msg = demand1+prompt+format+demand2
+
+    
+    # Create the request headers and body
+    data=[]
+    data['model']="gpt-3.5-turbo"
+    data['message']={"role":"user","content":msg.encode("utf-8")}
+    data['temperature']=0.7
+
+    # Send the POST request to the API endpoint
+    response = requests.post(url, headers=headers, data=data)
+    print(response.content.decode('utf-8'))
+    return success_api_response({"requirement_book":response.content.decode('utf-8')})
+    

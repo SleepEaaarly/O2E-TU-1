@@ -5,7 +5,7 @@
 			<u-row>
 				
 				<text class = "workTitle">{{title}}</text>
-				<u-tag :text="area" plain plainFill size="mini" style="margin-left: 10px;"> </u-tag>
+				<u-tag v-if="area" :text="area" plain plainFill size="mini" style="margin-left: 10px;"> </u-tag>
 				<u-tag :text="period" plain plainFill size="mini" type="success" style="margin-left: 10px;"> </u-tag>
 			</u-row>
 			

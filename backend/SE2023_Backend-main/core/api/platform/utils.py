@@ -1,4 +1,4 @@
-
+import datetime
 
 def format_time(time):
     # 格式化时间，2019-09-09 12:23:33
@@ -45,3 +45,7 @@ def get_order_state(state):
         3: "合作结束"
     }
     return ORDER_STATE[state]
+
+def get_now_time(): 
+    # 获取标准格式的当前时间
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")

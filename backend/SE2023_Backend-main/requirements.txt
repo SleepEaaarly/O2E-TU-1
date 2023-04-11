@@ -18,5 +18,5 @@ django-cors-headers
 requests
 torch
 transformers
-pymilvus
+pymilvus==2.0.2
 demjson

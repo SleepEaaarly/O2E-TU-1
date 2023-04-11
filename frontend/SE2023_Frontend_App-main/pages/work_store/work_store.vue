@@ -118,12 +118,11 @@ import { getWorkList } from "@/api/work_store.js"
 				
 			},
 			workDetail(work) {
-				console.log(work['author'])
-				console.log(work['uid'])
+				console.log(work['result_id'])
 				// getExpertByID
-				// uni.navigateTo({
-				// 	url: '../../pages/user-space/user-space?uid=' + work['uid'],
-				// })
+				uni.navigateTo({
+				 	url: '../../pages/work_detail/work_detail?rid=' + work['result_id'],
+				 })
 			},
 			async requestData() {
 				try {

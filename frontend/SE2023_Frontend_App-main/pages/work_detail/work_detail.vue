@@ -41,9 +41,11 @@
 
 <script>
 	import authorCard from"../../components/author_display_card.vue"
+	import { getWork } from "@/api/work_detail.js"
 	export default {
 		data() {
 			return {
+				work_id: 1,
 				height: 500,
 				work_info: {
 					"workName": 'A Summary of Machine Learning',
@@ -62,8 +64,17 @@
 				}
 			}
 		},
+		onLoad(data) {
+			console.log(data)
+			console.log('data should be:' + data.rid)
+			this.work_id = data.rid
+			this.loadData()
+		},
 		methods: {
-			
+			async loadData(){
+				console.log('get work detail')
+				this.work_info = await getWork(this.work_id)
+			}
 		},
 		components: {
 			authorCard
