@@ -291,6 +291,7 @@
                 })
                 let result = await getSystemChat(this.userInfo)
                 console.log(result)
+                this.isHuman = 1 - result.isai
                 let load_system_chat = {}
                 load_system_chat.noreadnum = result.noreadnum
                 load_system_chat.messages = []
