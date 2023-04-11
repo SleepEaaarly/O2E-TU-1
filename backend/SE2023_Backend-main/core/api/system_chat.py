@@ -102,6 +102,7 @@ def get_system_chat(request: HttpRequest):
         messages.append(a_message)
     ret_data['messages'] = messages
     ret_data['noreadnum'] = system_chatroom.unread_message_num
+    ret_data['isai'] = system_chatroom.isai
     return success_api_response(ret_data)
 
 
