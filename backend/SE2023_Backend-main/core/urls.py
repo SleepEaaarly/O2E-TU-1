@@ -74,7 +74,7 @@ urlpatterns = [
     # results
     path('res/pic', RES_PIC_API),
     path('images/<str:year>/<str:day>/res_pic/<str:file_name>', read_pic),
-    path('images/default_result_pic.jfif', read_default_pic),
+    path('images/default_result_pic.jpg', read_default_pic),
     path('res/pdf', RES_PDF_API),
     path('result/agree/<int:id>', agree_result),
     path('result/refuse/<int:id>', refuse_result),

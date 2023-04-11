@@ -12,15 +12,12 @@ import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModel
 from core.api.auth import getUserInfo
-from core.api.milvus_utils import {
-    get_milvus_connection, 
-    milvus_search, milvus_insert
-    milvus_query_paper_by_id, 
-    milvus_query_need_by_id, 
-    milvus_query_result_by_id, 
-}
+from core.api.milvus_utils import get_milvus_connection, milvus_search, milvus_insert, milvus_query_paper_by_id,\
+    milvus_query_need_by_id, milvus_query_result_by_id
+
 from core.api.zhitu_utils import get_expertInfo_by_expertId, search_expertID_by_paperID
 import requests
+
 
 class ContrastiveSciBERT(nn.Module):
     def __init__(self, out_dim, tau, device='cpu'):

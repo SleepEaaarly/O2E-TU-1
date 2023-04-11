@@ -183,6 +183,8 @@ def search_result(request: HttpRequest):
                 continue
             if field not in result.field:
                 continue
+        if result.state != 1:
+            continue
         expert = Expert.objects.filter(results__id=result.id)[0]
         user = User.objects.get(expert_info__id=expert.id)
 
