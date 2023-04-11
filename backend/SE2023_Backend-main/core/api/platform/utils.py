@@ -48,4 +48,4 @@ def get_order_state(state):
 
 def get_now_time(): 
     # 获取标准格式的当前时间
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.datetime.now()

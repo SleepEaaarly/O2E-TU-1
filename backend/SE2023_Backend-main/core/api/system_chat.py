@@ -312,23 +312,24 @@ def get_all_system_chatrooms(request: HttpRequest):
 @jwt_auth()
 @require_POST
 def push_system_message_by_admin(request: HttpRequest):
+    print(request)
     data: dict = parse_data(request)
     user: User = User.objects.get(id=data.get('uId'))
     content = data.get('content')
     try:
         system_chatroom: SystemChatroom = SystemChatroom.objects.get(
             owner=user)
-        from_user = None
-        to_user = user
         message_id = SystemMessage.new_message(
             is_to_system=0,
             owner=user,
             content=content)
+        print(message_id)
         if system_chatroom.add_message(message_id) is False:
             return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Add message failed.")
         system_chatroom.save()
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad System Chatroom ID or add message failed.")
 
+    print("hehehe")
     return success_api_response({'system_chatroom_id': system_chatroom.id,
                                  'message_id': message_id})
