@@ -223,6 +223,9 @@
 			async generateNeedReport() {
 				let result = await sendNeedInfoToGenerateReport(item.title, item.description, this.field_items[item.field], item.key_word)
 				// TODO: 检查 result
+
+				// 将生成的报告插入聊天记录
+				
 			},
 			//点击fab后的动作
 			trigger(e) {
