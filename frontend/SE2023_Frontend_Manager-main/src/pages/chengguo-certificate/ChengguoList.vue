@@ -29,21 +29,12 @@
                 <a-modal v-model="showDetail" title="" @ok="handleOk" width="750px">
                     <ChengguoCard v-if="showDetail" v-bind="post"></ChengguoCard>
                 </a-modal>
-<<<<<<< HEAD
                 <a-list-item-meta :description="item.scholars">
                     <a slot="title" :herf="item.herf">{{ item.result_name }}</a>
                     <a-avatar slot="avatar" shape="square"  :src="item.result_pic"></a-avatar>
                 </a-list-item-meta>
                 <a style="display: block;" class="textbreak" herf="javascript:void(0)" @click="handleShow(item.id)">
                     成果信息简介：{{ item.abstract | ellipsis }}
-=======
-                <a-list-item-meta :description="item.create_time">
-                    <a slot="title" :herf="item.herf">{{ item.chengguoName }}</a>
-                    <a-avatar slot="avatar" shape="square"  :src="item.pic"></a-avatar>
-                </a-list-item-meta>
-                <a style="display: block;" class="textbreak" herf="javascript:void(0)" @click="handleShow(item.id)">
-                    成果信息简介：{{ item.profile | ellipsis }}
->>>>>>> cbfdc186519333a0eccf5d5a0bf79081feee0d1e
                 </a>
             </a-list-item>
         </a-list>
@@ -53,11 +44,8 @@
 
 <script>
 import ChengguoCard from './ChengguoCard.vue';
-<<<<<<< HEAD
 import {BASE_URL_IP} from "../../services/api";
 import { getWorkAll, getWork, WorkApply, WorkRefuse } from '../../services/work';
-=======
->>>>>>> cbfdc186519333a0eccf5d5a0bf79081feee0d1e
 export default {
     name: "ChengguoList",
     components: {ChengguoCard},
@@ -72,7 +60,6 @@ export default {
     },
     data() {
         return {
-<<<<<<< HEAD
             loading: true,
             pageIndex: 1,
             data: [],
@@ -92,21 +79,11 @@ export default {
                     // create_time: "申请时间：2023-04-04T01:39:28.970Z",
                     // abstract: "成果简介成果简介成果简介成果简介成果简介成果简介成果简介成果简介",
                     // result_pic: "http://127.0.0.1:8000/api/images/202205/02/icons/zkg.jpg"
-=======
-            listData: [
-                {
-                    id: 0,
-                    chengguoName: "成果名称",
-                    create_time: "申请时间：2023-04-04T01:39:28.970Z",
-                    profile: "成果简介成果简介成果简介成果简介成果简介成果简介成果简介成果简介",
-                    pic: "http://127.0.0.1:8000/api/images/202205/02/icons/zkg.jpg"
->>>>>>> cbfdc186519333a0eccf5d5a0bf79081feee0d1e
                 }
             ]
         }
     },
     mounted() {
-<<<<<<< HEAD
         this.init();
     },
     inject: ['reload'],
@@ -178,13 +155,6 @@ export default {
                 this.reload();
             });
         }
-=======
-        
-    },
-    inject: ['reload'],
-    methods: {
-        
->>>>>>> cbfdc186519333a0eccf5d5a0bf79081feee0d1e
     },
 }
 </script>
