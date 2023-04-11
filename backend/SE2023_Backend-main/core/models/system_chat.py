@@ -3,7 +3,11 @@ SystemChatroom: 用户与平台的聊天
 """
 from django.db import models
 
+<<<<<<< HEAD
 from .message import Message
+=======
+from .system_message import SystemMessage
+>>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
 from .user import User
 from core.api.platform.utils import get_now_time
 
@@ -24,7 +28,11 @@ class SystemChatroom(models.Model):
         'User', on_delete=models.CASCADE, related_name="system_chatroom_list")
     created_at = models.DateTimeField(auto_now_add=True)
     messages = models.ManyToManyField(
+<<<<<<< HEAD
         'Message', related_name='system_message_list')
+=======
+        'SystemMessage', related_name='system_message_list')
+>>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
     isai = models.IntegerField()
     last_message_time = models.DateTimeField()
     unread_message_num = models.IntegerField()
@@ -32,7 +40,11 @@ class SystemChatroom(models.Model):
     # 新加入一条消息
     def add_message(self, message_id: int) -> bool:
         try:
+<<<<<<< HEAD
             m = Message.objects.get(id=message_id)
+=======
+            m = SystemMessage.objects.get(id=message_id)
+>>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
             self.messages.add(m)
             self.last_message_time = get_now_time()
             self.unread_message_num = self.unread_message_num + 1

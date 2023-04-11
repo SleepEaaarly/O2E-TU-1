@@ -22,6 +22,7 @@
     "clipboard": "^2.0.6",
     "core-js": "^3.6.5",
     "date-fns": "^2.14.0",
+    "element-ui": "^2.15.13",
     "enquire.js": "^2.1.6",
     "highlight.js": "^10.2.1",
     "iview": "^3.5.4",

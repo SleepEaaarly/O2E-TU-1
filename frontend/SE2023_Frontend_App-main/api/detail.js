@@ -1,5 +1,17 @@
 import axios from '@/config/requestConfig.js'
 import { picUrl } from './common.js'
+
+export const sendNeedInfoToGenerateReport = async (title, description, field, key_words) => {
+	let headers = { 'Authorization':'Bearer ' + uni.getStorageSync('token') }
+	let result = await axios.post('need_report/generate', {
+		title: title,
+		description: description,
+		key_words: key_words,
+		field: field
+	})
+	return result
+}
+
 export const getTopicDetail =async id => {
 	let headers = { 'Authorization':'Bearer ' + uni.getStorageSync('token') }
 	if (id === undefined) return false
