@@ -224,7 +224,7 @@ def alter_systemchat_visible(request: HttpRequest):
         content = 'AI'
     else:
         content = "Manual"
-    switch_message = SwitchMessage.new_switch_message(from_user=user, to_user=None,
+    switch_message = SwitchMessage.new_switch_message(is_to_system=1, owner=user,
                                                       content=content)
     system_chatroom.add_message(switch_message)
     system_chatroom.alter_mode(data.get('show'))
@@ -323,13 +323,11 @@ def push_system_message_by_admin(request: HttpRequest):
             is_to_system=0,
             owner=user,
             content=content)
-        print(message_id)
         if system_chatroom.add_message(message_id) is False:
             return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Add message failed.")
         system_chatroom.save()
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad System Chatroom ID or add message failed.")
 
-    print("hehehe")
     return success_api_response({'system_chatroom_id': system_chatroom.id,
                                  'message_id': message_id})
