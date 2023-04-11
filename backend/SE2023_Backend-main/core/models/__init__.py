@@ -25,6 +25,7 @@ from .patents import Patents
 from .projects import Projects
 from .feedback import Feedback
 from .results import Results
+from .results import Multipic
 from .system_chat import SystemChatroom
 from .card_message import CardMessage
 from .switch_message import SwitchMessage
