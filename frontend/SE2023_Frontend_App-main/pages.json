@@ -326,6 +326,36 @@
 				}
 			}
 		}, {
+			"path": "pages/system-chat/system-chat",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "AI/人工客服聊天页",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								
+							}
+						]
+					}
+				}
+			}
+		}, {
+			"path": "pages/try-system-camera/try-system-camera",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "测试页面",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								
+							}
+						]
+					}
+				}
+			}
+		}, {
 			"path": "pages/detail/detail",
 			"style": {
 				"navigationBarTitleText": "详情",

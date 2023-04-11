@@ -5,7 +5,7 @@ from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 
-from core.models import Papers, Patents, Projects, User, Expert, Results
+from core.models import Papers, Patents, Projects, User, Expert, Results, Multipic
 
 '''
     add paper
@@ -185,20 +185,20 @@ def add_result(request: HttpRequest):
     content = request.POST.get('content')
 
     picture = request.FILES.get("picture")
-    file = request.FILES.get('file')
 
-    print("2")
-
-#    print(file)
-    print(picture)
-    print(str(picture))
+    multipic = request.FILES.get('multipic')
 
     result = Results(title=title, abstract=abstract, scholars=scholars, pyear=pyear, field=field,
-                     period=period, picture=picture, content=content, file=file, state=0)
+                     period=period, picture=picture, content=content, state=0)
 
-    print("3")
+    print(multipic)
+
+    for p in multipic:
+        p = Multipic(picture=p)
+        result.multipic.add(p)
+
     result.save()
-    # insert_result(rid=id)
+
     print("4")
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
@@ -250,10 +250,15 @@ def refuse_result(request:HttpRequest, id:int):
 def get_resultInfo(request: HttpRequest, id: int):
     print('get result info')
     result = Results.objects.get(id=id)
-    if result.state == 1:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid user state")
+
+    if result.state != 1:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
+
     expert = Expert.objects.filter(results=id)[0]
     user = User.objects.get(expert_info=expert.id)
+
+    multipic = Multipic.objects.filter(results_id=id)
+
     return success_api_response({
         "title": result.title,
         "abstract": result.abstract,
@@ -270,6 +275,7 @@ def get_resultInfo(request: HttpRequest, id: int):
         "expert_logo": user.get_icon(),
         "uid": user.id,
         "result_pic": result.get_pic(),
-        "expert_email": user.email
+        "expert_email": user.email,
+        "result_multipic": multipic,
     })
 

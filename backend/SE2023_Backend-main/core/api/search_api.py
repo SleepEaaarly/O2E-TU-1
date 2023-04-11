@@ -95,7 +95,6 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
         key_words = key_word.split()
     print(key_words)
 
-
     data_results = []
     enterprises = Enterprise_info.objects.none()
     
@@ -183,6 +182,10 @@ def search_result(request: HttpRequest):
                 continue
             if field not in result.field:
                 continue
+
+        if result.state != 1:
+            continue
+
         expert = Expert.objects.filter(results__id=result.id)[0]
         user = User.objects.get(expert_info__id=expert.id)
 
