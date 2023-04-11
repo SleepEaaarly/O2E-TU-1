@@ -321,6 +321,7 @@ export default {
 					let data_item = {}
 					data_item.messages = []
 					// data_item.name = // TODO: 这块看看用户名称能不能传一下，或者我获取再获取一下用户信息
+					data_item.uId = item.userInfo.uId
 					data_item.email = item.userInfo.email
 					data_item.name = item.userInfo.name
 					let bef_time = null
@@ -364,7 +365,7 @@ export default {
 			console.log("abc")
 			// 发送回复的 submit 函数，需要确定数据类型
 			pushSystemChat({
-				"uId": selectData.userinfo.uId,
+				"uId": selectData.uId,
 				"content": this.reply, 
 			}).then((res) => {
 				console.log(res);
@@ -376,7 +377,7 @@ export default {
 					userpic: "",
 					type: "text",
 					message: this.reply,
-					gstime: time.gettime.gettime(now, selectData.messages[selectData.messages.length - 1].created_at),
+					gstime: gettime.gettime(now, selectData.messages[selectData.messages.length - 1].created_at),
 					created_at: now
 				}
 				selectData.messages.push(obj)
