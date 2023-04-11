@@ -218,9 +218,11 @@ def alter_systemchat_visible(request: HttpRequest):
     else:
         content = "Manual"
     switch_message = SystemMessage.new_message(is_to_system=1, owner=user,
-                                                      content=content,type='switch_info')
+                                               content=content, type='switch_info')
+    print("swicth_", switch_message)
     system_chatroom.add_message(switch_message)
     system_chatroom.alter_mode(data.get('show'))
+    system_chatroom.save()
     return success_api_response(None)
 
 
@@ -263,7 +265,7 @@ def get_all_system_chatrooms(request: HttpRequest):
                     a_message['user_pic'] = ''
                 # type, message, cardInfo
                 a_message['type'] = m.type
-                if(m.type=='card'):
+                if(m.type == 'card'):
                     a_message["cardInfo"] = CardMessage(m).generate_card()
                 else:
                     a_message['message'] = m.content
