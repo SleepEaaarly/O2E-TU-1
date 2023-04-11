@@ -140,7 +140,7 @@ const columns = [{
 // 				type: 'text',
 // 				message: "sdfadfadfadfadfa",
 // 				gstime: "text gstime",
-// 				create_at: "test created"
+// 				created_at: "test created"
 // 			},
 // 			{
 // 				isme: true,
@@ -148,7 +148,7 @@ const columns = [{
 // 				type: 'text',
 // 				message: "msg2",
 // 				gstime: null,
-// 				create_at: "test created"
+// 				created_at: "test created"
 // 			},
 // 			{
 // 				isme: false,
@@ -156,7 +156,7 @@ const columns = [{
 // 				type: 'text',
 // 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
 // 				gstime: null,
-// 				create_at: "test created"
+// 				created_at: "test created"
 // 			},
 // 			{
 // 				isme: false,
@@ -164,7 +164,7 @@ const columns = [{
 // 				type: 'text',
 // 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
 // 				gstime: null,
-// 				create_at: "test created"
+// 				created_at: "test created"
 // 			},
 // 			{
 // 				isme: false,
@@ -172,7 +172,7 @@ const columns = [{
 // 				type: 'text',
 // 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
 // 				gstime: null,
-// 				create_at: "test created"
+// 				created_at: "test created"
 // 			},
 // 			{
 // 				isme: false,
@@ -180,7 +180,7 @@ const columns = [{
 // 				type: 'text',
 // 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
 // 				gstime: null,
-// 				create_at: "test created"
+// 				created_at: "test created"
 // 			},
 // 			{
 // 				isme: true,
@@ -188,7 +188,7 @@ const columns = [{
 // 				type: 'text',
 // 				message: "回复回复回复回复",
 // 				gstime: null,
-// 				create_at: "test created"
+// 				created_at: "test created"
 // 			},
 // 			{
 // 				isme: false,
@@ -196,14 +196,14 @@ const columns = [{
 // 				type: 'text',
 // 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
 // 				gstime: null,
-// 				create_at: "test created"
+// 				created_at: "test created"
 // 			},{
 // 				isme: false,
 // 				userpic: "usrpiclink",
 // 				type: 'text',
 // 				message: "你好你好",
 // 				gstime: null,
-// 				create_at: "test created"
+// 				created_at: "test created"
 // 			}
 // 		],
 // 	}, 
@@ -219,7 +219,7 @@ const columns = [{
 // 				type: 'text',
 // 				message: "sdfadfadfadfadfa",
 // 				gstime: "text gstime",
-// 				create_at: "test created"
+// 				created_at: "test created"
 // 			}],
 // 	},
 // 	{
@@ -234,7 +234,7 @@ const columns = [{
 // 				type: 'text',
 // 				message: "sdfadfadfadfadfa",
 // 				gstime: "text gstime",
-// 				create_at: "test created"
+// 				created_at: "test created"
 // 			}],
 // 	}
 // ];
@@ -322,7 +322,9 @@ export default {
 					data_item.messages = []
 					// data_item.name = // TODO: 这块看看用户名称能不能传一下，或者我获取再获取一下用户信息
 					data_item.email = item.userInfo.email
+					data_item.name = item.userInfo.name
 					let bef_time = null
+					let last_message = null
 					for (let j = 0; j < item.messages.length; j++) {
 						let res_message = item.messages[j]
 						let data_message = {}
@@ -331,20 +333,25 @@ export default {
 						data_message.type = res_message.type
 						data_message.message = res_message.message
 						data_message.cardInfo = res_message.cardInfo
-						data_message.create_at = res_message.create_at
+						data_message.created_at = res_message.created_at
 						if (bef_time === null) {
-							data_message.gstime = gettime.gettime(data_message.create_at, 0)
-							bef_time = data_message.create_at
+							data_message.gstime = gettime.gettime(res_message.created_at, 0)
+							bef_time = res_message.created_at
 						} else {
 							data_message.gstime = 
-								gettime.gettime(data_message.create_at, bef_time)
-							bef_time = data_message.create_at
+								gettime.gettime(res_message.created_at, bef_time)
+							bef_time = res_message.created_at
 						}
+						console.log(res_message.created_at)
 						data_item.messages.push(data_message)
+						last_message = data_message.message
 					}
 					// for (res_message in item.messages) {
 						
 					// }
+					data_item.time = bef_time
+					data_item.message = last_message
+					console.log(data_item)
 					this.data.push(data_item)
 				}
 				
@@ -369,8 +376,8 @@ export default {
 					userpic: "",
 					type: "text",
 					message: this.reply,
-					gstime: time.gettime.gettime(now, selectData.messages[selectData.messages.length - 1].create_at),
-					create_at: now
+					gstime: time.gettime.gettime(now, selectData.messages[selectData.messages.length - 1].created_at),
+					created_at: now
 				}
 				selectData.messages.push(obj)
 			}).catch((error) => {
