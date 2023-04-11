@@ -52,7 +52,7 @@ export const getAllNeed =async () => {
 	let headers = { 'Authorization':'Bearer ' + uni.getStorageSync('token') }
 	let result = await axios.get('need/all', {}, headers)
 	result = result.data
-	// console.log("result is:" + result)
+	console.log("result is:" + result)
 	
 	//清洗数据格式
 	if(result && result.length){

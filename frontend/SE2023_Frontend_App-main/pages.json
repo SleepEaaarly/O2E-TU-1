@@ -1,9 +1,9 @@
 {
 	"pages": [
 		{
-			"path": "pages/index/index",
+			"path": "pages/entry/entry",
 			"style": {
-				"navigationBarTitleText": "首页",
+				"navigationBarTitleText": "主页",
 				"app-plus": {
 					"scrollIndicator": "none", //隐藏滚动条
 					"bounce": "none", //关闭反弹效果
@@ -11,6 +11,61 @@
 				}
 			}
 		}, 
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "社区",
+				"app-plus": {
+					"scrollIndicator": "none", //隐藏滚动条
+					"bounce": "none", //关闭反弹效果
+					"titleNView": false//禁用原生导航栏
+				}
+			}
+		}, 
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"scrollIndicator": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/expert_store/expert_store",
+			"style": {
+				"navigationBarTitleText": "专家库",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"scrollIndicator": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/work_store/work_store",
+			"style": {
+				"navigationBarTitleText": "成果库",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"scrollIndicator": "none"
+				}
+			}
+		},
+		{
+			"path": "pages/company_store/company_store",
+			"style": {
+				"navigationBarTitleText": "企业库",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"scrollIndicator": "none"
+				}
+			}
+		},
 		{
 			"path": "pages/login/login",
 			"style": {
@@ -581,7 +636,19 @@
 				}
 			}
 		}, 
-		
+		{
+			"path": "pages/work_detail/work_detail",
+			"style": {
+				"navigationBarTitleText": "成果详情",
+				"app-plus": {
+					"scrollIndicator": "none",
+					"bounce": "none",
+					"titleNView": {
+						"autoBackButton": true
+					}
+				}
+			}
+		},
 		{
 			"path": "pages/need-detail/detail",
 			"style": {
@@ -738,6 +805,12 @@
 				"navigationBarTitleText":"常见问题",
 				"enablePullDownRefresh": false
 			}
+		},
+		{
+			"path": "uni_modules/uni-combox/components/uni-combox/uni-combox",
+			"style": {
+			"navigationBarTitleText": "带输入的下拉菜单"
+			}
 		}
     ],
 	"permission": {
@@ -748,7 +821,9 @@
 	"easycom": {
 		"autoscan": true,
 		"custom": {
-			"tui-(.*)": "@/components/thorui/tui-$1/tui-$1.vue"
+			"tui-(.*)": "@/components/thorui/tui-$1/tui-$1.vue",
+			"^u-(.*)": "@/uni_modules/uview-ui/components/u-$1/u-$1.vue",
+			"fui-(.*)": "@/components/firstui/fui-$1/fui-$1.vue"
 		}
 	},
 	"globalStyle": {
@@ -765,10 +840,16 @@
 		"borderStyle": "black",
 		"backgroundColor": "#FFFFFF",
 		"list": [{
-				"pagePath": "pages/index/index",
+				"pagePath": "pages/entry/entry",
 				"text": "首页",
 				"iconPath": "/static/images/tabbar/index.png",
 				"selectedIconPath": "/static/images/tabbar/indexed.png"
+			},
+			{
+				"pagePath": "pages/index/index",
+				"text": "社区",
+				"iconPath": "/static/images/tabbar/shequ.png",
+				"selectedIconPath": "/static/images/tabbar/shequed.png"
 			},
 			{
 				"pagePath": "pages/paper/paper",

@@ -27,6 +27,7 @@ export const getTopicList = async () => {
 			}
 		})
 	}
+	console.log(result)
 	return result
 }
 

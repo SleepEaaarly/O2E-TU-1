@@ -11,7 +11,7 @@
 								<u-col span="7">
 									<u-row>
 										<text class = "expertTitle">{{name}}</text>
-									<u-tag :text="title" plain plainFill type="warning"  shape="circle" size = "mini" style="margin-left: 10px;"> </u-tag>
+									<u-tag v-if="title" :text="title" plain plainFill type="warning"  shape="circle" size = "mini" style="margin-left: 10px;"> </u-tag>
 								
 										
 									</u-row>
@@ -66,6 +66,6 @@
 		margin-left: 10px;
 		margin-top: 5px;
 		margin-bottom: 5px;
-		width: 70px;
+		width: auto;
 	}
 </style>

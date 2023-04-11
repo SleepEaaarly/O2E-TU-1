@@ -29,7 +29,7 @@
 					<uni-list-item class="explore" v-if='userInfo.type==4' :border="false" :show-extra-icon="true" clickable :extra-icon="rateIcon" title="最近收到的评价" link @click="clickRate" />
 					<uni-list-item class="explore" v-else-if='userInfo.type==5' :border="false" :show-extra-icon="true" clickable :extra-icon="rateIcon" title="最近评价" link @click="clickRate" />
 					
-					<uni-list-item class="explore" :border="false" :show-extra-icon="true" clickable link :extra-icon="inviteIcon" title="邀请好友享福利" rightText="立享首单补贴" @click="clickLink"/>
+					<!-- <uni-list-item class="explore" :border="false" :show-extra-icon="true" clickable link :extra-icon="inviteIcon" title="邀请好友享福利" rightText="立享首单补贴" @click="clickLink"/> -->
 					
 					<uni-list-item class="explore" :border="false" :show-extra-icon="true" clickable :extra-icon="feedbackIcon" title="帮助与反馈" link to="/pages/feedback/feedback" @click="onClick"/>
 					

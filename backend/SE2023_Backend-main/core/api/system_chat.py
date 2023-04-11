@@ -69,6 +69,7 @@ def create_system_chat(request: HttpRequest):
         - noreadnum: int 未读信息数
 """
 
+
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -248,9 +249,9 @@ def alter_systemchat_visible(request: HttpRequest):
 @require_GET
 @response_wrapper
 def get_all_system_chatrooms(request: HttpRequest):
-    ret_all_list = {}
+    ret_all_list = []
     try:
-        for sys_chat in SystemChatroom.all():
+        for sys_chat in SystemChatroom.objects.all():
             ret_data = {}
             messages = []
             owner = sys_chat.owner
@@ -260,11 +261,11 @@ def get_all_system_chatrooms(request: HttpRequest):
             }
             for m in sys_chat.messages.all():
                 a_message = {}
-                if(m.from_user is owner):
-                    a_message['isme'] = True
-                    a_message['user_pic'] = owner.icon
+                if(m.owner is owner):
+                    a_message['isme'] = 1
+                    a_message['user_pic'] = owner.icon.path
                 else:
-                    a_message['isme'] = False
+                    a_message['isme'] = 0
                     a_message['user_pic'] = ''
                 # type, message, cardInfo
                 if(isinstance(m, CardMessage)):
@@ -280,13 +281,14 @@ def get_all_system_chatrooms(request: HttpRequest):
                     a_message['type'] = 'text'
                     a_message['message'] = m.content
                 # created_at
-                a_message['created_at'] = m.created_at
+                a_message['created_at'] = m.get_create_time()
                 messages.append(a_message)
             ret_data['messages'] = messages
             ret_data['noreadnum'] = sys_chat.unread_message_num
             ret_data['userInfo'] = user_info
             ret_all_list.append(ret_data)
-        return success_api_response(ret_all_list)
+            print({"system_chat_list": ret_all_list})
+        return success_api_response({"system_chat_list": ret_all_list})
     except Exception:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Fail to get all system chatrooms information")
 
@@ -308,7 +310,6 @@ def get_all_system_chatrooms(request: HttpRequest):
 
 @jwt_auth()
 @require_POST
-@response_wrapper
 def push_system_message_by_admin(request: HttpRequest):
     data: dict = parse_data(request)
     user: User = User.objects.get(id=data.get('uId'))
@@ -319,7 +320,7 @@ def push_system_message_by_admin(request: HttpRequest):
             owner=user)
         from_user = None
         to_user = user
-        message_id = Message.new_message(
+        message_id = SystemMessage.new_message(
             from_user=from_user,
             to_user=to_user,
             content=content)
