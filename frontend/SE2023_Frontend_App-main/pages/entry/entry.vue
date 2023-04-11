@@ -262,7 +262,8 @@
 					}
 					var rec_list
 					if (Array.prototype.isPrototypeOf(this.recommendList.list) && this.recommendList.list.length === 0 ){
-						rec_list = await getWorkRec(paras)
+						//rec_list = await getWorkRec(paras)
+						rec_list = {}
 					}
 					if (Array.prototype.isPrototypeOf(this.recommendList.list) && this.recommendList.list.length === 0 ){
 						console.log("still None")
@@ -272,7 +273,7 @@
 						"period": '',
 						"key_word": ''
 					})
-					this.recommendList.list = rec_list.concat(work_list)
+					this.recommendList.list = Object.assign(rec_list, work_list)
 				} catch (e) {
 					console.log(e)
 					return

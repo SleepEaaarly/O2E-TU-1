@@ -15,6 +15,7 @@ module.exports = {
   UserAll:`${BASE_URL_IP}/api/user/all`,
   ExpertAll:`${BASE_URL_IP}/api/expert/getall`,
   EnterpriseAll: `${BASE_URL_IP}/api/enterprise/getall`,
+  WorkAll: `${BASE_URL_IP}/api/search/result`,
   OrderAll: `${BASE_URL_IP}/api/admin/order/getall`,
   BASE_URL_IP: BASE_URL_IP
 }
