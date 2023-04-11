@@ -10,6 +10,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-switchuser:before {
+  content: "\e8ea";
+}
+
 .icon-kulian:before {
   content: "\e600";
 }

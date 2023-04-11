@@ -344,4 +344,4 @@ def generate_requirement_book(request: HttpRequest,require):
     response = requests.post(url, headers=headers, data=data)
     print(response.content.decode('utf-8'))
     return success_api_response({"requirement_book":response.content.decode('utf-8')})
-    
+

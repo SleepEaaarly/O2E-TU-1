@@ -4,7 +4,9 @@ Switch message: 模式转换消息
 from django.db import models
 from django.contrib.auth import get_user_model
 from .user import User
-from .message import Message
+
+from .system_message import SystemMessage
+
 
 UNREAD = 0
 READ = 1
@@ -23,7 +25,9 @@ SWITCH_TYPE = (
 )
 
 
-class SwitchMessage(Message):
+
+class SwitchMessage(SystemMessage):
+
     """
     Field:
         - 与Message的字段完全一样，只是content的内容是转换后的模式
@@ -31,13 +35,14 @@ class SwitchMessage(Message):
 
     @classmethod
     def new_switch_message(cls,
-                           from_user: User,
-                           to_user: User,
+
+                           owner: User,
+                           is_to_system: int,
                            content: str,
                            ):
         try:
-            new_switch_message = SwitchMessage(content=content, from_user=from_user,
-                                               to_user=to_user, read_state=UNREAD,
+            new_switch_message = SwitchMessage(content=content, owner=owner,
+                                               is_to_system=is_to_system, read_state=UNREAD,
                                                )
             new_switch_message.save()
             return new_switch_message.id

@@ -10,7 +10,9 @@ from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 from core.api.platform.utils import get_now_time
-from core.models import User, Chatroom, Message, SystemChatroom, CardMessage
+
+from core.models import User, SystemMessage, SystemChatroom, CardMessage, Message
+
 from core.models import SwitchMessage, ImageMessage
 
 
@@ -71,11 +73,12 @@ def create_system_chat(request: HttpRequest):
 """
 
 
-@jwt_auth()
 @require_GET
 @response_wrapper
 def get_system_chat(request: HttpRequest):
-    data = parse_data(request)
+
+    data = request.GET.dict()
+
     user_id = data.get('uId')
     try:
         owner = User.objects.get(id=user_id)
@@ -86,9 +89,12 @@ def get_system_chat(request: HttpRequest):
     messages = []
     for m in system_chatroom.messages.all():
         a_message = {}
-        if(m.from_user is owner):
+
+        if(m.is_to_system == 1):
             a_message['isme'] = True
-            a_message['user_pic'] = owner.icon
+            print(type(owner.icon))
+            a_message['user_pic'] = owner.icon.path
+
         else:
             a_message['isme'] = False
             a_message['user_pic'] = ''
@@ -106,7 +112,9 @@ def get_system_chat(request: HttpRequest):
             a_message['type'] = 'text'
             a_message['message'] = m.content
         # created_at
-        a_message['created_at'] = m.created_at
+
+        a_message['created_at'] = m.get_create_time()
+
         messages.append(a_message)
     ret_data['messages'] = messages
     ret_data['noreadnum'] = system_chatroom.unread_message_num
@@ -142,14 +150,12 @@ def push_system_message(request: HttpRequest):
         system_chatroom: SystemChatroom = SystemChatroom.objects.get(
             owner=user)
         if(data.get('isme') == 0):
-            from_user = user
-            to_user = None
+            is_to_system = 0
         else:
-            from_user = None
-            to_user = user
-        message_id = Message.new_message(
-            from_user=from_user,
-            to_user=to_user,
+            is_to_system = 1
+        message_id = SystemMessage.new_message(
+            is_to_system=is_to_system,
+            owner=user,
             content=content)
         if system_chatroom.add_message(message_id) is False:
             return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Add message failed.")
@@ -307,6 +313,7 @@ def get_all_system_chatrooms(request: HttpRequest):
         - 成功信息
     
 """
+
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -332,3 +339,4 @@ def push_system_message_by_admin(request: HttpRequest):
 
     return success_api_response({'system_chatroom_id': system_chatroom.id,
                                  'message_id': message_id})
+

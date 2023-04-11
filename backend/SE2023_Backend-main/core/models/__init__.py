@@ -29,3 +29,5 @@ from .system_chat import SystemChatroom
 from .card_message import CardMessage
 from .switch_message import SwitchMessage
 from .image_message import ImageMessage
+from .system_message import SystemMessage
+

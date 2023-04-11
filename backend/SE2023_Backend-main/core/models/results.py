@@ -8,6 +8,7 @@ RES_STATE_CHOICES = (
 )
 
 
+
 class Multipic(models.Model):
     picture = models.ImageField(upload_to="images/%Y%m/%d/res_pic")
 
@@ -35,5 +36,4 @@ class Results(models.Model):
         return {"title": self.title, "abstract": self.abstract, "scholars": self.scholars,
                 "pyear": self.pyear, "field": self.field, "period": self.period, "picture": self.picture,
                 "content": self.content, "file": self.file, "state": self.state, "relate_expert_id": self.relate_expert_id}
-
 

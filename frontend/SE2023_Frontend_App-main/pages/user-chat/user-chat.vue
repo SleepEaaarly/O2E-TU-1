@@ -156,7 +156,8 @@
 		onPullDownRefresh(){
 			this.initdata()
 		},
-		async onLoad(data) {
+		async onLoad(data) {	// 函数的主要作用是设置导航栏标题和设置导航栏颜色
+			console.log(data)
 			if(data.index){
 				this.setIndex(parseInt(data.index))
 				this.index = data.index
@@ -276,7 +277,7 @@
 			'setMsgPage',
 			'addChatMessage','addNoreadMessage']),
 			// 初始化参数
-			async initdata(){
+			async initdata(){	// 获得页面信息（高度）
 				try {
 					const res = uni.getSystemInfoSync()
 					let t = 200
@@ -286,12 +287,13 @@
 					uni.stopPullDownRefresh()
 				} catch (e) { }
 			},
-			refresh(){
+			refresh(){	// 刷新，每隔5秒
+				console.log("刷新")
 				this.timer = setInterval(() => {
 				      setTimeout(this.trym, 0)
 				    }, 1000*5)
 			},
-			createOrderAndRefresh(){
+			createOrderAndRefresh(){	// 创建订单并刷新
 				if(this.userInfo.type === 5){	//5 = 专家
 					let temp={
 						enterprise_id: this.userInfo.id,
@@ -312,17 +314,17 @@
 				this.initorder()
 				this.sendm('我已向您发起订单，需求名为：' + this.need.title)
 			},
-			acceptOrderAndRefresh(){
+			acceptOrderAndRefresh(){	// 接收订单并刷新
 				acceptOrder(this.userInfo.id,this.order.order_id)
 				this.initorder()
 				this.sendm('我已接受您的订单，需求名为：'+this.need.title)
 			},
-			rejectOrderAndRefresh(){
+			rejectOrderAndRefresh(){	// 拒绝订单并刷新
 				rejectOrder(this.userInfo.id,this.order.order_id)
 				this.initorder()
 				this.sendm('我已拒绝您的订单，需求名为：'+this.need.title)
 			},
-			accomplishOrderAndRefresh(){
+			accomplishOrderAndRefresh(){	// 完成订单并刷新
 				if(this.userInfo.type===5){
 					let temp={
 						enterprise_id:this.userInfo.id,
@@ -344,7 +346,7 @@
 				this.initorder()
 				this.sendm('我们的订单已完成，需求名为：'+this.need.title)
 			},
-			async initorder(){
+			async initorder(){	// 获得专家和企业之间的需求和订单信息
 				if(this.userInfo.type===5){
 					let temp={
 						enterprise_id:this.userInfo.id,
@@ -399,7 +401,7 @@
 				
 				//console.log("order:"+this.need && this.need.need_id!=0)
 			},
-			async sendm(data){
+			async sendm(data){	// 通过 submid 发送数据
 				this.submit(data)
 			},
 			scrollTopHandle(){
@@ -418,7 +420,7 @@
 				this.triggered = true
 				this.setMsgPage()
 			},
-			pageToBottom(isfirst = false){
+			pageToBottom(isfirst = false){	// 页面展示当前聊天的底部
 				let q=uni.createSelectorQuery().in(this)
 				let itemH = q.selectAll('.chat-item')
 				if(this.currentChatMsgs.length!==0){
@@ -438,7 +440,7 @@
 					})
 				}
 			},
-			openmenu(){
+			openmenu(){	// 开启和关闭菜单
 				
 				if(this.show){
 					this.show=false
@@ -446,17 +448,17 @@
 					this.show=true
 				}
 			},
-			clear(){
+			clear(){	// 清除计时器
 				clearInterval(this.timer) //清除计时器
 				this.timer = null //设置为null
 			},
-			goToUserInfo(uid){
+			goToUserInfo(uid){	// 进入用户空间
 				uni.navigateTo({ url:'../../pages/user-space/user-space?uid=' + uid })
 			},
-			goToNeedDetail(item){
+			goToNeedDetail(item){	// 进入需求详情部分
 				uni.navigateTo({ url:'../need-detail/detail?id='+item })
 			},
-			goToOrderDetail(item){
+			goToOrderDetail(item){	// 进入订单详情部分
 				uni.navigateTo({ url:'../order-detail/order-detail?id='+item })
 			},
 			// 获取聊天数据
@@ -466,7 +468,7 @@
 					return
 				}
 			},
-			async submit(data){
+			async submit(data){	// 提交（发送）消息
 				// 构建数据
 				let now=new Date().getTime()
 				if(data===''){

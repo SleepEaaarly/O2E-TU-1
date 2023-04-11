@@ -195,7 +195,7 @@ def add_result(request: HttpRequest):
 
     print("3")
     result.save()
-    # insert_result(rid=id)
+
     print("4")
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
@@ -247,8 +247,10 @@ def refuse_result(request:HttpRequest, id:int):
 def get_resultInfo(request: HttpRequest, id: int):
     print('get result info')
     result = Results.objects.get(id=id)
+
     if result.state != 1:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
+
     expert = Expert.objects.filter(results=id)[0]
     user = User.objects.get(expert_info=expert.id)
     return success_api_response({
