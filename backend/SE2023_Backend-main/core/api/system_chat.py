@@ -10,11 +10,7 @@ from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 from core.api.platform.utils import get_now_time
-<<<<<<< HEAD
-from core.models import User, Chatroom, Message, SystemChatroom, CardMessage
-=======
 from core.models import User, SystemMessage, SystemChatroom, CardMessage
->>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
 from core.models import SwitchMessage, ImageMessage
 
 
