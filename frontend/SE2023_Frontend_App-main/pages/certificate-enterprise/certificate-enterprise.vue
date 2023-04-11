@@ -253,7 +253,7 @@
 				if (val.length > 0) {
 					this.business_license = val[0]
 				} else {
-					this.legal_person_ID = ''
+					this.business_license = ''
 				}
 				console.log('License Path!')
 				console.log(this.business_license)

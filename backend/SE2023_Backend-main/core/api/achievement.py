@@ -181,15 +181,18 @@ def add_result(request: HttpRequest):
     pyear = request.POST.get('pyear').split('-')[0]
     field = request.POST.get('field')
     period = request.POST.get('period')
-    picture = request.FILES.get('picture')
-    content = request.POST.get('content')
-    file = request.FILES.get('file')
     id = request.POST.get('id')
+    content = request.POST.get('content')
+
+    picture = request.FILES.get("picture")
+    file = request.FILES.get('file')
 
     print("2")
 
-    print(file)
+#    print(file)
     print(picture)
+    print(str(picture))
+
     result = Results(title=title, abstract=abstract, scholars=scholars, pyear=pyear, field=field,
                      period=period, picture=picture, content=content, file=file, state=0)
 

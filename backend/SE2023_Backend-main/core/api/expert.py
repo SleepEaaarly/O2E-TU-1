@@ -88,6 +88,8 @@ def setinfo(request:HttpRequest):
     if not ID_num:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need valid ID_num")
     scholar_ID = request.FILES.get("scholar_ID", None)
+    print(scholar_ID)
+    print(str(scholar_ID))
     scholar_profile = request.POST.get("scholar_profile", None)
     if not scholar_profile:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need valid scholar_profile")
