@@ -29,7 +29,4 @@ from .system_chat import SystemChatroom
 from .card_message import CardMessage
 from .switch_message import SwitchMessage
 from .image_message import ImageMessage
-<<<<<<< HEAD
-=======
 from .system_message import SystemMessage
->>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
