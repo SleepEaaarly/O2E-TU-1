@@ -220,6 +220,7 @@ def agree_result(request:HttpRequest, id:int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
     result.state = 1
     result.save()
+    
     return success_api_response("success")
 
 

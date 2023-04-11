@@ -280,7 +280,7 @@ def get_all_system_chatrooms(request: HttpRequest):
                     a_message['type'] = 'text'
                     a_message['message'] = m.content
                 # created_at
-                a_message['created_at'] = m.created_at
+                a_message['created_at'] = m.get_create_time()
                 messages.append(a_message)
             ret_data['messages'] = messages
             ret_data['noreadnum'] = sys_chat.unread_message_num
@@ -319,7 +319,7 @@ def push_system_message_by_admin(request: HttpRequest):
             owner=user)
         from_user = None
         to_user = user
-        message_id = Message.new_message(
+        message_id = SystemMessage.new_message(
             from_user=from_user,
             to_user=to_user,
             content=content)
