@@ -93,7 +93,7 @@ export default {
                 success: (res) => {
                     if (res.confirm) {
                         this.imageList.splice(index, 1);
-                        this.$emit('getIDpic', this.imageList)
+                        this.$emit('getWorkPic', this.imageList)
                     }
                 }
             });

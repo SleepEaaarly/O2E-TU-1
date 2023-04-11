@@ -53,9 +53,10 @@
 					</view>
 				</uni-section>
                 <uni-section title="成果示意图" subTitle="请选择图片展示成果" type="line" padding>
-                    <view>
-                        <uploadWorkPic @getWorkPic="getWorkPic"></uploadWorkPic>
-                    </view>
+					<view>
+						<view class="thorui-input-title">法人身份证(必填)</view>
+						<uploadID @getIDpic="getWorkPic"></uploadID>
+					</view>
                 </uni-section>
 				<uni-section title="成果详情" subTitle="请选择附件" type="line" padding>
 					<view class="add-btn">
@@ -85,6 +86,7 @@ import {
     saveachievement
 } from '@/api/add-achievement.js'
 import uploadWorkPic from '../../components/uploadImages/uploadWorkPic.vue'
+import uploadID from '../../components/uploadImages/uploadID.vue'
 import uniCard from '@/components/uni_easyinput/uni-card/components/uni-card/uni-card.vue'
 import uniEasyinput from '@/components/uni_easyinput/uni-easyinput/components/uni-easyinput/uni-easyinput.vue'
 import uniSection from '@/components/uni-section/uni-section.vue'
@@ -95,7 +97,8 @@ export default {
         uniEasyinput,
         uniSection,
         uniDatetimePicker,
-        uploadWorkPic
+        uploadWorkPic,
+        uploadID
     },
     data() {
         return {
@@ -122,6 +125,7 @@ export default {
 			paperKind: '',
             achievementFile: null,
             period: '',
+            picture: '',
             field_items: [
                 '信息技术', '装备制造', '新材料', '新能源', '节能环保', '生物医药', '科学创意', '检验检测', '其他'
             ],
@@ -220,19 +224,22 @@ export default {
             uni.navigateBack()
         },
         inputTitle(e) {
-            this.title = e.detail
+            this.title = e.detail.value
         },
         inputDescription(e) {
-            this.description = e.detail
+            this.description = e.detail.value
         },
 		inputScholars(e){
-			this.scholars = e.detail
+			this.scholars = e.detail.value
 		},
 		inputachievement_url(e){
-			this.achievement_url = e.detail
+			this.achievement_url = e.detail.value
 		},
         inputMoney(e) {
-            this.money = e.detail
+            this.money = e.detail.value
+        },
+        inputPicture(e){
+            this.picture = e.detail.value
         },
         show: function (e) {
             this.$refs.start_time.show()
@@ -252,16 +259,16 @@ export default {
             this.field = this.index
         },
         inputRegisterCapital(e) {
-            this.register_capital = e.detail
+            this.register_capital = e.detail.value
         },
         inputAddress(e) {
-            this.address = e.detail
+            this.address = e.detail.value
         },
 		inputCite(e){
 			this.cites = e.detail-0
 		},
         inputPredict(e) {
-            this.predict = e.detail
+            this.predict = e.detail.value
         },
         radioChange: function (evt) {
             for (let i = 0; i < this.achTypes.length; i++) {
@@ -349,17 +356,21 @@ export default {
 					console.log("validate_success!")
 				}
 				console.log("start_submit")
+				console.log(this.picture)
 				uni.uploadFile({
 					url: 'http://127.0.0.1:8000/api/result/add',
 				// url: 'http://122.9.14.73:8000/api/enterprise/setinfo',
 					files: [{
-						url: this.picture,
+						uri: this.picture,
 						name: 'picture'
 					},
 					{
-						url: this.achievementFile,
+						uri: this.achievementFile,
 						name: 'file'
-					}],
+					},
+					
+					],
+					
 					formData:{
 						'title': this.title,
 						'abstract': this.description,

@@ -6,7 +6,7 @@
 			<!-- <u-search placeholder="请输入搜索内容" :showAction = "false" ></u-search> -->
 		</u-row>
 		<u-row style="margin-left: 10px;margin-right: 10px;">
-			<u-search placeholder="请输入搜索内容" :showAction = "false" ></u-search>
+			<u-search placeholder="请输入搜索内容" :showAction = "false" v-model="searchText"></u-search>
 		</u-row>
 		<u-row style="margin-top: 10px;margin-left: 10px;">
 			<uni-combox :candidates="area_list" placeholder="领域" v-model="chosen_area" class="work_combox" :border="false"></uni-combox>

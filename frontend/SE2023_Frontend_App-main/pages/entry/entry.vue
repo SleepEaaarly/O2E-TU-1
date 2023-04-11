@@ -3,7 +3,7 @@
 	<view>
 		<!-- 搜索栏 -->
 		<view class = "search_view" style="margin-top: 10rpx;margin-left: 20px;margin-right: 20px;margin-top: 30px;">
-			<u-search placeholder="请输入搜索内容" :showAction = "false" ></u-search>
+			<u-search placeholder="请输入搜索内容" :showAction = "false" v-model="searchText"></u-search>
 		</view>
 		
 		
@@ -78,13 +78,13 @@
 					<work-card
 					@click.native="workDetail(item)"  
 					:authorLogoPath="item['authorLogoPath']" 
+					:workLogoPath="item['work_icon']" 
 					:author="item['author']"
-					:date="item['date']" 
 					:title="item['title']"
+					:date="item['date']"
 					:area="item['area']"
 					:intro="item['intro']"
 					:period="item['period']"
-					:workLogoPath="item['workLogoPath']"
 					:index="index1"></work-card>
 				</block> 
 				<uni-load-more :loadtext="recommendList.loadtext"></uni-load-more>
@@ -115,52 +115,112 @@
 
 <script>
 	import workCard from '@/components/work_display_card.vue'
+	import { getWorkRec } from "@/api/work_recommend.js"
+	import { mapState } from 'vuex'
+	import { getWorkList } from "@/api/work_store.js"
 	export default {
 		data() {
 			return {
+				searchText:'',
 				recommendList: {
 					loadtext: '没有更多数据了',
 					id: 'recommend',
 					list: [
-						{
-							'authorLogoPath': '/static/expert_test_head_logo (2).png',
-							'author': 'Expert1',
-							'date': '2023-3-30 21:41',
-							'title': '超高分子量聚乙烯的研发制备',
-							'area': '新材料',
-							'intro': '一种线型结构的具有优异综合性能的热塑性工程塑料',
-							'workLogoPath': '/static/super_quantity_material.png',
-							"period": "中试",
-						},
-						{
-							'authorLogoPath': '/static/expert_test_head_logo (1).png',
-							'author': 'Expert2',
-							'date': '2023-3-30 21:50',
-							'title': '环境友好大豆蛋白质材料改性开发',
-							'area': '生物医药',
-							'intro': '该项目通过与其他生物可降解材料的共混，以及与纳米粒子的复合来得到廉价、加工性能良好、力学及防水性能改善的大豆蛋白质环境友好材料。',
-							'workLogoPath': '/static/soybean_improvement.png',
-							"period": "产业化",
-						},
-						{
-							"title": 'A Summary of ML',
-							"author": '占瑞乙',
-							'area': '科学创意',
-							"expert_title": '本科生',
-							"intro": 'Here is a summary of some of the most commonly used methods in machine learning.',
-							"expert_organization": '北京航空航天大学',
-							"authorLogoPath": '/static/head_zry_fox.jpg',
-							"work_id": '',
-							"expert_id": '',
-							"user_id": '',
-							'workLogoPath': '/static/work_logo_test_zry.png',
-							"work_pic": '/static/ML_Notes.png' ,
-							"expert_mail": "iszry@foxmail.com",
-							'date': '2023-4-4 16:32',
-							"period": "实验室",
-						}
+						// {
+						// 	'authorLogoPath': '/static/expert_test_head_logo (2).png',
+						// 	'author': 'Expert1',
+						// 	'date': '2023-3-30 21:41',
+						// 	'title': '超高分子量聚乙烯的研发制备',
+						// 	'area': '新材料',
+						// 	'intro': '一种线型结构的具有优异综合性能的热塑性工程塑料',
+						// 	'workLogoPath': '/static/super_quantity_material.png',
+						// 	"period": "中试",
+						// },
+						// {
+						// 	'authorLogoPath': '/static/expert_test_head_logo (1).png',
+						// 	'author': 'Expert2',
+						// 	'date': '2023-3-30 21:50',
+						// 	'title': '环境友好大豆蛋白质材料改性开发',
+						// 	'area': '生物医药',
+						// 	'intro': '该项目通过与其他生物可降解材料的共混，以及与纳米粒子的复合来得到廉价、加工性能良好、力学及防水性能改善的大豆蛋白质环境友好材料。',
+						// 	'workLogoPath': '/static/soybean_improvement.png',
+						// 	"period": "产业化",
+						// },
+						// {
+						// 	"title": 'A Summary of ML',
+						// 	"author": '占瑞乙',
+						// 	'area': '科学创意',
+						// 	"expert_title": '本科生',
+						// 	"intro": 'Here is a summary of some of the most commonly used methods in machine learning.',
+						// 	"expert_organization": '北京航空航天大学',
+						// 	"authorLogoPath": '/static/head_zry_fox.jpg',
+						// 	"work_id": '',
+						// 	"expert_id": '',
+						// 	"user_id": '',
+						// 	'workLogoPath': '/static/work_logo_test_zry.png',
+						// 	"work_pic": '/static/ML_Notes.png' ,
+						// 	"expert_mail": "iszry@foxmail.com",
+						// 	'date': '2023-4-4 16:32',
+						// 	"period": "实验室",
+						// }
 					]
 				},
+			}
+		},
+		onShow() {		//页面加载,一个页面只会调用一次
+			console.log('works-onShow()')
+			this.requestData()
+		},
+		onLoad() {		//页面显示,每次打开页面都会调用一次
+			console.log('works-onLoad()')
+		},
+		computed: { 
+			items_classified:  {
+				get: 	function() {
+							if(this.field !== this.field_items.length) {
+								let val = []
+								for(let item of this.items) {
+									if(item.field === this.field) {
+										val.push(item)
+									}
+								}
+								return val.length === 0 ? this.items : val
+							} else {
+								return this.items
+							}
+						},
+				set:    function(newValue) {
+							if (newValue.length === 0) {
+								this.items_show = false
+							} else {
+								this.items_show = true
+							}
+						}
+			},
+			...mapState(['userInfo']) 
+		},
+
+		watch: {
+			searchText(newVal, oldVal) {
+				this.requestData()
+			},
+			field: function(newValue) {
+				let that = this
+				var f = function(that) {
+					if(newValue !== that.field_items.length - 2) {
+						let val = []
+						for(let item of that.items) {
+							if(item.field === newValue) {
+								val.push(item)
+							}
+						}
+						console.log(val.length)
+						that.items_classified = val
+					} else {
+						that.items_classified = that.items
+					}
+				}
+				f(that)
 			}
 		},
 		methods: {
@@ -185,7 +245,39 @@
 				uni.navigateTo({
 					url: '../company_store/company_store',
 				})
-			}
+			},
+			
+			workDetail(work) {
+				console.log(work['result_id'])
+				// getExpertByID
+				uni.navigateTo({
+				 	url: '../../pages/work_detail/work_detail?rid=' + work['result_id'],
+				 })
+			},
+			async requestData() {
+				try {
+					let paras = {
+						"id": this.userInfo.id,
+						"type": this.userInfo.type,
+					}
+					var rec_list
+					if (Array.prototype.isPrototypeOf(this.recommendList.list) && this.recommendList.list.length === 0 ){
+						rec_list = await getWorkRec(paras)
+					}
+					if (Array.prototype.isPrototypeOf(this.recommendList.list) && this.recommendList.list.length === 0 ){
+						console.log("still None")
+					}
+					let work_list =  await getWorkList({
+						"field": '',
+						"period": '',
+						"key_word": ''
+					})
+					this.recommendList.list = rec_list.concat(work_list)
+				} catch (e) {
+					console.log(e)
+					return
+				}
+			},
 		},
 		components : {
 			workCard

@@ -6,21 +6,32 @@ import {
 
 
 //获取 专家-搜索
-export const getWorkList = async (paras) => {
+export const getWorkRec = async (paras) => {
     console.log("getWorkList OK.")
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
-    let ret = await axios.get('search/result?key_word=' + paras.key_word,
-        paras,
-        headers)
+	//path->ai/resultRec/expert/int
+	//path->ai/resultRec/enterprise/int
+	var ret
+	console.log(paras.type)
+	if(paras.type==4){
+		ret = await axios.get('ai/resultRec/expert/' + paras.id,
+		    {},
+		    headers)
+	}else{
+		ret = await axios.get('ai/resultRec/enterprise/' + paras.id,
+		    {},
+		    headers)
+	}
+
     let result = ret.data
     if (result && result.length) {
         result = result.map((item) => {
             return {
                 "result_id": item.result_id,
                 "expert_id": item.expert_id,
-                "authorLogoPath": picUrl + item.expert_icon, //picUrl + item.userpic,
+                "userpic": picUrl + item.expert_icon, //picUrl + item.userpic,
                 "field": item.field,
                 'author': item.scholars,
                 'title': item.title,
@@ -29,8 +40,8 @@ export const getWorkList = async (paras) => {
                 'period': item.period,
                 'content': item.content,
                 'state': item.state,
-				"workLogoPath": picUrl + item.result_pic
-                // 'workpic': picUrl + file
+				'work_logo': item.picture,
+                'workpic': picUrl + file
             }
         })
     }

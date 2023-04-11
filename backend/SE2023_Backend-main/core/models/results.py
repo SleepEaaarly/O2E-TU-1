@@ -15,7 +15,7 @@ class Results(models.Model):
     pyear = models.IntegerField(blank=True, null=True)
     field = models.CharField(max_length=100, blank=True, null=True)
     period = models.CharField(max_length=100, blank=True, null=True)
-    picture = models.ImageField(upload_to="images/%Y%m/%d/res_pic", default="images/default_result_pic.jfif")
+    picture = models.ImageField(upload_to="images/%Y%m/%d/res_pic", default="images/default_result_pic.jpg")
     content = models.TextField(blank=True, null=True)
     file = models.FileField(upload_to="pdf/%Y%m/%d/res_pdf")
     state = models.IntegerField(choices=RES_STATE_CHOICES, default=0)

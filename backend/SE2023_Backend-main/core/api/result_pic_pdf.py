@@ -94,7 +94,7 @@ def read_pic(request: HttpRequest, year, day, file_name):
 @response_wrapper
 @require_http_methods('GET')
 def read_default_pic(request: HttpRequest):
-    imagepath=os.path.join(BASE_DIR, "static/images/default_result_pic.jfif")
+    imagepath=os.path.join(BASE_DIR, "static/images/default_result_pic.jpg")
     with open(imagepath, 'rb') as f:
         image_data = f.read()
     return HttpResponse(image_data, content_type="image/png")
