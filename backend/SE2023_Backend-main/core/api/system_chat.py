@@ -262,7 +262,7 @@ def get_all_system_chatrooms(request: HttpRequest):
             }
             for m in sys_chat.messages.all():
                 a_message = {}
-                if(m.owner is owner):
+                if(m.is_to_system == 0):
                     a_message['isme'] = 1
                     a_message['user_pic'] = owner.icon.path
                 else:
