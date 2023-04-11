@@ -28,7 +28,7 @@ class SystemMessage(models.Model):
         - read_state
         - type
     """
-    type = models.CharField(max_length=10)
+    type = models.CharField(max_length=30)
     content = models.CharField(max_length=140)
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="chat_user")
