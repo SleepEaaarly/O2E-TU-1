@@ -131,125 +131,125 @@ const columns = [{
 		render: () => <a>回复</a>
 	}
 ];
-const data = [
-	{
-		name: "usr1",
-		sex: "男",
-		email: "123@qq.com",
-		time: "4/3",
-		message: "你好你好",
-		messages: [
-			{
-				isme: false,
-				userpic: "usrpiclink",
-				type: 'text',
-				message: "sdfadfadfadfadfa",
-				gstime: "text gstime",
-				create_at: "test created"
-			},
-			{
-				isme: true,
-				userpic: "usrpiclink",
-				type: 'text',
-				message: "msg2",
-				gstime: null,
-				create_at: "test created"
-			},
-			{
-				isme: false,
-				userpic: "usrpiclink",
-				type: 'text',
-				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
-				gstime: null,
-				create_at: "test created"
-			},
-			{
-				isme: false,
-				userpic: "usrpiclink",
-				type: 'text',
-				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
-				gstime: null,
-				create_at: "test created"
-			},
-			{
-				isme: false,
-				userpic: "usrpiclink",
-				type: 'text',
-				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
-				gstime: null,
-				create_at: "test created"
-			},
-			{
-				isme: false,
-				userpic: "usrpiclink",
-				type: 'text',
-				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
-				gstime: null,
-				create_at: "test created"
-			},
-			{
-				isme: true,
-				userpic: "usrpiclink",
-				type: 'text',
-				message: "回复回复回复回复",
-				gstime: null,
-				create_at: "test created"
-			},
-			{
-				isme: false,
-				userpic: "usrpiclink",
-				type: 'text',
-				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
-				gstime: null,
-				create_at: "test created"
-			},{
-				isme: false,
-				userpic: "usrpiclink",
-				type: 'text',
-				message: "你好你好",
-				gstime: null,
-				create_at: "test created"
-			}
-		],
-	}, 
-	{
-		name: "usr2",
-		sex: "女",
-		email: "456@qq.com",
-		time: "4/2",
-		message: "你好你好",
-		messages: [{
-				isme: false,
-				userpic: "usrpiclink",
-				type: 'text',
-				message: "sdfadfadfadfadfa",
-				gstime: "text gstime",
-				create_at: "test created"
-			}],
-	},
-	{
-		name: "usr3",
-		sex: "武装直升机",
-		email: "abc@buaa.edu.cn",
-		time: "4/3",
-		message: "测试长消息测试长消息测试长消息测试长消息测试长消息测试长消息测试长消息",
-		messages: [{
-				isme: false,
-				userpic: "usrpiclink",
-				type: 'text',
-				message: "sdfadfadfadfadfa",
-				gstime: "text gstime",
-				create_at: "test created"
-			}],
-	}
-];
+// const data = [
+// 	{
+// 		name: "usr1",
+// 		sex: "男",
+// 		email: "123@qq.com",
+// 		time: "4/3",
+// 		message: "你好你好",
+// 		messages: [
+// 			{
+// 				isme: false,
+// 				userpic: "usrpiclink",
+// 				type: 'text',
+// 				message: "sdfadfadfadfadfa",
+// 				gstime: "text gstime",
+// 				create_at: "test created"
+// 			},
+// 			{
+// 				isme: true,
+// 				userpic: "usrpiclink",
+// 				type: 'text',
+// 				message: "msg2",
+// 				gstime: null,
+// 				create_at: "test created"
+// 			},
+// 			{
+// 				isme: false,
+// 				userpic: "usrpiclink",
+// 				type: 'text',
+// 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
+// 				gstime: null,
+// 				create_at: "test created"
+// 			},
+// 			{
+// 				isme: false,
+// 				userpic: "usrpiclink",
+// 				type: 'text',
+// 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
+// 				gstime: null,
+// 				create_at: "test created"
+// 			},
+// 			{
+// 				isme: false,
+// 				userpic: "usrpiclink",
+// 				type: 'text',
+// 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
+// 				gstime: null,
+// 				create_at: "test created"
+// 			},
+// 			{
+// 				isme: false,
+// 				userpic: "usrpiclink",
+// 				type: 'text',
+// 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
+// 				gstime: null,
+// 				create_at: "test created"
+// 			},
+// 			{
+// 				isme: true,
+// 				userpic: "usrpiclink",
+// 				type: 'text',
+// 				message: "回复回复回复回复",
+// 				gstime: null,
+// 				create_at: "test created"
+// 			},
+// 			{
+// 				isme: false,
+// 				userpic: "usrpiclink",
+// 				type: 'text',
+// 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
+// 				gstime: null,
+// 				create_at: "test created"
+// 			},{
+// 				isme: false,
+// 				userpic: "usrpiclink",
+// 				type: 'text',
+// 				message: "你好你好",
+// 				gstime: null,
+// 				create_at: "test created"
+// 			}
+// 		],
+// 	}, 
+// 	{
+// 		name: "usr2",
+// 		sex: "女",
+// 		email: "456@qq.com",
+// 		time: "4/2",
+// 		message: "你好你好",
+// 		messages: [{
+// 				isme: false,
+// 				userpic: "usrpiclink",
+// 				type: 'text',
+// 				message: "sdfadfadfadfadfa",
+// 				gstime: "text gstime",
+// 				create_at: "test created"
+// 			}],
+// 	},
+// 	{
+// 		name: "usr3",
+// 		sex: "武装直升机",
+// 		email: "abc@buaa.edu.cn",
+// 		time: "4/3",
+// 		message: "测试长消息测试长消息测试长消息测试长消息测试长消息测试长消息测试长消息",
+// 		messages: [{
+// 				isme: false,
+// 				userpic: "usrpiclink",
+// 				type: 'text',
+// 				message: "sdfadfadfadfadfa",
+// 				gstime: "text gstime",
+// 				create_at: "test created"
+// 			}],
+// 	}
+// ];
 export default {
 	name: "systemChatList",
 	inject: ['reload'],
 	components: {},
 	data() {
 		return {
-			data,
+			data: [],
 			columns,
 			showDetail: false,
 			reply: '',
@@ -273,7 +273,7 @@ export default {
 	methods: {
 		init: async function() {
 			console.log("init")
-			// this.loadAllChat();
+			this.loadAllChat();
 		},
 		async initdata() {	// 获得当前页面的高度
 			try {
@@ -317,7 +317,6 @@ export default {
 		},
 		loadAllChat: function() {	// 从后端获取所有数据
 			console.log("load all chat")
-			data.length = 0;
 			getSystemChatAll().then((res) => {
 				console.log(res);
 				// TODO：这部分需要看后端返回的数据是什么
@@ -345,7 +344,7 @@ export default {
 						}
 						data_item.messages.push(data_message)
 					}
-					data.push(data_item)
+					this.data.push(data_item)
 				}
 			}).catch((error) => {
 				console.log(error);	

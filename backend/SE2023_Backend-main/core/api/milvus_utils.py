@@ -126,3 +126,16 @@ def milvus_query_need_by_id(query):
         consistency_level="Strong"
     )
     return res
+
+
+def milvus_query_result_by_id(query):
+    """
+    根据id获取成果ID
+    """
+    collection = Collection("O2E_RESULT")
+    res = collection.query(
+        expr=query,
+        output_fields=["result_id"],
+        consistency_level="Strong"
+    )
+    return res
