@@ -34,8 +34,11 @@ class SystemChatroom(models.Model):
         try:
             m = SystemMessage.objects.get(id=message_id)
             self.messages.add(m)
+            print("add message")
             self.last_message_time = get_now_time()
+            print("give time")
             self.unread_message_num = self.unread_message_num + 1
+            print("add message finished.")
             self.save()
             return True
         except Exception:
