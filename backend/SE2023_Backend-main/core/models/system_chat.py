@@ -47,7 +47,7 @@ class SystemChatroom(models.Model):
     # 切换聊天模式
     def alter_mode(self, mode: int):
         try:
-            self.isai = mode
+            self.isai = 1 - mode
             self.save()
             return True
         except Exception:

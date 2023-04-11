@@ -33,7 +33,7 @@
                 </view>
             </block>
         </scroll-view>
-        <system-chat-bottom @submit="submit" @isHuman="getHuman"></system-chat-bottom>
+        <system-chat-bottom @submit="submit" @isHuman="getHuman" :isai="isHuman"></system-chat-bottom>
     </view>
 </template>
 
@@ -291,7 +291,14 @@
                 })
                 let result = await getSystemChat(this.userInfo)
                 console.log(result)
-                this.isHuman = 1 - result.isai
+                console.log(result.isai)
+                if (result.isai == 1) {
+                    this.isHuman = false
+                } else {
+                    this.isHuman = true
+                    
+                }
+                console.log(this.isHuman)
                 let load_system_chat = {}
                 load_system_chat.noreadnum = result.noreadnum
                 load_system_chat.messages = []
@@ -305,11 +312,11 @@
                     message.gstime = time.gettime.getChatTime(result.messages[i].created_at, last_time)
                     last_time = result.messages[i].created_at
                     load_system_chat.messages.push(message)
-                    console.log(message)
+                    // console.log(message)
                 }
-                console.log(load_system_chat)
+                // console.log(load_system_chat)
                 this.setSystemChat(load_system_chat)
-                console.log(this.currentSystemChatMsgs)
+                // console.log(this.currentSystemChatMsgs)
             },
             async submit(data) {    // 提交（发送）信息
                 console.log("submit data")

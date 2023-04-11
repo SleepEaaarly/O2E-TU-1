@@ -208,13 +208,13 @@ def system_message_read(request: HttpRequest):
 def alter_systemchat_visible(request: HttpRequest):
     data: dict = parse_data(request)
     user: User = User.objects.get(id=data.get('uId'))
-
+    print(data)
     try:
         system_chatroom = SystemChatroom.objects.get(owner=user)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad System Chatroom")
 
-    if(data.get('show') == 0):
+    if data.get('show') == 0:
         content = 'AI'
     else:
         content = "Manual"
