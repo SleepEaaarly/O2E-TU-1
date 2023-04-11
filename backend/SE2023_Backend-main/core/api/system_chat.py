@@ -257,6 +257,7 @@ def get_all_system_chatrooms(request: HttpRequest):
             owner = sys_chat.owner
             user_info = {
                 "uId": owner.id,
+                "name": owner.nick_name,
                 "email": owner.email
             }
             for m in sys_chat.messages.all():
