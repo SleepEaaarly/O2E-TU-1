@@ -14,7 +14,7 @@ from core.models.needContact import NeedContact
 from core.models.order import Order
 import pytz
 from django.utils import timezone
-from core.api.platform.utils import get_field, get_need_state
+from core.api.platforms.utils import get_field, get_need_state
 from core.api.ai_recommend import insert_need
 
 

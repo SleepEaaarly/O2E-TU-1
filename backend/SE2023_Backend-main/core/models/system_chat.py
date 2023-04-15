@@ -7,7 +7,7 @@ from django.db import models
 from .system_message import SystemMessage
 
 from .user import User
-from core.api.platform.utils import get_now_time
+from core.api.platforms.utils import get_now_time
 
 
 class SystemChatroom(models.Model):
