@@ -1,7 +1,7 @@
 from pymilvus import connections
 from pymilvus import CollectionSchema, FieldSchema, DataType, Collection
 
-_HOST = '122.9.14.73'
+_HOST = '116.63.14.146'
 _PORT = '19530'
 
 
@@ -106,7 +106,7 @@ def milvus_query_paper_by_id(query):
     """
     根据id获取论文知兔ID
     """
-    collection = Collection("O2E_ALL")
+    collection = Collection("O2E_PAPER")
     res = collection.query(
         expr=query,
         output_fields=["paper_id"],

@@ -147,7 +147,7 @@ def recommend(request: HttpRequest, id: int):
 
     #未注册专家推荐
     possible_experts = []
-    id_lists = milvus_search(collection_name="O2E_ALL", query_vectors=b, topk=3, partition_names=None)[0]
+    id_lists = milvus_search(collection_name="O2E_PAPER", query_vectors=b, topk=3, partition_names=None)[0]
     s = '['
     for id in id_lists:
         s = s + str(id) + ','
