@@ -115,3 +115,17 @@ def parse_data(request: HttpRequest):
         return json.loads(request.body.decode())
     except json.JSONDecodeError:
         return None
+
+def read_json_data(self, path):
+    """
+    :param path: 文件路径
+    :return: 获取的数据
+    """
+    try:
+        path = self.complete_path(path)
+        with open(file=path, mode="r", encoding="utf8") as f:
+            return json.load(f)
+    except Exception as e:
+        print(traceback.format_exc())
+        print(e)
+    return None

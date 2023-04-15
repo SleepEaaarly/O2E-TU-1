@@ -79,7 +79,10 @@ class ContrastiveSciBERT(nn.Module):
         return loss
 
 
-model = torch.load("model.pt", map_location='cpu')
+# model = torch.load("model.pt", map_location='cpu')
+state_dict = torch.load("model.pt", map_location='cpu')
+model = ContrastiveSciBERT(out_dim=128, tau=0.07)
+model.load_state_dict(state_dict)
 
 
 @require_GET
@@ -342,8 +345,11 @@ def generate_requirement_book(request: HttpRequest,require):
     data['message']={"role":"user","content":msg.encode("utf-8")}
     data['temperature']=0.7
 
-    # Send the POST request to the API endpoint
-    response = requests.post(url, headers=headers, data=data)
-    print(response.content.decode('utf-8'))
-    return success_api_response({"requirement_book":response.content.decode('utf-8')})
+
+if __name__ == '__main__':
+    state_dict = torch.load("E:\\lcm\\Course\\软件工程\\O2E-TU-2\\代码\\后端\\O2E-TU-2-训练\\model.pt", map_location='cpu')
+    model = ContrastiveSciBERT(out_dim=128, tau=0.07)
+    model.load_state_dict(state_dict)
+    vector = model.get_embeds(["哈哈哈","hhh"])
+    print(vector)
 
