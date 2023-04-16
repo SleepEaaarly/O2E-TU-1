@@ -88,14 +88,17 @@
 				<uni-col :span="8">
 					<button type="primary" @click="goToEnterpriseSpace" class="fix-button-left">企业详情</button>
 				</uni-col>
-				<uni-col :span="8" :offset="8">
+				<uni-col :span="8">
+					<button type="primary" @click="goToEnterpriseSpace" class="fix-button-left">生成报告</button>
+				</uni-col>
+				<uni-col :span="8">
 					<button type="primary" @click="contact" class="fix-button-right">立即对接</button>
 				</uni-col>
 			</view>
 		</uni-row>
 		<!-- 悬浮按钮 -->
-		<uni-fab ref="fab" :pattern="pattern" :content="content" :horizontal="horizontal" :vertical="vertical"
-					:direction="direction" @trigger="trigger" @fabClick="fabClick" />
+		<!-- <uni-fab ref="fab" :pattern="pattern" :content="content" :horizontal="horizontal" :vertical="vertical"
+					:direction="direction" @trigger="trigger" @fabClick="fabClick" /> -->
 	</view>
 </template>
 
@@ -223,6 +226,9 @@
 			async generateNeedReport() {
 				let result = await sendNeedInfoToGenerateReport(item.title, item.description, this.field_items[item.field], item.key_word)
 				// TODO: 检查 result
+
+				// 将生成的报告插入聊天记录
+				
 			},
 			//点击fab后的动作
 			trigger(e) {

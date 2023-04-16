@@ -4,11 +4,7 @@ card message: 卡片式消息
 from django.db import models
 from django.contrib.auth import get_user_model
 from .user import User
-
-from .message import Message
-
 from .system_message import SystemMessage
-
 
 UNREAD = 0
 READ = 1
@@ -32,7 +28,6 @@ CARD_TYPE = (
 
 
 class CardMessage(SystemMessage):
-
     """
     Field:
         - card_type: 卡片信息类型
@@ -45,7 +40,6 @@ class CardMessage(SystemMessage):
 
     @classmethod
     def new_card_message(cls,
-
                          owner: User,
                          is_to_system: int,
                          content: str,
@@ -53,7 +47,6 @@ class CardMessage(SystemMessage):
                          title: str,
                          avatar: str):
         try:
-
             new_card_message = CardMessage(content=content, owner=owner,
                                            is_to_system=is_to_system, read_state=UNREAD,
                                            card_type=card_type, title=title, avatar=avatar)

@@ -57,10 +57,10 @@ def get_milvus_collection(name):
 def milvus_insert(collection_name, data, partition_name=None):
     """
     插⼊数据。
-    param: collection_name: collection名称
-    param: partition_name: partition名称
-    param: data: 待插⼊的数据，list-like(list, tuple)
-    return: Milvus⽣成的ids
+    :param collection_name: collection名称
+    :param partition_name: partition名称
+    :param data: 待插⼊的数据，list-like(list, tuple)
+    :return: Milvus⽣成的ids
     """
     collection = get_milvus_collection(collection_name)
     res = collection.insert(partition_name=partition_name, data=data)
@@ -68,15 +68,16 @@ def milvus_insert(collection_name, data, partition_name=None):
     return ids
 
 
-def milvus_search(collection_name, partition_names, query_vectors, topk, expr=None):
+def milvus_search(collection_name, partition_names, query_vectors, topk, eps=0, expr=None):
     """
     查询相关向量。
-    param: collection_name: collection名称
-    param: partition_names: partition名称列表
-    param: query_vectors: 待查询的数据，list-like(list, tuple)
-    param: topk: 每个query返回的最相似个数
-    param: expr: 条件表达式
-    return: ids_list, (list,list)
+    :param collection_name: collection名称
+    :param partition_names: partition名称列表
+    :param query_vectors: 待查询的数据，list-like(list, tuple)
+    :param topk: 每个query返回的最相似个数
+    :param eps: 
+    :param expr: 条件表达式
+    :return: ids_list, (list,list)
     """
     collection = get_milvus_collection(collection_name)
     res = collection.search(
@@ -85,7 +86,7 @@ def milvus_search(collection_name, partition_names, query_vectors, topk, expr=No
         anns_field="vector",
         limit=topk,
         expr=expr,
-        param={"metric_type": "L2", "params": {"nprobe": 10}}
+        param={"metric_type": "L2", "params": {"nprobe": 10, "eps": eps}}
     )
     ids_list=[]
     for item in res:
@@ -143,3 +144,17 @@ def milvus_query_result_by_id(query):
         consistency_level="Strong"
     )
     return res
+
+
+def milvus_query_set_question_by_id(query):
+    """
+    根据id获取预设问题ID
+    """
+    collection = Collection("SET_QUESTION")
+    res = collection.query(
+        expr=query,
+        output_fields=["question_id"],
+        consistency_level="Strong"
+    )
+    return res
+

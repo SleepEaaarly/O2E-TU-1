@@ -1,3 +1,5 @@
+import requests
+from core.api.zhitu_utils import get_expertInfo_by_expertId, search_expertID_by_paperID
 import torch
 from django.db.models import Avg
 from django.http import HttpRequest
@@ -31,9 +33,12 @@ class ContrastiveSciBERT(nn.Module):
         super().__init__()
         self.tau = tau
         self.device = device
-        self.tokenizer = AutoTokenizer.from_pretrained('allenai/scibert_scivocab_uncased')
-        self.model = AutoModel.from_pretrained('allenai/scibert_scivocab_uncased').to(device)
-        self.linear = nn.Linear(self.model.config.hidden_size, out_dim).to(device)
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            'allenai/scibert_scivocab_uncased')
+        self.model = AutoModel.from_pretrained(
+            'allenai/scibert_scivocab_uncased').to(device)
+        self.linear = nn.Linear(
+            self.model.config.hidden_size, out_dim).to(device)
 
     def get_embeds(self, texts, max_length=64):
         """将⽂本编码为向量
@@ -79,7 +84,10 @@ class ContrastiveSciBERT(nn.Module):
         return loss
 
 
-model = torch.load("model.pt", map_location='cpu')
+# model = torch.load("model.pt", map_location='cpu')
+state_dict = torch.load("model.pt", map_location='cpu')
+model = ContrastiveSciBERT(out_dim=128, tau=0.07)
+model.load_state_dict(state_dict)
 
 
 @require_GET
@@ -111,17 +119,20 @@ def recommend(request: HttpRequest, id: int):
             dic = getUserInfo(user)
             dic['title'] = title
             avg = list()
-            avg_taste = user.expert_rate.aggregate(Avg('rate_taste')).get('rate_taste__avg')
+            avg_taste = user.expert_rate.aggregate(
+                Avg('rate_taste')).get('rate_taste__avg')
             if avg_taste is None:
                 avg_taste = 5
             avg.append(avg_taste)
 
-            avg_speed = user.expert_rate.aggregate(Avg('rate_speed')).get('rate_speed__avg')
+            avg_speed = user.expert_rate.aggregate(
+                Avg('rate_speed')).get('rate_speed__avg')
             if avg_speed is None:
                 avg_speed = 5
             avg.append(avg_speed)
 
-            avg_level = user.expert_rate.aggregate(Avg('rate_level')).get('rate_level__avg')
+            avg_level = user.expert_rate.aggregate(
+                Avg('rate_level')).get('rate_level__avg')
             if avg_level is None:
                 avg_level = 5
             avg.append(avg_level)
@@ -133,8 +144,10 @@ def recommend(request: HttpRequest, id: int):
         j = i + 1
         while j < len(register_experts):
             if max_cite != 0:
-                score_i = sum(register_experts[i]["comment"]) + cites[i] / max_cite
-                score_j = sum(register_experts[j]["comment"]) + cites[j] / max_cite
+                score_i = sum(
+                    register_experts[i]["comment"]) + cites[i] / max_cite
+                score_j = sum(
+                    register_experts[j]["comment"]) + cites[j] / max_cite
             else:
                 score_i = sum(register_experts[i]["comment"]) + cites[i]
                 score_j = sum(register_experts[j]["comment"]) + cites[j]
@@ -145,7 +158,7 @@ def recommend(request: HttpRequest, id: int):
             j += 1
         i += 1
 
-    #未注册专家推荐
+    # 未注册专家推荐
     possible_experts = []
     id_lists = milvus_search(collection_name="O2E_PAPER", query_vectors=b, topk=3, partition_names=None)[0]
     s = '['
@@ -178,7 +191,7 @@ def recommend(request: HttpRequest, id: int):
 
 @require_GET
 @response_wrapper
-def need_recommend(request:HttpRequest, id:int):
+def need_recommend(request: HttpRequest, id: int):
     get_milvus_connection()
     user = User.objects.get(id=id)
     papers = user.expert_info.papers.all()
@@ -188,13 +201,14 @@ def need_recommend(request:HttpRequest, id:int):
     key_vector = model.get_embeds(titles)
     key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
-    id_lists = milvus_search("O2E_NEED", query_vectors=key_vector, topk=2, partition_names=None)
+    id_lists = milvus_search(
+        "O2E_NEED", query_vectors=key_vector, topk=2, partition_names=None)
     ids = '['
     for id_list in id_lists:
         for milvus_id in id_list:
             ids += str(milvus_id) + ','
     ids = ids[:-1] + ']'
-    query = "milvus_id in "+ ids
+    query = "milvus_id in " + ids
     need_ids = milvus_query_need_by_id(query)
     need_infos = []
     for need_id in need_ids:
@@ -230,7 +244,7 @@ def need_recommend(request:HttpRequest, id:int):
 
 @require_GET
 @response_wrapper
-def result_recommend_for_expert(request:HttpRequest, id:int):
+def result_recommend_for_expert(request: HttpRequest, id: int):
     get_milvus_connection()
     user = User.objects.get(id=id)
     papers = user.expert_info.papers.all()
@@ -240,21 +254,22 @@ def result_recommend_for_expert(request:HttpRequest, id:int):
     key_vector = model.get_embeds(titles)
     key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
-    id_lists = milvus_search("O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
+    id_lists = milvus_search(
+        "O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
     ids = '['
     for id_list in id_lists:
         for milvus_id in id_list:
             ids += str(milvus_id) + ','
     ids = ids[:-1] + ']'
-    query = "milvus_id in "+ ids
+    query = "milvus_id in " + ids
     result_ids = milvus_query_result_by_id(query)
     result_infos = []
     for result_id in result_ids:
         result = Results.objects.get(pk=result_id['result_id'])
         if result.state == 1:
             result_info = {
-                "result_id": result.id, "title": result.title, "abstract": result.abstract, 
-                "scholars": result.scholars, "pyear": result.pyear, "field": result.field, 
+                "result_id": result.id, "title": result.title, "abstract": result.abstract,
+                "scholars": result.scholars, "pyear": result.pyear, "field": result.field,
                 "period": result.period, "picture": result.picture, "content": result.content,
                 "file": result.file, "state": result.state
             }
@@ -265,7 +280,7 @@ def result_recommend_for_expert(request:HttpRequest, id:int):
 
 @require_GET
 @response_wrapper
-def result_recommend_for_enterprise(request:HttpRequest, id:int):
+def result_recommend_for_enterprise(request: HttpRequest, id: int):
     get_milvus_connection()
     needs = Need.objects.filter(enterprise_id=id)
     titles = []
@@ -274,21 +289,22 @@ def result_recommend_for_enterprise(request:HttpRequest, id:int):
     key_vector = model.get_embeds(titles)
     key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
-    id_lists = milvus_search("O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
+    id_lists = milvus_search(
+        "O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
     ids = '['
     for id_list in id_lists:
         for milvus_id in id_list:
             ids += str(milvus_id) + ','
     ids = ids[:-1] + ']'
-    query = "milvus_id in "+ ids
+    query = "milvus_id in " + ids
     result_ids = milvus_query_result_by_id(query)
     result_infos = []
     for result_id in result_ids:
         result = Results.objects.get(pk=result_id['result_id'])
         if result.state == 1:
             result_info = {
-                "result_id": result.id, "title": result.title, "abstract": result.abstract, 
-                "scholars": result.scholars, "pyear": result.pyear, "field": result.field, 
+                "result_id": result.id, "title": result.title, "abstract": result.abstract,
+                "scholars": result.scholars, "pyear": result.pyear, "field": result.field,
                 "period": result.period, "picture": result.picture, "content": result.content,
                 "file": result.file, "state": result.state
             }
@@ -323,9 +339,10 @@ def insert_result(rid: int):
 
 @require_GET
 @response_wrapper
-def generate_requirement_book(request: HttpRequest,require):
+def generate_requirement_book(request: HttpRequest, require):
     # start a new conversation
-    headers = {"Content-Type": "application/json","Authorization":"Bearer $OPEN_API_KEY"}
+    headers = {"Content-Type": "application/json",
+               "Authorization": "Bearer $OPEN_API_KEY"}
     # start to ask
     url = f"https://api.openai.com/v1/chat/completions"
 
@@ -337,13 +354,20 @@ def generate_requirement_book(request: HttpRequest,require):
 
     
     # Create the request headers and body
-    data=[]
-    data['model']="gpt-3.5-turbo"
-    data['message']={"role":"user","content":msg.encode("utf-8")}
-    data['temperature']=0.7
-
+    data = []
+    data['model'] = "gpt-3.5-turbo"
+    data['message'] = {"role": "user", "content": msg.encode("utf-8")}
+    data['temperature'] = 0.7
     # Send the POST request to the API endpoint
     response = requests.post(url, headers=headers, data=data)
     print(response.content.decode('utf-8'))
-    return success_api_response({"requirement_book":response.content.decode('utf-8')})
+    return success_api_response({"requirement_book": response.content.decode('utf-8')})
 
+if __name__ == '__main__':
+    state_dict = torch.load("E:\\lcm\\Course\\软件工程\\O2E-TU-2\\代码\\后端\\O2E-TU-2-训练\\model.pt", map_location='cpu')
+    model = ContrastiveSciBERT(out_dim=128, tau=0.07)
+    model.load_state_dict(state_dict)
+    vector = model.get_embeds(["哈哈哈","hhh"])
+    print(vector)
+
+    

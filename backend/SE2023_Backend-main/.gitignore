@@ -36,3 +36,6 @@ test_report
 # cache/
 # static/
 model.pt
+
+# bert
+resource/bert/

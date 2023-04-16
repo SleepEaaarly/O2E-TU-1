@@ -99,6 +99,6 @@ const gettime = {
 	}
 }
 
-export default{
+export {
 	gettime
 }
