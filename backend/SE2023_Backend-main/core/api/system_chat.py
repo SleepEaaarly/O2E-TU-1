@@ -10,9 +10,7 @@ from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 from core.api.platforms.utils import get_now_time
-
-from core.models import User, SystemMessage, SystemChatroom, CardMessage, Message
-
+from core.models import User, SystemMessage, SystemChatroom, CardMessage
 from core.models import SwitchMessage, ImageMessage
 
 
@@ -40,7 +38,6 @@ def create_system_chat(request: HttpRequest):
                                    "Invalid request args.")
     # username = data.get('username')
     uid = data.get('uId')
-
     try:
         user = User.objects.get(id=uid)
     except ObjectDoesNotExist:
@@ -73,12 +70,11 @@ def create_system_chat(request: HttpRequest):
 """
 
 
+@jwt_auth()
 @require_GET
 @response_wrapper
 def get_system_chat(request: HttpRequest):
-
     data = request.GET.dict()
-
     user_id = data.get('uId')
     try:
         owner = User.objects.get(id=user_id)
@@ -89,35 +85,24 @@ def get_system_chat(request: HttpRequest):
     messages = []
     for m in system_chatroom.messages.all():
         a_message = {}
-
         if(m.is_to_system == 1):
             a_message['isme'] = True
-            print(type(owner.icon))
             a_message['user_pic'] = owner.icon.path
-
         else:
             a_message['isme'] = False
             a_message['user_pic'] = ''
         # type, message, cardInfo
-        if(isinstance(m, CardMessage)):
-            a_message['type'] = 'card'
-            a_message['cardInfo'] = m.generate_card()
-        elif(isinstance(m, SwitchMessage)):
-            a_message['type'] = 'switch_info'
-            a_message['message'] = m.content
-        elif(isinstance(m, ImageMessage)):
-            a_message['type'] = 'pic'
-            a_message['message'] = m.content
+        a_message['type'] = m.type
+        if(m.type == 'card'):
+            a_message['cardInfo'] = CardMessage(m).generate_card()
         else:
-            a_message['type'] = 'text'
             a_message['message'] = m.content
         # created_at
-
         a_message['created_at'] = m.get_create_time()
-
         messages.append(a_message)
     ret_data['messages'] = messages
     ret_data['noreadnum'] = system_chatroom.unread_message_num
+    ret_data['isai'] = system_chatroom.isai
     return success_api_response(ret_data)
 
 
@@ -156,7 +141,8 @@ def push_system_message(request: HttpRequest):
         message_id = SystemMessage.new_message(
             is_to_system=is_to_system,
             owner=user,
-            content=content)
+            content=content,
+            type='text')
         if system_chatroom.add_message(message_id) is False:
             return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Add message failed.")
         system_chatroom.save()
@@ -222,20 +208,22 @@ def system_message_read(request: HttpRequest):
 def alter_systemchat_visible(request: HttpRequest):
     data: dict = parse_data(request)
     user: User = User.objects.get(id=data.get('uId'))
-
+    print(data)
     try:
         system_chatroom = SystemChatroom.objects.get(owner=user)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad System Chatroom")
 
-    if(data.get('show') == 0):
+    if data.get('show') == 0:
         content = 'AI'
     else:
         content = "Manual"
-    switch_message = SwitchMessage.new_switch_message(from_user=user, to_user=None,
-                                                      content=content)
+    switch_message = SystemMessage.new_message(is_to_system=1, owner=user,
+                                               content=content, type='switch_info')
+    print("swicth_", switch_message)
     system_chatroom.add_message(switch_message)
     system_chatroom.alter_mode(data.get('show'))
+    system_chatroom.save()
     return success_api_response(None)
 
 
@@ -257,45 +245,40 @@ def alter_systemchat_visible(request: HttpRequest):
 @require_GET
 @response_wrapper
 def get_all_system_chatrooms(request: HttpRequest):
-    ret_all_list = {}
+    ret_all_list = []
     try:
-        for sys_chat in SystemChatroom.all():
+        for sys_chat in SystemChatroom.objects.all():
             ret_data = {}
             messages = []
             owner = sys_chat.owner
             user_info = {
                 "uId": owner.id,
+                "name": owner.username,
                 "email": owner.email
             }
             for m in sys_chat.messages.all():
                 a_message = {}
-                if(m.from_user is owner):
-                    a_message['isme'] = True
-                    a_message['user_pic'] = owner.icon
+                if(m.is_to_system == 0):
+                    a_message['isme'] = 1
+                    a_message['user_pic'] = owner.icon.path
                 else:
-                    a_message['isme'] = False
+                    a_message['isme'] = 0
                     a_message['user_pic'] = ''
                 # type, message, cardInfo
-                if(isinstance(m, CardMessage)):
-                    a_message['type'] = 'card'
-                    a_message['cardInfo'] = m.generate_card()
-                elif(isinstance(m, SwitchMessage)):
-                    a_message['type'] = 'switch_info'
-                    a_message['message'] = m.content
-                elif(isinstance(m, ImageMessage)):
-                    a_message['type'] = 'pic'
-                    a_message['message'] = m.content
+                a_message['type'] = m.type
+                if(m.type == 'card'):
+                    a_message["cardInfo"] = CardMessage(m).generate_card()
                 else:
-                    a_message['type'] = 'text'
                     a_message['message'] = m.content
                 # created_at
-                a_message['created_at'] = m.created_at
+                a_message['created_at'] = m.get_create_time()
                 messages.append(a_message)
             ret_data['messages'] = messages
             ret_data['noreadnum'] = sys_chat.unread_message_num
             ret_data['userInfo'] = user_info
             ret_all_list.append(ret_data)
-        return success_api_response(ret_all_list)
+            print({"system_chat_list": ret_all_list})
+        return success_api_response({"system_chat_list": ret_all_list})
     except Exception:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Fail to get all system chatrooms information")
 
@@ -316,21 +299,19 @@ def get_all_system_chatrooms(request: HttpRequest):
 
 @jwt_auth()
 @require_POST
-@response_wrapper
 def push_system_message_by_admin(request: HttpRequest):
+    print(request)
     data: dict = parse_data(request)
     user: User = User.objects.get(id=data.get('uId'))
     content = data.get('content')
-    # 暂时约定平台方为None
     try:
         system_chatroom: SystemChatroom = SystemChatroom.objects.get(
             owner=user)
-        from_user = None
-        to_user = user
-        message_id = Message.new_message(
-            from_user=from_user,
-            to_user=to_user,
-            content=content)
+        message_id = SystemMessage.new_message(
+            is_to_system=0,
+            owner=user,
+            content=content,
+            type='text')
         if system_chatroom.add_message(message_id) is False:
             return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Add message failed.")
         system_chatroom.save()
@@ -339,4 +320,3 @@ def push_system_message_by_admin(request: HttpRequest):
 
     return success_api_response({'system_chatroom_id': system_chatroom.id,
                                  'message_id': message_id})
-

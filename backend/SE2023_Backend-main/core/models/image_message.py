@@ -4,9 +4,7 @@ Image message: 图像消息
 from django.db import models
 from django.contrib.auth import get_user_model
 from .user import User
-
 from .system_message import SystemMessage
-
 
 UNREAD = 0
 READ = 1
@@ -17,9 +15,7 @@ READ_STATE_CHIOCES = (
 )
 
 
-
 class ImageMessage(SystemMessage):
-
     """
     Field:
         - 与Message的字段完全一样，只是content的内容是图片的存储路径
@@ -27,7 +23,6 @@ class ImageMessage(SystemMessage):
 
     @classmethod
     def new_image_message(cls,
-
                           owner: User,
                           is_to_system: int,
                           content: str,

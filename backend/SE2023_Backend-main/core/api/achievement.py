@@ -198,7 +198,6 @@ def add_result(request: HttpRequest):
         result.multipic.add(p)
 
     result.save()
-
     print("4")
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
@@ -224,6 +223,7 @@ def agree_result(request:HttpRequest, id:int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
     result.state = 1
     result.save()
+    
     return success_api_response("success")
 
 
