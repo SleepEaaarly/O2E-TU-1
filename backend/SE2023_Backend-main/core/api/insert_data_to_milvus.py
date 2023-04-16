@@ -39,6 +39,22 @@ def get_all_entity(entity: str):
     return result
 
 
+def update_vector(entity: str, vector: str, id: int):
+    connection, cursor = connect_database()
+
+    instruction = "update " + entity + " set vector=" + vector + " where id=" + str(id)
+
+    try:
+        cursor.execute(instruction)
+        connection.commit()
+    except Exception as e:
+        connection.rollback()
+        print("执行MySQL错误")
+    result = cursor.fetchall()
+    close_database(connection, cursor)
+    return result
+
+
 class ContrastiveSciBERT(nn.Module):
     def __init__(self, out_dim, tau, device='cpu'):
         """⽤于对⽐学习的SciBERT模型
@@ -97,8 +113,9 @@ class ContrastiveSciBERT(nn.Module):
         return loss
 
 
-rst = get_all_entity("core_papers")
-c_name = "O2E_PAPER"
+d_name = "core_need"
+c_name = "O2E_NEED"
+rst = get_all_entity(d_name)
 inp = [[r[1], r[0]] for r in rst]
 # print(pap_titles)
 state_dict = torch.load("D:\\大学学习\\大三下\\软件工程\\O2E-TU-1\\backend\\SE2023_Backend-main\\model.pt", map_location='cpu')
@@ -108,11 +125,11 @@ get_milvus_connection()
 for i in inp:
     get_milvus_connection()
     vector = model.get_embeds(i[0])
+    # vector = vector / vector.norm(dim=1, keepdim=True)
     v = vector.tolist()[0]
     mid = milvus_insert(c_name, data=[[v], [i[1]]])
-    c = get_milvus_collection(c_name)
-    c.load()
     disconnect_milvus()
+    update_vector(d_name, str(mid[0]), i[1])
 
 # m = ContrastiveSciBERT(128, 25.0)
 # key_vector = m.get_embeds(pap_titles)
