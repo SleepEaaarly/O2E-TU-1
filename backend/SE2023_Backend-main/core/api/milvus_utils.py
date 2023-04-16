@@ -14,6 +14,10 @@ def get_milvus_connection():
     )
 
 
+def disconnect_milvus():
+    connections.disconnect("default")
+
+
 def create_milvus_collection():
     """
     建⽴Milvus连接

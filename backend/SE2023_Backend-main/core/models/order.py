@@ -2,7 +2,7 @@ from django.db import models
 
 from .need import Need
 from .user import User
-from core.api.platform.utils import format_time
+from core.api._platform.utils import format_time
 
 ORDER_STATE = (
     (0, "待接受"),

@@ -27,11 +27,11 @@ from core.api.interpretation import createInterpretation, INTERPRETATION_API, \
 
 from core.api.user import get_all_user_info, delete_user, change_user_info
 
-from core.api.platform.need_api import create_need, get_all_need, get_need_info, get_finished_need, \
+from core.api._platform.need_api import create_need, get_all_need, get_need_info, get_finished_need, \
     finish_need, get_proceeding_need, edit_need, delete_need, search_need, create_need_contact,\
     get_need_contact, expert_recommend, get_saved_need, transform_need, get_needs_info, get_oneneed_allexperts, admin_delete_need
 
-from core.api.platform.order_api import get_pending_order, get_cooperating_order, get_finished_order, finish_order, accept_order, \
+from core.api._platform.order_api import get_pending_order, get_cooperating_order, get_finished_order, finish_order, accept_order, \
     refuse_order, get_order_info, create_order, get_order_id, get_all_order, abandon_order, get_order_byID, \
     admin_delete_order, admin_get_all_order, get_user_orderid_byneedID
 
@@ -44,7 +44,7 @@ from core.api.feedback import get_feedback, make_feedback, reply_feedback, get_u
 
 from core.api.ai_recommend import recommend, need_recommend, result_recommend_for_expert, result_recommend_for_enterprise
 
-from core.api.platform.rate import rate_order, get_order_rate, get_user_rate
+from core.api._platform.rate import rate_order, get_order_rate, get_user_rate
 
 from core.tests.generate_avatar import avatar, get_user_num
 

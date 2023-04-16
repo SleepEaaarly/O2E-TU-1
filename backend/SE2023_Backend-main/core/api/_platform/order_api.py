@@ -11,9 +11,9 @@ from core.api.auth import jwt_auth
 from core.models.need import Need
 from core.models.order import Order
 from django.utils import timezone
-from core.api.platform.need_api import finish_need
+from core.api._platform.need_api import finish_need
 import pytz
-from core.api.platform.utils import format_time, get_order_state
+from core.api._platform.utils import format_time, get_order_state
 
 def get_info(s):
     max = 20

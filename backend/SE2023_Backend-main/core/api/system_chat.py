@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
-from core.api.platform.utils import get_now_time
+from core.api._platform.utils import get_now_time
 
 from core.models import User, SystemMessage, SystemChatroom, CardMessage, Message
 

@@ -53,3 +53,5 @@ class Need(models.Model):
     predict = models.IntegerField()
     #实际已招募人数
     real = models.IntegerField(default=0)
+
+    vector = models.TextField(blank=True, null=True)
