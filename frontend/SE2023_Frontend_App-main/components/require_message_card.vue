@@ -45,8 +45,12 @@
 </template>
 
 <script>
+	import fuiCard from "@/components/firstui/fui-card/fui-card.vue"
 	export default {
 		name:"require_message_card",
+		components: {
+			fuiCard
+		},
 		data() {
 			return {
 				

@@ -32,7 +32,26 @@
                         :item="item" :index="index" :isHuman="isHuman"></system-chat-list>
                 </view>
             </block>
+            <!-- <require_message_card
+                title="请帮我写软工吧"
+                companyName="北京航空航天大学"
+                :companyLogoPath="testpic"
+                intro="Here is a summary of some of the most commonly used methods in machine learning."
+                time="上午 7:43"
+                ></require_message_card>
+                <system-chat-list 
+                        @goToUserInfo="goToUserInfo" 
+                        :item="item" :isHuman="isHuman"></system-chat-list>
+            <work_message_card 
+                title="A Summary of Machine Learning" 
+                expertName="占瑞乙" 
+                expertLogoPath="/static/head_zry_fox.jpg"
+                intro="Here is a summary of some of the most commonly used methods in machine learning." 
+                time="上午 7:45">
+
+            </work_message_card> -->
         </scroll-view>
+        
         <system-chat-bottom @submit="submit" @isHuman="getHuman" :isai="isHuman"></system-chat-bottom>
     </view>
 </template>
@@ -51,11 +70,15 @@
     import Vue from 'vue'
     // import {getOrderDetail} from '@/api/order-detail.js'
     // import {getNeedDetail} from '@/api/need-detail.js'
+    import require_message_card from '../../components/require_message_card.vue'
+    import work_message_card from '../../components/work_message_card.vue'
     export default {
         components: {
             systemChatBottom,
             systemChatCard,
-            systemChatList
+            systemChatList,
+            require_message_card,
+            work_message_card
         },
         computed: {
             ...mapState(['system_chat', 'userInfo']),
@@ -63,6 +86,7 @@
         },
         data() {
             return {
+                testpic: "/static/head.jpg",
                 isShow: false,
                 isHuman: false,
                 currentState: 'AI',
@@ -72,7 +96,7 @@
                     // fromId: 0,
                     // toId: 0,
                     // index: 0,
-                    isme: false,    // 是不是本人发的，如果是本人发送的则显示在屏幕右边
+                    isme: 0,    // 是不是本人发的，如果是本人发送的则显示在屏幕右边
                                     // 如果不是本人发的，则显示在屏幕左边
                     userpic: "userpiclink", // 用户头像，如果是消息是本人发送的，头像就是本人头像，否则就是对面人的头像
                     type: 'text',   // 可选的值包括 'switch info', 'text', 'pic', 'card'
@@ -83,10 +107,7 @@
                             3. 如果是 pic，则 message 本身是图片的 url
                             4. 如果是 card，则 message 无意义，具体的内容在 card info 中
                     */
-                    message: "test test test test test test test test test test test test test test \
-                    test test test test test test test test test test test test test test test test \
-                    test test test test test test test test test test test test test test test test \
-                    test test test test test test test test test test test test test test test test ", 
+                    message: "测试0", 
                     // time: "test time", 显示出来的聊天框时间
                     cardInfo: {
                         cardType: "expert", // expert enterpise demand technique(chengguo)
@@ -94,7 +115,7 @@
                         avatar: "专家头像/企业图片/需求图片/成果图片 没有则默认",
                         info: "企业简介/专家简介/需求简介/成果简介"
                     },
-                    gstime: "test gstime",
+                    gstime: null,
                     created_at: "test created"
                 },
                 style: {
@@ -248,7 +269,7 @@
             pageToBottom(isfirst = false) {    // 页面展示当前聊天的底部
                 let q = uni.createSelectorQuery().in(this)
                 let itemH = q.selectAll('.chat-item')   // TODO: 不确定这个是否可行
-                console.log(this.currentSystemChatMsgs)
+                // console.log(this.currentSystemChatMsgs)
                 if (this.currentSystemChatMsgs.length !== 0) {
                     this.$nextTick(() => {
                         itemH.fields({size: true}, data => {

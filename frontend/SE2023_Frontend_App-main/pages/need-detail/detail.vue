@@ -88,14 +88,17 @@
 				<uni-col :span="8">
 					<button type="primary" @click="goToEnterpriseSpace" class="fix-button-left">企业详情</button>
 				</uni-col>
-				<uni-col :span="8" :offset="8">
+				<uni-col :span="8">
+					<button type="primary" @click="goToEnterpriseSpace" class="fix-button-left">生成报告</button>
+				</uni-col>
+				<uni-col :span="8">
 					<button type="primary" @click="contact" class="fix-button-right">立即对接</button>
 				</uni-col>
 			</view>
 		</uni-row>
 		<!-- 悬浮按钮 -->
-		<uni-fab ref="fab" :pattern="pattern" :content="content" :horizontal="horizontal" :vertical="vertical"
-					:direction="direction" @trigger="trigger" @fabClick="fabClick" />
+		<!-- <uni-fab ref="fab" :pattern="pattern" :content="content" :horizontal="horizontal" :vertical="vertical"
+					:direction="direction" @trigger="trigger" @fabClick="fabClick" /> -->
 	</view>
 </template>
 
