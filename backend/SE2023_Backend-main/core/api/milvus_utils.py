@@ -14,6 +14,10 @@ def get_milvus_connection():
     )
 
 
+def disconnect_milvus():
+    connections.disconnect("default")
+
+
 def create_milvus_collection():
     """
     建⽴Milvus连接
@@ -150,6 +154,32 @@ def milvus_query_set_question_by_id(query):
     res = collection.query(
         expr=query,
         output_fields=["question_id"],
+        consistency_level="Strong"
+    )
+    return res
+
+
+def milvus_query_expert_by_id(query):
+    """
+    根据id获取专家ID
+    """
+    collection = Collection("O2E_EXPERT")
+    res = collection.query(
+        expr=query,
+        output_fields=["expert_id"],
+        consistency_level="Strong"
+    )
+    return res
+
+
+def milvus_query_enterprise_by_id(query):
+    """
+    根据id获取企业ID
+    """
+    collection = Collection("O2E_ENTERPRISE")
+    res = collection.query(
+        expr=query,
+        output_fields=["enterprise_id"],
         consistency_level="Strong"
     )
     return res

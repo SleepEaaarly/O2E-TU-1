@@ -125,12 +125,22 @@ export const getSelectUser = (type, page) => {
 
 export const UserDel = (params) => {
   const url = BASE_URL_IP + `/api/user/delete`
-  return request(url,"post",params)
+  return request(url,"post", params)
 }
 
 export const UserModify = (params) => {
   const url = BASE_URL_IP + `/api/user/changeinfo`
-  return request(url, "post",params)
+  return request(url, "post", params)
+}
+
+export const WorkDel = (params) => {
+  const url = BASE_URL_IP + `/api/work/delete`
+  return request(url,"post", params)
+}
+
+export const WorkModify = (params) => {
+  const url = BASE_URL_IP + `/api/work/changeinfo`
+  return request(url, "post", params)
 }
 
 export default {
@@ -153,5 +163,7 @@ export default {
   deleteComment,
   deleteDiscussionComment,
   UserDel,
-  UserModify
+  UserModify,
+  WorkDel,
+  WorkModify
 };

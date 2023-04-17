@@ -8,7 +8,7 @@ RES_STATE_CHOICES = (
 )
 
 
-class Multipic(models.Model):
+class ResMultipic(models.Model):
     picture = models.ImageField(upload_to="images/%Y%m/%d/res_pic")
 
 
@@ -21,9 +21,10 @@ class Results(models.Model):
     period = models.CharField(max_length=100, blank=True, null=True)
     picture = models.ImageField(upload_to="images/%Y%m/%d/res_pic", default="images/default_result_pic.jpg")
     content = models.TextField(blank=True, null=True)
-    multipic = models.ManyToManyField(to=Multipic, related_name="result_multipic")
+    multipic = models.ManyToManyField(to=ResMultipic, related_name="result_multipic")
     # file = models.FileField(upload_to="pdf/%Y%m/%d/res_pdf")
     state = models.IntegerField(choices=RES_STATE_CHOICES, default=0)
+    vector = models.TextField(blank=True, null=True)
 
     def get_pic(self):
         return str(self.picture)
