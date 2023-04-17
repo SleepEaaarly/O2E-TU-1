@@ -11,6 +11,12 @@ from core.api.utils import {
     success_api_response, failed_api_response,
     read_json_data
 }
+from core.api.milvus_util import {
+    milvus_query_set_question_by_id,
+    milvus_query_expert_by_id,
+    milvus_query_enterprise_by_id,
+    milvus_query_result_by_id,
+}
 
 RES_PATH = "../../resource"
 
@@ -64,17 +70,7 @@ class Preprocessor:
         self.ltp.add_words(words=self.list1)
 
     def renew_all_data(self, dict_replace1, dict_replace2, model, n_gram, list_disltp):
-        self.words = {
-            'val': 'None',
-            'note': 'None',
-        }
-        self.dict1 = dict_replace1
-        self.model = model
-        self.dict2 = dict_replace2
-        self.n_gram = n_gram
-        self.list1 = list_disltp
-        self.ltp = LTP(path=self.model)
-        self.ltp.add_words(words=self.list1)
+        self.__init__(dict_replace1, dict_replace2, model, n_gram, list_disltp)
 
     def change_model(self, model):
         """
@@ -203,20 +199,47 @@ class Preprocessor:
 
 
 class Recognizer:
-    def __init__(self, ques_thresh):
+    def __init__(self, ques_thresh, exp_thresh, ent_thresh, res_thresh):
         """
-        预设问题识别器
+        问题/关键词识别器
         :param ques_thresh: 确认匹配预设问题的阈值
-        :param ques_list: 预设问题库-回答列表
+        :param exp_thresh: 确认匹配专家名的阈值
+        :param ent_thresh: 确认匹配企业名的阈值
+        :param res_thresh: 确认匹配成果标题的阈值
         """
-        self.ques_thresh = ques_thresh
+        self.thresh_dict = {
+            "SET_QUESTION": ques_thresh,
+            "O2E_EXPERT": exp_thresh,
+            "O2E_ENTERPRISE":ent_thresh,
+            "O2E_RESULT": res_thresh,
+        }
+        self.milvus_key_dict = {
+            "SET_QUESTION": "question_id",
+            "O2E_EXPERT": "expert_id",
+            "O2E_ENTERPRISE": "enterprise_id",
+            "O2E_RESULT": "result_id",
+        }
+        self.milvus_fn_dict = {
+            "SET_QUESTION": milvus_query_set_question_by_id,
+            "O2E_EXPERT": milvus_query_expert_by_id,
+            "O2E_ENTERPRISE": milvus_query_enterprise_by_id,
+            "O2E_RESULT": milvus_query_result_by_id,
+        }
 
-    def renew_all_data(self, ques_thresh):
+    def renew_all_data(self, ques_thresh, exp_thresh, ent_thresh, res_thresh):
         """
+        问题/关键词识别器
         :param ques_thresh: 确认匹配预设问题的阈值
-        :param ques_list: 预设问题库-回答列表
+        :param exp_thresh: 确认匹配专家名的阈值
+        :param ent_thresh: 确认匹配企业名的阈值
+        :param res_thresh: 确认匹配成果标题的阈值
         """
-        self.ques_thresh = ques_thresh
+        self.thresh_dict = {
+            "SET_QUESTION": ques_thresh,
+            "O2E_EXPERT": exp_thresh,
+            "O2E_ENTERPRISE":ent_thresh,
+            "O2E_RESULT": res_thresh,
+        }
 
     def recognize_whole(self, ques):
         """
@@ -235,7 +258,7 @@ class Recognizer:
             if not ques:
                 print('未接收到数据')
                 return False, res
-            matched_id = self.matcher(ques)
+            matched_id = self.matcher(ques, "SET_QUESTION")
             if matched_id < 0:
                 return True, res
             # todo: 下述均不是确定的对象名属性名，等数据库建好表记得改
@@ -249,17 +272,83 @@ class Recognizer:
             print(e)
             return False, None
 
-    def matcher(self, target_sent, n_cand=1):
+    def recognize_words(self, sent_cut):
         """
-        计算问题句向量，寻找编码矩阵中离该句向量最近的n_cand个向量
+        识别传入分词结果能否匹配至数据库实体名
+        :param sent_cut: 分词结果 [{'val':名字,'type':类型},{}]
+        :param sent_in: 句子 字符串
+        :return: (
+            未出错标志, {
+                "direct": "True/False（是否直接将问题输入给chatGPT）",
+                "entity": {
+                    "expert": ["专家id1", "专家id2"],
+                    "enterprise": ["企业id1", "企业id2"],
+                    "result": ["成果id1", "成果id2"]
+                }
+            }
+        )
+        """
+        res = {
+            "direct": "True",
+            "entity": {
+                "expert": [],
+                "enterprise": [],
+                "result": []
+            }
+        }
+        sentence = None
+        if sent_cut[-1].get("note") == "question":
+            sentence = sent_cut[-1].get("val")
+        else:
+            for val in sent_cut:
+                if val.get("note") == "question":
+                    sentence = sent_cut[-1].get("val")
+                    break
+        if sentence is None:
+            raise Exception("没有问题输入")
+
+        try:
+            if not sent_cut:
+                print('未接收到分词结果')
+                return False, res
+            for word in sent_cut:
+                if sentence.find(word['val']) == -1:
+                    continue
+                matched_id = self.matcher(word['val'], "O2E_EXPERT")
+                if matched_id != -1:
+                    res["direct"] = "False"
+                    res["entity"]["expert"].append(matched_id)
+                    sentence = sentence.replace(word['val'], '')
+                    continue
+                matched_id = self.matcher(word['val'], "O2E_ENTERPRISE")
+                if matched_id != -1:
+                    res["direct"] = "False"
+                    res["entity"]["enterprise"].append(matched_id)
+                    sentence = sentence.replace(word['val'], '')
+                    continue
+                matched_id = self.matcher(word['val'], "O2E_RESULT")
+                if matched_id != -1:
+                    res["direct"] = "False"
+                    res["entity"]["result"].append(matched_id)
+                    sentence = sentence.replace(word['val'], '')
+            return True, res
+        except Exception as e:
+            print(traceback.format_exc())
+            print(e)
+            return False, None
+
+    def matcher(self, target_sent, milvus_collection, n_cand=1):
+        """
+        计算句向量，寻找编码矩阵中离该句向量最近的n_cand个向量
         :param target_sent: 待计算问句
-        :param n_cand: 候选问题数量
-        :return: 最佳匹配问题的数据库id
+        :param milvus_collection: milvus库表名
+        :param n_cand: 候选数量
+        :return: 最佳匹配的数据库id
         """ 
         cand_id = -1
         target_vec = hit.encode_2_list(target_sent)
-        id_lists = milvus_search(collection_name="SET_QUESTION", query_vectors=[target_vec], 
-                                 topk=n_cand, eps=self.ques_thresh, partition_names=None)
+        id_lists = milvus_search(collection_name=milvus_collection, query_vectors=[target_vec], 
+                                 topk=n_cand, eps=self.thresh_dict[milvus_collection], partition_names=None)
         if not id_lists or not id_lists[0]:
             return cand_id
         
@@ -269,9 +358,9 @@ class Recognizer:
                 ids += str(milvus_id) + ','
         ids = ids[:-1] + ']'
         query = "milvus_id in " + ids
-        ques_ids = milvus_query_set_question_by_id(query)
+        ques_ids = self.milvus_fn_dict[milvus_collection](query)
         # todo: 目前是直接选top1，应该改进为选top5/10后用其他方法再判断
-        cand_id = ques_ids[0]["question_id"]
+        cand_id = ques_ids[0][self.milvus_key_dict[milvus_collection]]
         return cand_id
 
 
@@ -280,9 +369,9 @@ hit = hitBert(hitModelPath=RES_PATH+"/bert", device="cpu")
 sentence_replace_dict = read_json_data(RES_PATH+"/sentence_replace_dict.json")
 word_replace_dict = read_json_data(RES_PATH+"/word_replace_dict.json")
 ltpParticipleDict = [] # todo: 要从数据库得到
-process = Preprocessor(sentence_replace_dict, word_replace_dict, "small", 2, ltpParticipleDict)
+process = Preprocessor(sentence_replace_dict, word_replace_dict, "small", 4, ltpParticipleDict)
 
-recognizer = Recognizer(ques_thresh=0.5)
+recognizer = Recognizer(ques_thresh=0.7, exp_thresh=0.9, ent_thresh=0.9, res_thresh=0.7)
 
 
 @require_GET
@@ -292,11 +381,11 @@ def answer_set_question(request:HttpRequest):
     data = request.GET.dict()
     question = data.get('input')
     ques = process.replacesentword(question)
-    flag, data = recognizer.recognize_whole(ques)
+    flag, result = recognizer.recognize_whole(ques)
     if not flag:
         return failed_api_response(500, error_msg="预设问题识别过程失败")
-    data["code"] = 200
-    return success_api_response(data)
+    result["code"] = 200
+    return success_api_response(result)
 
 
 @require_GET
@@ -306,9 +395,11 @@ def answer_free_question(request:HttpRequest):
     get_milvus_connection()
     data = request.GET.dict()
     question = data.get('input')
-    ques = process.replacesentword(question)
-    flag, data = recognizer.recognize_whole(ques)
+    flag, result = process.preprocess(question)
     if not flag:
-        return failed_api_response(500, error_msg="非预设问题识别过程失败")
-    data["code"] = 200
-    return success_api_response(data)
+        return failed_api_response(500, error_msg="非预设问题预处理过程失败")
+    flag, result2 = recognizer.recognize_words(result)
+    if not flag:
+        return failed_api_response(500, error_msg="非预设问题提取关键词过程失败")
+    result2["code"] = 200
+    return success_api_response(result2)
