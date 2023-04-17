@@ -9,3 +9,14 @@ export const getOrderReport = async (id) => {
     }, headers)
     return output
 }
+
+export const orderGenerateCard = async (expertId, enterpriseId, id) => {
+    let headers = {
+        'Authorization': 'Bearer ' + uni.getStorageSync('token')
+    }
+    await axios.get('order_report/generateCard', {
+        expertId: expertId,
+        enterpriseId: enterpriseId,
+        id: id
+    }, headers)
+}

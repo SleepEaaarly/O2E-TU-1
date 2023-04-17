@@ -12,3 +12,12 @@ export const getWorkReport = async (id) => {
     return output
 }
 
+export const workGenerateCard = async (uId, id) => {
+	let headers = {
+		'Authorization': 'Bearer ' + uni.getStorageSync('token')
+	}
+	await axios.get('work_report/generateCard', {
+		uId: uId,
+		id: id
+	}, headers)
+}

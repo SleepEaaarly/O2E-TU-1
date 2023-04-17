@@ -47,7 +47,8 @@
                 expertName="占瑞乙" 
                 expertLogoPath="/static/head_zry_fox.jpg"
                 intro="Here is a summary of some of the most commonly used methods in machine learning." 
-                time="上午 7:45">
+                time="上午 7:45"
+                @click.native="clickevent">
 
             </work_message_card>
         </scroll-view>
@@ -190,6 +191,11 @@
                 'addSystemChatMessage',
                 'addSystemNoReadMessage',
                 'setSystemChat']),
+
+            clickevent(event) {
+                console.log("123123")
+                uni.navigateTo({url: '../../pages/order_report/order_report?reportId=' + 1})
+            },
             // 监听chat bottom子组件中 isHuman 的变化
             getHuman(isHuman) {
                 let now = new Date().getTime()

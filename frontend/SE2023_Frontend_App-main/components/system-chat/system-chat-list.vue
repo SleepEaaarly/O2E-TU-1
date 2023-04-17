@@ -16,7 +16,24 @@
                 <!-- 卡片 -->
                 <!-- <system-chat-card v-if="item.type == 'card'" :src="item.message" class="system-chat-card"></system-chat-card>  -->
                 <system-chat-card v-if="item.type == 'card'" :cardInfo="item.cardInfo" class="system-chat-card"></system-chat-card> 
+                <!-- 报告 -->
+                <require_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'need'"
                 
+                >
+
+                </require_message_card>
+                
+                <work_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'work'"
+                
+                >
+
+                </work_message_card>
+
+                <order_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'order'"
+                
+                >
+                
+                </order_message_card>
             </view>
             <!-- 点击头像跳转到自己主页 -->
         </view>
@@ -25,9 +42,15 @@
 
 <script>
     import systemChatCard from 'components/system-chat/system-chat-card'
+    import require_message_card from '../../components/require_message_card.vue'
+    import work_message_card from '../../components/work_message_card.vue'
+    import order_message_card from '../order_message_card.vue'
     export default {
         components: {
-            systemChatCard
+            systemChatCard,
+            require_message_card,
+            work_message_card,
+            order_message_card
         },
         props: {
             item: Object,
@@ -38,6 +61,15 @@
             navUserInfo() {
                 console.log(this.item)
                 this.$emit('goToUserInfo', this.item.uid)
+            },
+            gotoWorkReportDetail() {
+                uni.navigateTo({url: '../../pages/work_report/work_report?reportId=' + this.item.reportInfo.reportId})
+            },
+            gotoRequireReportDetail() {
+                uni.navigateTo({url: '../../pages/require_report/require_report?reportId=' + this.item.reportInfo.reportId})
+            },
+            gotoOrderReportDetail() {
+                uni.navigateTo({url: '../../pages/order_report/order_report?reportId=' + this.item.reportInfo.reportId})
             }
         },
     }

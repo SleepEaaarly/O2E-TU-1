@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view >
 
 		<u-row>
 			<text style="margin-left:50rpx;font-size: 20px;font-weight: 550;text-align:center;">{{ work_info.workName }}</text>
@@ -35,14 +35,30 @@
 		  <scroll-view :style="{height:height+'px'}" scroll-y>
 			<image :src="work_info.work_pic" style="width: 100%;" mode="widthFix"></image>
 		  </scroll-view>
+		<uni-row >
+			<!-- <view v-if="userInfo.type==4&&order.order_id==0"> -->
+			<view>
+				<uni-col :span="8">
+					<button type="primary" @click="goToEnterpriseSpace" class="fix-button-left">专家详情</button>
+				</uni-col>
+				<uni-col :span="8" :offset="8">
+					<button type="primary" @click="contact" class="fix-button-right">生成报告</button>
+				</uni-col>
+			</view>
+		</uni-row>
 	</view>
 	
 </template>
 
 <script>
+	import { mapState, mapMutations } from 'vuex'
 	import authorCard from"../../components/author_display_card.vue"
 	import { getWork } from "@/api/work_detail.js"
+	import workGenerateCard from '@/api/work_report.js'
 	export default {
+		computed: {
+			...mapState(['userInfo']),
+		},
 		data() {
 			return {
 				work_id: 1,
@@ -74,6 +90,13 @@
 			async loadData(){
 				console.log('get work detail')
 				this.work_info = await getWork(this.work_id)
+			},
+			goToExpertSpace() {
+				uni.navigateTo({ url:'../user-space/user-space?uid='+this.work_info.expert_id })
+			},
+			generateWorkReport() {
+				// 调用生成报告的 api，后端负责将报告插入到对应的用户-系统聊天之中
+				workGenerateCard(this.userInfo.id, this.work_info.work_id)
 			}
 		},
 		components: {
@@ -84,5 +107,28 @@
 </script>
 
 <style>
-	
+
+	.fix-button {
+		background-color: white;
+		position: fixed;
+		bottom: 0upx;
+		/* right: 10upx; */
+		width: 100%;
+		height: 120upx;
+		z-index: 2;
+	}
+	.fix-button-left {
+		margin: 25upx;
+		font-size: 30upx;
+		/* float: left; */
+		left: 10upx;
+		background-color: orange;
+		/* float: left; */
+	}
+	.fix-button-right {
+		margin: 25upx;
+		font-size: 30upx;
+		right : 10upx;
+		/* float: right; */
+	}
 </style>

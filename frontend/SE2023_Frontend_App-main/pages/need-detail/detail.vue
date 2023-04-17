@@ -89,7 +89,7 @@
 					<button type="primary" @click="goToEnterpriseSpace" class="fix-button-left">企业详情</button>
 				</uni-col>
 				<uni-col :span="8">
-					<button type="primary" @click="goToEnterpriseSpace" class="fix-button-left">生成报告</button>
+					<button type="primary" @click="generateNeedReport" class="fix-button-left">生成报告</button>
 				</uni-col>
 				<uni-col :span="8">
 					<button type="primary" @click="contact" class="fix-button-right">立即对接</button>
@@ -109,11 +109,9 @@
 	} from 'vuex'
 	import {
 		getNeedDetail,
-		createContact
+		createContact,
 	} from '@/api/need-detail.js'
-	import {
-		sendNeedInfoToGenerateReport
-	} from '@/api/detail.js'
+	import requireGenerateCard from '@/api/require_report.js'
 	import tuiCard from '@/components/thorui/tui-card/tui-card.vue'
 	import tuiListView from '@/components/thorui/tui-list-view/tui-list-view'
 	import tuiListCell from '@/components/thorui/tui-list-cell/tui-list-cell'
@@ -224,11 +222,8 @@
 		methods: {
 			// 生成报告
 			async generateNeedReport() {
-				let result = await sendNeedInfoToGenerateReport(item.title, item.description, this.field_items[item.field], item.key_word)
-				// TODO: 检查 result
-
-				// 将生成的报告插入聊天记录
-				
+				// 调用生成报告的api，后端负责将报告插入到对应的用户系统聊天之中
+				requireGenerateCard(this.userInfo.id, this.detail.id)
 			},
 			//点击fab后的动作
 			trigger(e) {
