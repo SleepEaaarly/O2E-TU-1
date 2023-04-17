@@ -357,6 +357,38 @@
 				}
 			}
 		}, {
+			"path": "pages/work_report/work_report",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "成果报告",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								
+							}
+						]
+					}
+				}
+			}
+		}, {
+			"path": "pages/order_report/order_report",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "订单报告",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								
+							}
+						]
+					}
+				}
+			}
+		},
+		
+		{
 			"path": "pages/detail/detail",
 			"style": {
 				"navigationBarTitleText": "详情",

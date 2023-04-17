@@ -5,10 +5,10 @@
 		</u-row>
 		
 		<company-card
-		:name="require_info.company_name"
-		:area="require_info.company_area" 
-		:address="require_info.company_address"
-		:logoPath="require_info.company_logoPath"
+			:name="require_info.company_name"
+			:area="require_info.company_area" 
+			:address="require_info.company_address"
+			:logoPath="require_info.company_logoPath"
 		
 		></company-card>
 		
