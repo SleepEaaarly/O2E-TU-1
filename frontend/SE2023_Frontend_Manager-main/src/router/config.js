@@ -50,9 +50,14 @@ const options = {
                     component: PageView,
                     children: [
                         {
-                            path: 'list',
+                            path: 'userList',
                             name: '用户列表',
                             component: () => import('@/pages/form/advance/UserForm'),
+                        },
+                        {
+                            path: 'resultList',
+                            name: '成果列表',
+                            component: () => import('@/pages/form/advance/ResultForm'),
                         },
 
                         {

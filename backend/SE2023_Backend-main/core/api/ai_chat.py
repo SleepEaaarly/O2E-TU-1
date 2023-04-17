@@ -1,8 +1,14 @@
 import numpy as np
 import torch
 from transformers import BertModel, BertTokenizer
+from django.http import HttpRequest
+from core.models import Question
+from core.api.milvus_utils import milvus_search, milvus_query_set_question_by_id, get_milvus_connection
+from django.views.decorators.http import require_POST, require_GET
 
+import copy
 from copy import deepcopy
+
 import traceback
 from ltp import LTP
 
@@ -262,7 +268,7 @@ class Recognizer:
             if matched_id < 0:
                 return True, res
             # todo: 下述均不是确定的对象名属性名，等数据库建好表记得改
-            q_info = Questions.objects.get(pk=matched_id) 
+            q_info = Question.objects.get(pk=matched_id)
             res["matched_q"] = q_info.question
             res["answer"] = q_info.answer
             res["transfer"] = "False"
@@ -376,7 +382,7 @@ recognizer = Recognizer(ques_thresh=0.7, exp_thresh=0.9, ent_thresh=0.9, res_thr
 
 @require_GET
 @response_wrapper
-def answer_set_question(request:HttpRequest):
+def answer_set_question(request: HttpRequest):
     get_milvus_connection()
     data = request.GET.dict()
     question = data.get('input')

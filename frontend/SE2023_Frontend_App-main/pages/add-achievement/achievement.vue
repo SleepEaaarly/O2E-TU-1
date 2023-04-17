@@ -8,14 +8,18 @@
         <view class="achievement-form">
             <form @submit="submit" @reset="reset">
                 <uni-section title="成果标题" subTitle="为您的成果总结一个标题" type="line" padding>
-                    <uni-easyinput v-model="title" focus placeholder="请输入内容" @input="inputTitle"></uni-easyinput>
+                    <uni-easyinput v-model="title" focus placeholder="请输入内容"></uni-easyinput>
                 </uni-section>
                 <uni-section title="摘要" subTitle="描述您的成果" type="line" padding>
                     <uni-easyinput type="textarea" v-model="description" placeholder="请输入内容"
-                        @input="inputDescription"></uni-easyinput>
+                        ></uni-easyinput>
                 </uni-section>
+				<uni-section title="内容" subTitle="介绍成果的内容" type="line" padding>
+				    <uni-easyinput type="textarea" v-model="content" placeholder="请输入内容"
+				        ></uni-easyinput>
+				</uni-section>
                 <uni-section title="成果作者" subTitle="多个作者用英文逗号分隔" type="line" padding>
-                    <uni-easyinput v-model="scholars" focus placeholder="请输入作者" @input="inputScholars"></uni-easyinput>
+                    <uni-easyinput v-model="scholars" focus placeholder="请输入作者" ></uni-easyinput>
                 </uni-section>
                 <!-- <uni-section title="成果链接" subTitle="给出您的成果链接" type="line" padding>
                     <uni-easyinput v-model="achievement_url" focus placeholder="请输入链接" @input="inputachievement_url"></uni-easyinput>
@@ -54,15 +58,12 @@
 				</uni-section>
                 <uni-section title="成果示意图" subTitle="请选择图片展示成果" type="line" padding>
 					<view>
-						<view class="thorui-input-title">法人身份证(必填)</view>
-						<uploadID @getIDpic="getWorkPic"></uploadID>
+						<uploadID @getIDpic="getWorkLogo"></uploadID>
 					</view>
                 </uni-section>
 				<uni-section title="成果详情" subTitle="请选择附件" type="line" padding>
 					<view class="add-btn">
-					   <u-button @click="openFile" v-model="achievementFile">
-						   上传PDF添加附件
-					   </u-button>
+					   <uploadWorkPic @getWorkPic="getWorkPic"></uploadWorkPic>
 					</view>			
 				</uni-section>
 
@@ -105,6 +106,7 @@ export default {
 			id: '',
             title: '',
             description: '',
+			content: '',
             money: '',
             start_time: '',
             end_time: '',
@@ -126,6 +128,7 @@ export default {
             achievementFile: null,
             period: '',
             picture: '',
+			multipic: [],
             field_items: [
                 '信息技术', '装备制造', '新材料', '新能源', '节能环保', '生物医药', '科学创意', '检验检测', '其他'
             ],
@@ -193,25 +196,25 @@ export default {
     },
     methods: {
 		// 打开文件选择器
-		openFile(){
-			uni.chooseFile({
-				count: 1, //默认100
-                // extension: ['.zip', '.doc', '.xls', '.pdf', 'docx', '.rar', '.7z', '.jpg', '.png', '.jpeg'],
-                extension: ['.pdf'],
-				success: (res) =>{
-					console.log(res);
-					if(res.tempFiles[0].size / 1024 / 1024 > 20){
-						this.$refs.uToast.show({
-							title: '附件大小不能超过20M',
-							type: 'warning',
-						})
-						return;
-                    }
-                    this.achievementFile = res.tempFilePaths[0]
-				}
-			});
-		},
-        getWorkPic(val) {
+		// openFile(){
+		// 	uni.chooseFile({
+		// 		count: 1, //默认100
+  //               // extension: ['.zip', '.doc', '.xls', '.pdf', 'docx', '.rar', '.7z', '.jpg', '.png', '.jpeg'],
+  //               extension: ['.pdf'],
+		// 		success: (res) =>{
+		// 			console.log(res);
+		// 			if(res.tempFiles[0].size / 1024 / 1024 > 20){
+		// 				this.$refs.uToast.show({
+		// 					title: '附件大小不能超过20M',
+		// 					type: 'warning',
+		// 				})
+		// 				return;
+  //                   }
+  //                   this.achievementFile = res.tempFilePaths[0]
+		// 		}
+		// 	});
+		// },
+        getWorkLogo(val) {
             if (val.length > 0) {
                 this.picture = val[0]
             } else {
@@ -220,6 +223,15 @@ export default {
             console.log('result picture!')
             console.log(this.picture)
         },
+		getWorkPic(val){
+			if (val.length > 0) {
+			    this.multipic = val
+			} else {
+			    this.multipic = []
+			}
+			console.log('result multipic!')
+			console.log(this.multipic)
+		},
         back() {
             uni.navigateBack()
         },
@@ -229,6 +241,9 @@ export default {
         inputDescription(e) {
             this.description = e.detail.value
         },
+		inputContent(e) {
+		    this.content = e.detail.value
+		},
 		inputScholars(e){
 			this.scholars = e.detail.value
 		},
@@ -305,6 +320,9 @@ export default {
             } else if (data.description === '') {
                 this.$http.toast('请详细描述您的成果！')
                 validate_answer = false
+            } else if (data.content === '') {
+                this.$http.toast('请输入成果内容！')
+                validate_answer = false
             } else if (data.scholars === '') {
                 this.$http.toast('请输入成果作者！')
                 validate_answer = false
@@ -346,7 +364,7 @@ export default {
 					'achievement_url': this.achievement_url,
 					'scholars': this.scholars,
 					'pyear': this.pyear,
-					'content': "Unnecessary Content",
+					'content': this.content,
 					'id': this.id
 				}
 				console.log(data)
@@ -357,19 +375,15 @@ export default {
 				}
 				console.log("start_submit")
 				console.log(this.picture)
+				let filelist = []
+				for(let i=0;i<this.multipic.length;i++){
+					filelist.push({name:'multipic', uri:this.multipic[i]})
+				}
+				filelist.push({name:'picture', uri:this.picture})
 				uni.uploadFile({
 					url: 'http://127.0.0.1:8000/api/result/add',
 				// url: 'http://122.9.14.73:8000/api/enterprise/setinfo',
-					files: [{
-						uri: this.picture,
-						name: 'picture'
-					},
-					{
-						uri: this.achievementFile,
-						name: 'file'
-					},
-					
-					],
+					files: filelist,
 					
 					formData:{
 						'title': this.title,
@@ -384,7 +398,7 @@ export default {
 						'achievement_url': this.achievement_url,
 						'scholars': this.scholars,
 						'pyear': this.pyear,
-						'content': "Unnecessary Content",
+						'content': this.content,
 						'id': this.id
 					},
 					success: uploadFileRes => {
@@ -416,6 +430,7 @@ export default {
         reset: function (e) {
                 this.title = '',
                 this.description = '',
+				this.content = '',
                 this.money = '',
                 this.start_time = '',
                 this.end_time = '',
@@ -439,6 +454,7 @@ export default {
             let data = {
                 'title': this.title,
                 'abstract': this.description,
+				'content': this.content,
                 'start_time': this.start_time,
                 'end_time': this.end_time,
                 'period': this.period,
@@ -449,7 +465,7 @@ export default {
                 'achievement_url': this.achievement_url,
                 'scholars': this.scholars,
                 'pyear': this.pyear,
-                'content': "Unnecessary Content",
+                'content': this.content,
                 'file': this.achievementFile,
                 'picture': this.picture,
 				'id': this.id

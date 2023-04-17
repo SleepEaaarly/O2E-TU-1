@@ -29,3 +29,5 @@ class Enterprise_info(models.Model):
     #法人身份证
     legal_person_ID = models.ImageField(upload_to="images/%Y%m/%d/icons",
                                         default='images/default_user_icon.jpg')
+
+    vector = models.TextField(blank=True, null=True)

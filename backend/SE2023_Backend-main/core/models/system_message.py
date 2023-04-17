@@ -26,7 +26,9 @@ class SystemMessage(models.Model):
         - is_to_system
         - created_at
         - read_state
+        - type
     """
+    type = models.CharField(max_length=30)
     content = models.CharField(max_length=140)
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="chat_user")
@@ -51,11 +53,13 @@ class SystemMessage(models.Model):
     def new_message(cls,
                     owner: User,
                     is_to_system: int,
-                    content: str):
+                    content: str,
+                    type: str):
         try:
             new_message = SystemMessage(content=content,
                                         owner=owner,
                                         is_to_system=is_to_system,
+                                        type = type,
                                         read_state=UNREAD)
             new_message.save()
             print(new_message.id)
