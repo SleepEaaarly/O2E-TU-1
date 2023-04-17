@@ -166,15 +166,14 @@ def add_project(request: HttpRequest):
 @require_POST
 @response_wrapper
 def add_result(request: HttpRequest):
-    print('in func')
-    print(request.FILES)
+    # print('in func')
+    # print(request.FILES)
 
     # data: dict = parse_data(request)
     # if not data:
     #     return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
     #                                "Invalid request args.")
     # print(data)
-
     title = request.POST.get('title')
     abstract = request.POST.get('abstract')
     scholars = request.POST.get('scholars')
@@ -186,7 +185,9 @@ def add_result(request: HttpRequest):
 
     picture = request.FILES.get("picture")
 
-    multipic = request.FILES.get('multipic')
+    multipic = request.FILES.getlist('multipic')
+
+
 
     result = Results(title=title, abstract=abstract, scholars=scholars, pyear=pyear, field=field,
                      period=period, picture=picture, content=content, state=0)
@@ -194,7 +195,7 @@ def add_result(request: HttpRequest):
     print(multipic)
 
     for p in multipic:
-        p = Multipic(picture=p)
+        p = ResMultipic(picture=p)
         result.multipic.add(p)
 
     result.save()
@@ -257,7 +258,7 @@ def get_resultInfo(request: HttpRequest, id: int):
     expert = Expert.objects.filter(results=id)[0]
     user = User.objects.get(expert_info=expert.id)
 
-    multipic = Multipic.objects.filter(results_id=id)
+    multipic = ResMultipic.objects.filter(results_id=id)
 
     return success_api_response({
         "title": result.title,

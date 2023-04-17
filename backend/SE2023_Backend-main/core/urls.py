@@ -43,12 +43,12 @@ from core.api.expert import setinfo, agree_expert, refuse_expert, get_expertInfo
 
 from core.api.feedback import get_feedback, make_feedback, reply_feedback, get_user_unreplied_feedback, get_user_replied_feedback
 
-from core.api.ai_recommend import recommend, need_recommend, result_recommend_for_expert, result_recommend_for_enterprise
+# from core.api.ai_recommend import recommend, need_recommend, result_recommend_for_expert, result_recommend_for_enterprise
 
 
 from core.api._platform.rate import rate_order, get_order_rate, get_user_rate
 
-from core.api.ai_chat import answer_set_question, answer_free_question
+# from core.api.ai_chat import answer_set_question, answer_free_question
 
 
 from core.tests.generate_avatar import avatar, get_user_num
@@ -250,15 +250,15 @@ urlpatterns = [
     path('user/<int:id>/feedback/replied', get_user_replied_feedback),
     path('user/<int:id>/feedback/unreplied', get_user_unreplied_feedback),
 
-    # AI推荐
-    path('ai/recommend/<int:id>', recommend),
-    path('ai/needRecommend/<int:id>', need_recommend),
-    path('ai/resultRec/expert/<int:id>', result_recommend_for_expert),
-    path('ai/resultRec/enterprise/<int:id>', result_recommend_for_enterprise),
-
-    # AI客服
-    path('answer/set', answer_set_question),
-    path('answer/free', answer_free_question),
+    # # AI推荐
+    # path('ai/recommend/<int:id>', recommend),
+    # path('ai/needRecommend/<int:id>', need_recommend),
+    # path('ai/resultRec/expert/<int:id>', result_recommend_for_expert),
+    # path('ai/resultRec/enterprise/<int:id>', result_recommend_for_enterprise),
+    #
+    # # AI客服
+    # path('answer/set', answer_set_question),
+    # path('answer/free', answer_free_question),
 
     # 评价
     path('order/rate', rate_order),
