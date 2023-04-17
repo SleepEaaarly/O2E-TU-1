@@ -397,7 +397,6 @@ def answer_set_question(request: HttpRequest):
 @require_GET
 @response_wrapper
 def answer_free_question(request:HttpRequest):
-    # todo
     get_milvus_connection()
     data = request.GET.dict()
     question = data.get('input')
@@ -407,5 +406,36 @@ def answer_free_question(request:HttpRequest):
     flag, result2 = recognizer.recognize_words(result)
     if not flag:
         return failed_api_response(500, error_msg="非预设问题提取关键词过程失败")
-    result2["code"] = 200
-    return success_api_response(result2)
+    """
+    result2 = {
+        "direct": "True/False（是否直接将问题输入给chatGPT）",
+        "entity": {
+            "expert": ["专家id1", "专家id2"],
+            "enterprise": ["企业id1", "企业id2"],
+            "result": ["成果id1", "成果id2"]
+        }
+    }
+    """
+    final = {
+        "code": 200,
+        "answer": "",
+        "card": {
+            "expert": [],
+            "enterprise": [],
+            "result": [],
+        }
+    }
+
+    # todo 曾凡一：
+    # 注：当result2["direct"] == "True"时，不需要查数据库，直接跳过该步骤
+    # (1)
+    #   在result2["entity"][?]拿id --> 数据库查这个id的属性 --> 把查到的东西拼接成一段话，放进final["answer"]
+    #   如果result2有很多个id，那就把分别得到的“一段话”拼成一大段话放进final["answer"]
+    # (2)
+    #   根据张凯歌给的前端卡片信息展示需求（cardInfo），把信息放到final["card"][?]。（列表元素是一个个dict：{"cardType": xx, "title": xx, ...}）
+    #   result2["entity"]有多少个元素，final["card"]就得对应上
+    #
+    # todo 荆睿涛：
+    #   将final["answer"]和question拼接起来送进chatGPT，然后用chatGPT的回复替换final["answer"]的内容
+    
+    return success_api_response(final)
