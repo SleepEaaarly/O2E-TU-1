@@ -187,8 +187,6 @@ def add_result(request: HttpRequest):
 
     multipic = request.FILES.getlist('multipic')
 
-
-
     result = Results(title=title, abstract=abstract, scholars=scholars, pyear=pyear, field=field,
                      period=period, picture=picture, content=content, state=0)
 

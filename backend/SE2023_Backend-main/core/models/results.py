@@ -29,11 +29,8 @@ class Results(models.Model):
     def get_pic(self):
         return str(self.picture)
 
-    def get_pdf(self):
-        return str(self.file)
-
     def to_dict(self) -> dict:
         return {"title": self.title, "abstract": self.abstract, "scholars": self.scholars,
-                "pyear": self.pyear, "field": self.field, "period": self.period, "picture": self.picture,
-                "content": self.content, "file": self.file, "state": self.state, "relate_expert_id": self.relate_expert_id}
+                "pyear": self.pyear, "field": self.field, "period": self.period, "picture": self.get_pic(),
+                "content": self.content, "state": self.state}
 

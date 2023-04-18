@@ -167,6 +167,8 @@ def delete_user(request: HttpRequest):
     User.objects.get(pk=pid).delete()
     return success_api_response({"result": "Ok, all user info has been provided."})
 
+
+
 @response_wrapper
 #@jwt_auth()
 @require_http_methods('POST')
