@@ -62,6 +62,8 @@ from core.api.search_api import search_expert, search_enterprise, search_result,
 from core.api.system_chat import create_system_chat, get_system_chat, push_system_message, \
     system_message_read, alter_systemchat_visible, get_all_system_chatrooms, push_system_message_by_admin
 
+from core.api.admin_entity import get_all_result_info, change_result_info, delete_result
+
 
 urlpatterns = [
 
@@ -82,10 +84,12 @@ urlpatterns = [
     path('res/pic', RES_PIC_API),
     path('images/<str:year>/<str:day>/res_pic/<str:file_name>', read_pic),
     path('images/default_result_pic.jpg', read_default_pic),
-
     path('res/pdf', RES_PDF_API),
     path('result/agree/<int:id>', agree_result),
     path('result/refuse/<int:id>', refuse_result),
+    path('result/all/<int:page>', get_all_result_info),
+    path('result/delete', delete_result),
+    path('result/changeinfo', change_result_info),
 
     # comment apis
     path('comment/create', create_comment),

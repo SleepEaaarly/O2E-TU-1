@@ -182,7 +182,6 @@ def add_result(request: HttpRequest):
     period = request.POST.get('period')
     id = request.POST.get('id')
     content = request.POST.get('content')
-
     picture = request.FILES.get("picture")
 
     multipic = request.FILES.getlist('multipic')
