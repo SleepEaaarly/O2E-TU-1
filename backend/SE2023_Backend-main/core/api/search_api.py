@@ -170,9 +170,9 @@ def search_result(request: HttpRequest):
         print(results)
         results = Results.objects.all()
         print(results)
-    print('debug 1')
+    # print('debug 1')
     print(results)
-    print('debug 2')
+    # print('debug 2')
     for result in results:
         if not (period is None or period == ''):
             if result.period != period:
@@ -205,7 +205,7 @@ def search_result(request: HttpRequest):
             "expert_icon": str(user.icon)
         }
         data_results.append(result_info)
-    print('debug 6')
+    # print('debug 6')
     data_results = data_results[:10]
     return success_api_response({"data": data_results})
 
