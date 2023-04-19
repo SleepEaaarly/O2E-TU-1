@@ -191,9 +191,12 @@ def add_result(request: HttpRequest):
 
     print(multipic)
 
+    result.save()
+
     for p in multipic:
-        p = ResMultipic(picture=p)
-        result.multipic.add(p)
+        a = ResMultipic(picture=p)
+        a.save()
+        result.multipic.add(a)
 
     result.save()
     print("4")
@@ -255,7 +258,7 @@ def get_resultInfo(request: HttpRequest, id: int):
     expert = Expert.objects.filter(results=id)[0]
     user = User.objects.get(expert_info=expert.id)
 
-    multipic = ResMultipic.objects.filter(results_id=id)
+    multipic = result.multipic.all()
 
     return success_api_response({
         "title": result.title,
