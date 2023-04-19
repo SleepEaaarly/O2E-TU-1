@@ -246,16 +246,16 @@
 					this.info.expert_phone = data.expert_phone
 					this.info.expert_title = data.expert_title
 				}
-				if (this.info.expert_field) {
-					let str = ''
-					let s = this.info.expert_field
-					for (let i = 0; i < s.length; i++) {
-						if (s[i] === '1') {
-							str = str + this.field_items[i] + ' '
-						}
-					}
-					this.info.expert_field = str
-				}
+				// if (this.info.expert_field) {
+				// 	let str = ''
+				// 	let s = this.info.expert_field
+				// 	for (let i = 0; i < s.length; i++) {
+				// 		if (s[i] === '1') {
+				// 			str = str + this.field_items[i] + ' '
+				// 		}
+				// 	}
+				// 	this.info.expert_field = str
+				// }
 			},
 			getFiled(data) {
 				let str = ''

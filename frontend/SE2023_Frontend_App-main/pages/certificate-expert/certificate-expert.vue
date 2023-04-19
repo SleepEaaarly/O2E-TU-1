@@ -292,6 +292,8 @@
 			},
 			getFieldString() {
 				let string = []
+				let str = ''
+				let first = false
 				for (let i = 0; i < this.checkboxItems.length; i++) {
 					string.push('0')
 				}
@@ -301,9 +303,16 @@
 					string[this.selectedItems[i]] = '1'
 				}
 				console.log('string is ' + string)
-				let str = ''
+				
 				for (let i = 0; i < string.length; i++) {
-					str = str + string[i]
+					if(string[i]=='1'){
+						if(first){
+							str = str + ' '
+						}else{
+							first = true
+						}
+						str = str + this.checkboxItems[i].name
+					}
 				}
 				this.field = str
 			},
@@ -356,6 +365,7 @@
 			certificate() {
 				console.log('认证开始！')
 				this.getFieldString()
+				console.log(this.field)
 				let checkRes = this.validate()
 				if (checkRes) {
 					uni.showToast({

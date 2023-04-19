@@ -78,12 +78,12 @@
 					<work-card
 					@click.native="workDetail(item)"  
 					:authorLogoPath="item['authorLogoPath']" 
-					:workLogoPath="item['work_icon']" 
+					:workLogoPath="item['workLogoPath']" 
 					:author="item['author']"
 					:title="item['title']"
 					:date="item['date']"
 					:area="item['area']"
-					:intro="item['intro']"
+					:intro="item['abstract']"
 					:period="item['period']"
 					:index="index1"></work-card>
 				</block> 

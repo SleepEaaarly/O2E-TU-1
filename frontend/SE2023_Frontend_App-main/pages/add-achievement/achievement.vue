@@ -270,8 +270,9 @@ export default {
         },
         inputField(e) {
             this.index = e.detail.value
-            console.log(this.index)
-            this.field = this.index
+            
+            this.field = this.field_items[this.index]
+			console.log(this.field)
         },
         inputRegisterCapital(e) {
             this.register_capital = e.detail.value
