@@ -65,6 +65,9 @@ from core.api.system_chat import create_system_chat, get_system_chat, push_syste
 from core.api.admin_entity import get_all_result_info, change_result_info, delete_result
 
 
+from core.api.order_report import get_order_report
+
+from core.api.ai_report import generate_requirement_report, generate_result_report, get_requirement_report, get_result_report
 urlpatterns = [
 
     # user apis
@@ -284,5 +287,18 @@ urlpatterns = [
     path('search/enterprise', search_enterprise),
     path('search/result', search_result),
     path('search/mixture', search_mixture),
+
+    # 获得订单报告
+    path('order_report/get', get_order_report),
+
+    # 专家企业互释报告
+    path('work_report/submit', generate_requirement_report),
+
+    path('work_report/get', get_requirement_report),
+
+    path("need_report/get", generate_result_report),
+
+    path("need_report/generate", get_result_report)
+
 
 ]
