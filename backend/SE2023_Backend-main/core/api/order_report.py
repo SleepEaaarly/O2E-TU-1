@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
-from core.api.platform.utils import get_now_time
+from core.api._platform.utils import get_now_time
 from core.models import User, SystemMessage, SystemChatroom, CardMessage
 from core.models import SwitchMessage, ImageMessage
 from core.models import Order, Need, Enterprise_info

@@ -11,6 +11,9 @@ RES_STATE_CHOICES = (
 class ResMultipic(models.Model):
     picture = models.ImageField(upload_to="images/%Y%m/%d/res_pic")
 
+    def get_pic(self):
+        return str(self.picture)
+
 
 class Results(models.Model):
     title = models.TextField()
