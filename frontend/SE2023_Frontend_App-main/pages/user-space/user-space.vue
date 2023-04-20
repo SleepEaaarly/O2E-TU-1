@@ -50,7 +50,7 @@
 		
 		<!-- 成果 -->
 		<template v-if="tabIndex==2 && info.type==4">
-			<userAchievement :id="info.id"></userAchievement>	
+			<userAchievement :id="info.id" :isSelf="info.id==userInfo.id"></userAchievement>	
 		</template>
 		
 		<!-- 评价 -->
@@ -216,6 +216,7 @@
 			async initData(id){
 				let data = await getUserInfo({ 'user_id':id })
 				let topicList = await getTopicListByUid(id)
+				console.log('Get UserInfo')
 				this.topicList = topicList
 				if('id' in data){
 					this.spacedata[0].num = data.total_like>=1000?(data.total_like/1000)+'k':data.total_like
@@ -265,7 +266,7 @@
 					// 	str = str + this.field_items[i] + " ";
 					// }
 				}
-				console.log('get field ' + str)
+				// console.log('get field ' + str)
 				return str
 			},
 			userActive(){

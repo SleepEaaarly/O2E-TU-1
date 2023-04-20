@@ -7,7 +7,7 @@ export const getWork = async (id) => {
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
-	console.log("Get work before call " + id)
+	// console.log("Get work before call " + id)
     let item = await axios.get("result/getinfo/" + id, {}, headers)
     let result = {
 		"workName": item.title,

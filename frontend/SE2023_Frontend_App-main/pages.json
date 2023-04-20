@@ -67,6 +67,17 @@
 			}
 		},
 		{
+			"path": "pages/mix_search/mix_search",
+			"style": {
+				"navigationBarTitleText": "",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"scrollIndicator": "none"
+				}
+			}
+		},
+		{
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "登录",

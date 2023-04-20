@@ -3,7 +3,7 @@
 	<view>
 		<!-- 搜索栏 -->
 		<view class = "search_view" style="margin-top: 10rpx;margin-left: 20px;margin-right: 20px;margin-top: 30px;">
-			<u-search placeholder="请输入搜索内容" :showAction = "false" v-model="searchText"></u-search>
+			<u-search placeholder="请输入搜索内容" :showAction = "true" v-model="searchText" @custom="mixSearch"></u-search>
 		</view>
 		
 		
@@ -201,9 +201,10 @@
 		},
 
 		watch: {
-			searchText(newVal, oldVal) {
-				this.requestData()
-			},
+			// searchText(newVal, oldVal) {
+			// 	console.log(oldVal)
+			// 	console.log(newVal)
+			// },
 			field: function(newValue) {
 				let that = this
 				var f = function(that) {
@@ -224,9 +225,11 @@
 			}
 		},
 		methods: {
-			workDetail(work) {
-				// console.log(work['title'])
-				// console.log('Jump to detail of the work')
+			
+			mixSearch(){
+				uni.navigateTo({
+					url: `../mix_search/mix_search?search_text=${this.searchText}`,
+				})
 			},
 			navToExperts() {
 				// console.log('Jump to detail of the Experts')
@@ -260,7 +263,12 @@
 						"id": this.userInfo.id,
 						"type": this.userInfo.type,
 					}
-					var rec_list = await getWorkRec(paras)
+					var rec_list = {}
+					
+					// TODO 成果推荐 Debug
+					// rec_list = await getWorkRec(paras)
+					// TODO 成果推荐 Debug
+					
 					if(rec_list == null){
 						rec_list = {}
 					}
