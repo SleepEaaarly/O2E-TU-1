@@ -13,11 +13,11 @@ import traceback
 from ltp import LTP
 
 from core.api.utils import (
-    response_wrapper, 
+    response_wrapper,
     success_api_response, failed_api_response,
     read_json_data
 )
-from core.api.milvus_util import (
+from core.api.milvus_utils import (
     milvus_query_set_question_by_id,
     milvus_query_expert_by_id,
     milvus_query_enterprise_by_id,
@@ -30,7 +30,7 @@ from core.models.results import Results
 RES_PATH = "../../resource"
 
 
-class hitBert:
+class HitBert:
     def __init__(self, hitModelPath, device):
         self.hit_tokenizer = BertTokenizer.from_pretrained(hitModelPath)
         self.hit_model = BertModel.from_pretrained(hitModelPath)
@@ -219,7 +219,7 @@ class Recognizer:
         self.thresh_dict = {
             "SET_QUESTION": ques_thresh,
             "O2E_EXPERT": exp_thresh,
-            "O2E_ENTERPRISE":ent_thresh,
+            "O2E_ENTERPRISE": ent_thresh,
             "O2E_RESULT": res_thresh,
         }
         self.milvus_key_dict = {
@@ -246,7 +246,7 @@ class Recognizer:
         self.thresh_dict = {
             "SET_QUESTION": ques_thresh,
             "O2E_EXPERT": exp_thresh,
-            "O2E_ENTERPRISE":ent_thresh,
+            "O2E_ENTERPRISE": ent_thresh,
             "O2E_RESULT": res_thresh,
         }
 
@@ -354,14 +354,14 @@ class Recognizer:
         :param milvus_collection: milvus库表名
         :param n_cand: 候选数量
         :return: 最佳匹配的数据库id
-        """ 
+        """
         cand_id = -1
         target_vec = hit.encode_2_list(target_sent)
-        id_lists = milvus_search(collection_name=milvus_collection, query_vectors=[target_vec], 
+        id_lists = milvus_search(collection_name=milvus_collection, query_vectors=[target_vec],
                                  topk=n_cand, eps=self.thresh_dict[milvus_collection], partition_names=None)
         if not id_lists or not id_lists[0]:
             return cand_id
-        
+
         ids = '['
         for id_list in id_lists:
             for milvus_id in id_list:
@@ -374,11 +374,11 @@ class Recognizer:
         return cand_id
 
 
-hit = hitBert(hitModelPath=RES_PATH+"/bert", device="cpu")
+hit = HitBert(hitModelPath=RES_PATH + "/bert", device="cpu")
 
-sentence_replace_dict = read_json_data(RES_PATH+"/sentence_replace_dict.json")
-word_replace_dict = read_json_data(RES_PATH+"/word_replace_dict.json")
-ltpParticipleDict = [] # todo: 要从数据库得到
+sentence_replace_dict = read_json_data(RES_PATH + "/sentence_replace_dict.json")
+word_replace_dict = read_json_data(RES_PATH + "/word_replace_dict.json")
+ltpParticipleDict = []  # todo: 要从数据库得到
 process = Preprocessor(sentence_replace_dict, word_replace_dict, "small", 4, ltpParticipleDict)
 
 recognizer = Recognizer(ques_thresh=0.7, exp_thresh=0.9, ent_thresh=0.9, res_thresh=0.7)
@@ -402,33 +402,35 @@ def expert_to_info_str(exp_id):
     user = User.objects.get(id=exp_id)
     expert = user.expert_info
     info_str = f"{expert.name}，在{expert.organization}工作，" + \
-                f"头衔为{expert.title}，"
-                f"擅长的研究领域有{expert.field}，" + \
-                f"他/她这样介绍自己：{expert.self_profile}。"
+               f"头衔为{expert.title}，" + \
+               f"擅长的研究领域有{expert.field}，" + \
+               f"他/她这样介绍自己：{expert.self_profile}。"
     papers = expert.papers.all()
     if len(papers) > 0:
         paper_info = f"{expert.name}的论文有："
-        for index, paper in enumerate(papars):
-            papar_info += f"{index+1}. {paper.title}. "
+        for index, paper in enumerate(papers):
+            paper_info += f"{index + 1}. {paper.title}. "
         info_str += paper_info
     patents = expert.patents.all()
     if len(patents) > 0:
         patent_info = f"{expert.name}的专利有："
         for index, patent in enumerate(patents):
-            patent_info += f"{index+1}. {patent.title}. "
+            patent_info += f"{index + 1}. {patent.title}. "
         info_str += patent_info
+    projects = expert.projects.all()
     if len(projects) > 0:
         project_info = f"{expert.name}的项目有："
         for index, project in enumerate(projects):
-            project_info += f"{index+1}. {project.title}. "
+            project_info += f"{index + 1}. {project.title}. "
         info_str += project_info
+    results = expert.results.all()
     if len(results) > 0:
         result_info = f"{expert.name}的成果有："
         for index, result in enumerate(results):
-            result_info += f"{index+1}. {result.title}. "
+            result_info += f"{index + 1}. {result.title}. "
         info_str += result_info
     card_info = {
-        "cardType": "expert", "id": exp_id, "title": expert.name, 
+        "cardType": "expert", "id": exp_id, "title": expert.name,
         "avatar": user.icon, "info": expert.self_profile
     }
     return info_str, card_info
@@ -441,7 +443,7 @@ def enterprise_to_info_str(ent_id):
                f"主营业务有{enterprise.field}，" + \
                f"企业简介：{enterprise.self_profile}。"
     card_info = {
-        "cardType": "enterprise", "id": ent_id, "title": enterprise.name, 
+        "cardType": "enterprise", "id": ent_id, "title": enterprise.name,
         "avatar": user.icon, "info": enterprise.instruction
     }
     return info_str, card_info
@@ -451,7 +453,7 @@ def result_to_info_str(rst_id):
     result = Results.get(id=rst_id)
     info_str = f"{result.field}领域的技术成果《{result.title}》，{result.abstract}。"
     card_info = {
-        "cardType": "technique", "id": rst_id, "title": result.title, 
+        "cardType": "technique", "id": rst_id, "title": result.title,
         "avatar": result.picture, "info": result.abstract
     }
     return info_str, card_info
@@ -459,7 +461,7 @@ def result_to_info_str(rst_id):
 
 @require_GET
 @response_wrapper
-def answer_free_question(request:HttpRequest):
+def answer_free_question(request: HttpRequest):
     get_milvus_connection()
     data = request.GET.dict()
     question = data.get('input')
@@ -489,7 +491,6 @@ def answer_free_question(request:HttpRequest):
         }
     }
 
-    # todo 曾凡一：
     # 注：当result2["direct"] == "True"时，不需要查数据库，直接跳过该步骤
     # (1)
     #   在result2["entity"][?]拿id --> 数据库查这个id的属性 --> 把查到的东西拼接成一段话，放进final["answer"]
@@ -500,12 +501,12 @@ def answer_free_question(request:HttpRequest):
     #   result2["entity"]有多少个元素，final["card"]就得对应上
 
     if result2["direct"] == "False":
-        
+
         for exp_id in result2["entity"]["expert"]:
             info_str, card_info = expert_to_info_str(exp_id)
             final["answer"] += info_str
             final["card"]["expert"].append(card_info)
-        
+
         for ent_id in result2["entity"]["enterprise"]:
             info_str, card_info = enterprise_to_info_str(ent_id)
             final["answer"] += info_str
@@ -515,10 +516,8 @@ def answer_free_question(request:HttpRequest):
             info_str, card_info = result_to_info_str(rst_id)
             final["answer"] += info_str
             final["card"]["result"].append(card_info)
-            
-                        
 
     # todo 荆睿涛：
     #   将final["answer"]和question拼接起来送进chatGPT，然后用chatGPT的回复替换final["answer"]的内容
-    
+
     return success_api_response(final)
