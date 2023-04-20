@@ -12,17 +12,17 @@ from copy import deepcopy
 import traceback
 from ltp import LTP
 
-from core.api.utils import {
+from core.api.utils import (
     response_wrapper, 
     success_api_response, failed_api_response,
     read_json_data
-}
-from core.api.milvus_util import {
+)
+from core.api.milvus_util import (
     milvus_query_set_question_by_id,
     milvus_query_expert_by_id,
     milvus_query_enterprise_by_id,
     milvus_query_result_by_id,
-}
+)
 
 RES_PATH = "../../resource"
 
