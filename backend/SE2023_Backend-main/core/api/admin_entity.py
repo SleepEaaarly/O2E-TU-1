@@ -21,7 +21,7 @@ def get_all_result_info(request: HttpRequest, page: int):
         data.append(rst.to_dict())
     return success_api_response({
         "page_num": page_num,
-        "data": data
+        "data": data,
     })
 
 

@@ -130,6 +130,7 @@ export default {
             return
           }
           this.$forceUpdate()
+          console.log('Page-->')
           console.log(page);
           console.log(this.selectedType);
           getSelectUser(this.selectedType === "全部" ? 6 : this.selectedType, page).then((oriRes) => {

@@ -18,7 +18,7 @@
       <br/>
       <a-table :data-source="data" :columns="columns" :pagination="pagination" :key="itemKey">
         <template
-          v-for="col in ['name', 'author', 'type', 'field']"
+          v-for="col in ['name', 'author', 'period', 'field']"
           :slot="col"
           slot-scope="text, record"
         >
@@ -84,9 +84,9 @@
     },
     {
       title: "阶段",
-      dataIndex: "type",
+      dataIndex: "period",
       width: "15%",
-      scopedSlots: { customRender: "type" },
+      scopedSlots: { customRender: "period" },
       // onFilter: (value, record) => record.type.indexOf(value) === 0,
     },
     {
@@ -128,7 +128,7 @@
             this.$forceUpdate()
             console.log(page);
             console.log(this.selectedType);
-            getWorkAll().then((oriRes) => {
+            getWorkAll(page).then((oriRes) => {
               console.log(oriRes);
               let res = oriRes.data;
               data.length = 0;
@@ -145,6 +145,7 @@
                   name: res.data[i].title,
                   author: res.data[i].scholars,
                   type: this.type,
+                  period: res.data[i].period,
                   field: res.data[i].field,
                   editable: false
                 });
@@ -190,15 +191,16 @@
         this.loading = true;
         data.length=0;
         this.pagination.current = 1;
-        getWorkAll().then((oriRes) => {
+        getWorkAll(1).then((oriRes) => {
           // const target = data.filter((item) => key === item.key)[0];
           // this.editingKey = key;
           // if (target) {
           //   target.editable = true;
           // }
         for (let i = 0; i < data.length; i++) {
-        data[i].target = false;
+          data[i].target = false;
         }
+        console.log('response')
         console.log(oriRes);
         let res = oriRes.data
         console.log(res);
@@ -216,6 +218,7 @@
                 name: res.data[i].title,
                 author: res.data[i].scholars,
                 type: this.type,
+                period: res.data[i].period,
                 field: res.data[i].field,
                 editable: false
             });
@@ -235,17 +238,12 @@
         const newData = [...this.data];
         this.data = newData.filter((item) => item.key !== key);
         const target = newData.filter((item) => key === item.key)[0];
-        if(target.type=="个人"){
-          this.type1=0
-        }else if(target.type=="学校"){
-          this.type1=1
-        }else{
-          this.type1=2
-        }
+
         const params = {
           id:target.key,
           name: target.name,
-          type: this.data.type,
+          type:this.type,
+          period: target.period,
           author:target.author,
           field: target.field,
         };
@@ -266,15 +264,16 @@
         if (!this.editData.key) {
           this.editData = record
         }
+        console.log('check key')
+        console.log(this.editData.key)
         if (col === "name") {
           this.editData.name = value;
         } else if (col === 'author') {
           this.editData.author = value;
         } else if (col === 'field') {
           this.editData.field = value;
-        } else if (col === 'type') {
-          alert("请前往成果审核页面")
-          this.reload()
+        } else if (col === 'period') {
+          this.editData.period = value
         }
         console.log(this.editData)
   
@@ -282,8 +281,9 @@
       },
       edit(key) {
         const newData = [...this.data];
+        // console.log(this.data)
         const target = newData.filter((item) => key === item.key)[0];
-        console.log(target)
+        // console.log(target)
         this.editingKey = key;
         if (target) {
           target.editable = true;
@@ -311,19 +311,12 @@
           this.cacheData = newCacheData;
         }
         this.editingKey = "";
-        if(target.type=="个人"){
-          this.type1=0
-        }else if(target.type=="学校"){
-          this.type1=1
-        }else{
-          this.type1=2
-        }
+
         const params = {
           id: this.editData.key,
-          name: this.editData.name,
-          // usertype: this.type1,
-  
-          author:this.editData.author,
+          title: this.editData.name,
+          period: this.editData.period,
+          scholars:this.editData.author,
           field: this.editData.field,
         };
   
@@ -399,7 +392,7 @@
         console.log(value);
         console.log(this.selectedType);
         this.pagination.current = 1;
-        getWorkAll().then((oriRes) => {
+        getWorkAll(1).then((oriRes) => {
           console.log(oriRes);
           let res = oriRes.data
           console.log(res);
@@ -417,8 +410,9 @@
                 key: res.data[i].id,
                 name: res.data[i].title,
                 author: res.data[i].scholars,
-                type: this.type,
+                period: res.data[i].period,
                 field: res.data[i].field,
+                type: this.type,
                 editable: false
             });
           }
