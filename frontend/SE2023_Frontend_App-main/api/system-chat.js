@@ -22,7 +22,7 @@ export const getBasicAISystemQuestionAns = async (question) => {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
     axios.setLoading(false)
-    let output = await axios.post("system_chat_basic_question", {
+    let output = await axios.post("answer/set", {
         input: question
     })
     axios.setLoading(true)
@@ -34,7 +34,7 @@ export const getAdvanceAISystemQuestionAns = async (question) => {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
     axios.setLoading(false)
-    let output = await axios.post("system_chat_advance_question", {
+    let output = await axios.post("answer/free", {
         input: question
     })
     axios.setLoading(true)

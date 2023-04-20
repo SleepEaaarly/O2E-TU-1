@@ -78,12 +78,12 @@
 					<work-card
 					@click.native="workDetail(item)"  
 					:authorLogoPath="item['authorLogoPath']" 
-					:workLogoPath="item['work_icon']" 
+					:workLogoPath="item['workLogoPath']" 
 					:author="item['author']"
 					:title="item['title']"
 					:date="item['date']"
 					:area="item['area']"
-					:intro="item['intro']"
+					:intro="item['abstract']"
 					:period="item['period']"
 					:index="index1"></work-card>
 				</block> 
@@ -225,23 +225,23 @@
 		},
 		methods: {
 			workDetail(work) {
-				console.log(work['title'])
-				console.log('Jump to detail of the work')
+				// console.log(work['title'])
+				// console.log('Jump to detail of the work')
 			},
 			navToExperts() {
-				console.log('Jump to detail of the Experts')
+				// console.log('Jump to detail of the Experts')
 				uni.navigateTo({
 					url: '../expert_store/expert_store',
 				})
 			},
 			navToWorks() {
-				console.log('Jump to detail of the Works')
+				// console.log('Jump to detail of the Works')
 				uni.navigateTo({
 					url: '../work_store/work_store',
 				})
 			},
 			navToCompanies() {
-				console.log('Jump to detail of the companies')
+				// console.log('Jump to detail of the companies')
 				uni.navigateTo({
 					url: '../company_store/company_store',
 				})
@@ -260,13 +260,9 @@
 						"id": this.userInfo.id,
 						"type": this.userInfo.type,
 					}
-					var rec_list
-					if (Array.prototype.isPrototypeOf(this.recommendList.list) && this.recommendList.list.length === 0 ){
-						//rec_list = await getWorkRec(paras)
+					var rec_list = await getWorkRec(paras)
+					if(rec_list == null){
 						rec_list = {}
-					}
-					if (Array.prototype.isPrototypeOf(this.recommendList.list) && this.recommendList.list.length === 0 ){
-						console.log("still None")
 					}
 					let work_list =  await getWorkList({
 						"field": '',

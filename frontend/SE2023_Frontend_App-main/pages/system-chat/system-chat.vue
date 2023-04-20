@@ -32,7 +32,7 @@
                         :item="item" :index="index" :isHuman="isHuman"></system-chat-list>
                 </view>
             </block>
-            <!-- <require_message_card
+            <require_message_card
                 title="请帮我写软工吧"
                 companyName="北京航空航天大学"
                 :companyLogoPath="testpic"
@@ -47,9 +47,10 @@
                 expertName="占瑞乙" 
                 expertLogoPath="/static/head_zry_fox.jpg"
                 intro="Here is a summary of some of the most commonly used methods in machine learning." 
-                time="上午 7:45">
+                time="上午 7:45"
+                @click.native="clickevent">
 
-            </work_message_card> -->
+            </work_message_card>
         </scroll-view>
         
         <system-chat-bottom @submit="submit" @isHuman="getHuman" :isai="isHuman"></system-chat-bottom>
@@ -87,6 +88,7 @@
         data() {
             return {
                 testpic: "/static/head.jpg",
+                aiPic: "/static/head.jpg",
                 isShow: false,
                 isHuman: false,
                 currentState: 'AI',
@@ -189,6 +191,11 @@
                 'addSystemChatMessage',
                 'addSystemNoReadMessage',
                 'setSystemChat']),
+
+            clickevent(event) {
+                console.log("123123")
+                uni.navigateTo({url: '../../pages/order_report/order_report?reportId=' + 1})
+            },
             // 监听chat bottom子组件中 isHuman 的变化
             getHuman(isHuman) {
                 let now = new Date().getTime()
@@ -202,9 +209,6 @@
                     showSystemMessage(this.userInfo.id, 0)  // 不在管理端展示聊天窗口
                 }
                 let obj = { // 插入前端列表的数据
-                    // fromId: this.userInfo.id,
-                    // toId: this.fid,
-                    // index
                     isme: 1,
                     userpic: this.userInfo.userpic,
                     type: 'switch_info',
@@ -350,28 +354,12 @@
                     })
                     return
                 }
-                
                 let msg = await pushSystemMessage({   // 发送给后端的数据
-                    // 'cId': this.system_chat.id,
-                    // 'fromId': this.userInfo.id,
-                    // 'toId': this.system_chat.fid,
                     'uId': this.userInfo.id,
                     'content': data,
                     "isme": 1
                 })
-                console.log(msg)
-                // if (msg.code && msg.code !== 0) {
-                //     uni.showToast({
-                //         title: "消息发送失败！",
-                //         icon: 'none'
-                //     })
-                //     return
-                // }
-
                 let obj = { // 插入前端列表的数据
-                    // fromId: this.userInfo.id,
-                    // toId: this.fid,
-                    // index
                     isme: 1,
                     userpic: this.userInfo.userpic,
                     type: 'text',
@@ -382,10 +370,7 @@
                     gstime: now,
                     created_at: now
                 }
-                
                 this.addSystemChatMessage(obj)
-                
-
                 if (!this.isHuman) {    // 如果不是人工，则可以直接获得输出
                     if (this.questionType === 'basic') {    // 对于操作的基础问题，可以直接输出结果
                         // 1. 将问题送入楚珉的AI模型接口，获取输出
@@ -393,18 +378,58 @@
                         // 1.5 判断code是否等于200，如果等于500不进行接下来的判断
                         if (code !== 200) {
                             // 我觉得还是提示一下比较好
+                            console.log("基础问题：失败")
+                            uni.showToast({
+                                title: output.error_msg,
+                                icon: 'none'
+                            })
+                            return
                         }
                         // 2. 判断是否转人工
                         if (output.transfer == "True" || output.transfer == true) {
                             // 转人工
                             // 2.1 构建转人工信息
+                            let now = new Date().getTime()
+                            let obj = { // 插入前端列表的数据
+                                isme: 0,
+                                userpic: this.aiPic,
+                                type: 'text',
+                                message: "啊偶，遇到我不会的了，建议您转人工哦",
+                                time: time.gettime.gettime(now),
+                                cardInfo: {},
+                                gstime: now,
+                                created_at: now
+                            }
                             // 2.2 将转人工信息发送给数据库
+                            let msg = await pushSystemMessage({   // 发送给后端的数据
+                                'uId': this.userInfo.id,
+                                'content': "啊偶，遇到我不会的了，建议您转人工哦",
+                                "isme": 0
+                            })
                             // 2.3 将转人工信息插入前端store
+                            this.addSystemChatMessage(obj)
                         } else {
                             // 不转人工
-                            // 2.1 构建信息
-                            // 2.2 将信息发送给数据库
-                            // 2.3 将信息插入前端store
+                            // 2.1 构建转人工信息
+                            let now = new Date().getTime()
+                            let obj = { // 插入前端列表的数据
+                                isme: 0,
+                                userpic: this.aiPic,
+                                type: 'text',
+                                message: output.answer,
+                                time: time.gettime.gettime(now),
+                                cardInfo: {},
+                                gstime: now,
+                                created_at: now
+                            }
+                            // 2.2 将转人工信息发送给数据库
+                            let msg = await pushSystemMessage({   // 发送给后端的数据
+                                'uId': this.userInfo.id,
+                                'content': output.answer,
+                                "isme": 0
+                            })
+                            // 2.3 将转人工信息插入前端store
+                            this.addSystemChatMessage(obj)
                         }
                     } else {    // 其他问题，流程：
                         // 1. 将问题送入自动回复模型接口2，回收楚珉output
@@ -412,12 +437,90 @@
                         // 1.5 判断code
                         if (code !== 200) {
                             // 错误处理
+                            console.log("其他问题：失败")
+                            uni.showToast({
+                                title: output.error_msg,
+                                icon: 'none'
+                            })
+                            return
                         }
-                        // 如果有实体，将实体名送入曾哥的接口--回收曾output
-                        
-                        // 把问题和数据库检索送入chatgpt接口--回收涛output
-                        
-                        // 显示涛回收内容
+                        // 2.1 处理信息
+                        let now = new Data().getTime()
+                        let obj = { // 插入前端列表的数据
+                            isme: 0,
+                            userpic: this.aiPic,
+                            type: 'text',
+                            message: output.answer,
+                            time: time.gettime.gettime(now),
+                            cardInfo: {},
+                            gstime: now,
+                            created_at: now
+                        }
+                        // 2.2 将转人工信息发送给数据库
+                        let msg = await pushSystemMessage({   // 发送给后端的数据
+                            'uId': this.userInfo.id,
+                            'content': output.answer,
+                            "isme": 0
+                        })
+                        // 2.3 将转人工信息插入前端store
+                        this.addSystemChatMessage(obj)
+                        // 2.4.1 专家信息
+                        let expertList = output.card.expert
+                        for (let i = 0; i < expertList.length; i++) {
+                            // 2.4.1.1 构建专家信息
+                            let obj = {
+                                isme: 0,
+                                userpic: this.aiPic,
+                                type: 'card',
+                                message: "一条卡片信息~",
+                                time: time.gettime.gettime(now),
+                                cardInfo: expertList[i],
+                                gstime: now,
+                                created_at: now
+                            }
+                            // 2.4.1.2 将信息发送给数据库
+                                // TODO: 这个有点麻，可能还得和涛哥约定一下如何传输数据
+                            // 2.4.1.3 将信息插入前端 store
+                            this.addSystemChatMessage(obj)
+                        }
+                        // 2.4.2 企业信息
+                        let enterpriseList = output.card.enterprise 
+                        for (let i = 0; i < enterpriseList.length; i++) {
+                            // 2.4.2.1 构建企业信息
+                            let obj = {
+                                isme: 0,
+                                userpic: this.aiPic,
+                                type: 'card',
+                                message: "一条卡片信息~",
+                                time: time.gettime.gettime(now),
+                                cardInfo: enterpriseList[i],
+                                gstime: now,
+                                created_at: now
+                            }
+                            // 2.4.2.2 将信息发送给数据库
+                                // TODO: 这个有点麻，可能还得和涛哥约定一下如何传输数据
+                            // 2.4.2.3 将信息插入前端 store
+                            this.addSystemChatMessage(obj)
+                        }
+                        // 2.4.3 成果信息
+                        let resultList = output.card.result
+                        for (let i = 0; i < resultList.length; i++) {
+                            // 2.4.3.1 构建企业信息
+                            let obj = {
+                                isme: 0,
+                                userpic: this.aiPic,
+                                type: 'card',
+                                message: "一条卡片信息~",
+                                time: time.gettime.gettime(now),
+                                cardInfo: resultList[i],
+                                gstime: now,
+                                created_at: now
+                            }
+                            // 2.4.3.2 将信息发送给数据库
+                                // TODO: 这个有点麻，可能还得和涛哥约定一下如何传输数据
+                            // 2.4.3.3 将信息插入前端 store
+                            this.addSystemChatMessage(obj)
+                        }
                     }
                 }
                 this.pageToBottom(true) // 页面到新的数据处

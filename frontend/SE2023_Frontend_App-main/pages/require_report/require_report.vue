@@ -5,10 +5,10 @@
 		</u-row>
 		
 		<company-card
-		:name="require_info.company_name"
-		:area="require_info.company_area" 
-		:address="require_info.company_address"
-		:logoPath="require_info.company_logoPath"
+			:name="require_info.company_name"
+			:area="require_info.company_area" 
+			:address="require_info.company_address"
+			:logoPath="require_info.company_logoPath"
 		
 		></company-card>
 		
@@ -68,12 +68,18 @@
 </template>
 
 <script>
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
+	import { getRequireReport } from '../../api/require_report'
 	import companyCard from "../../components/company_rep_display_card.vue"
 	import fuiCard from "@/components/firstui/fui-card/fui-card.vue"
 	import require_message_card from 'components/require_message_card'
 	export default {
 		data() {
 			return {
+				inRequireId: null,
 				work_id: 1,
 				height: 500,
 				require_info: {
@@ -89,12 +95,37 @@
 					// "work_pic": '/static/ML_Notes.png' ,
 					"require_keyword_1": "实验室",
 					"require_keyword_2": "科学创意"
-				}
-				
+				},
+				content: "",
 			}
 		},
+		onLoad(data) {
+			this.inRequireId = data.reportId
+		},
+		computed: {
+			...mapState(['userInfo'])
+		},
 		methods: {
-			
+			getRequireDetailInfo() {
+				let output = getRequireReport(this.inRequireId)
+				this.require_info.requireName = output.requireInfo.requireName
+				this.require_info.company_name = output.companyInfo.companyName 
+				this.require_info.require_intro = output.requireInfo.requireIntro 
+				this.require_info.company_address = output.companyInfo.companyAddress
+				this.require_info.company_logoPath = output.companyInfo.companyLogoPath
+				this.require_info.company_area = output.companyInfo.companyArea
+				this.require_info.require_id = output.requireInfo.requireId 
+				this.require_info.company_id = output.companyInfo.companyId
+				this.require_info.require_keyword_1 = output.requireInfo.requireKeywords 
+				// this.require_info.require_keyword_2
+				this.content = output.content
+			},
+			gotoCompanyDetail() {
+
+			},
+			gotoRequireDetail() {
+
+			}
 		},
 		components: {
 			companyCard,

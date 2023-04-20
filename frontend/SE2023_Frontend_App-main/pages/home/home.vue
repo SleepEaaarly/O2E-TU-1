@@ -237,7 +237,8 @@
 				uni.navigateTo({
 					// url: '../try-system-camera/try-system-camera',
 					// url: '../work_report/work_report',
-					url: '../require_report/require_report',
+					// url: '../require_report/require_report',
+					url: '../order_report/order_report'
 				})
 			},
 			goToSystemChat() {

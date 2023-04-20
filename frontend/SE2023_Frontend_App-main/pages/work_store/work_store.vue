@@ -21,8 +21,8 @@
 			:author="item['author']"
 			:title="item['title']"
 			:date="item['date']"
-			:area="item['area']"
-			:intro="item['intro']"
+			:area="item['field']"
+			:intro="item['abstract']"
 			:period="item['period']"
 			:index="index1"></work-card>
 		</block> 

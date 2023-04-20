@@ -8,7 +8,8 @@
 			:name="work_info.expert_name" 
 			:title="work_info.expert_title" :institution="work_info.expert_organization"
 			:mail="work_info.expert_mail"
-			:logoPath="work_info.expert_logoPath"></author-card>
+			:logoPath="work_info.expert_logoPath"
+			@click.native="gotoExpertDetail"></author-card>
 		
 		<view style="
 		margin-top: auto;background-color: aliceblue;width: 650rpx;margin-left: 35rpx;height: auto;
@@ -63,10 +64,16 @@
 </template>
 
 <script>
+	import {
+			mapState,
+			mapMutations
+	} from 'vuex'
 	import authorCard from"../../components/author_display_card.vue"
+	import { getWorkReport } from "../../api/work_report"
 	export default {
 		data() {
 			return {
+				inWorkId: null, 
 				work_id: 1,
 				height: 500,
 				work_info: {
@@ -83,12 +90,40 @@
 					"expert_mail": "iszry@foxmail.com",
 					"work_period": "实验室",
 					"work_field": "科学创意"
-				}
-				
+				},
+				content: "",
 			}
 		},
+		onLoad(data) {
+			this.inWorkId = data.reportId
+		},
+		computed: {
+			...mapState(['userInfo'])
+		},
 		methods: {
-			
+			getWorkDetailInfo() {
+				let output = getWorkReport(this.inWorkId)
+				this.work_info.workName = output.workInfo.workName
+				this.work_info.expert_name = output.expertInfo.expertName
+				this.work_info.expert_title = output.expertInfo.expertTitle 
+				this.work_info.work_abstract = output.workInfo.workAbstract 
+				this.work_info.expert_organization = output.expertInfo.expertOrganization 
+				this.work_info.expert_logoPath = output.expertInfo.expertLogoPath 
+				this.work_info.work_id = output.workInfo.workId 
+				this.work_info.expert_id = output.workInfo.expertId 
+				this.work_info.user_id = this.userInfo.id 
+				this.work_info.work_pic = output.workInfo.workPic 
+				this.work_info.expert_email = output.expertInfo.expertEmail 
+				this.work_info.work_period = output.workInfo.workPeriod 
+				this.work_info.work_field = output.workInfo.workPeriod
+				this.content = output.content
+			},
+			gotoExpertDetail() {
+
+			},
+			gotoWorkDetail() {
+
+			}
 		},
 		components: {
 			authorCard

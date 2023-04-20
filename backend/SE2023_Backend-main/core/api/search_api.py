@@ -25,7 +25,7 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
-    print(key_words)
+    # print(key_words)
     data_results = []
     experts = Expert.objects.none()
     if key_words != '':
@@ -39,14 +39,14 @@ def search_expert(request: HttpRequest, *args, **kwargs):
                 Q(paper__icontains=key_word) | Q(title__icontains=key_word)
             )
             )
-        print(experts.count())
+        # print(experts.count())
     else:
         experts = Expert.objects.all()
 #    print(experts)
     # 专家库有脏数据，下面这个循环全部遍历会报错
-    print(field)
+    # print(field)
     for expert in experts:
-        print(expert.field)
+        # print(expert.field)
         if not (organization is None or organization == ''):
             if expert.organization != organization:
                 continue
@@ -77,7 +77,7 @@ def search_expert(request: HttpRequest, *args, **kwargs):
         data_results.append(expert_info)
 
     data_results = data_results[:10]
-    print(data_results)
+    # print(data_results)
     return success_api_response({"data": data_results})
 
 
@@ -93,7 +93,7 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
-    print(key_words)
+    # print(key_words)
 
     data_results = []
     enterprises = Enterprise_info.objects.none()
@@ -107,7 +107,7 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
                 Q(legal_representative__icontains=key_word) | Q(field__icontains=key_word)
             )
             )
-        print(enterprises.count())
+        # print(enterprises.count())
     else:
         enterprises = Enterprise_info.objects.all()
     
@@ -167,12 +167,12 @@ def search_result(request: HttpRequest):
             )
         print(results.count())
     else:
-        print(results)
+        # print(results)
         results = Results.objects.all()
-        print(results)
-    print('debug 1')
-    print(results)
-    print('debug 2')
+        # print(results)
+    # print('debug 1')
+    # print(results)
+    # print('debug 2')
     for result in results:
         if not (period is None or period == ''):
             if result.period != period:
@@ -183,8 +183,8 @@ def search_result(request: HttpRequest):
             if field not in result.field:
                 continue
 
-        # if result.state != 1:
-        #     continue
+        if result.state != 1:
+            continue
 
         expert = Expert.objects.filter(results__id=result.id)[0]
         user = User.objects.get(expert_info__id=expert.id)
@@ -205,7 +205,7 @@ def search_result(request: HttpRequest):
             "expert_icon": str(user.icon)
         }
         data_results.append(result_info)
-    print('debug 6')
+    # print('debug 6')
     data_results = data_results[:10]
     return success_api_response({"data": data_results})
 
