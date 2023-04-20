@@ -2,6 +2,7 @@ import axios from '@/config/requestConfig.js'
 import { picUrl } from './common.js'
 
 export const sendNeedInfoToGenerateReport = async (title, description, field, key_words) => {
+	// 将需求的信息发送给后端，后端生成报告
 	let headers = { 'Authorization':'Bearer ' + uni.getStorageSync('token') }
 	let result = await axios.post('need_report/generate', {
 		title: title,

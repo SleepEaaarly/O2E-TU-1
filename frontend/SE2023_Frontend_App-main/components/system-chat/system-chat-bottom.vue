@@ -15,11 +15,18 @@
 <script>
 
     export default {
+        props: [
+            'isai'
+        ],
         data() {
             return {
                 text: "",
-                isHuman: false
+                isHuman: (this.isai) ? false : true
             }
+        },
+        onReady() {
+            console.log(this.isai)
+            this.isHuman = this.isai
         },
         methods: {
             submit() {

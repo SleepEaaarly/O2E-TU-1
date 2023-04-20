@@ -195,10 +195,6 @@ def add_result(request: HttpRequest):
 
     print("3")
     result.save()
-<<<<<<< HEAD
-    # insert_result(rid=id)
-=======
->>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
     print("4")
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
@@ -224,6 +220,7 @@ def agree_result(request:HttpRequest, id:int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
     result.state = 1
     result.save()
+    
     return success_api_response("success")
 
 

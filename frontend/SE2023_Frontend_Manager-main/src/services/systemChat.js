@@ -8,5 +8,6 @@ export const getSystemChatAll = () => {
 
 export const pushSystemChat = (params) => {
     const url = `${BASE_URL_IP}/api/system_chat/pushAdmin`
+    console.log(params)
     return request(url, METHOD.POST, params);
 }
