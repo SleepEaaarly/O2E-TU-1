@@ -14,10 +14,10 @@ from transformers import AutoTokenizer, AutoModel
 from core.api.auth import getUserInfo
 from core.api.milvus_utils import {
     get_milvus_connection, 
-    milvus_search, milvus_insert
+    milvus_search, milvus_insert,
     milvus_query_paper_by_id, 
     milvus_query_need_by_id, 
-    milvus_query_result_by_id, 
+    milvus_query_result_by_id,
 }
 from core.api.zhitu_utils import get_expertInfo_by_expertId, search_expertID_by_paperID
 import requests
@@ -310,7 +310,6 @@ def insert_need(nid: int):
     return True
 
 
-<<<<<<< HEAD
 def insert_result(rid: int):
     get_milvus_connection()
     result = Results.objects.get(pk=rid)
@@ -323,8 +322,6 @@ def insert_result(rid: int):
     return True
 
 
-=======
->>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
 @require_GET
 @response_wrapper
 def generate_requirement_book(request: HttpRequest,require):
@@ -338,10 +335,7 @@ def generate_requirement_book(request: HttpRequest,require):
     format = "报告采用markdown格式，设三级标题。对于每个功能点，形式化表述、详细描述和参考技术路线，请分条叙述。"
     demand2 = "报告首先有一个总标题，但是不用写引言、不用写总结、不用写参考文献。总字数不超过2000字，请对内容进行精炼。报告生成结束请回复完毕二字。"
     msg = demand1+prompt+format+demand2
-<<<<<<< HEAD
 
-=======
->>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
     
     # Create the request headers and body
     data=[]
@@ -353,8 +347,4 @@ def generate_requirement_book(request: HttpRequest,require):
     response = requests.post(url, headers=headers, data=data)
     print(response.content.decode('utf-8'))
     return success_api_response({"requirement_book":response.content.decode('utf-8')})
-<<<<<<< HEAD
     
-=======
-    
->>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc

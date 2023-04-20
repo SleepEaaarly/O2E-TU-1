@@ -1,5 +1,5 @@
 setuptools~=57.5.0
-django
+django==
 pylint
 pylint-django
 pyjwt

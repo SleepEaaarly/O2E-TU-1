@@ -4,11 +4,7 @@ card message: 卡片式消息
 from django.db import models
 from django.contrib.auth import get_user_model
 from .user import User
-<<<<<<< HEAD
-from .message import Message
-=======
 from .system_message import SystemMessage
->>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
 
 UNREAD = 0
 READ = 1
@@ -31,11 +27,7 @@ CARD_TYPE = (
 )
 
 
-<<<<<<< HEAD
-class CardMessage(Message):
-=======
 class CardMessage(SystemMessage):
->>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
     """
     Field:
         - card_type: 卡片信息类型
@@ -48,25 +40,15 @@ class CardMessage(SystemMessage):
 
     @classmethod
     def new_card_message(cls,
-<<<<<<< HEAD
-                         from_user: User,
-                         to_user: User,
-=======
                          owner: User,
                          is_to_system: int,
->>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
                          content: str,
                          card_type: int,
                          title: str,
                          avatar: str):
         try:
-<<<<<<< HEAD
-            new_card_message = CardMessage(content=content, from_user=from_user,
-                                           to_user=to_user, read_state=UNREAD,
-=======
             new_card_message = CardMessage(content=content, owner=owner,
                                            is_to_system=is_to_system, read_state=UNREAD,
->>>>>>> 4bb4ae121deaa8e30fdb67117994c9103adf4afc
                                            card_type=card_type, title=title, avatar=avatar)
             new_card_message.save()
             return new_card_message.id
