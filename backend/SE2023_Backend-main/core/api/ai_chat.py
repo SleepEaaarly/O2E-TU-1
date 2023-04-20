@@ -208,14 +208,16 @@ class Preprocessor:
 
 
 class Recognizer:
-    def __init__(self, ques_thresh, exp_thresh, ent_thresh, res_thresh):
+    def __init__(self, hit_obj, ques_thresh, exp_thresh, ent_thresh, res_thresh):
         """
         问题/关键词识别器
+        :param hit_obj: HitBert对象
         :param ques_thresh: 确认匹配预设问题的阈值
         :param exp_thresh: 确认匹配专家名的阈值
         :param ent_thresh: 确认匹配企业名的阈值
         :param res_thresh: 确认匹配成果标题的阈值
         """
+        self.hit = hit_obj
         self.thresh_dict = {
             "SET_QUESTION": ques_thresh,
             "O2E_EXPERT": exp_thresh,
@@ -235,14 +237,16 @@ class Recognizer:
             "O2E_RESULT": milvus_query_result_by_id,
         }
 
-    def renew_all_data(self, ques_thresh, exp_thresh, ent_thresh, res_thresh):
+    def renew_all_data(self, hit_obj, ques_thresh, exp_thresh, ent_thresh, res_thresh):
         """
         问题/关键词识别器
+        :param hit_obj: HitBert对象
         :param ques_thresh: 确认匹配预设问题的阈值
         :param exp_thresh: 确认匹配专家名的阈值
         :param ent_thresh: 确认匹配企业名的阈值
         :param res_thresh: 确认匹配成果标题的阈值
         """
+        self.hit = hit_obj
         self.thresh_dict = {
             "SET_QUESTION": ques_thresh,
             "O2E_EXPERT": exp_thresh,
@@ -356,7 +360,7 @@ class Recognizer:
         :return: 最佳匹配的数据库id
         """
         cand_id = -1
-        target_vec = hit.encode_2_list(target_sent)
+        target_vec = self.hit.encode_2_list(target_sent)
         id_lists = milvus_search(collection_name=milvus_collection, query_vectors=[target_vec],
                                  topk=n_cand, eps=self.thresh_dict[milvus_collection], partition_names=None)
         if not id_lists or not id_lists[0]:
@@ -381,7 +385,7 @@ word_replace_dict = read_json_data(RES_PATH + "/word_replace_dict.json")
 ltpParticipleDict = []  # todo: 要从数据库得到
 process = Preprocessor(sentence_replace_dict, word_replace_dict, "small", 4, ltpParticipleDict)
 
-recognizer = Recognizer(ques_thresh=0.7, exp_thresh=0.9, ent_thresh=0.9, res_thresh=0.7)
+recognizer = Recognizer(hit, ques_thresh=0.7, exp_thresh=0.9, ent_thresh=0.9, res_thresh=0.7)
 
 
 @require_GET
