@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<fui-card :padding="['5rpx','20rpx']" :src="companyLogoPath" :title="companyName" :tag="time">
+		<fui-card :padding="['5rpx','20rpx']" :src="companyLogoPath" :title="companyName" :tag="time" @click.native="gotoRequireReport">
 			<view style="margin-top: 20rpx;margin-bottom: 20rpx;">
 				<u-row style="margin-left: 20rpx;">
 					<text class = "info">
@@ -56,7 +56,12 @@
 				
 			};
 		},
-		props:['title','companyName','companyLogoPath','intro','time']
+		props:['title','companyName','companyLogoPath','intro','time'],
+		methods: {
+			gotoRequireReport() {
+				uni.navigateTo({url: '../../pages/require_report/require_report?reportId=' + this.id})
+			}
+		},
 	}
 </script>
 

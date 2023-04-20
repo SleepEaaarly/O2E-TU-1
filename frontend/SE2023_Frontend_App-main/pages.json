@@ -341,7 +341,6 @@
 				}
 			}
 		}, {
-			// "path": "pages/try-system-camera/try-system-camera",
 			"path": "pages/require_report/require_report",
 			"style": {
 				"enablePullDownRefresh": false,

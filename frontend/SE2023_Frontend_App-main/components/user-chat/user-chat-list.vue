@@ -11,7 +11,13 @@
 				<!-- 图片 -->
 				<image v-if="item.type=='img'" :src="item.message" mode="widthFix" lazy-load></image>
 				<!-- 卡片 -->
-				
+				<order_message_card v-if="item.type=='report' && item.reportInfo.reportType=='order'"
+					:id="item.reportInfo.reportId"
+					:title="item.reportInfo.reportTitle"
+					:intro="item.reportInfo.reportInfo"
+					:time="item.reportInfo.time"
+					@click.native="clickOrderReport(12)"
+				></order_message_card>
 			</view>
 			<!-- 点击头像跳转到自己主页 -->
 			<image v-if="item.isme" :src="item.userpic" @tap="navUserInfo" mode="widthFix" lazy-load></image>
@@ -21,12 +27,19 @@
 </template>
 
 <script>
+	import order_message_card from '../order_message_card.vue';
 	export default {
+		components: {
+			order_message_card
+		},
 		props:{
 			item:Object,
 			index:Number
 		},
 		methods:{
+			clickOrderReport(id) {
+				console.log(id)
+			},
 			navUserInfo(){
 				console.log(this.item)
 				this.$emit('goToUserInfo',this.item.uid)

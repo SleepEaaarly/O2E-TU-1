@@ -92,6 +92,14 @@
 					:item="item" :index="index"></user-chat-list>
 				</view>
 			</block>
+			<order_message_card
+				title="请帮我写软工"
+                companyName="企业zkg"
+                :companyLogoPath="testpic"
+                intro="Here is a summary of some of the most commonly used methods in machine learning."
+                time="上午 7:43"
+			>
+			</order_message_card>
 		</scroll-view>
 		
 		<!-- 输入框 -->
@@ -100,6 +108,7 @@
 </template>
 
 <script>
+	import order_message_card from '../../components/order_message_card.vue'
 	import userChatBottom from '../../components/user-chat/user-chat-bottom.vue'
 	import time from '../../common/time.js'
 	import userChatList from '../../components/user-chat/user-chat-list.vue'
@@ -113,7 +122,8 @@
 	export default {
 		components:{
 			userChatBottom,
-			userChatList
+			userChatList,
+			order_message_card
 		},
 		computed:{
 			...mapState(['chatList','userInfo','msgIndex','msgPage']),
@@ -121,6 +131,7 @@
 		},
 		data() {
 			return {
+				testpic: "http://127.0.0.1:8000/api/images/202205/02/icons/zkg.jpg",
 				scrollTop:0,
 				triggered:false,
 				index:-1,

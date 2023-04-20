@@ -101,6 +101,7 @@
 		},
 		onLoad(data) {
 			this.inRequireId = data.reportId
+			this.getRequireDetailInfo()
 		},
 		computed: {
 			...mapState(['userInfo'])

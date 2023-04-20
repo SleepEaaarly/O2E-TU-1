@@ -51,6 +51,8 @@
 </template>
 
 <script>
+	import uniRow from '@/components/uni-row/components/uni-row/uni-row.vue'
+	import uniCol from '@/components/uni-row/components/uni-col/uni-col.vue'
 	import { mapState, mapMutations } from 'vuex'
 	import authorCard from"../../components/author_display_card.vue"
 	import { getWork } from "@/api/work_detail.js"
@@ -100,7 +102,9 @@
 			}
 		},
 		components: {
-			authorCard
+			authorCard,
+			uniCol,
+			uniRow
 		},
 		
 	}

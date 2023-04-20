@@ -3,22 +3,22 @@
 		<u-row>
 			<text class="title">需求信息</text>
 		</u-row>
-		<!-- <require-card
-            :logoPath="'/static//logo.png'"
-            :name="'帮我写软工吧'"
-            :area="'软件工程'"
-            :intro="'这是一个需求！'"
-            :keyword="'soft engineering;computer science;company;expert'"
-            @click.native="gotoNeedDetail"
-		></require-card> -->
 		<require-card
+            :logoPath="'http://localhost:8080/static/img/need_contracted.b69b28cb.jpg'"
+            :name="'请帮我写软工'"
+            :area="'信息技术'"
+            :intro="''"
+            :keyword="'123'"
+            @click.native="gotoNeedDetail"
+		></require-card>
+		<!-- <require-card
             :logoPath="needInfo.needLogoPath"
             :name="needInfo.needName"
             :area="needInfo.needfield"
             :intro="needInfo.needIntro"
             :keyword="needInfo.needKeywords"
             @click.native="gotoNeedDetail"
-		></require-card>
+		></require-card> -->
 		<u-row style="margin-top: 20rpx;margin-left: 20rpx;margin-right: 20rpx;">
 			<u-line></u-line>
 		</u-row>
@@ -26,21 +26,22 @@
 		<u-row>
 			<text class = "title">专家信息</text>
 		</u-row>
-		<!-- <author-card
-            :name="'佛系甜胖妮'"
-            :title="'废物'"
-            :logoPath="'/static//head.jpg'"
-            :mail="'duansangni@hhhhh.com'"
-            :institution="'北京航空航天大学'"
-		></author-card> -->
 		<author-card
+            :name="'专家zkg'"
+            :title="''"
+            :logoPath="'http://127.0.0.1:8000/api/images/202205/02/icons/zkg2.jpg'"
+            :mail="'1793030808@qq.com'"
+            :institution="'123'"
+            @click.native="gotoExpertDetail"
+		></author-card>
+		<!-- <author-card
             :name="expertInfo.expertName"
             :title="expertInfo.expertTitle"
             :logoPath="expertInfo.expertLogoPath"
             :mail="expertInfo.expertEmail"
             :institution="expertInfo.expertOrganization"
             @click.native="gotoExpertDetail"
-		></author-card>
+		></author-card> -->
 		
 		<u-row style="margin-top: 20rpx;margin-left: 20rpx;margin-right: 20rpx;">
 			<u-line></u-line>
@@ -49,20 +50,20 @@
 		<u-row>
 			<text class = "title">企业信息</text>
 		</u-row>
-		<!-- <company-card
-            :name="'北京航空航天大学'"
-            :area="'计算机科学与技术'" 
-            :address="'北京市海淀区'"
-            :logoPath="'/static//company.png'"
-		
-		></company-card> -->
 		<company-card
+            :name="'企业zkg'"
+            :area="'123'" 
+            :address="'123'"
+            :logoPath="'http://127.0.0.1:8000/api/images/202205/02/icons/zkg.jpg'"
+            @click.native="goToEnterpriseDetail"
+		></company-card>
+		<!-- <company-card
             :name="enterpriseInfo.enterpriseName"
             :area="enterpriseInfo.enterpriseArea" 
             :address="enterpriseInfo.enterpriseAddress"
             :logoPath="enterpriseInfo.enterpriseLogoPath"
             @click.native="goToEnterpriseDetail"
-		></company-card>
+		></company-card> -->
 		<u-row style="margin-top: 20rpx;margin-left: 20rpx;margin-right: 20rpx;">
 			<u-line></u-line>
 		</u-row>
@@ -89,17 +90,17 @@
                 inReportId: 0, 
 				dataArray:[
                     {
-                        time:'2020-11-25 17:32:15',
+                        time:'2023-04-12 17:32:15',
                         title:'需求发布',
                         // content:'那就看你会计解决',
                         active:true
                     },{
-                        time:'2020-11-25 17:32:15',
+                        time:'2023-04-17 15:31:15',
                         title:'专家接单',
                         // content:'顺丰到付的',
                         active:true
                     },{
-                        time:'2020-11-25 17:32:15',
+                        time:'2023-04-19 11:31:52',
                         title:'订单完成',
                         // content:'大幅度发',
                         active:true
@@ -132,6 +133,10 @@
         onLoad(data) {
             console.log(data.reportId)
             this.inReportId = data.reportId
+            this.expertInfo.expertId = 667
+            this.enterpriseInfo.enterpriseId = 666
+            this.needInfo.needId = 49
+            this.getOrderDetailInfo()
         },
         computed: {
             ...mapState(['userInfo'])
@@ -139,6 +144,7 @@
 		methods: {
 			getOrderDetailInfo() {
                 let output = getOrderReport(this.inReportId)
+                console.log(output)
                 this.dataArray[0].time = output.orderInfo.needPostTime
                 this.dataArray[1].time = output.orderInfo.orderStartTime
                 this.dataArray[2].time = output.orderInfo.orderEndTime
@@ -147,13 +153,14 @@
                 this.enterpriseInfo = output.enterpriseInfo
             },
             gotoNeedDetail() {
-
+                uni.navigateTo({url: '../../pages/need-detail/detail?id=' + this.needInfo.needId})
             },
             gotoExpertDetail() {
-
+                // console.log(this.expertInfo.expertId)
+                uni.navigateTo({url: '../../pages/user-space/user-space?uid=' + this.expertInfo.expertId})
             },
             goToEnterpriseDetail() {
-
+                uni.navigateTo({url: '../../pages/user-space/user-space?uid=' + this.enterpriseInfo.enterpriseId})
             }
 		},
 		components: {
