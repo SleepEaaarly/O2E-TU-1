@@ -56,8 +56,6 @@
 	import authorCard from"../../components/author_display_card.vue"
 	import { getWork } from "@/api/work_detail.js"
 	import workGenerateCard from '@/api/work_report.js'
-	import uniCol from '@/components/uni-row/components/uni-col/uni-col.vue'
-	import uniRow from '@/components/uni-row/components/uni-row/uni-row.vue'
 	export default {
 		computed: {
 			...mapState(['userInfo']),
