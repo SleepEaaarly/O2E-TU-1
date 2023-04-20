@@ -15,10 +15,10 @@
 				<view class="icon iconfont icon-qingchu"></view> 
 				清除列表
 			</view> -->
-			<view class="u-f-ac" hover-class="papar-left-popup-h" @tap="manageachievement">
+			<!-- <view class="u-f-ac" hover-class="papar-left-popup-h" @tap="manageachievement">
 				<view class="icon iconfont icon-sousuo"></view> 
 				成果管理
-			</view>
+			</view> -->
 		</view>
 	</view>
 </template>
@@ -47,12 +47,12 @@
 						text: '发布',
 						active: false
 					},
-					{
-						iconPath: '/static/images/icon/manage.png',
-						selectedIconPath: '/static/images/icon/manage-active.png',
-						text: '管理',
-						active: false
-					},
+					// {
+					// 	iconPath: '/static/images/icon/manage.png',
+					// 	selectedIconPath: '/static/images/icon/manage-active.png',
+					// 	text: '管理',
+					// 	active: false
+					// },
 				]
 			}
 		},

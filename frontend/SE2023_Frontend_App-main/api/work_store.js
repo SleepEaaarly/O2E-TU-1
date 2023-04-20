@@ -7,7 +7,7 @@ import {
 
 //获取 专家-搜索
 export const getWorkList = async (paras) => {
-    console.log("getWorkList OK.")
+    // console.log("getWorkList OK.")
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
@@ -34,7 +34,7 @@ export const getWorkList = async (paras) => {
             }
         })
     }
-	console.log('ret result is')
-    console.log(result)
+	// console.log('ret result is')
+    // console.log(result)
     return result
 }

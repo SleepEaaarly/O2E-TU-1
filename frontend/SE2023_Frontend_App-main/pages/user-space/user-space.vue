@@ -50,7 +50,7 @@
 		
 		<!-- 成果 -->
 		<template v-if="tabIndex==2 && info.type==4">
-			<userAchievement :id="info.id"></userAchievement>	
+			<userAchievement :id="info.id" :isSelf="info.id==userInfo.id"></userAchievement>	
 		</template>
 		
 		<!-- 评价 -->
@@ -216,6 +216,7 @@
 			async initData(id){
 				let data = await getUserInfo({ 'user_id':id })
 				let topicList = await getTopicListByUid(id)
+				console.log('Get UserInfo')
 				this.topicList = topicList
 				if('id' in data){
 					this.spacedata[0].num = data.total_like>=1000?(data.total_like/1000)+'k':data.total_like
@@ -246,16 +247,16 @@
 					this.info.expert_phone = data.expert_phone
 					this.info.expert_title = data.expert_title
 				}
-				if (this.info.expert_field) {
-					let str = ''
-					let s = this.info.expert_field
-					for (let i = 0; i < s.length; i++) {
-						if (s[i] === '1') {
-							str = str + this.field_items[i] + ' '
-						}
-					}
-					this.info.expert_field = str
-				}
+				// if (this.info.expert_field) {
+				// 	let str = ''
+				// 	let s = this.info.expert_field
+				// 	for (let i = 0; i < s.length; i++) {
+				// 		if (s[i] === '1') {
+				// 			str = str + this.field_items[i] + ' '
+				// 		}
+				// 	}
+				// 	this.info.expert_field = str
+				// }
 			},
 			getFiled(data) {
 				let str = ''
@@ -265,7 +266,7 @@
 					// 	str = str + this.field_items[i] + " ";
 					// }
 				}
-				console.log('get field ' + str)
+				// console.log('get field ' + str)
 				return str
 			},
 			userActive(){

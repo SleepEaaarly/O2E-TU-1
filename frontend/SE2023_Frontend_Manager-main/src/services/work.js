@@ -1,23 +1,32 @@
 import {request, METHOD} from "../utils/request";
-import {WorkAll, BASE_URL_IP} from './api';
+import {BASE_URL_IP} from './api';
 
-export const getWorkAll = () => {
-    let paras = {"field": '',"period": '',"key_word": ''}
-    return request(WorkAll, METHOD.GET, paras);
+export const getWorkAll = (page) => {
+    const url = `${BASE_URL_IP}/api/result/all/${page}`
+    return request(url, METHOD.GET);
 }
 
-export const getWork = (id, method) => {
+export const getWork = (id) => {
     const url = `${BASE_URL_IP}/api/result/getinfo/${id}`
-    return request(url, method);
+    return request(url, METHOD.GET);
 }
 
-export const WorkApply = (id, method) => {
+export const WorkApply = (id) => {
     const url = `${BASE_URL_IP}/api/result/agree/${id}`
-    return request(url, method)
+    return request(url, METHOD.GET)
 }
 
-export const WorkRefuse = (id, method) => {
+export const WorkRefuse = (id) => {
     const url = `${BASE_URL_IP}/api/result/refuse/${id}`
+    return request(url, METHOD.GET)
+}
 
-    return request(url, method)
+export const WorkDel = (params) => {
+    const url = BASE_URL_IP + `/api/result/delete`
+    return request(url, METHOD.POST, params)
+}
+  
+export const WorkModify = (params) => {
+    const url = BASE_URL_IP + `/api/result/changeinfo`
+return request(url, METHOD.POST, params)
 }

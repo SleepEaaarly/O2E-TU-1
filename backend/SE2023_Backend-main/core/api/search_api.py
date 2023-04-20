@@ -25,7 +25,7 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
-    print(key_words)
+    # print(key_words)
     data_results = []
     experts = Expert.objects.none()
     if key_words != '':
@@ -39,14 +39,14 @@ def search_expert(request: HttpRequest, *args, **kwargs):
                 Q(paper__icontains=key_word) | Q(title__icontains=key_word)
             )
             )
-        print(experts.count())
+        # print(experts.count())
     else:
         experts = Expert.objects.all()
 #    print(experts)
     # 专家库有脏数据，下面这个循环全部遍历会报错
-    print(field)
+    # print(field)
     for expert in experts:
-        print(expert.field)
+        # print(expert.field)
         if not (organization is None or organization == ''):
             if expert.organization != organization:
                 continue
@@ -76,8 +76,8 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     #    print(expert.id)
         data_results.append(expert_info)
 
-    data_results = data_results[:10]
-    print(data_results)
+    # data_results = data_results[:10]
+    # print(data_results)
     return success_api_response({"data": data_results})
 
 
@@ -88,30 +88,28 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
     data = request.GET.dict()
     key_word = data.get('key_word')
     field = data.get('field')
-
     address = data.get('address')
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
-    print(key_words)
 
     data_results = []
     enterprises = Enterprise_info.objects.none()
     
     if key_words != '':
         for key_word in key_words:
-            print('in branch')
+            # print('in branch')
             enterprises = enterprises.union(Enterprise_info.objects.filter(
                 Q(name__icontains=key_word) | Q(address__icontains=key_word) |
                 Q(website__icontains=key_word) | Q(instruction__icontains=key_word) |
                 Q(legal_representative__icontains=key_word) | Q(field__icontains=key_word)
             )
             )
-        print(enterprises.count())
+        # print(enterprises.count())
     else:
         enterprises = Enterprise_info.objects.all()
-    
     for enterprise in enterprises:
+
         if not (address is None or address == ''):
             if enterprise.address is None or enterprise.address == '':
                 continue
@@ -140,7 +138,9 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
             "userpic": str(user.icon)
         }
         data_results.append(enterprise_info)
-    data_results = data_results[:10]
+
+    
+    # data_results = data_results[:10]
     return success_api_response({"data": data_results})
 
 
@@ -165,14 +165,14 @@ def search_result(request: HttpRequest):
                 Q(content__icontains=key_word) | Q(field__icontains=key_word) | Q(pyear__icontains=key_word)
             )
             )
-        print(results.count())
+        # print(results.count())
     else:
-        print(results)
+        # print(results)
         results = Results.objects.all()
-        print(results)
-    print('debug 1')
-    print(results)
-    print('debug 2')
+        # print(results)
+    # print('debug 1')
+    # print(results)
+    # print('debug 2')
     for result in results:
         if not (period is None or period == ''):
             if result.period != period:
@@ -183,8 +183,8 @@ def search_result(request: HttpRequest):
             if field not in result.field:
                 continue
 
-        # if result.state != 1:
-        #     continue
+        if result.state != 1:
+            continue
 
         expert = Expert.objects.filter(results__id=result.id)[0]
         user = User.objects.get(expert_info__id=expert.id)
@@ -205,22 +205,23 @@ def search_result(request: HttpRequest):
             "expert_icon": str(user.icon)
         }
         data_results.append(result_info)
-    print('debug 6')
-    data_results = data_results[:10]
+    # print('debug 6')
+    # data_results = data_results[:10]
     return success_api_response({"data": data_results})
 
 
 @response_wrapper
 # @jwt_auth()
-@require_POST
+@require_http_methods('GET')
 def search_mixture(request: HttpRequest):
-    data = parse_data(request)
+    data = request.GET.dict()
     key_word = data.get('key_word')
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
     data_res = []
     results = Results.objects.none()
+
     if key_words != '':
         for key_word in key_words:
             results = results.union(Results.objects.filter(
@@ -230,16 +231,17 @@ def search_mixture(request: HttpRequest):
             )
             )
 
-        print(results.count())
+        # print(results.count())
     else:
         results = Results.objects.all()
 
     for result in results:
 
-        expert = Expert.objects.filter(expert_results=result.id)[0]
-        user = User.objects.get(expert_info=expert.id)
+        expert = Expert.objects.filter(results__id=result.id)[0]
+        user = User.objects.get(expert_info__id=expert.id)
 
         result_info = {
+            "user_id": user.id,
             "result_id": result.id,
             "expert_id": expert.id,
             "title": result.title,
@@ -254,24 +256,25 @@ def search_mixture(request: HttpRequest):
             "expert_icon": str(user.icon)
         }
         data_res.append(result_info)
-    data_res = data_res[:5]
+    # data_res = data_res[:5]
 
     data_ent = []
     enterprises = Enterprise_info.objects.none()
+    
     if key_words != '':
         for key_word in key_words:
+            # print('in branch')
             enterprises = enterprises.union(Enterprise_info.objects.filter(
                 Q(name__icontains=key_word) | Q(address__icontains=key_word) |
                 Q(website__icontains=key_word) | Q(instruction__icontains=key_word) |
-                Q(legal_representative__icontains=key_word) | Q(field__icontains=key_word) |
-                Q(title__icontains=key_word)
+                Q(legal_representative__icontains=key_word) | Q(field__icontains=key_word)
             )
             )
-        print(enterprises.count())
+        # print(enterprises.count())
     else:
         enterprises = Enterprise_info.objects.all()
-
     for enterprise in enterprises:
+
         user = User.objects.get(enterprise_info=enterprise.id)
         enterprise_info = {
             "user_id": user.id,
@@ -289,11 +292,10 @@ def search_mixture(request: HttpRequest):
             "userpic": str(user.icon)
         }
         data_ent.append(enterprise_info)
-    data_ent = data_ent[:5]
+    # data_ent = data_ent[:5]
 
     data_exp = []
     experts = Expert.objects.none()
-
     if key_words != '':
         for key_word in key_words:
             print(key_word)
@@ -305,12 +307,12 @@ def search_mixture(request: HttpRequest):
                 Q(paper__icontains=key_word) | Q(title__icontains=key_word)
             )
             )
-        print(experts.count())
+        # print(experts.count())
     else:
         experts = Expert.objects.all()
-
     for expert in experts:
-        user = Expert.objects.get(expert_info=expert.id)
+        # print(expert)
+        user = User.objects.get(expert_info=expert.id)
         expert_info = {
             "user_id": user.id,
             "expert_id": expert.id,
@@ -321,8 +323,9 @@ def search_mixture(request: HttpRequest):
             "title": expert.title,
             "userpic": str(user.icon)
         }
+    #    print(expert.id)
         data_exp.append(expert_info)
-    data_exp = data_exp[:5]
+    # data_exp = data_exp[:5]
 
     data_results = [data_exp, data_res, data_ent]
 

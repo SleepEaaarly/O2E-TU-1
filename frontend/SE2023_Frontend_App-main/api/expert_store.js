@@ -30,7 +30,6 @@ export const getExpertList = async (paras) => {
             }
         })
     }
-    console.log(result)
     return result
 }
 

@@ -89,11 +89,12 @@ export default {
     inject: ['reload'],
     methods: {
         init: async function() {
+            this.pagination.current = 1
             this.loadPost();
         },
         loadPost: function () {
             this.loading = true;
-            getWorkAll().then((res) => {
+            getWorkAll(this.pagination.current).then((res) => {
                 console.log(res);
                 console.log(res.data.data)
                 this.listData.length = 0;
@@ -101,11 +102,11 @@ export default {
                 res.data.data.map((item) => {
                     if(item.state == 0){
                         this.listData.push({
-                            id: item.result_id,
+                            id: item.id,
                             result_name: item.title,
                             scholars: item.scholars,
                             field: item.field,
-                            result_pic :BASE_URL_IP + '/api/' + item.result_pic,
+                            result_pic :BASE_URL_IP + '/api/' + item.picture,
                             abstract: item.abstract,
                         })
                     }

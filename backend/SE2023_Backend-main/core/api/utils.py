@@ -2,10 +2,12 @@
 utils for generating api responses
 """
 import json
+import traceback
 from enum import Enum, unique
 
 from django.http import JsonResponse, HttpRequest
 from django.views.decorators.http import require_http_methods
+
 
 @unique
 class ErrorCode(Enum):
@@ -19,7 +21,6 @@ class ErrorCode(Enum):
     WRONG_CONFIRM_CODE = 402
     ITEM_ALREADY_EXISTS = 409
     SERVER_ERROR = 500
-    
 
 
 def _api_response(success, data) -> dict:
@@ -75,7 +76,7 @@ def response_wrapper(func):
         _response = func(*args, **kwargs)
         if isinstance(_response, dict):
             if _response['success']:
-                _response = JsonResponse(_response['data'], safe=False, json_dumps_params={'ensure_ascii':False})
+                _response = JsonResponse(_response['data'], safe=False, json_dumps_params={'ensure_ascii': False})
             else:
                 status_code = _response.get("data").get("code")
                 _response = JsonResponse(_response['data'])
@@ -101,6 +102,7 @@ def wrapped_api(api_dict: dict):
 
     return _api
 
+
 def parse_data(request: HttpRequest):
     """Parse request body and generate python dict
 
@@ -116,13 +118,14 @@ def parse_data(request: HttpRequest):
     except json.JSONDecodeError:
         return None
 
-def read_json_data(self, path):
+
+def read_json_data(path):
     """
     :param path: 文件路径
     :return: 获取的数据
     """
     try:
-        path = self.complete_path(path)
+        # path = complete_path(path)
         with open(file=path, mode="r", encoding="utf8") as f:
             return json.load(f)
     except Exception as e:

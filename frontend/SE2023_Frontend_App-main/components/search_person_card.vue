@@ -8,7 +8,7 @@
 			</u-row>
 			<u-row style="margin-top: 5px;">
 				<text style="font-size: 15px;margin:auto;font-weight: 600;">{{name}}</text>
-				<u-tag :text="type" type="error" plain plainFill shape="circle" size = "mini"></u-tag>
+				<u-tag v-if="type" :text="type" type="error" plain plainFill shape="circle" size = "mini"></u-tag>
 			</u-row>
 				
 			<!-- <fui-button text="默认按钮"></fui-button> -->

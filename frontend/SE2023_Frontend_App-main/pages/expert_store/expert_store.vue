@@ -11,7 +11,7 @@
 		<u-row style="margin-top: 10px;margin-left: 10px;">
 			<uni-combox :candidates="institution_list" placeholder="机构" v-model="chosen_institution" class="expert_combox" :border="false"></uni-combox>
 			<uni-combox :candidates="area_list" placeholder="领域" v-model="chosen_area" class="expert_combox" :border="false"></uni-combox>
-			<uni-combox :candidates="title_list" placeholder="职称" v-model="chosen_title" class="expert_combox" :border="false"></uni-combox>
+			<uni-combox :candidates="title_list" placeholder="头衔" v-model="chosen_title" class="expert_combox" :border="false"></uni-combox>
 		</u-row>
 		
 <!-- 		<view style="background-color: #f2f2f2;margin-top: 10px;padding-top: 10px;padding-bottom: 10px;">
@@ -117,7 +117,7 @@ import { getExpertList } from "@/api/expert_store.js"
 		},
 		methods: {
 			navToEntry(){
-				console.log('back to entry')
+				// console.log('back to entry')
 				uni.switchTab({
 					url: '../entry/entry',
 				})

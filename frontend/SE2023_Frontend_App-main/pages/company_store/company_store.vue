@@ -77,15 +77,12 @@
 		},
 		methods: {
 			navToEntry(){
-				console.log('back to entry')
+				// console.log('back to entry')
 				uni.switchTab({
 					url: '../entry/entry',
 				})
 			},
 			companyDetail(company){
-				console.log(company['address'])
-				console.log(company['title'])
-				console.log(company['area'])
 				// getExpertByID
 				uni.navigateTo({
 					url: '../../pages/user-space/user-space?uid=' + company['uid'],

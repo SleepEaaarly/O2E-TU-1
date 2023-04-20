@@ -3,7 +3,7 @@
 	<view>
 		<!-- 搜索栏 -->
 		<view class = "search_view" style="margin-top: 10rpx;margin-left: 20px;margin-right: 20px;margin-top: 30px;">
-			<u-search placeholder="请输入搜索内容" :showAction = "false" v-model="searchText"></u-search>
+			<u-search placeholder="请输入搜索内容" :showAction = "true" v-model="searchText" @custom="mixSearch"></u-search>
 		</view>
 		
 		
@@ -78,12 +78,12 @@
 					<work-card
 					@click.native="workDetail(item)"  
 					:authorLogoPath="item['authorLogoPath']" 
-					:workLogoPath="item['work_icon']" 
+					:workLogoPath="item['workLogoPath']" 
 					:author="item['author']"
 					:title="item['title']"
 					:date="item['date']"
 					:area="item['area']"
-					:intro="item['intro']"
+					:intro="item['abstract']"
 					:period="item['period']"
 					:index="index1"></work-card>
 				</block> 
@@ -201,9 +201,10 @@
 		},
 
 		watch: {
-			searchText(newVal, oldVal) {
-				this.requestData()
-			},
+			// searchText(newVal, oldVal) {
+			// 	console.log(oldVal)
+			// 	console.log(newVal)
+			// },
 			field: function(newValue) {
 				let that = this
 				var f = function(that) {
@@ -224,24 +225,26 @@
 			}
 		},
 		methods: {
-			workDetail(work) {
-				console.log(work['title'])
-				console.log('Jump to detail of the work')
+			
+			mixSearch(){
+				uni.navigateTo({
+					url: `../mix_search/mix_search?search_text=${this.searchText}`,
+				})
 			},
 			navToExperts() {
-				console.log('Jump to detail of the Experts')
+				// console.log('Jump to detail of the Experts')
 				uni.navigateTo({
 					url: '../expert_store/expert_store',
 				})
 			},
 			navToWorks() {
-				console.log('Jump to detail of the Works')
+				// console.log('Jump to detail of the Works')
 				uni.navigateTo({
 					url: '../work_store/work_store',
 				})
 			},
 			navToCompanies() {
-				console.log('Jump to detail of the companies')
+				// console.log('Jump to detail of the companies')
 				uni.navigateTo({
 					url: '../company_store/company_store',
 				})
@@ -260,13 +263,14 @@
 						"id": this.userInfo.id,
 						"type": this.userInfo.type,
 					}
-					var rec_list
-					if (Array.prototype.isPrototypeOf(this.recommendList.list) && this.recommendList.list.length === 0 ){
-						//rec_list = await getWorkRec(paras)
+					var rec_list = {}
+					
+					// TODO 成果推荐 Debug
+					// rec_list = await getWorkRec(paras)
+					// TODO 成果推荐 Debug
+					
+					if(rec_list == null){
 						rec_list = {}
-					}
-					if (Array.prototype.isPrototypeOf(this.recommendList.list) && this.recommendList.list.length === 0 ){
-						console.log("still None")
 					}
 					let work_list =  await getWorkList({
 						"field": '',
