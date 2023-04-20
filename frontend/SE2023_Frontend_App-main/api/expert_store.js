@@ -5,9 +5,7 @@ import {
 } from './common.js'
 
 
-//获取 专家-搜索
 export const getExpertList = async (paras) => {
-    console.log("getExpertList OK.")
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }

@@ -24,7 +24,8 @@
 		:title="'职称'" :institution="'机构'"
 		:mail="'邮箱'"
 		:logoPath="'/static//logo.png'"></expert-card> -->
-		<block v-for="(item, index1) in recommendList.list" :key="index1">
+		<uni-scroll-view scroll-y="true" @scroll="loadMore()" :style="{height: windowHeight + 'px'}"
+		 v-for="(item, index1) in recommendList.list" :key="index1">
 			<expert-card
 			@click.native="expertDetail(item)"  
 			:logoPath="item['userpic']" 
@@ -33,14 +34,14 @@
 			:mail="item['mail']"
 			:institution="item['institution']"
 			:index="index1"></expert-card>
-		</block> 
+		</uni-scroll-view> 
 	</view>
-	
 </template>
 
 <script>
 import expertCard from "@/components/expert_display_card.vue"
 import { getExpertList } from "@/api/expert_store.js"
+import loadMore from '../../components/common/load-more.vue'
 	export default {
 		data() {
 			return {
@@ -48,6 +49,9 @@ import { getExpertList } from "@/api/expert_store.js"
 				chosen_area: '',
 				chosen_title: '',
 				searchText: '',
+				cur_page: 0,
+				loadtext:'',
+				windowHeight: 100,
 				institution_list: [
 					'北航',
 					'复旦大学'
@@ -64,26 +68,7 @@ import { getExpertList } from "@/api/expert_store.js"
 				recommendList: {
 					loadtext: '没有更多数据了',
 					id: 'recommend',
-					list: [
-					// 	{
-					// 		'userpic': '/static/head.jpg',
-					// 		'author': 'Expert1',
-					// 		'mail': 'iszry@foxmail.com',
-					// 		'title': '副教授',
-					// 		'institution': '北京航空航天大学',
-					// 		'intro': '一种线型结构的具有优异综合性能的热塑性工程塑料',
-					// 		'workLogoPath': '/static//logo.png',
-					// 	},
-					// 	{
-					// 		'userpic': '/static/head.jpg',
-					// 		'author': 'Expert2',
-					// 		'mail': 'iszry@foxmail.com',
-					// 		'title': '副教授',
-					// 		'institution': '北京航空航天大学',
-					// 		'intro': '该项目通过与其他生物可降解材料的共混，以及与纳米粒子的复合来得到廉价、加工性能良好、力学及防水性能改善的大豆蛋白质环境友好材料。',
-					// 		'workLogoPath': '/static//logo.png',
-					// 	}
-					]
+					list: []
 				},
 			}
 		},
@@ -93,13 +78,6 @@ import { getExpertList } from "@/api/expert_store.js"
 		},
 		onLoad() {		//页面显示,每次打开页面都会调用一次
 			console.log('experts-onLoad()')
-			// uni.getSystemInfo({
-			// 	success: res => {
-			// 		let height = res.windowHeight - uni.upx2px(100)
-			// 		this.swiperheight = height
-			// 	}
-			// })
-			//this.requestData() 不能刷新，防止点进文章再出来跳飞了
 		},
 		watch: {
 			chosen_institution(newVal, oldVal) {
@@ -114,6 +92,24 @@ import { getExpertList } from "@/api/expert_store.js"
 			searchText(newVal, oldVal) {
 				this.requestData()
 			}
+		},
+		onReachBottom() {
+			// this.loadmore()
+		},
+		// 监听下拉刷新
+		onPullDownRefresh() {
+			console.log('pulldown')
+			this.cur_page = this.cur_page + 1
+			this.requestData()
+			uni.stopPullDownRefresh()
+		},
+		onPullUpRefresh(){
+				
+			if(this.cur_page > 0){
+				this.cur_page = this.cur_page - 1
+				this.requestData()
+			}
+			uni.stopPullUpRefresh()
 		},
 		methods: {
 			navToEntry(){
@@ -136,17 +132,31 @@ import { getExpertList } from "@/api/expert_store.js"
 						"organization": this.chosen_institution,
 						"field": this.chosen_area,
 						"title": this.chosen_title,
-						"key_word": this.searchText
+						"key_word": this.searchText,
+						"page": this.cur_page
 					}
-					this.recommendList.list = await getExpertList(paras)
+					let ret = await getExpertList(paras)
+					this.cur_page = this.cur_page + 1
+					if(ret.length===0||ret==null||ret==[]||ret=={}){
+						return 
+					}else{
+						this.recommendList.list = this.recommendList.list.concat(ret)
+					}
 				} catch (e) {
 					console.log(e)
 					return
 				}
 			},
+			loadMore(){
+				console.log('loadMore')
+				
+				// 获取数据
+				this.requestData()
+			},
 		},
 		components : {
-			expertCard
+			expertCard,
+			loadMore
 		}
 	}
 </script>

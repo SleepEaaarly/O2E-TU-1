@@ -21,6 +21,7 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     organization = data.get('organization')
     field = data.get('field')
     title = data.get('title')
+    page = int(data.get('page'))
 
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
@@ -42,9 +43,12 @@ def search_expert(request: HttpRequest, *args, **kwargs):
         # print(experts.count())
     else:
         experts = Expert.objects.all()
-#    print(experts)
-    # 专家库有脏数据，下面这个循环全部遍历会报错
-    # print(field)
+    end_index = min(experts.count(), page*10+10)
+    start_index = min(experts.count() - 1, page*10)
+    print(start_index)
+    print(end_index)
+    experts = experts[start_index:end_index]
+    print('debug 2')
     for expert in experts:
         # print(expert.field)
         if not (organization is None or organization == ''):

@@ -25,14 +25,25 @@
 			style="margin-left: 20rpx;margin-top: 20rpx;"></u-tag>
 			<u-tag :text="work_info.work_field"  plain plainFill size = "mini" type="success"
 			style="margin-left: 20rpx;margin-top: 20rpx;"></u-tag>
-			
 		</u-row>
+		
+		<u-row style="margin-top: 20rpx;margin-left: 20rpx;margin-right: 20rpx;">
+			<u-line></u-line>
+		</u-row>
+		<view style="
+		margin-top: auto;background-color: aliceblue;width: 650rpx;margin-left: 35rpx;height: auto;
+		border-left:8rpx solid cornflowerblue;
+		background-color: aliceblue;padding-top: 10rpx;padding-left: 20rpx;padding-bottom: 10rpx;">
+			<text class="intro">{{ work_info.work_content }}</text>
+		</view>
 		<u-row style="margin-top: 20rpx;margin-left: 20rpx;margin-right: 20rpx;">
 			<u-line></u-line>
 		</u-row>
 		</view>
 		  <scroll-view :style="{height:height+'px'}" scroll-y>
-			<image :src="work_info.work_pic" style="width: 100%;" mode="widthFix"></image>
+			<view v-for="(item, index1) in work_info.work_detail_pics" :key="index1">
+				<image :src="picUrl + item" style="width: 100%;" mode="widthFix"></image>
+			</view>
 		  </scroll-view>
 		<uni-row >
 			<!-- <view v-if="userInfo.type==4&&order.order_id==0"> -->
@@ -50,12 +61,15 @@
 </template>
 
 <script>
-	import uniRow from '@/components/uni-row/components/uni-row/uni-row.vue'
-	import uniCol from '@/components/uni-row/components/uni-col/uni-col.vue'
 	import { mapState, mapMutations } from 'vuex'
 	import authorCard from"../../components/author_display_card.vue"
 	import { getWork } from "@/api/work_detail.js"
 	import workGenerateCard from '@/api/work_report.js'
+	import uniCol from '@/components/uni-row/components/uni-col/uni-col.vue'
+	import uniRow from '@/components/uni-row/components/uni-row/uni-row.vue'
+	import {
+		picUrl
+	} from '@/api/common.js'
 	export default {
 		computed: {
 			...mapState(['userInfo']),
@@ -64,6 +78,7 @@
 			return {
 				work_id: 1,
 				height: 500,
+				picUrl: '',
 				work_info: {
 					"workName": 'A Summary of Machine Learning',
 					"expert_name": '占瑞乙',
@@ -86,11 +101,13 @@
 			// console.log('data should be:' + data.rid)
 			this.work_id = data.rid
 			this.loadData()
+			this.picUrl = picUrl
 		},
 		methods: {
 			async loadData(){
 				// console.log('get work detail')
 				this.work_info = await getWork(this.work_id)
+				console.log(this.work_info)
 				// console.log(this.work_info)
 			},
 			goToExpertSpace() {

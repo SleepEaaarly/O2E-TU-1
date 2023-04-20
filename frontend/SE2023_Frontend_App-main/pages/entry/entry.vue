@@ -82,9 +82,9 @@
 					:author="item['author']"
 					:title="item['title']"
 					:date="item['date']"
-					:area="item['area']"
 					:intro="item['abstract']"
 					:period="item['period']"
+					:area="item['field']"
 					:index="index1"></work-card>
 				</block> 
 				<uni-load-more :loadtext="recommendList.loadtext"></uni-load-more>
