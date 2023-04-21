@@ -32,7 +32,7 @@
                         :item="item" :index="index" :isHuman="isHuman"></system-chat-list>
                 </view>
             </block>
-            <require_message_card
+            <!-- <require_message_card
                 title="请帮我写软工吧"
                 companyName="北京航空航天大学"
                 :companyLogoPath="testpic"
@@ -48,7 +48,7 @@
                 expertLogoPath="/static/head_zry_fox.jpg"
                 intro="Here is a summary of some of the most commonly used methods in machine learning." 
                 time="上午 7:45">
-            </work_message_card>
+            </work_message_card> -->
         </scroll-view>
         
         <system-chat-bottom @submit="submit" @isHuman="getHuman" :isai="isHuman"></system-chat-bottom>
@@ -133,7 +133,9 @@
             }
         },
         onShow() {
+            console.log("adfadfadfad")
             this.isShow = true
+            uni.$emit('system-chat-list-on-show')
         },
         beforeDestroy() {
             this.isShow = false
@@ -360,7 +362,7 @@
                 let obj = { // 插入前端列表的数据
                     isme: 1,
                     userpic: this.userInfo.userpic,
-                    type: 'text',
+                    type: 'card',
                     message: data,
                     // message: "http://127.0.0.1:8000/api/images/202205/07/icons/1651921131602.png",
                     time: time.gettime.gettime(now),
