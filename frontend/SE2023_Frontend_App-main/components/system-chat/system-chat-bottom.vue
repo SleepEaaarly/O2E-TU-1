@@ -1,7 +1,7 @@
 <template>
     <view class="system-chat-bottom u-f-ac animated fadeInDown fast" >
-        <view v-if="!isHuman" class="icon iconfont icon-kulian u-f-ajc" @click="humanAISwitch"></view>
-        <view v-if="isHuman" class="icon iconfont icon-smile u-f-ajc" @click="humanAISwitch"></view>
+        <view v-if="!notAI" class="icon iconfont icon-kulian u-f-ajc" @click="humanAISwitch"></view>
+        <view v-if="notAI" class="icon iconfont icon-smile u-f-ajc" @click="humanAISwitch"></view>
         <input type="text" 
          placeholder="请输入私信" 
          v-model="text" 
@@ -16,17 +16,16 @@
 
     export default {
         props: [
-            'isai'
+            'notAI'
         ],
+        mounted() {
+        },
         data() {
             return {
                 text: "",
-                isHuman: (this.isai) ? false : true
             }
         },
         onReady() {
-            console.log(this.isai)
-            this.isHuman = this.isai
         },
         methods: {
             submit() {
@@ -34,14 +33,10 @@
                 this.text = "";
             },
             humanAISwitch() {
-                this.isHuman = !this.isHuman
+                this.notAI = !this.notAI
+                this.$emit('isHuman', this.notAI)
             }
         },
-        watch: {
-            isHuman(val) {
-                this.$emit('isHuman', val)
-            }
-        }
     }
 </script>
 

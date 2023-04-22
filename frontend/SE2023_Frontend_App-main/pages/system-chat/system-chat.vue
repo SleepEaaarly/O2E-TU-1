@@ -51,7 +51,7 @@
             </work_message_card> -->
         </scroll-view>
         
-        <system-chat-bottom @submit="submit" @isHuman="getHuman" :isai="isHuman"></system-chat-bottom>
+        <system-chat-bottom @submit="submit" @isHuman="getHuman" :notAI="isHuman"></system-chat-bottom>
     </view>
 </template>
 

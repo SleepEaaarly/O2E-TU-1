@@ -92,14 +92,14 @@
 					:item="item" :index="index"></user-chat-list>
 				</view>
 			</block>
-			<order_message_card
+			<!-- <order_message_card
 				title="请帮我写软工"
                 companyName="企业zkg"
                 :companyLogoPath="testpic"
                 intro="Here is a summary of some of the most commonly used methods in machine learning."
                 time="上午 7:43"
 			>
-			</order_message_card>
+			</order_message_card> -->
 		</scroll-view>
 		
 		<!-- 输入框 -->
@@ -356,6 +356,8 @@
 				
 				this.initorder()
 				this.sendm('我们的订单已完成，需求名为：'+this.need.title)
+				// 生成订单报告
+
 			},
 			async initorder(){	// 获得专家和企业之间的需求和订单信息
 				if(this.userInfo.type===5){
