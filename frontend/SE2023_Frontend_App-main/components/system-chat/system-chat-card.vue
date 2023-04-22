@@ -1,6 +1,26 @@
 <template>
     <view  >
-        <uni-row class="header">
+        <fui-card style="width: 400rpx; height: 120px; margin: 0 0 0 0;" @click.native="gotoCardDetail">
+            <view style="margin-top:  20rpx; margin-bottom: 20rpx;">
+                <u-row style="margin-left: 20rpx;">
+                    {{cardInfo.title}}
+                </u-row>
+                <u-row>
+                    <u-col span="8">
+                        <text class="content">
+                            {{cardInfo.info}}
+                        </text>
+                    </u-col>
+                    <u-col span="4">
+                        <!-- <image src="http://localhost:8080/static/img/need_contracted.b69b28cb.jpg" ></image> -->
+                        <!-- <image class="logo" src="http://localhost:8080/static/img/need_contracted.b69b28cb.jpg"  -->
+                        <image class="logo" :src="cardInfo.avatar" 
+					style = "height: 55px;width: 55px;margin-left: 10px;margin-top: 15px;border-radius: 20px;">
+                    </u-col>
+                </u-row>
+            </view>
+        </fui-card>
+        <!-- <uni-row class="header">
             <uni-col :span="9" class="image">
                 <image :src="cardInfo.avatar" mode="widthFix" lazy-load class="image-image"></image>
             </uni-col>
@@ -15,7 +35,7 @@
                     </uni-row>
                 </uni-row>
             </uni-col>
-        </uni-row>
+        </uni-row> -->
         <!-- <uni-row class="header">
             <uni-col>
                 <text class="topic_cont_text">testtesttesttesttesttesttesttesttesttest
@@ -37,12 +57,15 @@
 </template>
 
 <script>
+import fuiCard from "@/components/firstui/fui-card/fui-card.vue"
     import uniCol from '@/components/uni-row/components/uni-col/uni-col.vue'
 	import uniRow from '@/components/uni-row/components/uni-row/uni-row.vue'
     export default {
+        name: "system-chat-card",
         components: {
             uniCol,
-            uniRow
+            uniRow,
+            fuiCard
         },
         props: {
             cardInfo: Object
@@ -55,18 +78,71 @@
                 }
             }
         },
-        onReady() {
+        onLoad() {
+            console.log("onReady")
             this.initdata()
+
+        },
+        onShow() {
+            console.log("onShow")
+        },
+        onReady(){
+            console.log("onReady")
+        },
+        mounted() {
+            uni.$on('system-chat-card-on-show', function() {
+                console.log("system-chat-card-on-show")
+                // this.cardInfo = {}
+                // this.cardInfo.cardType = 'expert',
+                // this.cardInfo.id = 24,
+                // this.cardInfo.avatar = "http://localhost:8080/static/img/need_contracted.b69b28cb.jpg",
+                // this.cardInfo.info = "测试长消息测试长消息测试长消息测试场消息"
+                console.log(this.cardInfo)
+                this.initdata()
+            });
+
+        },
+        beforeDestroy() {
+            uni.$off('system-chat-card-on-show')
         },
         methods: {
             async initdata() {
+                console.log(1)
                 try {
                     const res = uni.getSystemInfoSync()
                     let t = 200
                     this.style.contentH = res.windowHeight
                     this.style.contentW = res.windowWidth
                 } catch(e) {}
+                // debug init data
+                // {  
+                //     this.cardInfo.cardType = 'expert',
+                //     this.cardInfo.id = 24,
+                //     this.cardInfo.avatar = "http://localhost:8080/static/img/need_contracted.b69b28cb.jpg",
+                //     this.cardInfo.info = "测试长消息测试长消息测试长消息测试场消息"
+                // }
+                console.log(this.cardInfo)
             },
+            gotoCardDetail() {
+                {  
+                    this.cardInfo = {},
+                    this.cardInfo.title = "测试专家"
+                    this.cardInfo.cardType = 'technique',
+                    this.cardInfo.id = 6,
+                    this.cardInfo.avatar = "http://localhost:8080/static/img/need_contracted.b69b28cb.jpg",
+                    this.cardInfo.info = "测试长消息测试长消息测试长消息测试场消息"
+                }
+                console.log(this.cardInfo)
+                if (this.cardInfo.cardType === 'expert') {
+                    uni.navigateTo({url: '../../pages/user-space/user-space?uid=' + this.cardInfo.id})
+                } else if (this.cardInfo.cardType === 'enterprise') {
+                    uni.navigateTo({url: '../../pages/user-space/user-space?uid=' + this.cardInfo.id})
+                } else if (this.cardInfo.cardType === 'demand') {
+                    uni.navigateTo({url: '../../pages/need-detail/detail?id=' + this.cardInfo.id})
+                } else if (this.cardInfo.cardType === 'technique') {
+                    uni.navigateTo({url: '../../pages/work_detail/work_detail?rid=' + this.cardInfo.id})
+                }
+            }
         },
     }
 
@@ -139,4 +215,25 @@
     word-wrap: break-word;
     word-break: normal;
 }
+
+.info {
+		font-size: 30rpx;
+		font-weight: 600;
+	}
+	.title {
+		font-size: 30rpx;
+		font-weight: 600;
+		text-overflow:ellipsis;
+		overflow:hidden;
+		white-space:nowrap;
+		max-width: 300rpx;
+	}
+	.content {
+		font-size: 20rpx;
+		margin-left: 20rpx;
+		color: #606266;
+		text-overflow:ellipsis;
+		overflow:hidden;
+		white-space:nowrap;
+	}
 </style>

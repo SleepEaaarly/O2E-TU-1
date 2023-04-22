@@ -32,13 +32,13 @@
                         :item="item" :index="index" :isHuman="isHuman"></system-chat-list>
                 </view>
             </block>
-            <require_message_card
+            <!-- <require_message_card
                 title="请帮我写软工吧"
                 companyName="北京航空航天大学"
                 :companyLogoPath="testpic"
                 intro="Here is a summary of some of the most commonly used methods in machine learning."
                 time="上午 7:43"
-                ></require_message_card>
+            ></require_message_card>
                 <system-chat-list 
                         @goToUserInfo="goToUserInfo" 
                         :item="item" :isHuman="isHuman"></system-chat-list>
@@ -47,10 +47,8 @@
                 expertName="占瑞乙" 
                 expertLogoPath="/static/head_zry_fox.jpg"
                 intro="Here is a summary of some of the most commonly used methods in machine learning." 
-                time="上午 7:45"
-                @click.native="clickevent">
-
-            </work_message_card>
+                time="上午 7:45">
+            </work_message_card> -->
         </scroll-view>
         
         <system-chat-bottom @submit="submit" @isHuman="getHuman" :isai="isHuman"></system-chat-bottom>
@@ -135,7 +133,9 @@
             }
         },
         onShow() {
+            console.log("adfadfadfad")
             this.isShow = true
+            uni.$emit('system-chat-list-on-show')
         },
         beforeDestroy() {
             this.isShow = false
@@ -362,7 +362,7 @@
                 let obj = { // 插入前端列表的数据
                     isme: 1,
                     userpic: this.userInfo.userpic,
-                    type: 'text',
+                    type: 'card',
                     message: data,
                     // message: "http://127.0.0.1:8000/api/images/202205/07/icons/1651921131602.png",
                     time: time.gettime.gettime(now),
@@ -373,7 +373,7 @@
                 this.addSystemChatMessage(obj)
                 if (!this.isHuman) {    // 如果不是人工，则可以直接获得输出
                     if (this.questionType === 'basic') {    // 对于操作的基础问题，可以直接输出结果
-                        // 1. 将问题送入楚珉的AI模型接口，获取输出
+                        // 1. 将问题送入lcm的AI模型接口，获取输出
                         let output = await getBasicAISystemQuestionAns(data)
                         // 1.5 判断code是否等于200，如果等于500不进行接下来的判断
                         if (code !== 200) {
@@ -394,7 +394,7 @@
                                 isme: 0,
                                 userpic: this.aiPic,
                                 type: 'text',
-                                message: "啊偶，遇到我不会的了，建议您转人工哦",
+                                message: "啊哦，遇到我不会的了，建议您转人工哦",
                                 time: time.gettime.gettime(now),
                                 cardInfo: {},
                                 gstime: now,
@@ -403,7 +403,7 @@
                             // 2.2 将转人工信息发送给数据库
                             let msg = await pushSystemMessage({   // 发送给后端的数据
                                 'uId': this.userInfo.id,
-                                'content': "啊偶，遇到我不会的了，建议您转人工哦",
+                                'content': "啊哦，遇到我不会的了，建议您转人工哦",
                                 "isme": 0
                             })
                             // 2.3 将转人工信息插入前端store

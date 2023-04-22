@@ -1,44 +1,23 @@
 <template>
 	<view>
-		<fui-card :padding="['5rpx','20rpx']" :src="expertLogoPath" :title="expertName" :tag="time">
+		<fui-card :padding="['5rpx','20rpx']" :src="expertLogoPath" :title="expertName" :tag="time" @click.native="gotoWorkReport">
 			<view style="margin-top: 20rpx;margin-bottom: 20rpx;">
 				<u-row style="margin-left: 20rpx;">
-					<text class = "info">
-					
-					请查收成果
-					</text>
-					
-					
+					<text class = "info">请查收成果</text>
 					<text class = "title">《{{title}}》</text>
-					
 					<text class = "info">的专属报告!</text>
-					
 				</u-row>
 				<u-row>
-					
-					
 					<u-col span = "8">
-						
 						<text class = "content">
-							
 							简介：{{intro}}
-							
 						</text>
-						
-						
-						
 					</u-col>
 					<u-col span = "4">
-						
 						<image class="logo" src="/static///Designer _Flatline.png" style = "height: 90px;width: 90px;margin-left: 10rpx;">
-						
 					</u-col>
 				</u-row>
-				 
-				
-				
 			</view>
-			
 		</fui-card>
 	</view>
 </template>
@@ -51,7 +30,12 @@
 				
 			};
 		},
-		props:['title','expertName','expertLogoPath','intro','time']
+		props:['title','expertName','expertLogoPath','intro','time', 'id'],
+		methods: {
+			gotoWorkReport() {
+				uni.navigateTo({url: '../../pages/work_report/work_report?reportId=' + this.id})
+			}
+		},
 	}
 </script>
 

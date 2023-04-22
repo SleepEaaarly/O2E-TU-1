@@ -248,10 +248,15 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     get_milvus_connection()
     user = User.objects.get(id=id)
     papers = user.expert_info.papers.all()
+    print('check milvus connection:[1]')
+    print('Papers:')
+    print(papers)
     titles = []
     for paper in papers:
         titles.append(paper.title)
     key_vector = model.get_embeds(titles)
+    print('check milvus connection:[2]')
+
     key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
     id_lists = milvus_search(
@@ -262,6 +267,7 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
             ids += str(milvus_id) + ','
     ids = ids[:-1] + ']'
     query = "milvus_id in " + ids
+
     result_ids = milvus_query_result_by_id(query)
     result_infos = []
     for result_id in result_ids:

@@ -1,46 +1,24 @@
 <template>
 	<view>
-		<fui-card :padding="['5rpx','20rpx']" :src="companyLogoPath" :title="companyName" :tag="time">
+		<fui-card :padding="['5rpx','20rpx']" @click.native="gotoOrderReport">
 			<view style="margin-top: 20rpx;margin-bottom: 20rpx;">
 				<u-row style="margin-left: 20rpx;">
-					<text class = "info">
-					
-					请查收需求
-					</text>
-					
-					
+					<text class = "info">请查收关于</text>
 					<text class = "title">《{{title}}》</text>
-					
-					<text class = "info">的专属报告!</text>
-					
+					<text class = "info">的订单报告!</text>
 				</u-row>
 				<u-row>
-					
-					
 					<u-col span = "8">
-						
 						<text class = "content">
-							
 							简介：{{intro}}
-							
 						</text>
-						
-						
-						
 					</u-col>
 					<u-col span = "4">
-						
-						<image class="logo" src="/static//company.png" style = "height: 90px;width: 90px;margin-left: 10rpx;">
-						
+						<image class="logo" src="/static/Done.png" style = "height: 90px;width: 90px;margin-left: 10rpx;">
 					</u-col>
 				</u-row>
-				 
-				
-				
 			</view>
-			
 		</fui-card>
-		
 	</view>
 </template>
 
@@ -56,7 +34,13 @@
 				
 			};
 		},
-		props:['title','companyName','companyLogoPath','intro','time']
+		props:['title','intro','time', 'id'],
+		methods: {
+			gotoOrderReport() {
+				console.log(this.id)
+				uni.navigateTo({url: '../../pages/order_report/order_report?reportId=' + this.id})
+			}
+		},
 	}
 </script>
 

@@ -45,3 +45,14 @@ export const  searchNeedList =async (text) => {
 	}
 	return result.data
 }
+
+export const getMixSearch = async (paras) => {
+    let headers = {
+        "Authorization": 'Bearer ' + uni.getStorageSync('token')
+    }
+    let ret = await axios.get('search/mixture?key_word=' + paras.key_word,
+        paras,
+        headers)
+	// console.log(ret)
+    return ret.data
+}

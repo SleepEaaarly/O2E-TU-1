@@ -67,6 +67,17 @@
 			}
 		},
 		{
+			"path": "pages/mix_search/mix_search",
+			"style": {
+				"navigationBarTitleText": "",
+				"app-plus": {
+					"titleNView": false,
+					"bounce": "none",
+					"scrollIndicator": "none"
+				}
+			}
+		},
+		{
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "登录",
@@ -341,7 +352,6 @@
 				}
 			}
 		}, {
-			// "path": "pages/try-system-camera/try-system-camera",
 			"path": "pages/require_report/require_report",
 			"style": {
 				"enablePullDownRefresh": false,

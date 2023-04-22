@@ -96,6 +96,7 @@
 		},
 		onLoad(data) {
 			this.inWorkId = data.reportId
+			this.getWorkDetailInfo()
 		},
 		computed: {
 			...mapState(['userInfo'])

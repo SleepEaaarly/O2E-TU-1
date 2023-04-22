@@ -34,7 +34,7 @@
 				</uni-col>
 			</uni-row>
 		</uni-card>
-		<expert-create-achievement v-if="userInfo.type=='4'" :show="show" @hide="hidepopup" @addachievement="addachievement" @manageachievement="manageachievement">
+		<expert-create-achievement v-if="userInfo.type=='4'&&isSelf" :show="show" @hide="hidepopup" @addachievement="addachievement" @manageachievement="manageachievement">
 		</expert-create-achievement>
 	</view>
 </template>
@@ -53,13 +53,15 @@
 			uniRow,
 			uniCol,
 			expertCreateAchievement,
+			uniFav,
+			uniCard
 		},
 		computed:{ ...mapState(['userInfo']) },
 		mounted() {		//页面显示,每次打开页面都会调用一次
 			this.initData()
 			console.log('Achievement onLoad')
 		},
-		props: { id: { type: Number, } },
+		props: { id: { type: Number, }, isSelf:{type: Boolean}},
 		data() {
 			return {
 				paperlist:[],	//论文列表
