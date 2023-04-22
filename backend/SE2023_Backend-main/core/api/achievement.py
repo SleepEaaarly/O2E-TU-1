@@ -252,8 +252,8 @@ def get_resultInfo(request: HttpRequest, id: int):
     print('get result info')
     result = Results.objects.get(id=id)
     print(result)
-#    if result.state != 1:
-#        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
+    if result.state != 1:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
     print('debug 1')
     expert = Expert.objects.filter(results=id)[0]
     user = User.objects.get(expert_info=expert.id)

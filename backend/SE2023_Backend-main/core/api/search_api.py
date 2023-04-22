@@ -21,7 +21,9 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     organization = data.get('organization')
     field = data.get('field')
     title = data.get('title')
+
     page = int(data.get('page'))
+
 
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
@@ -43,15 +45,20 @@ def search_expert(request: HttpRequest, *args, **kwargs):
         # print(experts.count())
     else:
         experts = Expert.objects.all()
-    end_index = min(experts.count(), page*10+10)
-    start_index = min(experts.count() - 1, page*10)
-    print(start_index)
-    print(end_index)
-    experts = experts[start_index:end_index]
-    print('debug 2')
+
+
+    # experts = experts[start:end]
+
+    start = 10 * (page - 1)
+    end = 10 * page
+    experts_after = []
+
+
     for expert in experts:
         # print(expert.field)
         if not (organization is None or organization == ''):
+            if expert.organization is None or expert.organization == '':
+                continue
             if expert.organization != organization:
                 continue
         if not (field is None or field == ''):
@@ -64,8 +71,13 @@ def search_expert(request: HttpRequest, *args, **kwargs):
                 continue
             if title not in expert.title:
                 continue
+        experts_after.append(expert)
+        if experts_after.__len__() == 10:
+            break
 
-        # print(expert)
+    experts_after = experts_after[start:end]
+
+    for expert in experts_after:
         user = User.objects.get(expert_info=expert.id)
         expert_info = {
             "user_id": user.id,
@@ -80,8 +92,6 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     #    print(expert.id)
         data_results.append(expert_info)
 
-    # data_results = data_results[:10]
-    # print(data_results)
     return success_api_response({"data": data_results})
 
 
@@ -93,6 +103,10 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
     key_word = data.get('key_word')
     field = data.get('field')
     address = data.get('address')
+
+    # page从第1页开始
+    page = data.get('page')
+
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
@@ -112,6 +126,14 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
         # print(enterprises.count())
     else:
         enterprises = Enterprise_info.objects.all()
+
+
+    start = 10 * (page - 1)
+    end = 10 * page
+
+    # enterprises = enterprises[start:end]
+    enterprises_after = []
+
     for enterprise in enterprises:
 
         if not (address is None or address == ''):
@@ -124,7 +146,13 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
                 continue
             if field not in enterprise.field:
                 continue
+        enterprises_after.append(enterprise)
+        if enterprises_after.__len__() == 10:
+            break
 
+    enterprises_after = enterprises_after[start:end]
+
+    for enterprise in enterprises_after:
         user = User.objects.get(enterprise_info=enterprise.id)
         enterprise_info = {
             "user_id": user.id,
@@ -156,6 +184,7 @@ def search_result(request: HttpRequest):
     key_word = data.get('key_word')
     period = data.get('period')
     field = data.get('field')
+    page = data.get('page')
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
@@ -173,10 +202,12 @@ def search_result(request: HttpRequest):
     else:
         # print(results)
         results = Results.objects.all()
-        # print(results)
-    # print('debug 1')
-    # print(results)
-    # print('debug 2')
+
+    start = 10 * (page - 1)
+    end = 10 * page
+
+    results_after = []
+
     for result in results:
         if not (period is None or period == ''):
             if result.period != period:
@@ -190,6 +221,13 @@ def search_result(request: HttpRequest):
         if result.state != 1:
             continue
 
+        results_after.append(result)
+        if results_after.__len__() == 10:
+            break
+
+    results_after = results_after[start:end]
+
+    for result in results_after:
         expert = Expert.objects.filter(results__id=result.id)[0]
         user = User.objects.get(expert_info__id=expert.id)
 
@@ -221,6 +259,7 @@ def search_mixture(request: HttpRequest):
     data = request.GET.dict()
     key_word = data.get('key_word')
     key_words = ''
+    page = data.get('page')
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
     data_res = []
@@ -238,6 +277,11 @@ def search_mixture(request: HttpRequest):
         # print(results.count())
     else:
         results = Results.objects.all()
+
+    start = 5 * (page - 1)
+    end = 5 * page
+
+    results = results[start:end]
 
     for result in results:
 
@@ -260,7 +304,7 @@ def search_mixture(request: HttpRequest):
             "expert_icon": str(user.icon)
         }
         data_res.append(result_info)
-    # data_res = data_res[:5]
+
 
     data_ent = []
     enterprises = Enterprise_info.objects.none()
@@ -277,6 +321,9 @@ def search_mixture(request: HttpRequest):
         # print(enterprises.count())
     else:
         enterprises = Enterprise_info.objects.all()
+
+    enterprises = enterprises[start:end]
+
     for enterprise in enterprises:
 
         user = User.objects.get(enterprise_info=enterprise.id)
@@ -296,7 +343,6 @@ def search_mixture(request: HttpRequest):
             "userpic": str(user.icon)
         }
         data_ent.append(enterprise_info)
-    # data_ent = data_ent[:5]
 
     data_exp = []
     experts = Expert.objects.none()
@@ -314,6 +360,9 @@ def search_mixture(request: HttpRequest):
         # print(experts.count())
     else:
         experts = Expert.objects.all()
+
+    experts = experts[start:end]
+
     for expert in experts:
         # print(expert)
         user = User.objects.get(expert_info=expert.id)

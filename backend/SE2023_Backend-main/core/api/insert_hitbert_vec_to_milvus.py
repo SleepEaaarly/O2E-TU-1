@@ -87,7 +87,8 @@ c_name = "O2E_NEED"
 rst = get_all_entity(d_name)
 inp = [[r[1], r[0]] for r in rst]
 # print(pap_titles)
-hit = HitBert(hitModelPath="E:\\lcm\\Course\\软件工程\\代码\\O2E-TU-1\\backend\\SE2023_Backend-main\\resource\\bert", device="cpu")
+hit = HitBert(hitModelPath="D:\\大学学习\\大三下\\软件工程\\O2E-TU-1\\backend\\SE2023_Backend-main\\model.pt", device="cpu")
+disconnect_milvus()
 get_milvus_connection()
 for i in inp:
     get_milvus_connection()
@@ -98,16 +99,3 @@ for i in inp:
     disconnect_milvus()
     update_vector(d_name, str(mid[0]), i[1])
 
-# m = ContrastiveSciBERT(128, 25.0)
-# key_vector = m.get_embeds(pap_titles)
-
-
-
-
-'''
-get_milvus_connection()
-
-print(list(rst[0:2]))
-m_id = milvus_insert("O2E_PAPER", list(rst[0:2]))
-print(m_id)
-'''
