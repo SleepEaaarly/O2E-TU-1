@@ -251,6 +251,8 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     print('check milvus connection:[1]')
     print('Papers:')
     print(papers)
+    if not papers:
+        return success_api_response({"results": []})
     titles = []
     for paper in papers:
         titles.append(paper.title)
@@ -289,6 +291,8 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
 def result_recommend_for_enterprise(request: HttpRequest, id: int):
     get_milvus_connection()
     needs = Need.objects.filter(enterprise_id=id)
+    if not needs:
+        return success_api_response({"results": []})
     titles = []
     for need in needs:
         titles.append(need.title)
