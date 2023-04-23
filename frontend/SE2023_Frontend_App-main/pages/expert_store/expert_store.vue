@@ -49,7 +49,7 @@ import loadMore from '../../components/common/load-more.vue'
 				chosen_area: '',
 				chosen_title: '',
 				searchText: '',
-				cur_page: 0,
+				cur_page: 1,
 				loadtext:'',
 				windowHeight: 100,
 				institution_list: [
@@ -105,7 +105,7 @@ import loadMore from '../../components/common/load-more.vue'
 		},
 		onPullUpRefresh(){
 				
-			if(this.cur_page > 0){
+			if(this.cur_page > 1){
 				this.cur_page = this.cur_page - 1
 				this.requestData()
 			}

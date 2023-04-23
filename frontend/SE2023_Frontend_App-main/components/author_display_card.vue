@@ -66,6 +66,10 @@
 		margin-left: 10px;
 		margin-top: 5px;
 		margin-bottom: 5px;
-		width: auto;
+		width: 90%;
+		text-overflow:ellipsis;
+		overflow:hidden;
+		white-space:nowrap;
 	}
+
 </style>

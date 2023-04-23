@@ -47,11 +47,11 @@
 					loadtext: '没有更多数据了',
 					id: 'recommend',
 					list: [
-							//{
-					 		// 'area': '信息技术',
-					 		// 'address': '北京市朝阳区',
-					 		// 'title': '中航工业'
-							//}
+							{
+					 		'area': '信息技术',
+					 		'address': '北京市朝阳区',
+					 		'title': '中航工业'
+							}
 					]
 				},
 			}
