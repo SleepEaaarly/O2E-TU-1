@@ -38,6 +38,8 @@ import { getWorkList } from "@/api/work_store.js"
 				chosen_period: '',
 				chosen_area: '',
 				searchText: '',
+				cur_page: 1,
+				finish_getting: false,
 				area_list: [
 					"信息技术", "装备制造", "新材料", "新能源", "节能环保", "生物医药", "科学创意", "检验检测", "其他"
 				],
@@ -91,6 +93,8 @@ import { getWorkList } from "@/api/work_store.js"
 		},
 		onShow() {		//页面加载,一个页面只会调用一次
 			console.log('works-onShow()')
+			this.finish_getting = false
+			this.recommendList.list = []
 			this.requestData()
 		},
 		onLoad() {		//页面显示,每次打开页面都会调用一次
@@ -106,6 +110,11 @@ import { getWorkList } from "@/api/work_store.js"
 			searchText(newVal, oldVal) {
 				this.requestData()
 			}
+		},
+		onPageScroll(res) {
+			// console.log("页面滚动了")
+			this.requestData()
+			uni.$emit('onPageScroll', res.scrollTop);
 		},
 		methods: {
 			navToEntry(){
@@ -125,13 +134,23 @@ import { getWorkList } from "@/api/work_store.js"
 				 })
 			},
 			async requestData() {
+				if(this.finish_getting){
+					console.log('finish getting data')
+					return
+				}
 				try {
 					let paras = {
 						"field": this.chosen_area,
 						"period": this.chosen_period,
-						"key_word": this.searchText
+						"key_word": this.searchText,
+						"page": this.cur_page
 					}
-					this.recommendList.list = await getWorkList(paras)
+					var work_list = await getWorkList(paras)
+					if(work_list.length===0||work_list==null||work_list==[]||work_list=={}){
+						this.finish_getting = true
+					}
+					this.recommendList.list = this.recommendList.list.concat(work_list)
+					this.cur_page = this.cur_page + 1
 				} catch (e) {
 					console.log(e)
 					return

@@ -105,7 +105,7 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
     address = data.get('address')
 
     # page从第1页开始
-    page = data.get('page')
+    page = int(data.get('page'))
 
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
@@ -184,7 +184,7 @@ def search_result(request: HttpRequest):
     key_word = data.get('key_word')
     period = data.get('period')
     field = data.get('field')
-    page = data.get('page')
+    page = int(data.get('page'))
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
