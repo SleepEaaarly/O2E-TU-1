@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import torch
 from transformers import BertModel, BertTokenizer
@@ -28,8 +30,9 @@ from core.api.milvus_utils import (
 from core.models.user import User
 from core.models.results import Results
 
-RES_PATH = "../../resource"
-
+RES_PATH = os.path.abspath(os.getcwd()).split("\\core\\api")[0] + "\\resource"
+# print(RES_PATH)
+# assert 0
 
 class HitBert:
     def __init__(self, hitModelPath, device):
