@@ -6,6 +6,9 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 
 from core.models import Papers, Patents, Projects, User, Expert, Results, ResMultipic
+from core.api.milvus_utils import milvus_insert, get_milvus_connection, disconnect_milvus
+from core.api.ai_chat import get_hitbert_embedding
+from core.api.ai_recommend import get_scibert_embedding
 
 '''
     add paper
@@ -223,6 +226,14 @@ def agree_result(request:HttpRequest, id:int):
     if result.state != 0:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
     result.state = 1
+    hit_vec = get_hitbert_embedding(result.title)
+    sci_vec = get_scibert_embedding(result.title)
+    get_milvus_connection()
+    mid_hit = milvus_insert("O2E_EXPERT_HIT", data=[[hit_vec], [id]])
+    mid_sci = milvus_insert("O2E_EXPERT", data=[[sci_vec], [id]])
+    disconnect_milvus()
+    result.vector_sci = mid_sci[0]
+    result.vector_hit = mid_hit[0]
     result.save()
     
     return success_api_response("success")

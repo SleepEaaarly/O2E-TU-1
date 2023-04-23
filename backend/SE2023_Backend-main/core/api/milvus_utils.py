@@ -135,7 +135,7 @@ def milvus_query_need_by_id(query):
 
 def milvus_query_result_by_id(query):
     """
-    根据id获取成果ID
+    根据id（scibert）获取成果ID
     """
     collection = Collection("O2E_RESULT")
     res = collection.query(
@@ -184,3 +184,46 @@ def milvus_query_enterprise_by_id(query):
     )
     return res
 
+
+def milvus_query_result_hit_by_id(query):
+    """
+    根据id（hitbert）获取成果ID
+    """
+    collection = Collection("O2E_RESULT_HIT")
+    res = collection.query(
+        expr=query,
+        output_fields=["result_id"],
+        consistency_level="Strong"
+    )
+    return res
+
+
+if __name__ == '__main__':
+    get_milvus_connection()
+    milvus_id = FieldSchema(
+        name="milvus_id",
+        dtype=DataType.INT64,
+        is_primary=True,
+        auto_id=True
+    )
+    result_hit_vector = FieldSchema(
+        name="vector",
+        dtype=DataType.FLOAT_VECTOR, dim=768
+    )
+    result_id = FieldSchema(
+        name="result_id",
+        dtype=DataType.INT64
+    )
+    schema = CollectionSchema(
+        fields=[milvus_id, result_hit_vector],
+        description="O2E_RESULT_HIT"
+    )
+    collection_name = "O2E_RESULT_HIT"
+    collection = Collection(
+        name=collection_name,
+        schema=schema,
+        using='default',
+        # shards_num=2,
+        # consistency_level="Strong"
+    )
+    disconnect_milvus()

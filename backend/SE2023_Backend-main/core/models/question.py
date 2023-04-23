@@ -9,4 +9,4 @@ class Question(models.Model):
     question = models.TextField(blank=True, null=True)
     ans = models.TextField(blank=True, null=True)
     multipic = models.ManyToManyField(to=QuesMultipic, related_name="question_multipic")
-    vector = models.TextField(blank=True, null=True)
+    vector_hit = models.TextField(blank=True, null=True)
