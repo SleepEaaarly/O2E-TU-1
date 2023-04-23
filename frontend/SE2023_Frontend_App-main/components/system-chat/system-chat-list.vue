@@ -18,22 +18,36 @@
                 <system-chat-card v-if="item.type == 'card'" :cardInfo="item.cardInfo" class="system-chat-card"></system-chat-card> 
                 <!-- 报告 -->
                 <require_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'need'"
-                
+                    :id="item.reportInfo.reportId"
+                    :title="item.reportInfo.reportTitle"
+                    :companyName="item.reportInfo.reportName"
+                    :companyLogoPath="item.reportInfo.reportLogoPath"
+                    :intro="item.reportInfo.reportInfo"
+                    :time="item.reportInfo.time"
                 >
 
                 </require_message_card>
                 
                 <work_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'work'"
-                
+                    :id="item.reportInfo.reportId"
+                    :title="item.reportInfo.reportTitle"
+                    :expertName="item.reportInfo.reportName"
+                    :expertLogoPath="item.reportInfo.reportLogoPath"
+                    :intro="item.reportInfo.reportInfo"
+                    :time="item.reportInfo.time"
                 >
 
                 </work_message_card>
 
-                <order_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'order'"
-                
-                >
-                
-                </order_message_card>
+                <!-- <order_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'order'">
+                </order_message_card> -->
+
+                <order_message_card v-if="item.type=='report' && item.reportInfo.reportType=='order'"
+					:id="item.reportInfo.reportId"
+					:title="item.reportInfo.reportTitle"
+					:intro="item.reportInfo.reportInfo"
+					:time="item.reportInfo.time"
+				></order_message_card>
             </view>
             <!-- 点击头像跳转到自己主页 -->
         </view>
@@ -68,15 +82,15 @@
                 console.log(this.item)
                 this.$emit('goToUserInfo', this.item.uid)
             },
-            gotoWorkReportDetail() {
-                uni.navigateTo({url: '../../pages/work_report/work_report?reportId=' + this.item.reportInfo.reportId})
-            },
-            gotoRequireReportDetail() {
-                uni.navigateTo({url: '../../pages/require_report/require_report?reportId=' + this.item.reportInfo.reportId})
-            },
-            gotoOrderReportDetail() {
-                uni.navigateTo({url: '../../pages/order_report/order_report?reportId=' + this.item.reportInfo.reportId})
-            }
+            // gotoWorkReportDetail() {
+            //     uni.navigateTo({url: '../../pages/work_report/work_report?reportId=' + this.item.reportInfo.reportId})
+            // },
+            // gotoRequireReportDetail() {
+            //     uni.navigateTo({url: '../../pages/require_report/require_report?reportId=' + this.item.reportInfo.reportId})
+            // },
+            // gotoOrderReportDetail() {
+            //     uni.navigateTo({url: '../../pages/order_report/order_report?reportId=' + this.item.reportInfo.reportId})
+            // }
         },
     }
 
