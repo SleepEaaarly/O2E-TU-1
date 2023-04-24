@@ -32,6 +32,6 @@ return request(url, METHOD.POST, params)
 }
 
 export const getWorkUnaudited = (page) => {
-    const url = BASE_URL_IP + `api/result/all/unaudited/${page}`
+    const url = `${BASE_URL_IP}/api/result/all/unaudited/${page}`
 return request(url, METHOD.GET)
 }

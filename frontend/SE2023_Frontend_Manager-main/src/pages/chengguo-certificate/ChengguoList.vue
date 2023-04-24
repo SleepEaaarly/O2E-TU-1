@@ -68,7 +68,7 @@ export default {
             //翻页
             pagination: {
                 onChange: (page) => {
-                console.log(page);
+                    console.log(page);
                 },
                 pageSize: 10,
             },
@@ -94,7 +94,7 @@ export default {
         },
         loadPost: function () {
             this.loading = true;
-            getWorkUnaudited(this.pagination.current, "get").then((res) => {
+            getWorkUnaudited(this.pagination.current).then((res) => {
                 console.log(res);
                 console.log(res.data.data)
                 this.listData.length = 0;
