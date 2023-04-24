@@ -302,7 +302,7 @@ def generate_requirement_report_card(request: HttpRequest):
     print("need", involved_need)
     new_report_message_id = ReportMessage.new_report_message(owner=owner, info=involved_report.content,
                                                              report_type=ReportMessage.NEED, title=involved_need.title,
-                                                             name=involved_need.enterprise.name,avatar="",involved_id=requirement_id)
+                                                             name=involved_need.enterprise.enterprise_info.name,avatar="",involved_id=requirement_id)
     print("card_message_id", new_report_message_id)
     t=system_chatroom.add_message(new_report_message_id)
     print(t)
