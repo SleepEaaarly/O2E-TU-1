@@ -9,7 +9,7 @@ from core.models.user import User
 
 
 @response_wrapper
-# @jwt_auth()
+@jwt_auth()
 @require_GET
 def get_profile(request: HttpRequest):
     data: dict = request.GET.dict()
