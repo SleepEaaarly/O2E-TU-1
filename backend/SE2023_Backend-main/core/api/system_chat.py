@@ -100,11 +100,15 @@ def get_system_chat(request: HttpRequest):
         # type, message, cardInfo
         a_message['type'] = m.type
         if(m.type == 'card'):
-            a_message['cardInfo'] = CardMessage(m).generate_card()
+            a_message['cardInfo'] = m.generate_card()
         elif(m.type == 'report'):
-            a_message['reportInfo'] = ReportMessage(m).generate_card()
+            print(m)
+            n:ReportMessage = ReportMessage.objects.get(id=m.id)
+            a_message['reportInfo'] = n.generate_card()
+            print(a_message['reportInfo'])
         else:
             a_message['message'] = m.content
+        print(a_message)
         # created_at
         a_message['created_at'] = m.get_create_time()
         messages.append(a_message)
