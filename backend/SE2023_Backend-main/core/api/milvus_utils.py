@@ -1,4 +1,4 @@
-from pymilvus import connections
+from pymilvus import connections, drop_collection
 from pymilvus import CollectionSchema, FieldSchema, DataType, Collection
 
 _HOST = '116.63.14.146'
@@ -19,25 +19,28 @@ def disconnect_milvus():
     connections.disconnect("default")
 
 
-def create_milvus_collection():
+def create_milvus_collection(db_id_name, collection_name, vec_dim):
     """
-    建⽴Milvus连接
+    新建Milvus集合
     """
+    get_milvus_connection()
     milvus_id = FieldSchema(
         name="milvus_id",
         dtype=DataType.INT64,
         is_primary=True,
         auto_id=True
     )
-    paper_vector = FieldSchema(
+    vector = FieldSchema(
         name="vector",
-        dtype=DataType.FLOAT_VECTOR, dim=128
+        dtype=DataType.FLOAT_VECTOR, dim=vec_dim
+    )
+    db_id = FieldSchema(
+        name=db_id_name,
+        dtype=DataType.INT64
     )
     schema = CollectionSchema(
-        fields=[milvus_id, paper_vector],
-        description="O2E_TEMP"
+        fields=[milvus_id, vector, db_id],
     )
-    collection_name = "O2E_TEMP"
     collection = Collection(
         name=collection_name,
         schema=schema,
@@ -47,12 +50,34 @@ def create_milvus_collection():
     )
 
 
+def del_milvus_collection(name):
+    """
+    删除指定collection
+    """
+    drop_collection(name)
+
+
 def get_milvus_collection(name):
     """
     获取指定collection
     """
     collection = Collection(name)
     return collection
+
+
+def discribe_milvus_collection(name):
+    """
+    展示collection信息
+    """
+    collection = Collection(name)
+    # collection.load(verbose=True)
+
+    # 获取集合属性并访问 'num_entities' 属性
+    desc = collection.describe()
+    # print(desc)
+    num_entities = collection.num_entities
+
+    print(f'集合 {name} 中有 {num_entities} 个向量')
 
 
 def milvus_insert(collection_name, data, partition_name=None):
@@ -200,37 +225,11 @@ def milvus_query_result_hit_by_id(query):
 
 
 if __name__ == '__main__':
+    from pymilvus import drop_collection, list_collections
     get_milvus_connection()
-    # milvus_id = FieldSchema(
-    #     name="milvus_id",
-    #     dtype=DataType.INT64,
-    #     is_primary=True,
-    #     auto_id=True
-    # )
-    # result_hit_vector = FieldSchema(
-    #     name="vector",
-    #     dtype=DataType.FLOAT_VECTOR, dim=768
-    # )
-    # question_id = FieldSchema(
-    #     name="question_id",
-    #     dtype=DataType.INT64
-    # )
-    # result_hit_id = FieldSchema(
-    #     name="result_id",
-    #     dtype=DataType.INT64
-    # )
-    # schema = CollectionSchema(
-    #     fields=[milvus_id, result_hit_vector],
-    #     description="SET_QUESTION_HIT"
-    # )
-    # collection_name = "SET_QUESTION_HIT"
-    # collection = Collection(
-    #     name=collection_name,
-    #     schema=schema,
-    #     # using='default',
-    #     # shards_num=2,
-    #     # consistency_level="Strong"
-    # )
-
-
+    names = list_collections()
+    print(names)
+    for name in names:
+        print()
+        discribe_milvus_collection(name)
     disconnect_milvus()
