@@ -6,8 +6,15 @@ from core.models import Question
 from core.api.milvus_utils import milvus_search, milvus_query_set_question_by_id, get_milvus_connection
 from django.views.decorators.http import require_POST, require_GET
 
+import requests
 import copy
 from copy import deepcopy
+from core.models.ai_report import AIReport
+from core.models.card_message import CardMessage
+from core.models.system_chat import SystemChatroom
+
+from django.utils import timezone
+import pytz
 
 import traceback
 from ltp import LTP
@@ -30,6 +37,15 @@ from core.models.results import Results
 RES_PATH = "../../resource"
 
 
+def get_now_time():
+    """获取当前时间"""
+    tz = pytz.timezone('Asia/Shanghai')
+    # 返回时间格式的字符串
+    now_time = timezone.now().astimezone(tz=tz)
+    now_time_str = now_time.strftime("%Y-%m-%d %H:%M:%S")
+    return now_time_str
+
+
 class HitBert:
     def __init__(self, hitModelPath, device):
         self.hit_tokenizer = BertTokenizer.from_pretrained(hitModelPath)
@@ -42,13 +58,17 @@ class HitBert:
         encode_tensors = self.hit_tokenizer.encode_plus(sent, add_special_tokens=True, return_tensors='pt',
                                                         max_length=None)
         input_ids = encode_tensors['input_ids']
-        lengths = torch.from_numpy(np.array([input_ids.shape[1] for _ in range(input_ids.shape[0])])).float()
+        lengths = torch.from_numpy(
+            np.array([input_ids.shape[1] for _ in range(input_ids.shape[0])])).float()
         # padding_mask = get_padding_mask(lengths)  # transformers==2.3.0
         padding_mask = encode_tensors['attention_mask']  # transformers>3.0
         with torch.no_grad():
-            outputs = self.hit_model(input_ids.to(self.device), attention_mask=padding_mask.to(self.device))[0]
-            outputs.masked_fill_(padding_mask[:, :, None].to(self.device) == 0, 0)
-            outputs = outputs[:, 1:-1, :].sum(dim=1).to(self.device) / (lengths[:, None] - 2).to(self.device)
+            outputs = self.hit_model(input_ids.to(
+                self.device), attention_mask=padding_mask.to(self.device))[0]
+            outputs.masked_fill_(
+                padding_mask[:, :, None].to(self.device) == 0, 0)
+            outputs = outputs[:, 1:-1, :].sum(dim=1).to(
+                self.device) / (lengths[:, None] - 2).to(self.device)
         # return outputs[0].cpu().numpy().tolist()
         return outputs
 
@@ -380,12 +400,15 @@ class Recognizer:
 
 hit = HitBert(hitModelPath=RES_PATH + "/bert", device="cpu")
 
-sentence_replace_dict = read_json_data(RES_PATH + "/sentence_replace_dict.json")
+sentence_replace_dict = read_json_data(
+    RES_PATH + "/sentence_replace_dict.json")
 word_replace_dict = read_json_data(RES_PATH + "/word_replace_dict.json")
 ltpParticipleDict = []  # todo: 要从数据库得到
-process = Preprocessor(sentence_replace_dict, word_replace_dict, "small", 4, ltpParticipleDict)
+process = Preprocessor(sentence_replace_dict,
+                       word_replace_dict, "small", 4, ltpParticipleDict)
 
-recognizer = Recognizer(hit, ques_thresh=0.7, exp_thresh=0.9, ent_thresh=0.9, res_thresh=0.7)
+recognizer = Recognizer(hit, ques_thresh=0.7,
+                        exp_thresh=0.9, ent_thresh=0.9, res_thresh=0.7)
 
 
 @require_GET
@@ -495,6 +518,16 @@ def answer_free_question(request: HttpRequest):
         }
     }
 
+    user_id = data.get("uId")
+    sender: User = User.objects.get(id=user_id)
+    system_chatroom: SystemChatroom = None
+    if sender.system_chatroom_list.all().exists():
+        system_chatroom = sender.system_chatroom_list.get().id
+    else:
+        system_chatroom = SystemChatroom(owner=sender, isai=SystemChatroom.MANUAL_REPLY,
+                                         last_message_time=get_now_time(), unread_message_num=0)
+        system_chatroom.save()
+
     # 注：当result2["direct"] == "True"时，不需要查数据库，直接跳过该步骤
     # (1)
     #   在result2["entity"][?]拿id --> 数据库查这个id的属性 --> 把查到的东西拼接成一段话，放进final["answer"]
@@ -510,18 +543,46 @@ def answer_free_question(request: HttpRequest):
             info_str, card_info = expert_to_info_str(exp_id)
             final["answer"] += info_str
             final["card"]["expert"].append(card_info)
+            new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
+                                                               card_type=0, title=card_info['title'],
+                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
+            system_chatroom.add_message(new_card_message_id)
 
         for ent_id in result2["entity"]["enterprise"]:
             info_str, card_info = enterprise_to_info_str(ent_id)
             final["answer"] += info_str
             final["card"]["enterprise"].append(card_info)
+            new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
+                                                               card_type=1, title=card_info['title'],
+                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
+            system_chatroom.add_message(new_card_message_id)
 
         for rst_id in result2["entity"]["result"]:
             info_str, card_info = result_to_info_str(rst_id)
             final["answer"] += info_str
             final["card"]["result"].append(card_info)
+            new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
+                                                               card_type=3, title=card_info['title'],
+                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
+            system_chatroom.add_message(new_card_message_id)
 
     # todo 荆睿涛：
     #   将final["answer"]和question拼接起来送进chatGPT，然后用chatGPT的回复替换final["answer"]的内容
+     # 形成询问prompt
+    demand1 = "请结合已有的信息，回答以下的问题"
+    partial_answer = "其中已知信息为" + final['answer']
+    msg = demand1+partial_answer+", 问题是"+question
+
+    # 整合请求体
+    url = f"https://api.openai.com/v1/chat/completions"
+    headers = {"Content-Type": "application/json",
+               "Authorization": "Bearer $OPEN_API_KEY"}
+    sent_data = []
+    sent_data['model'] = "gpt-3.5-turbo"
+    sent_data['message'] = {"role": "user", "content": msg.encode("utf-8")}
+    sent_data['temperature'] = 0.7
+    response = requests.post(url, headers=headers, data=sent_data)
+
+    final['answer'] = response.content.decode('utf-8')
 
     return success_api_response(final)

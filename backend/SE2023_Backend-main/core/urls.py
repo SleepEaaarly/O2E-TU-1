@@ -69,6 +69,9 @@ from core.api.admin_entity import get_all_result_info, change_result_info, delet
 from core.api.order_report import get_order_report
 
 from core.api.ai_report import generate_requirement_report, generate_result_report, get_requirement_report, get_result_report
+
+from core.api.ai_report import generate_requirement_report_card, generate_result_report_card
+
 urlpatterns = [
 
     # user apis
@@ -299,7 +302,10 @@ urlpatterns = [
 
     path("need_report/get", generate_result_report),
 
-    path("need_report/generate", get_result_report)
-
-
+    path("need_report/generate", get_result_report),
+    
+    path("work_report/generateCard", generate_result_report_card),
+    
+    path("need_report/generateCard", generate_requirement_report_card),
+    
 ]

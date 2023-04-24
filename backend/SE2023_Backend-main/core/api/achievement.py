@@ -6,6 +6,7 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 
 from core.models import Papers, Patents, Projects, User, Expert, Results, ResMultipic
+from core.api.ai_report import generate_result_report
 
 '''
     add paper
@@ -214,27 +215,32 @@ def add_result(request: HttpRequest):
 """
 应该添加一个认证成功提示
 """
-#@jwt_auth()
+# @jwt_auth()
+
+
 @response_wrapper
 @require_http_methods('GET')
-def agree_result(request:HttpRequest, id:int):
+def agree_result(request: HttpRequest, id: int):
     print(id)
     result = Results.objects.get(id=id)
     if result.state != 0:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
     result.state = 1
     result.save()
-    
+    # 审核通过后将生成成果报告
+    generate_result_report(result.id)
     return success_api_response("success")
 
 
 """
 应该添加一个认证失败提示
 """
-#@jwt_auth()
+# @jwt_auth()
+
+
 @response_wrapper
 @require_http_methods('GET')
-def refuse_result(request:HttpRequest, id:int):
+def refuse_result(request: HttpRequest, id: int):
     result = Results.objects.get(id=id)
     print(1)
     if result.state != 0:
@@ -245,7 +251,7 @@ def refuse_result(request:HttpRequest, id:int):
     return success_api_response("success")
 
 
-#@jwt_auth()
+# @jwt_auth()
 @response_wrapper
 @require_GET
 def get_resultInfo(request: HttpRequest, id: int):
@@ -283,4 +289,3 @@ def get_resultInfo(request: HttpRequest, id: int):
         "expert_email": user.email,
         "result_multipic": m_list,
     })
-
