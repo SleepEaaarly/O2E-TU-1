@@ -58,7 +58,7 @@ class ReportMessage(SystemMessage):
 
     def generate_card(self):
         return {
-            "reportType": REPORT_TYPE[self.report_type],
+            "reportType": self.REPORT_TYPE[self.report_type],
             "reportId": self.report_belong_id,
             "reportTitle": self.report_title,
             "reportLogoPath": self.report_logo_path,
