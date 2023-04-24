@@ -93,7 +93,7 @@
 			},
 			async initDat() {
 				if (this.userInfo && this.userInfo.id) {
-					let userProfile = await getUserProfile()
+					let userProfile = await getUserProfile(this.userInfo.id)
 					console.log(userProfile)
 					this.needdata[0].num = userProfile.total_post
 					this.needdata[1].num = userProfile.total_comment

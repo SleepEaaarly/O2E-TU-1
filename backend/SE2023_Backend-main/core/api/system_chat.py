@@ -36,7 +36,8 @@ from core.models import SwitchMessage, ImageMessage
 @response_wrapper
 def create_system_chat(request: HttpRequest):
 
-    data: dict = parse_data(request)
+    # data: dict = parse_data(request)
+    data: dict = request.POST.dict()
     if not data:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
                                    "Invalid request args.")
@@ -132,6 +133,7 @@ def get_system_chat(request: HttpRequest):
 @response_wrapper
 def push_system_message(request: HttpRequest):
     data: dict = parse_data(request)
+    # data: dict = request.POST.dict()
     user: User = User.objects.get(id=data.get('uId'))
     content = data.get('content')
     # 暂时约定平台方为None

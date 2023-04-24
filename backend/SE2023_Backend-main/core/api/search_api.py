@@ -24,7 +24,6 @@ def search_expert(request: HttpRequest, *args, **kwargs):
 
     page = int(data.get('page'))
 
-
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
@@ -46,13 +45,9 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     else:
         experts = Expert.objects.all()
 
-
-    # experts = experts[start:end]
-
     start = 10 * (page - 1)
     end = 10 * page
     experts_after = []
-
 
     for expert in experts:
         # print(expert.field)
@@ -72,7 +67,7 @@ def search_expert(request: HttpRequest, *args, **kwargs):
             if title not in expert.title:
                 continue
         experts_after.append(expert)
-        if experts_after.__len__() == 10:
+        if experts_after.__len__() == end:
             break
 
     experts_after = experts_after[start:end]
@@ -91,7 +86,10 @@ def search_expert(request: HttpRequest, *args, **kwargs):
         }
     #    print(expert.id)
         data_results.append(expert_info)
-
+    print('dis')
+    print(page)
+    print(data)
+    print(data_results)
     return success_api_response({"data": data_results})
 
 
@@ -127,7 +125,6 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
     else:
         enterprises = Enterprise_info.objects.all()
 
-
     start = 10 * (page - 1)
     end = 10 * page
 
@@ -147,7 +144,7 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
             if field not in enterprise.field:
                 continue
         enterprises_after.append(enterprise)
-        if enterprises_after.__len__() == 10:
+        if enterprises_after.__len__() == end:
             break
 
     enterprises_after = enterprises_after[start:end]
@@ -173,6 +170,7 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
 
     
     # data_results = data_results[:10]
+
     return success_api_response({"data": data_results})
 
 
@@ -222,7 +220,7 @@ def search_result(request: HttpRequest):
             continue
 
         results_after.append(result)
-        if results_after.__len__() == 10:
+        if results_after.__len__() == end:
             break
 
     results_after = results_after[start:end]
@@ -247,7 +245,10 @@ def search_result(request: HttpRequest):
             "expert_icon": str(user.icon)
         }
         data_results.append(result_info)
-    # print('debug 6')
+    print('dis')
+    print(page)
+    print(data)
+    print(data_results)
     # data_results = data_results[:10]
     return success_api_response({"data": data_results})
 
@@ -259,7 +260,7 @@ def search_mixture(request: HttpRequest):
     data = request.GET.dict()
     key_word = data.get('key_word')
     key_words = ''
-    page = data.get('page')
+    page = int(data.get('page'))
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
     data_res = []

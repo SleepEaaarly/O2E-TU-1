@@ -1,5 +1,6 @@
 import datetime
-
+from django.utils import timezone
+import pytz
 def format_time(time):
     # 格式化时间，2019-09-09 12:23:33
     # 去掉毫秒
@@ -46,6 +47,10 @@ def get_order_state(state):
     }
     return ORDER_STATE[state]
 
-def get_now_time(): 
-    # 获取标准格式的当前时间
-    return datetime.datetime.now()
+def get_now_time():
+    """获取当前时间"""
+    tz = pytz.timezone('Asia/Shanghai')
+    # 返回时间格式的字符串
+    now_time = timezone.now().astimezone(tz=tz)
+    now_time_str = now_time.strftime("%Y-%m-%d %H:%M:%S")
+    return now_time_str

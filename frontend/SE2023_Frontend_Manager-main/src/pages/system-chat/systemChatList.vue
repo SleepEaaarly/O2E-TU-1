@@ -61,6 +61,19 @@
 												<!-- 图像 -->
 												<a-row v-if="item.type == 'img'" :src="item.message" mode="widthFix" lazy-load></a-row>
 												<!-- 卡片 -->
+												<a-row v-if="item.type == 'card' && item.cardInfo.cardType == 'expert'">
+													[卡片信息]专家名称：{{ item.cardInfo.title }}<br>
+													专家信息：{{ item.cardInfo.info }}
+												</a-row>
+												<a-row v-if="item.type == 'card' && item.cardInfo.cardType == 'enterprise'">
+													[卡片信息]企业名称：{{ item.cardInfo.title }}<br>
+													专家信息：{{ item.cardInfo.info }}
+												</a-row>
+												<a-row v-if="item.type == 'card' && item.cardInfo.cardType == 'demand'">{{item.message}}</a-row>
+												<a-row v-if="item.type == 'card' && item.cardInfo.cardType == 'technique'">{{item.message}}</a-row>
+												<a-row v-if="item.type == 'report' && item.reportInfo.reportType == 'work'">{{item.message}}</a-row>
+												<a-row v-if="item.type == 'report' && item.reportInfo.reportType == 'need'">{{item.message}}</a-row>
+												<a-row v-if="item.type == 'report' && item.reportInfo.reportType == 'order'">{{item.message}}</a-row>
 												<!-- 待会实现 -->
 												
 											</a-row>

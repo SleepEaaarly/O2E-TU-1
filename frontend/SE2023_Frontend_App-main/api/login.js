@@ -15,6 +15,7 @@ import axios from '@/config/requestConfig.js';
 // }
 
 export const login = async(data) => {
+	console.log(data)
   let result = await axios.post('token-auth',data)
   console.log(result)
   return result

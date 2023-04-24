@@ -5,6 +5,7 @@ from .utils import (failed_api_response, ErrorCode,
 from core.api.auth import jwt_auth
 from django.views.decorators.http import require_http_methods
 from core.models import User, Results
+from django.db.models import Q
 
 
 @response_wrapper
@@ -76,7 +77,7 @@ def change_result_info(request: HttpRequest):
     content = data.get('content')
     state = data.get('state')
     abstract = data.get('abstract')
-    
+
     rst = Results.objects.filter(pk=pid).first()
 
     print(pid, title, scholars, period, field)
@@ -95,3 +96,24 @@ def change_result_info(request: HttpRequest):
     return success_api_response({"result": "Ok, the user info has been changed."})
 
 '''
+
+
+@response_wrapper
+@require_http_methods('POST')
+def search_result_by_name(request: HttpRequest):
+    data = parse_data(request)
+    title = data.get('title')
+    page = int(data.get('page'))
+    results = Results.objects.filter(Q(title__icontains=title))
+
+    start = 10 * (page - 1)
+    end = 10 * page
+
+    d = list()
+    for rst in results:
+        d.append(rst.to_dict())
+    return success_api_response({
+        "page_num": page,
+        "data": d
+    })
+

@@ -12,7 +12,7 @@ export const getUserInfo = async (data) => {
 	let headers = {
 		"Authorization":'Bearer ' + uni.getStorageSync('token')
 	}
-	let result = await axios.get('user/profile',data,headers);
+	let result = await axios.post('user/profile',data,headers);
 	return result
 }
 
