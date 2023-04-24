@@ -1,5 +1,5 @@
 setuptools~=57.5.0
-django
+django==2.2.3
 pylint
 pylint-django
 pyjwt
@@ -20,3 +20,4 @@ torch
 transformers
 pymilvus==2.2.2
 demjson
+ltp

@@ -172,7 +172,10 @@ import loadMore from '../../components/common/load-more.vue'
 		border-radius: 15px;
 		background-color: #f2f2f2;
 		margin-right: 5px;
-		
+		/* font-size: 10rpx; */
 	}
-
+	
+	/* .uni-combox .uni-combox-list .uni-combox-item {
+	    font-size: 6rpx;
+	} */
 </style>
