@@ -229,17 +229,24 @@ def agree_result(request: HttpRequest, id: int):
     if result.state != 0:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
     result.state = 1
+    print('debug 1')
     hit_vec = get_hitbert_embedding(result.title)
     sci_vec = get_scibert_embedding(result.title)
+    print('debug 2')
+
     get_milvus_connection()
-    mid_hit = milvus_insert("O2E_EXPERT_HIT", data=[[hit_vec], [id]])
-    mid_sci = milvus_insert("O2E_EXPERT", data=[[sci_vec], [id]])
+    mid_hit = milvus_insert("O2E_RESULT_HIT", data=[[hit_vec], [id]])
+    mid_sci = milvus_insert("O2E_RESULT", data=[[sci_vec], [id]])
+    print('debug 3')
+
     disconnect_milvus()
     result.vector_sci = mid_sci[0]
     result.vector_hit = mid_hit[0]
+    print('debug 4')
     result.save()
     # 审核通过后将生成成果报告
     generate_result_report(result.id)
+    print('debug 5')
     return success_api_response("success")
 
 
@@ -269,8 +276,8 @@ def get_resultInfo(request: HttpRequest, id: int):
     print('get result info')
     result = Results.objects.get(id=id)
     print(result)
-    if result.state != 1:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
+    # if result.state != 1:
+    #     return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
     print('debug 1')
     expert = Expert.objects.filter(results=id)[0]
     user = User.objects.get(expert_info=expert.id)

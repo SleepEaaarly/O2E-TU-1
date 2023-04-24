@@ -167,6 +167,7 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
 
     
     # data_results = data_results[:10]
+
     return success_api_response({"data": data_results})
 
 
@@ -241,7 +242,10 @@ def search_result(request: HttpRequest):
             "expert_icon": str(user.icon)
         }
         data_results.append(result_info)
-    # print('debug 6')
+    print('dis')
+    print(page)
+    print(data)
+    print(data_results)
     # data_results = data_results[:10]
     return success_api_response({"data": data_results})
 

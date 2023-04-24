@@ -327,8 +327,8 @@ export default {
 					this.$http.toast('成果标题请勿超过' + this.title_max_length +'字！')
 				}                
                 validate_answer = false
-            } else if (data.description === '' || data.description.length > this.abstract_max_length) {
-                if(data.description === ''){
+            } else if (data.abstract === '' || data.abstract.length > this.abstract_max_length) {
+                if(data.abstract === ''){
 					this.$http.toast('请详细描述您的成果！')
 				}else{
 					this.$http.toast('成果摘要请勿超过' + this.abstract_max_length +'字！')
@@ -357,7 +357,7 @@ export default {
             } else if (data.period === '') {
                 this.$http.toast('请选择成果阶段！')
                 validate_answer = false
-            } else if (data.multipic.length > this.pics_max_num) {
+            } else if (data.multipic != null && data.multipic.length > this.pics_max_num) {
 				this.$http.toast('附件图片请勿超过' + this.pics_max_num + '张！')
 				validate_answer = false
                 // PDF为可选项   
@@ -370,7 +370,6 @@ export default {
             // 	this.$http.toast('预估人数必须大于0！')
             // 	validate_answer = false
             // }
-			return false
             return validate_answer
         },
         isKeyword: function (key_word) {
@@ -392,19 +391,21 @@ export default {
 					'scholars': this.scholars,
 					'pyear': this.pyear,
 					'content': this.content,
-					'id': this.id
+					'id': this.id,
+					'picture': this.picture,
+					'multipic': this.multipic
 				}
 				console.log(data)
-				let validate_answer = this.validate(data)
-				console.log(data.type)
-				if (validate_answer) {
-					console.log("validate_success!")
-				} else{
-					console.log("fail to validate!")
-					return
-				}
+				// let validate_answer = this.validate(data)
+				// console.log(data.type)
+				// if (validate_answer) {
+				// 	console.log("validate_success!")
+				// } else{
+				// 	console.log("fail to validate!")
+				// 	return
+				// }
 				console.log("start_submit")
-				console.log(this.picture)
+				console.log(this.id)
 				let filelist = []
 				for(let i=0;i<this.multipic.length;i++){
 					filelist.push({name:'multipic', uri:this.multipic[i]})
