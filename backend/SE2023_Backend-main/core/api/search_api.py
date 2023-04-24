@@ -32,7 +32,7 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     experts = Expert.objects.none()
     if key_words != '':
         for key_word in key_words:
-            print(key_word)
+            # print(key_word)
 
             experts = experts.union(Expert.objects.filter(
                 Q(name__icontains=key_word) | Q(organization__icontains=key_word) |
@@ -343,7 +343,7 @@ def search_mixture(request: HttpRequest):
     experts = Expert.objects.none()
     if key_words != '':
         for key_word in key_words:
-            print(key_word)
+            # print(key_word)
 
             experts = experts.union(Expert.objects.filter(
                 Q(name__icontains=key_word) | Q(organization__icontains=key_word) |
