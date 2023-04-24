@@ -546,6 +546,8 @@ def answer_free_question(request: HttpRequest):
             "result": ["成果id1", "成果id2"]
         }
     }
+    for ent in ["expert", "enterprise", "result"]:
+        result2["entity"][ent] = list(set(result2["entity"][ent]))
     final = {
         "code": 200,
         "answer": "",

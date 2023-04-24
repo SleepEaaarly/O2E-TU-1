@@ -60,6 +60,14 @@ class ReportMessage(SystemMessage):
             return -1
 
     def generate_card(self):
+        print("enter report card generation")
+        print(self.report_type)
+        print(self.REPORT_TYPE[self.report_type])
+        print(self.report_belong_id)
+        print(self.report_title)
+        print(self.report_logo_path)
+        print(self.content)
+        print(self.created_at)
         return {
             "reportType": self.REPORT_TYPE[self.report_type],
             "reportId": self.report_belong_id,

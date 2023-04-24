@@ -69,3 +69,6 @@ class SystemMessage(models.Model):
     
     def get_create_time(self):
         return self.created_at.strftime("%Y-%m-%d, %H:%M:%S")
+
+    def generate_card(self):
+        pass
