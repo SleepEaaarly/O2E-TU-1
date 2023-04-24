@@ -51,7 +51,9 @@ class ReportMessage(SystemMessage):
                                              is_to_system=0, read_state=UNREAD,
                                              report_type=report_type, report_belong_id=involved_id,
                                              report_title=title, report_name=name, report_logo_path=avatar)
+            print("report_message step1")
             new_report_message.save()
+            print("report_message step2")
             return new_report_message.id
         except Exception:
             return -1
