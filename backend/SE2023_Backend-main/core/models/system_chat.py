@@ -9,7 +9,6 @@ from .user import User
 from core.api._platform.utils import get_now_time
 
 
-
 class SystemChatroom(models.Model):
     """
     Fields:

@@ -172,7 +172,6 @@ def obtain_jwt_token(request: HttpRequest):
     [method]: POST
     """
     data: dict = json.loads(request.body.decode())
-    # data: dict = request.POST.dict()
     if not data:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
 

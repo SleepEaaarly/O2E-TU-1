@@ -27,7 +27,6 @@ from core.api.interpretation import createInterpretation, INTERPRETATION_API, \
 
 from core.api.user import get_all_user_info, delete_user, change_user_info
 
-
 from core.api._platform.need_api import create_need, get_all_need, get_need_info, get_finished_need, \
     finish_need, get_proceeding_need, edit_need, delete_need, search_need, create_need_contact,\
     get_need_contact, expert_recommend, get_saved_need, transform_need, get_needs_info, get_oneneed_allexperts, admin_delete_need
@@ -63,7 +62,7 @@ from core.api.search_api import search_expert, search_enterprise, search_result,
 from core.api.system_chat import create_system_chat, get_system_chat, push_system_message, \
     system_message_read, alter_systemchat_visible, get_all_system_chatrooms, push_system_message_by_admin
 
-from core.api.admin_entity import get_all_result_info, change_result_info, delete_result
+from core.api.admin_entity import get_all_result_info, change_result_info, delete_result, search_result_by_name
 
 
 from core.api.order_report import get_order_report
@@ -291,6 +290,9 @@ urlpatterns = [
     path('search/enterprise', search_enterprise),
     path('search/result', search_result),
     path('search/mixture', search_mixture),
+
+    # 管理端search
+    path('admin/search/result', search_result_by_name),
 
     # 获得订单报告
     path('order_report/get', get_order_report),

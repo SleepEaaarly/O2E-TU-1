@@ -11,7 +11,7 @@
 			
 			<u-row style="margin-bottom: 10px;">
 				<text class = "workSummary">{{intro}}</text>
-				<image class="logo" :src="workLogoPath" style = "height: 80px;width: 80px;">
+				<image class="logo" :src="workLogoPath" style = "max-height: 80px;max-width: 80px;">
 				</image>
 				
 			</u-row>
