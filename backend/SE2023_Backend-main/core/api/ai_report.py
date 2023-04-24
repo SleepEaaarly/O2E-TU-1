@@ -23,6 +23,8 @@ from core.models.enterprise_info import Enterprise_info
 from core.models.system_chat import SystemChatroom
 from core.api._platform.utils import get_now_time
 from core.models.card_message import CardMessage
+from core.models.report_message import ReportMessage
+from core.models.expert import Expert
 
 """ 调用chatGPT生成需求报告
 
@@ -243,14 +245,17 @@ def generate_result_report_card(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Result ID or bad user id.")
     system_chatroom: SystemChatroom = None
     if owner.system_chatroom_list.all().exists():
-        system_chatroom = owner.system_chatroom_list.get().id
+        system_chatroom = owner.system_chatroom_list.get(owner=user_id)
     else:
         system_chatroom = SystemChatroom(owner=owner, isai=SystemChatroom.MANUAL_REPLY,
                                          last_message_time=get_now_time(), unread_message_num=0)
         system_chatroom.save()
-    new_card_message_id = CardMessage.new_message(owner=owner, is_to_system=0, content=involved_report.content,
-                                                  type=CardMessage.ENTERPRISE)
-    system_chatroom.add_message(new_card_message_id)
+    involved_result:Results= Results.object.get(id=result_id)
+    expert:Expert = involved_result.expert_results.filter(results_id=result_id)
+    new_report_message_id = ReportMessage.new_report_message(owner=owner, info=involved_report.content,
+                                                             report_type=ReportMessage.WORK, title=involved_result.title,
+                                                             name=expert.name,avatar="",involved_id=result_id)
+    system_chatroom.add_message(new_report_message_id)
     return success_api_response()
     
 
@@ -295,10 +300,11 @@ def generate_requirement_report_card(request: HttpRequest):
     print("system_chatroom",system_chatroom)
     involved_need:Need = Need.objects.get(id=requirement_id)
     print("need", involved_need)
-    new_card_message_id = CardMessage.new_card_message(owner=owner, is_to_system=0, content=involved_report.content,
-                                                  title=involved_need.title,card_type=2,avatar="",involved_id=requirement_id)
-    print("card_message_id", new_card_message_id)
-    t=system_chatroom.add_message(new_card_message_id)
+    new_report_message_id = ReportMessage.new_report_message(owner=owner, info=involved_report.content,
+                                                             report_type=ReportMessage.NEED, title=involved_need.title,
+                                                             name=involved_need.enterprise.name,avatar="",involved_id=requirement_id)
+    print("card_message_id", new_report_message_id)
+    t=system_chatroom.add_message(new_report_message_id)
     print(t)
     return success_api_response({})
     
