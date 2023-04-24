@@ -99,10 +99,10 @@ import loadMore from '../../components/common/load-more.vue'
 		onReachBottom() {
 			// this.loadmore()
 		},
-		onPageScroll(res) {
+		onReachBottom(res) {
 			// console.log("页面滚动了")
 			this.requestData()
-			uni.$emit('onPageScroll', res.scrollTop);
+			uni.$emit('onReachBottom', res.scrollTop);
 		},
 		methods: {
 			navToEntry(){
@@ -135,6 +135,7 @@ import loadMore from '../../components/common/load-more.vue'
 					}
 					let ret = await getExpertList(paras)
 					this.cur_page = this.cur_page + 1
+					console.log(this.cur_page)
 					if(ret.length===0||ret==null||ret==[]||ret=={}){
 						this.finish_getting = true
 						return 
@@ -172,7 +173,10 @@ import loadMore from '../../components/common/load-more.vue'
 		border-radius: 15px;
 		background-color: #f2f2f2;
 		margin-right: 5px;
-		
+		/* font-size: 10rpx; */
 	}
-
+	
+	/* .uni-combox .uni-combox-list .uni-combox-item {
+	    font-size: 6rpx;
+	} */
 </style>

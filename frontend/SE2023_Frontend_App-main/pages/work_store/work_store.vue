@@ -111,10 +111,10 @@ import { getWorkList } from "@/api/work_store.js"
 				this.requestData()
 			}
 		},
-		onPageScroll(res) {
+		onReachBottom(res) {
 			// console.log("页面滚动了")
 			this.requestData()
-			uni.$emit('onPageScroll', res.scrollTop);
+			uni.$emit('onReachBottom', res.scrollTop);
 		},
 		methods: {
 			navToEntry(){

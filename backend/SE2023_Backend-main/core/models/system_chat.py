@@ -33,7 +33,9 @@ class SystemChatroom(models.Model):
     # 新加入一条消息
     def add_message(self, message_id: int) -> bool:
         try:
+            print(message_id)
             m = SystemMessage.objects.get(id=message_id)
+            print("system message", m)
             self.messages.add(m)
             print("add message")
             self.last_message_time = get_now_time()
