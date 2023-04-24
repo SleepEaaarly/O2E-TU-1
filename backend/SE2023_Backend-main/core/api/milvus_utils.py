@@ -194,7 +194,7 @@ def milvus_query_expert_by_id(query):
     """
     根据id获取专家ID
     """
-    collection = Collection("O2E_EXPERT")
+    collection = Collection("O2E_EXPERT_HIT")
     res = collection.query(
         expr=query,
         output_fields=["expert_id"],
@@ -207,7 +207,7 @@ def milvus_query_enterprise_by_id(query):
     """
     根据id获取企业ID
     """
-    collection = Collection("O2E_ENTERPRISE")
+    collection = Collection("O2E_ENTERPRISE_HIT")
     res = collection.query(
         expr=query,
         output_fields=["enterprise_id"],

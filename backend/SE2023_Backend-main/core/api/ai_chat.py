@@ -247,21 +247,21 @@ class Recognizer:
         self.hit = hit_obj
         self.thresh_dict = {
             "SET_QUESTION": ques_thresh,
-            "O2E_EXPERT": exp_thresh,
-            "O2E_ENTERPRISE": ent_thresh,
-            "O2E_RESULT": res_thresh,
+            "O2E_EXPERT_HIT": exp_thresh,
+            "O2E_ENTERPRISE_HIT": ent_thresh,
+            "O2E_RESULT_HIT": res_thresh,
         }
         self.milvus_key_dict = {
             "SET_QUESTION": "question_id",
-            "O2E_EXPERT": "expert_id",
-            "O2E_ENTERPRISE": "enterprise_id",
-            "O2E_RESULT": "result_id",
+            "O2E_EXPERT_HIT": "expert_id",
+            "O2E_ENTERPRISE_HIT": "enterprise_id",
+            "O2E_RESULT_HIT": "result_id",
         }
         self.milvus_fn_dict = {
             "SET_QUESTION": milvus_query_set_question_by_id,
-            "O2E_EXPERT": milvus_query_expert_by_id,
-            "O2E_ENTERPRISE": milvus_query_enterprise_by_id,
-            "O2E_RESULT": milvus_query_result_hit_by_id,
+            "O2E_EXPERT_HIT": milvus_query_expert_by_id,
+            "O2E_ENTERPRISE_HIT": milvus_query_enterprise_by_id,
+            "O2E_RESULT_HIT": milvus_query_result_hit_by_id,
         }
 
     def renew_all_data(self, hit_obj, ques_thresh, exp_thresh, ent_thresh, res_thresh):
@@ -276,9 +276,9 @@ class Recognizer:
         self.hit = hit_obj
         self.thresh_dict = {
             "SET_QUESTION": ques_thresh,
-            "O2E_EXPERT": exp_thresh,
-            "O2E_ENTERPRISE": ent_thresh,
-            "O2E_RESULT": res_thresh,
+            "O2E_EXPERT_HIT": exp_thresh,
+            "O2E_ENTERPRISE_HIT": ent_thresh,
+            "O2E_RESULT_HIT": res_thresh,
         }
 
     def recognize_whole(self, ques):
@@ -328,6 +328,7 @@ class Recognizer:
             }
         )
         """
+
         res = {
             "direct": "True",
             "entity": {
@@ -354,19 +355,19 @@ class Recognizer:
             for word in sent_cut:
                 if sentence.find(word['val']) == -1:
                     continue
-                matched_id = self.matcher(word['val'], "O2E_EXPERT")
+                matched_id = self.matcher(word['val'], "O2E_EXPERT_HIT")
                 if matched_id != -1:
                     res["direct"] = "False"
                     res["entity"]["expert"].append(matched_id)
                     sentence = sentence.replace(word['val'], '')
                     continue
-                matched_id = self.matcher(word['val'], "O2E_ENTERPRISE")
+                matched_id = self.matcher(word['val'], "O2E_ENTERPRISE_HIT")
                 if matched_id != -1:
                     res["direct"] = "False"
                     res["entity"]["enterprise"].append(matched_id)
                     sentence = sentence.replace(word['val'], '')
                     continue
-                matched_id = self.matcher(word['val'], "O2E_RESULT")
+                matched_id = self.matcher(word['val'], "O2E_RESULT_HIT")
                 if matched_id != -1:
                     res["direct"] = "False"
                     res["entity"]["result"].append(matched_id)
@@ -377,7 +378,7 @@ class Recognizer:
             print(e)
             return False, None
 
-    def matcher(self, target_sent, milvus_collection, n_cand=1):
+    def matcher(self, target_sent, milvus_collection, n_cand=5):
         """
         计算句向量，寻找编码矩阵中离该句向量最近的n_cand个向量
         :param target_sent: 待计算问句
@@ -414,7 +415,7 @@ process = Preprocessor(sentence_replace_dict,
                        word_replace_dict, "small", 4, ltpParticipleDict)
 
 recognizer = Recognizer(hit, ques_thresh=0.7,
-                        exp_thresh=0.9, ent_thresh=0.9, res_thresh=0.7)
+                        exp_thresh=0.95, ent_thresh=0.95, res_thresh=0.7)
 
 
 def get_hitbert_embedding(sent):
@@ -438,31 +439,38 @@ def answer_set_question(request: HttpRequest):
 
 
 def expert_to_info_str(exp_id):
+    print("expert to info str")
     user = User.objects.get(id=exp_id)
+    print("expert to info str2")
     expert = user.expert_info
     info_str = f"{expert.name}，在{expert.organization}工作，" + \
                f"头衔为{expert.title}，" + \
                f"擅长的研究领域有{expert.field}，" + \
                f"他/她这样介绍自己：{expert.self_profile}。"
+    print("try to get all papers")
     papers = expert.papers.all()
+    print("get all papers")
     if len(papers) > 0:
         paper_info = f"{expert.name}的论文有："
         for index, paper in enumerate(papers):
             paper_info += f"{index + 1}. {paper.title}. "
         info_str += paper_info
     patents = expert.patents.all()
+    print("get all patents")
     if len(patents) > 0:
         patent_info = f"{expert.name}的专利有："
         for index, patent in enumerate(patents):
             patent_info += f"{index + 1}. {patent.title}. "
         info_str += patent_info
     projects = expert.projects.all()
+    print("get all projects")
     if len(projects) > 0:
         project_info = f"{expert.name}的项目有："
         for index, project in enumerate(projects):
             project_info += f"{index + 1}. {project.title}. "
         info_str += project_info
     results = expert.results.all()
+    print("get all results")
     if len(results) > 0:
         result_info = f"{expert.name}的成果有："
         for index, result in enumerate(results):
@@ -501,23 +509,25 @@ def result_to_info_str(rst_id):
 @require_POST
 @response_wrapper
 def answer_free_question(request: HttpRequest):
-    print(0)
-    get_milvus_connection()
-    print(1.1)
-    # data = request.POST.dict()
+    # print(0)
+    # get_milvus_connection()
+    # print(1.1)
+    # # data = request.POST.dict()
     data: dict = json.loads(request.body.decode())
-    print(data)
+    # print(data)
     question = data.get('input')
-
-    flag, result = process.preprocess(question)
-    print(1)
-    if not flag:
-        return failed_api_response(500, error_msg="非预设问题预处理过程失败")
-    flag, result2 = recognizer.recognize_words(result)
-    print(2)
-    if not flag:
-        return failed_api_response(500, error_msg="非预设问题提取关键词过程失败")
-    print(3)
+    #
+    # flag, result = process.preprocess(question)
+    # print(result)
+    # print(1)
+    # if not flag:
+    #     return failed_api_response(500, error_msg="非预设问题预处理过程失败")
+    # flag, result2 = recognizer.recognize_words(result)
+    # print(result2)
+    # print(2)
+    # if not flag:
+    #     return failed_api_response(500, error_msg="非预设问题提取关键词过程失败")
+    # print(3)
     """
     result2 = {
         "direct": "True/False（是否直接将问题输入给chatGPT）",
@@ -528,6 +538,14 @@ def answer_free_question(request: HttpRequest):
         }
     }
     """
+    result2 = {
+        "direct": "True",
+        "entity": {
+            "expert": ["专家id1", "专家id2"],
+            "enterprise": ["企业id1", "企业id2"],
+            "result": ["成果id1", "成果id2"]
+        }
+    }
     final = {
         "code": 200,
         "answer": "",
@@ -563,9 +581,11 @@ def answer_free_question(request: HttpRequest):
             info_str, card_info = expert_to_info_str(exp_id)
             final["answer"] += info_str
             final["card"]["expert"].append(card_info)
+            print(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
                                                                card_type=0, title=card_info['title'],
                                                                avatar=card_info['avatar'], involved_id=card_info['id'])
+            print(new_card_message_id)
             system_chatroom.add_message(new_card_message_id)
 
         for ent_id in result2["entity"]["enterprise"]:

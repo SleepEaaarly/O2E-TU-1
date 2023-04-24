@@ -17,26 +17,28 @@ export const showSystemMessage = async (uId, show) => {
     // axios.setLoading(false)
 }
 
-export const getBasicAISystemQuestionAns = async (question) => {
+export const getBasicAISystemQuestionAns = async (question, id) => {
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
     axios.setLoading(false)
     let output = await axios.post("answer/set", {
-        input: question
+        input: question,
+        uId: id
     }, headers)
     axios.setLoading(true)
     return output
 }
 
-export const getAdvanceAISystemQuestionAns = async (question) => {
+export const getAdvanceAISystemQuestionAns = async (question, id) => {
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
     console.log(question)
     axios.setLoading(false)
     let output = await axios.post("answer/free", {
-        input: question
+        input: question,
+        uId: id
     }, headers)
     axios.setLoading(true)
     return output
