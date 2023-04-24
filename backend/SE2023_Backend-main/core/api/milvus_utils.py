@@ -107,16 +107,11 @@ def milvus_insert(collection_name, data, partition_name=None):
     :return: Milvus⽣成的ids
     """
     collection = get_milvus_collection(collection_name)
-    print('milvus_insert 1')
-    print(data)
     try:
         res = collection.insert(partition_name=partition_name, data=data)
     except Exception as e:
         print(e)
-    print('milvus_insert 2')
     ids = res.primary_keys # 这个id是由Milvus⽣成的，⼤家注意要和论⽂id对应起来保存
-    print('milvus_insert 3')
-    
     return ids
 
 
