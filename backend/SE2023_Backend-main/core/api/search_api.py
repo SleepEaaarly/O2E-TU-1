@@ -67,7 +67,7 @@ def search_expert(request: HttpRequest, *args, **kwargs):
             if title not in expert.title:
                 continue
         experts_after.append(expert)
-        if experts_after.__len__() == 10:
+        if experts_after.__len__() == end:
             break
 
     experts_after = experts_after[start:end]
@@ -86,7 +86,10 @@ def search_expert(request: HttpRequest, *args, **kwargs):
         }
     #    print(expert.id)
         data_results.append(expert_info)
-
+    print('dis')
+    print(page)
+    print(data)
+    print(data_results)
     return success_api_response({"data": data_results})
 
 
@@ -141,7 +144,7 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
             if field not in enterprise.field:
                 continue
         enterprises_after.append(enterprise)
-        if enterprises_after.__len__() == 10:
+        if enterprises_after.__len__() == end:
             break
 
     enterprises_after = enterprises_after[start:end]
@@ -217,7 +220,7 @@ def search_result(request: HttpRequest):
             continue
 
         results_after.append(result)
-        if results_after.__len__() == 10:
+        if results_after.__len__() == end:
             break
 
     results_after = results_after[start:end]

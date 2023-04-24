@@ -236,6 +236,7 @@ def agree_result(request: HttpRequest, id: int):
 
     get_milvus_connection()
     mid_hit = milvus_insert("O2E_RESULT_HIT", data=[[hit_vec], [id]])
+    print('debug 2.5')
     mid_sci = milvus_insert("O2E_RESULT", data=[[sci_vec], [id]])
     print('debug 3')
 

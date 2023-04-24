@@ -119,7 +119,6 @@ class User(AbstractUser):
           """
         return self.user_set.all()
 
-
     def get_followers(self):
         """
         follower: user关注的人
