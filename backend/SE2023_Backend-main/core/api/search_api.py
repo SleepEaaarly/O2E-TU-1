@@ -86,7 +86,10 @@ def search_expert(request: HttpRequest, *args, **kwargs):
         }
     #    print(expert.id)
         data_results.append(expert_info)
-
+    print('dis')
+    print(page)
+    print(data)
+    print(data_results)
     return success_api_response({"data": data_results})
 
 

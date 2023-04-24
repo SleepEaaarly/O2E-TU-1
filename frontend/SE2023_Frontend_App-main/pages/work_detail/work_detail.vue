@@ -51,7 +51,8 @@
 			<u-line></u-line>
 		</u-row>
 		</view>
-		  <scroll-view :style="{height:height+'px'}" scroll-y>
+		  <!-- <scroll-view :style="{height:height+'px'}" scroll-y> -->
+			  <scroll-view  scroll-y>
 			<view v-for="(item, index1) in work_info.work_detail_pics" :key="index1">
 				<image :src="picUrl + item" style="width: 100%;" mode="widthFix"></image>
 			</view>

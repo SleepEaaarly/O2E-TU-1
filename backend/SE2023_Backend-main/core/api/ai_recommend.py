@@ -94,7 +94,7 @@ model.load_state_dict(state_dict)
 
 
 def get_scibert_embedding(sent):
-    return model.get_embeds(sent)
+    return model.get_embeds([sent]).tolist()[0]
 
 
 @require_GET
