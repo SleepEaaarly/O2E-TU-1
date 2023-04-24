@@ -7,6 +7,8 @@ from .utils import (failed_api_response, ErrorCode,
                     wrapped_api, response_wrapper)
 from core.api.auth import jwt_auth, getUserInfo
 from core.models.user import User
+from core.api.milvus_utils import milvus_insert, get_milvus_connection, disconnect_milvus
+from core.api.ai_chat import get_hitbert_object
 
 
 #@jwt_auth()
@@ -63,6 +65,10 @@ def set_info(request:HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid legal_person_ID")
 
     user = User.objects.get(id=id)
+    name_vec = get_scibert_embedding(name)
+    get_milvus_connection()
+    mid = milvus_insert("O2E_ENTERPRISE_HIT", data=[[name_vec], [id]])
+    disconnect_milvus()
     if user.enterprise_info is None:
         enterprise_info = Enterprise_info()
         enterprise_info.name = name
@@ -75,6 +81,7 @@ def set_info(request:HttpRequest):
         enterprise_info.field = field
         enterprise_info.business_license = business_license
         enterprise_info.legal_person_ID = legal_person_ID
+        enterprise_info.vector_hit = mid[0]
         enterprise_info.save()
         user.enterprise_info = enterprise_info
         user.state = 2
@@ -91,6 +98,7 @@ def set_info(request:HttpRequest):
         enterprise_info.field = field
         enterprise_info.business_license = business_license
         enterprise_info.legal_person_ID = legal_person_ID
+        enterprise_info.vector_hit = mid[0]
         enterprise_info.save()
         user.state = 2
         user.save()

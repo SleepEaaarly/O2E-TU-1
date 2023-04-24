@@ -44,12 +44,34 @@
 		margin-left: 20px;
 		margin-top: 5px;
 		margin-bottom: 5px;
+		text-overflow:ellipsis;
+		overflow:hidden;
+		white-space:nowrap;
+		
+		
+		width: 90%;
 	}
 	.workSummary{
 		margin-left: 10px;
 		font-size: 10px;
 		color:#333333;
 		width: 70%;
+		
+		/* text-overflow:ellipsis;
+		overflow:hidden; */
+		/* white-space:nowrap; */
+		
+		/* line-height: 1.5em; 
+		max-height: 4.5em; 
+		text-overflow:ellipsis;
+		overflow:hidden;
+		white-space: nowrap; */
+		display: -webkit-box; /* 使用webkit内核的盒子布局 */
+		-webkit-line-clamp: 3; /* 设置显示行数为4行 */
+		-webkit-box-orient: vertical; /* 设置盒子垂直排列 */
+		overflow: hidden; /* 超出部分隐藏 */
+		text-overflow: ellipsis; /* 超出部分显示省略号 */
+		
 	}
 
 </style>

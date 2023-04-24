@@ -27,7 +27,8 @@ class Results(models.Model):
     multipic = models.ManyToManyField(to=ResMultipic, related_name="results_set")
     # file = models.FileField(upload_to="pdf/%Y%m/%d/res_pdf")
     state = models.IntegerField(choices=RES_STATE_CHOICES, default=0)
-    vector = models.TextField(blank=True, null=True)
+    vector_sci = models.TextField(blank=True, null=True)
+    vector_hit = models.TextField(blank=True, null=True)
 
     def get_pic(self):
         return str(self.picture)

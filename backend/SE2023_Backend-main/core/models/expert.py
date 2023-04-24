@@ -41,5 +41,5 @@ class Expert(models.Model):
     results = models.ManyToManyField(to=Results, related_name="expert_results")
     #称号
     title = models.CharField(max_length=300, blank=True, null=True)
-    #向量
-    vector = models.TextField(blank=True, null=True)
+    # hitBert编码的向量对应的milvus id
+    vector_hit = models.TextField(blank=True, null=True)

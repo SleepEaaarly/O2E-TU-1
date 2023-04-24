@@ -9,7 +9,7 @@ class Papers(models.Model):
     isSCI = models.BooleanField(blank=True, null=True)
     url = models.TextField(blank=True, null=True)
     scholars = models.TextField(blank=True, null=True)
-    vector = models.TextField(blank=True, null=True)
+    vector_sci = models.TextField(blank=True, null=True)
 
     def to_dict(self) -> dict:
         return {"title": self.title, "cites": self.cites, "pyear": self.pyear,

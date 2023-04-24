@@ -2,6 +2,8 @@ import random
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
 from django.http import HttpRequest
 from django.db.models import Q
+
+from core.api.milvus_utils import get_milvus_connection, disconnect_milvus, milvus_insert
 from core.api.utils import (failed_api_response, ErrorCode,
                             success_api_response, parse_data,
                             wrapped_api, response_wrapper)
@@ -18,6 +20,7 @@ from core.api._platform.utils import get_field, get_need_state
 
 from core.api.ai_recommend import insert_need
 from core.api.ai_report import generate_requirement_report
+from core.api.ai_recommend import get_scibert_embedding
 
 
 def get_now_time():
@@ -308,11 +311,16 @@ def create_need(request: HttpRequest):
     need = Need(title=title, description=description, money=money, start_time=start_time,
                 end_time=end_time, key_word=key_word, field=field, address=address,
                 enterprise=user, state=state, emergency=emergency, predict=4, real=0)
-
     need.save()
     insert_need(need.id)
     # 为需求生成报告
     generate_requirement_report(need.id)
+    sci_vec = get_scibert_embedding(title)
+    get_milvus_connection()
+    mid_sci = milvus_insert("O2E_NEED", data=[[sci_vec], [need.id]])
+    disconnect_milvus()
+    need.vector_sci = mid_sci[0]
+    need.save()
     return success_api_response({})
 
 

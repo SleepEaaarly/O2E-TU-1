@@ -1,5 +1,3 @@
-import requests
-from core.api.zhitu_utils import get_expertInfo_by_expertId, search_expertID_by_paperID
 import torch
 from django.db.models import Avg
 from django.http import HttpRequest
@@ -15,8 +13,13 @@ import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModel
 from core.api.auth import getUserInfo
 
-from core.api.milvus_utils import get_milvus_connection, milvus_search, milvus_insert, milvus_query_paper_by_id,\
-    milvus_query_need_by_id, milvus_query_result_by_id
+from core.api.milvus_utils import (
+    get_milvus_connection,
+    milvus_search, milvus_insert,
+    milvus_query_paper_by_id,
+    milvus_query_need_by_id,
+    milvus_query_result_by_id,
+)
 
 
 from core.api.zhitu_utils import get_expertInfo_by_expertId, search_expertID_by_paperID
@@ -88,6 +91,10 @@ class ContrastiveSciBERT(nn.Module):
 state_dict = torch.load("model.pt", map_location='cpu')
 model = ContrastiveSciBERT(out_dim=128, tau=0.07)
 model.load_state_dict(state_dict)
+
+
+def get_scibert_embedding(sent):
+    return model.get_embeds(sent)
 
 
 @require_GET
@@ -322,29 +329,29 @@ def result_recommend_for_enterprise(request: HttpRequest, id: int):
 
     return success_api_response({"results": result_infos})
 
+#
+# def insert_need_sci(nid: int):
+#     get_milvus_connection()
+#     need = Need.objects.get(pk=nid)
+#     keyword = [need.key_word]
+#     key_vector = model.get_embeds(keyword)
+#     # key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
+#     key_vector = key_vector.detach().numpy().tolist()
+#     milvus_id = milvus_insert("O2E_NEED", [key_vector, [nid]])
+#     print(milvus_id)
+#     return milvus_id
 
-def insert_need(nid: int):
-    get_milvus_connection()
-    need = Need.objects.get(pk=nid)
-    keyword = [need.key_word]
-    key_vector = model.get_embeds(keyword)
-    key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
-    key_vector = key_vector.detach().numpy().tolist()
-    milvus_id = milvus_insert("O2E_NEED", [key_vector, [nid]])
-    print(milvus_id)
-    return True
-
-
-def insert_result(rid: int):
-    get_milvus_connection()
-    result = Results.objects.get(pk=rid)
-    keyword = [result.title, result.abstract]
-    key_vector = model.get_embeds(keyword)
-    key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
-    key_vector = key_vector.detach().numpy().tolist()
-    milvus_id = milvus_insert("O2E_RESULT", [key_vector, [rid]])
-    print(milvus_id)
-    return True
+#
+# def insert_result_sci(rid: int):
+#     get_milvus_connection()
+#     result = Results.objects.get(pk=rid)
+#     keyword = [result.title, result.abstract]
+#     key_vector = model.get_embeds(keyword)
+#     # key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
+#     key_vector = key_vector.detach().numpy().tolist()
+#     milvus_id = milvus_insert("O2E_RESULT", [key_vector, [rid]])
+#     print(milvus_id)
+#     return milvus_id
 
 
 @require_GET

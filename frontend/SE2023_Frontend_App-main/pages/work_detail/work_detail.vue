@@ -1,7 +1,14 @@
 <template>
 	<view >
 		<u-row>
-			<text style="margin-left:50rpx;font-size: 20px;font-weight: 550;text-align:center;">{{ work_info.workName }}</text>
+			<text style="margin-left:50rpx;font-size: 20px;font-weight: 550;text-align:center;
+			text-overflow:ellipsis;
+			overflow:hidden;
+			white-space:nowrap;">
+			
+			
+			
+			{{ work_info.workName }}</text>
 		</u-row>
 		
 		<author-card
@@ -11,7 +18,7 @@
 			:logoPath="work_info.expert_logoPath"></author-card>
 		
 		<view style="
-		margin-top: auto;background-color: aliceblue;width: 650rpx;margin-left: 35rpx;height: auto;
+		margin-top: 2%;background-color: aliceblue;width:90%;margin-left: 3%;height: auto;
 		border-left:8rpx solid cornflowerblue;
 		background-color: aliceblue;padding-top: 10rpx;padding-left: 20rpx;padding-bottom: 10rpx;">
 			<text class="intro">{{ work_info.work_abstract }}</text>
@@ -27,16 +34,20 @@
 			style="margin-left: 20rpx;margin-top: 20rpx;"></u-tag>
 		</u-row>
 		
-		<u-row style="margin-top: 20rpx;margin-left: 20rpx;margin-right: 20rpx;">
+		<u-row style="margin-top: 20rpx;margin-left: 5%;margin-right: 5%;">
 			<u-line></u-line>
 		</u-row>
-		<view style="
+		<!-- <view style="
 		margin-top: auto;background-color: aliceblue;width: 650rpx;margin-left: 35rpx;height: auto;
 		border-left:8rpx solid cornflowerblue;
 		background-color: aliceblue;padding-top: 10rpx;padding-left: 20rpx;padding-bottom: 10rpx;">
 			<text class="intro">{{ work_info.work_content }}</text>
+			
+		</view> -->
+		<view style = "margin-left: 5%;margin-right: 5%;margin-top: 15rpx;">
+			<text class = "text-mixed">{{ work_info.work_content }}</text>
 		</view>
-		<u-row style="margin-top: 20rpx;margin-left: 20rpx;margin-right: 20rpx;">
+		<u-row style="margin-top: 20rpx;margin-left: 5%;margin-right: 5%;">
 			<u-line></u-line>
 		</u-row>
 		</view>
@@ -80,7 +91,7 @@
 				height: 500,
 				picUrl: '',
 				work_info: {
-					"workName": 'A Summary of Machine Learning',
+					"workName": 'A Summary of Machine Learning123123',
 					"expert_name": '占瑞乙',
 					"expert_title": '本科生',
 					"work_abstract": 'Here is a summary of some of the most commonly used methods in machine learning.',
@@ -92,7 +103,8 @@
 					"work_pic": '/static/ML_Notes.png' ,
 					"expert_mail": "iszry@foxmail.com",
 					"work_period": "实验室",
-					"work_field": "科学创意"
+					"work_field": "科学创意",
+					"work_content":"大家好，我叫sunny11111111111111111111112222222222",
 				}
 			}
 		},
@@ -154,4 +166,34 @@
 		right : 10upx;
 		/* float: right; */
 	}
+
+	
+	.text-mixed {
+	 /* font-size: 18px; */
+	  line-height: 1.5;
+	  width: 90rpx;
+	  white-space: normal;/*设置自动换行*/
+	  /* overflow: hidden; */
+	  /* text-overflow: ellipsis; */
+	  word-wrap: break-word;
+	  word-break: break-all;
+	  
+	}
+	
+	/* .text-mixed span {
+	  display: inline-block;
+	  vertical-align: middle;
+	} */
+	
+	.text-mixed .chinese {
+	  text-align: right;
+	  margin-left: 5px;
+	}
+	
+	.text-mixed .english {
+	  text-align: left;
+	  margin-right: 5px;
+	}
+	
+	
 </style>

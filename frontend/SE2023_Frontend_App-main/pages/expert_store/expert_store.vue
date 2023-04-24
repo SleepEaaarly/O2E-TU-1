@@ -24,17 +24,20 @@
 		:title="'职称'" :institution="'机构'"
 		:mail="'邮箱'"
 		:logoPath="'/static//logo.png'"></expert-card> -->
-		<uni-scroll-view scroll-y="true" @scroll="loadMore()" :style="{height: windowHeight + 'px'}"
-		 v-for="(item, index1) in recommendList.list" :key="index1">
-			<expert-card
-			@click.native="expertDetail(item)"  
-			:logoPath="item['userpic']" 
-			:name="item['author']"
-			:title="item['title']"
-			:mail="item['mail']"
-			:institution="item['institution']"
-			:index="index1"></expert-card>
-		</uni-scroll-view> 
+		<view>
+			<block
+			 v-for="(item, index1) in recommendList.list" :key="index1">
+				<expert-card
+				@click.native="expertDetail(item)"  
+				:logoPath="item['userpic']" 
+				:name="item['author']"
+				:title="item['title']"
+				:mail="item['mail']"
+				:institution="item['institution']"
+				:index="index1"></expert-card>
+			</block>
+		</view>
+
 	</view>
 </template>
 
@@ -49,13 +52,11 @@ import loadMore from '../../components/common/load-more.vue'
 				chosen_area: '',
 				chosen_title: '',
 				searchText: '',
-				cur_page: 0,
+				cur_page: 1,
 				loadtext:'',
 				windowHeight: 100,
-				institution_list: [
-					'北航',
-					'复旦大学'
-				],
+				finish_getting: false,
+				institution_list: ['北京大学', '北京航空航天大学', '北京理工大学', '北京师范大学', '重庆大学', '大连理工大学', '电子科技大学', '东北大学', '东南大学', '复旦大学', '国防科技大学', '哈尔滨工业大学', '湖南大学', '华东师范大学', '华南理工大学', '华中科技大学', '吉林大学', '兰州大学', '南京大学', '南开大学', '清华大学', '山东大学', '上海交通大学', '四川大学', '天津大学', '同济大学', '武汉大学', '西安交通大学', '西北工业大学', '西北农林科技大学', '厦门大学', '浙江大学', '中国海洋大学', '中国科学技术大学', '中国农业大学', '中国人民大学', '中南大学', '中山大学', '中央民族大学'],
 				area_list: [
 					"信息技术", "装备制造", "新材料", "新能源", "节能环保", "生物医药", "科学创意", "检验检测", "其他"
 				],
@@ -74,6 +75,8 @@ import loadMore from '../../components/common/load-more.vue'
 		},
 		onShow() {		//页面加载,一个页面只会调用一次
 			console.log('experts-onShow()')
+			this.finish_getting = false
+			this.recommendList.list = []
 			this.requestData()
 		},
 		onLoad() {		//页面显示,每次打开页面都会调用一次
@@ -96,20 +99,10 @@ import loadMore from '../../components/common/load-more.vue'
 		onReachBottom() {
 			// this.loadmore()
 		},
-		// 监听下拉刷新
-		onPullDownRefresh() {
-			console.log('pulldown')
-			this.cur_page = this.cur_page + 1
+		onPageScroll(res) {
+			// console.log("页面滚动了")
 			this.requestData()
-			uni.stopPullDownRefresh()
-		},
-		onPullUpRefresh(){
-				
-			if(this.cur_page > 0){
-				this.cur_page = this.cur_page - 1
-				this.requestData()
-			}
-			uni.stopPullUpRefresh()
+			uni.$emit('onPageScroll', res.scrollTop);
 		},
 		methods: {
 			navToEntry(){
@@ -126,7 +119,12 @@ import loadMore from '../../components/common/load-more.vue'
 					url: '../../pages/user-space/user-space?uid=' + expert['uid'],
 				})
 			},
+			
 			async requestData() {
+				if(this.finish_getting){
+					console.log('finish getting data')
+					return
+				}
 				try {
 					let paras = {
 						"organization": this.chosen_institution,
@@ -138,6 +136,7 @@ import loadMore from '../../components/common/load-more.vue'
 					let ret = await getExpertList(paras)
 					this.cur_page = this.cur_page + 1
 					if(ret.length===0||ret==null||ret==[]||ret=={}){
+						this.finish_getting = true
 						return 
 					}else{
 						this.recommendList.list = this.recommendList.list.concat(ret)
@@ -153,6 +152,12 @@ import loadMore from '../../components/common/load-more.vue'
 				// 获取数据
 				this.requestData()
 			},
+			upper(){
+				console.log('scroll upper')
+			},
+			lower(){
+				console.log('scroll lower')
+			}
 		},
 		components : {
 			expertCard,

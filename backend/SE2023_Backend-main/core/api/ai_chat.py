@@ -1,9 +1,10 @@
+import os
+
 import numpy as np
 import torch
 from transformers import BertModel, BertTokenizer
 from django.http import HttpRequest
 from core.models import Question
-from core.api.milvus_utils import milvus_search, milvus_query_set_question_by_id, get_milvus_connection
 from django.views.decorators.http import require_POST, require_GET
 
 import requests
@@ -25,17 +26,20 @@ from core.api.utils import (
     read_json_data
 )
 from core.api.milvus_utils import (
+    milvus_search,
+    get_milvus_connection,
     milvus_query_set_question_by_id,
     milvus_query_expert_by_id,
     milvus_query_enterprise_by_id,
-    milvus_query_result_by_id,
+    milvus_query_result_hit_by_id,
 )
 
 from core.models.user import User
 from core.models.results import Results
 
-RES_PATH = "../../resource"
-
+RES_PATH = os.path.abspath(os.getcwd()).split("\\core\\api")[0] + "\\resource"
+# print(RES_PATH)
+# assert 0
 
 def get_now_time():
     """获取当前时间"""
@@ -254,7 +258,7 @@ class Recognizer:
             "SET_QUESTION": milvus_query_set_question_by_id,
             "O2E_EXPERT": milvus_query_expert_by_id,
             "O2E_ENTERPRISE": milvus_query_enterprise_by_id,
-            "O2E_RESULT": milvus_query_result_by_id,
+            "O2E_RESULT": milvus_query_result_hit_by_id,
         }
 
     def renew_all_data(self, hit_obj, ques_thresh, exp_thresh, ent_thresh, res_thresh):
@@ -294,7 +298,6 @@ class Recognizer:
             matched_id = self.matcher(ques, "SET_QUESTION")
             if matched_id < 0:
                 return True, res
-            # todo: 下述均不是确定的对象名属性名，等数据库建好表记得改
             q_info = Question.objects.get(pk=matched_id)
             res["matched_q"] = q_info.question
             res["answer"] = q_info.ans
@@ -411,6 +414,10 @@ recognizer = Recognizer(hit, ques_thresh=0.7,
                         exp_thresh=0.9, ent_thresh=0.9, res_thresh=0.7)
 
 
+def get_hitbert_embedding(sent):
+    return hit.encode_2_list(sent)
+
+
 @require_GET
 @response_wrapper
 def answer_set_question(request: HttpRequest):
@@ -421,6 +428,7 @@ def answer_set_question(request: HttpRequest):
     flag, result = recognizer.recognize_whole(ques)
     if not flag:
         return failed_api_response(500, error_msg="预设问题识别过程失败")
+
     result["code"] = 200
     return success_api_response(result)
 

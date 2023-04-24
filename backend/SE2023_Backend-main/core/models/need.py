@@ -54,4 +54,4 @@ class Need(models.Model):
     #实际已招募人数
     real = models.IntegerField(default=0)
 
-    vector = models.TextField(blank=True, null=True)
+    vector_sci = models.TextField(blank=True, null=True)

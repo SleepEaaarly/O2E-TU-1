@@ -37,6 +37,8 @@
 				chosen_area: '',
 				chosen_address: '',
 				searchText: '',
+				finish_getting: false,
+				cur_page: 1,
 				address_list: [
 					'北京','上海','深圳'
 				],
@@ -47,21 +49,28 @@
 					loadtext: '没有更多数据了',
 					id: 'recommend',
 					list: [
-							//{
-					 		// 'area': '信息技术',
-					 		// 'address': '北京市朝阳区',
-					 		// 'title': '中航工业'
-							//}
+							{
+					 		'area': '信息技术',
+					 		'address': '北京市朝阳区',
+					 		'title': '中航工业'
+							}
 					]
 				},
 			}
 		},
 		onShow() {		//页面加载,一个页面只会调用一次
 			console.log('companies-onShow()')
+			this.finish_getting = false
+			this.recommendList.list = []
 			this.requestData()
 		},
 		onLoad() {		//页面显示,每次打开页面都会调用一次
 			console.log('companies-onLoad()')
+		},
+		onPageScroll(res) {
+			//console.log("页面滚动了")
+			this.requestData()
+			uni.$emit('onPageScroll', res.scrollTop);
 		},
 		watch: {
 			chosen_address(newVal, oldVal) {
@@ -90,13 +99,23 @@
 				// pages/user-space/user-space?uid=10
 			},
 			async requestData() {
+				if(this.finish_getting){
+					console.log('finish getting data')
+					return
+				}
 				try {
 					let paras = {
 						"field": this.chosen_area,
 						"address": this.chosen_address,
-						"key_word": this.searchText
+						"key_word": this.searchText,
+						"page": this.cur_page
 					}
-					this.recommendList.list = await getCompanyList(paras)
+					var company_list = await getCompanyList(paras)
+					this.cur_page = this.cur_page + 1
+					if(company_list.length===0||company_list==null||company_list==[]||company_list=={}){
+						this.finish_getting = true
+					}
+					this.recommendList.list = this.recommendList.list.concat(company_list)
 				} catch (e) {
 					console.log(e)
 					return

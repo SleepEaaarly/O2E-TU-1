@@ -13,6 +13,9 @@ import demjson
 from core.models.papers import Papers
 from core.models.projects import Projects
 from core.models.patents import Patents
+from core.api.milvus_utils import milvus_insert, get_milvus_connection, disconnect_milvus
+from core.api.ai_chat import get_hitbert_embedding
+
 
 @response_wrapper
 # @jwt_auth
@@ -97,6 +100,10 @@ def setinfo(request:HttpRequest):
     if not phone:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need valid phone")
     user = User.objects.get(id=id)
+    name_vec = get_hitbert_embedding(name)
+    get_milvus_connection()
+    mid = milvus_insert("O2E_EXPERT_HIT", data=[[name_vec], [id]])
+    disconnect_milvus()
     if user.expert_info is not None:
         expert = user.expert_info
         expert.name = name
@@ -108,6 +115,7 @@ def setinfo(request:HttpRequest):
         expert.phone = phone
         expert.patent = patent
         expert.paper = paper
+        expert.vector_hit = mid[0]
         expert.save()
         user.state = 1
         user.save()
@@ -122,10 +130,12 @@ def setinfo(request:HttpRequest):
         expert.phone = phone
         expert.patent = patent
         expert.paper = paper
+        expert.vector_hit = mid[0]
         expert.save()
         user.expert_info = expert
         user.state = 1
         user.save()
+
     return success_api_response("correct")
 
 

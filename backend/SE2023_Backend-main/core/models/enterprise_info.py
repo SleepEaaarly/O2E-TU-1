@@ -30,4 +30,5 @@ class Enterprise_info(models.Model):
     legal_person_ID = models.ImageField(upload_to="images/%Y%m/%d/icons",
                                         default='images/default_user_icon.jpg')
 
-    vector = models.TextField(blank=True, null=True)
+    # hitBert编码的向量对应的milvus id
+    vector_hit = models.TextField(blank=True, null=True)
