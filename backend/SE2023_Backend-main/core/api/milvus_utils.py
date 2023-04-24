@@ -2,6 +2,7 @@ from pymilvus import connections
 from pymilvus import CollectionSchema, FieldSchema, DataType, Collection
 
 _HOST = '116.63.14.146'
+# _HOST = '101.200.191.47'
 _PORT = '19530'
 
 
@@ -200,30 +201,36 @@ def milvus_query_result_hit_by_id(query):
 
 if __name__ == '__main__':
     get_milvus_connection()
-    milvus_id = FieldSchema(
-        name="milvus_id",
-        dtype=DataType.INT64,
-        is_primary=True,
-        auto_id=True
-    )
-    result_hit_vector = FieldSchema(
-        name="vector",
-        dtype=DataType.FLOAT_VECTOR, dim=768
-    )
-    result_id = FieldSchema(
-        name="result_id",
-        dtype=DataType.INT64
-    )
-    schema = CollectionSchema(
-        fields=[milvus_id, result_hit_vector],
-        description="O2E_RESULT_HIT"
-    )
-    collection_name = "O2E_RESULT_HIT"
-    collection = Collection(
-        name=collection_name,
-        schema=schema,
-        using='default',
-        # shards_num=2,
-        # consistency_level="Strong"
-    )
+    # milvus_id = FieldSchema(
+    #     name="milvus_id",
+    #     dtype=DataType.INT64,
+    #     is_primary=True,
+    #     auto_id=True
+    # )
+    # result_hit_vector = FieldSchema(
+    #     name="vector",
+    #     dtype=DataType.FLOAT_VECTOR, dim=768
+    # )
+    # question_id = FieldSchema(
+    #     name="question_id",
+    #     dtype=DataType.INT64
+    # )
+    # result_hit_id = FieldSchema(
+    #     name="result_id",
+    #     dtype=DataType.INT64
+    # )
+    # schema = CollectionSchema(
+    #     fields=[milvus_id, result_hit_vector],
+    #     description="SET_QUESTION_HIT"
+    # )
+    # collection_name = "SET_QUESTION_HIT"
+    # collection = Collection(
+    #     name=collection_name,
+    #     schema=schema,
+    #     # using='default',
+    #     # shards_num=2,
+    #     # consistency_level="Strong"
+    # )
+
+
     disconnect_milvus()

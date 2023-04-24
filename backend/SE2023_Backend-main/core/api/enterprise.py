@@ -2,13 +2,14 @@ from codecs import register_error
 from core.models.enterprise_info import Enterprise_info
 from django.views.decorators.http import require_http_methods
 from django.http import HttpRequest
+
+from .ai_recommend import get_scibert_embedding
 from .utils import (failed_api_response, ErrorCode,
                     success_api_response, parse_data,
                     wrapped_api, response_wrapper)
 from core.api.auth import jwt_auth, getUserInfo
 from core.models.user import User
 from core.api.milvus_utils import milvus_insert, get_milvus_connection, disconnect_milvus
-from core.api.ai_chat import get_hitbert_object
 
 
 #@jwt_auth()
