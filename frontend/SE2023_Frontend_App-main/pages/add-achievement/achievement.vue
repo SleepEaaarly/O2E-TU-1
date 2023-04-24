@@ -29,7 +29,7 @@
                         <uni-datetime-picker type="datetime" v-model="pyear" @change="changeLogStart" />
                     </view>
                 </uni-section>
-                <uni-section title="领域" subTitle="请为您的成果确定一个领域方向" type="line" padding>
+                <uni-section title="领域" subTitle="请为您的成果确定主要领域方向" type="line" padding>
                     <view class="uni-list">
                         <view class="uni-list-cell">
                             <view class="uni-list-cell-left">
@@ -70,7 +70,7 @@
 
                 <view class="uni-btn-v">
                     <button type="primary" form-type="submit">直接发布</button>
-                    <button type="primary" @click="saveAchievement">保存</button>
+                    <!-- <button type="primary" @click="saveAchievement">保存</button> -->
                     <button type="default" form-type="reset">清除</button>
                 </view>
             </form>
@@ -129,6 +129,11 @@ export default {
             period: '',
             picture: '',
 			multipic: [],
+			title_max_length: 30,
+			abstract_max_length: 300,
+			content_max_length: 1000,
+			author_max_length: 30,
+			pics_max_num: 9,
             field_items: [
                 '信息技术', '装备制造', '新材料', '新能源', '节能环保', '生物医药', '科学创意', '检验检测', '其他'
             ],
@@ -315,36 +320,57 @@ export default {
 		// },
         validate: function (data) {
             let validate_answer = true
-            if (data.title === '') {
-                this.$http.toast('请输入成果标题！')
+            if (data.title === '' || data.title.length > this.title_max_length) {
+				if(data.title === ''){
+					this.$http.toast('请输入成果标题！')
+				}else{
+					this.$http.toast('成果标题请勿超过' + this.title_max_length +'字！')
+				}                
                 validate_answer = false
-            } else if (data.description === '') {
-                this.$http.toast('请详细描述您的成果！')
+            } else if (data.description === '' || data.description.length > this.abstract_max_length) {
+                if(data.description === ''){
+					this.$http.toast('请详细描述您的成果！')
+				}else{
+					this.$http.toast('成果摘要请勿超过' + this.abstract_max_length +'字！')
+				}
                 validate_answer = false
-            } else if (data.content === '') {
-                this.$http.toast('请输入成果内容！')
+            } else if (data.content === '' || data.content.length > this.content_max_length) {
+                if(data.content === ''){
+					this.$http.toast('请输入成果内容！')
+				}else{
+					this.$http.toast('成果内容请勿超过' + this.content_max_length +'字！')
+				}
                 validate_answer = false
-            } else if (data.scholars === '') {
-                this.$http.toast('请输入成果作者！')
+            } else if (data.scholars === '' || data.scholars.length > this.author_max_length) {
+                if(data.scholars === ''){
+					this.$http.toast('请输入成果作者！')
+				}else{
+					this.$http.toast('成果作者长度请勿超过' + this.author_max_length +'字！')
+				}
                 validate_answer = false
             } else if (data.pyear === '') {
-                this.$http.toast('请输入正确的时间！')
+                this.$http.toast('请选择发布时间！')
                 validate_answer = false
                 // } else if (!isKeyword(data.key_word)) {
                 // 	this.$http.toast("请按照格式输入！")
                 // 	validate_answer = false
             } else if (data.period === '') {
-                this.$http.toast('请选择成果阶段')
+                this.$http.toast('请选择成果阶段！')
                 validate_answer = false
-            } else if (data.achievementFile == null) {
+            } else if (data.multipic.length > this.pics_max_num) {
+				this.$http.toast('附件图片请勿超过' + this.pics_max_num + '张！')
+				validate_answer = false
                 // PDF为可选项   
             } else if (data.picture == null) {
+                this.$http.toast('请选择成果图片！')
+                validate_answer = false
                 // Pic为可选项
             }
             // } else if (data.predict === '0' || data.predict === 0) {
             // 	this.$http.toast('预估人数必须大于0！')
             // 	validate_answer = false
             // }
+			return false
             return validate_answer
         },
         isKeyword: function (key_word) {
@@ -373,6 +399,9 @@ export default {
 				console.log(data.type)
 				if (validate_answer) {
 					console.log("validate_success!")
+				} else{
+					console.log("fail to validate!")
+					return
 				}
 				console.log("start_submit")
 				console.log(this.picture)
@@ -444,7 +473,7 @@ export default {
                 this.index = 0,
 				this.cites = '',
 				this.scholars = '',
-				this.pyear = 2020,
+				this.pyear = '',
 				this.achievement_url = '',
 				this.isEI = false,
                 this.isSCI = false,
