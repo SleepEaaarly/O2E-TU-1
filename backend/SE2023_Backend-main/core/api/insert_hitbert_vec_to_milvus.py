@@ -43,7 +43,7 @@ def get_all_entity(entity: str):
 def update_vector(entity: str, vector: str, id: int):
     connection, cursor = connect_database()
 
-    instruction = "update " + entity + " set vector=" + vector + " where id=" + str(id)
+    instruction = "update " + entity + " set vector_hit=" + vector + " where id=" + str(id)
 
     try:
         cursor.execute(instruction)
@@ -82,10 +82,10 @@ class HitBert:
         return self.encode(sent)[0].cpu().numpy().tolist()
 
 
-d_name = "core_enterprise_info"    # 换成专家、企业的表
-c_name = "O2E_ENTERPRISE_HIT"
+d_name = "core_expert"    # 换成专家、企业的表
+c_name = "O2E_EXPERT_HIT"
 rst = get_all_entity(d_name)
-inp = [[r[1], r[0]] for r in rst]
+inp = [[r[2], r[0]] for r in rst]
 # print(pap_titles)
 hit = HitBert(hitModelPath="D:\\大学学习\\大三下\\软件工程\\O2E-TU-1\\backend\\SE2023_Backend-main\\resource\\bert", device="cpu")
 for i in inp:

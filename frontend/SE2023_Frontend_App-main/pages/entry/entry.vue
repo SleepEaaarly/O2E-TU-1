@@ -272,7 +272,7 @@
 					var rec_list = {}
 					
 					// TODO 成果推荐 Debug
-					// rec_list = await getWorkRec(paras)
+					rec_list = await getWorkRec(paras)
 					// TODO 成果推荐 Debug
 					
 					if(rec_list == null){

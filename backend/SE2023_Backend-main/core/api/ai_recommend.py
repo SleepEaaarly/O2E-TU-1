@@ -274,6 +274,8 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     for id_list in id_lists:
         for milvus_id in id_list:
             ids += str(milvus_id) + ','
+    if ids == '[':
+        return success_api_response({"results": []})
     ids = ids[:-1] + ']'
     query = "milvus_id in " + ids
 
@@ -312,6 +314,8 @@ def result_recommend_for_enterprise(request: HttpRequest, id: int):
     for id_list in id_lists:
         for milvus_id in id_list:
             ids += str(milvus_id) + ','
+    if ids == '[':
+        return success_api_response({"results": []})
     ids = ids[:-1] + ']'
     query = "milvus_id in " + ids
     result_ids = milvus_query_result_by_id(query)
