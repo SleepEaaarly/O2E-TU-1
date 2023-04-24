@@ -18,7 +18,6 @@ import pytz
 from django.utils import timezone
 from core.api._platform.utils import get_field, get_need_state
 
-from core.api.ai_recommend import insert_need
 from core.api.ai_report import generate_requirement_report
 from core.api.ai_recommend import get_scibert_embedding
 
@@ -312,9 +311,9 @@ def create_need(request: HttpRequest):
                 end_time=end_time, key_word=key_word, field=field, address=address,
                 enterprise=user, state=state, emergency=emergency, predict=4, real=0)
     need.save()
-    insert_need(need.id)
     # 为需求生成报告
     generate_requirement_report(need.id)
+    # 向milvus库插入向量
     sci_vec = get_scibert_embedding(title)
     get_milvus_connection()
     mid_sci = milvus_insert("O2E_NEED", data=[[sci_vec], [need.id]])

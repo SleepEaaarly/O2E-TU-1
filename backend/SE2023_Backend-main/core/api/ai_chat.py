@@ -99,7 +99,7 @@ class Preprocessor:
         self.dict2 = dict_replace2
         self.n_gram = n_gram
         self.list1 = list_disltp
-        self.ltp = LTP(path=self.model)
+        self.ltp = LTP()
         self.ltp.add_words(words=self.list1)
 
     def renew_all_data(self, dict_replace1, dict_replace2, model, n_gram, list_disltp):
@@ -109,7 +109,7 @@ class Preprocessor:
         """
         更改ltp模型
         """
-        self.ltp = LTP(path=model)
+        self.ltp = LTP()
         self.ltp.add_words(words=self.list1)
 
     def preprocess(self, sent):
