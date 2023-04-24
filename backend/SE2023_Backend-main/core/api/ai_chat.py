@@ -54,7 +54,7 @@ def get_now_time():
 class HitBert:
     def __init__(self, hitModelPath, device):
         self.hit_tokenizer = BertTokenizer.from_pretrained(hitModelPath)
-        self.hit_model = BertModel.from_pretrained(hitModelPath)
+        self.hit_model = BertModel.from_pretrained(hitModelPath, local_files_only=True)
         self.device = device
         self.hit_model.to(device)
         self.hit_model.eval()
