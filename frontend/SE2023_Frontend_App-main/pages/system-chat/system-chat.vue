@@ -26,11 +26,18 @@
         :style="{height: style.contentH + 'px'}">
             <!-- 聊天列表 -->
             <block v-for="(item, index) in currentSystemChatMsgs" :key="index">
-                <view class="chat-item">
+                <view class="chat-item" v-if="item.type != 'report'">
                     <system-chat-list 
                         @goToUserInfo="goToUserInfo" 
                         :item="item" :index="index" :isHuman="isHuman"></system-chat-list>
                 </view>
+                <require_message_card v-if="item.type == 'report'"
+                title="请帮我写软工吧"
+                companyName="北京航空航天大学"
+                :companyLogoPath="testpic"
+                intro="Here is a summary of some of the most commonly used methods in machine learning."
+                time="上午 7:43"
+            ></require_message_card>
             </block>
             <!-- <require_message_card
                 title="请帮我写软工吧"
