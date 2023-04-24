@@ -5,7 +5,7 @@
         <view v-if="item.type == 'switch_info'" class="system-chat-time u-f-ajc">您已转换为{{item.message === 'AI' ? "AI" : "人工"}}服务</view>
         <view v-if="item.type !== 'switch_info'" class="system-chat-list u-f" :class="{'system-chat-me': item.isme}">
             <!-- 显示管理员/AI头像但不跳转 -->
-            <image v-if="!item.isme" :src="item.userpic" mode="widthFix" lazy-load></image>
+            <image v-if="!item.isme" :src="item.user_pic" mode="widthFix" lazy-load></image>
             <!-- 消息 -->
             <view class="system-chat-list-body">
                 
