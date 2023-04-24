@@ -26,11 +26,18 @@
         :style="{height: style.contentH + 'px'}">
             <!-- 聊天列表 -->
             <block v-for="(item, index) in currentSystemChatMsgs" :key="index">
-                <view class="chat-item">
+                <view class="chat-item" v-if="item.type != 'report'">
                     <system-chat-list 
                         @goToUserInfo="goToUserInfo" 
                         :item="item" :index="index" :isHuman="isHuman"></system-chat-list>
                 </view>
+                <require_message_card v-if="item.type == 'report'"
+                title="请帮我写软工吧"
+                companyName="北京航空航天大学"
+                :companyLogoPath="testpic"
+                intro="Here is a summary of some of the most commonly used methods in machine learning."
+                time="上午 7:43"
+            ></require_message_card>
             </block>
             <!-- <require_message_card
                 title="请帮我写软工吧"
@@ -374,7 +381,7 @@
                 if (!this.isHuman) {    // 如果不是人工，则可以直接获得输出
                     if (this.questionType === 'basic') {    // 对于操作的基础问题，可以直接输出结果
                         // 1. 将问题送入lcm的AI模型接口，获取输出
-                        let output = await getBasicAISystemQuestionAns(data)
+                        let output = await getBasicAISystemQuestionAns(data, this.userInfo.id)
                         // 1.5 判断code是否等于200，如果等于500不进行接下来的判断
                         if (code !== 200) {
                             // 我觉得还是提示一下比较好
@@ -433,7 +440,7 @@
                         }
                     } else {    // 其他问题，流程：
                         // 1. 将问题送入自动回复模型接口2，回收楚珉output
-                        let output = await getAdvanceAISystemQuestionAns(data)
+                        let output = await getAdvanceAISystemQuestionAns(data, this.userInfo.id)
                         // 1.5 判断code
                         if (code !== 200) {
                             // 错误处理

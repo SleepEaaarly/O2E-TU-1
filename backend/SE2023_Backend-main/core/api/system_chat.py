@@ -17,6 +17,7 @@ from core.models import User, SystemMessage, SystemChatroom, CardMessage, Messag
 
 from core.models import SwitchMessage, ImageMessage
 
+from core.models.report_message import ReportMessage
 
 """
     create system chatroom
@@ -99,9 +100,15 @@ def get_system_chat(request: HttpRequest):
         # type, message, cardInfo
         a_message['type'] = m.type
         if(m.type == 'card'):
-            a_message['cardInfo'] = CardMessage(m).generate_card()
+            a_message['cardInfo'] = m.generate_card()
+        elif(m.type == 'report'):
+            print(m)
+            n:ReportMessage = ReportMessage.objects.get(id=m.id)
+            a_message['reportInfo'] = n.generate_card()
+            print(a_message['reportInfo'])
         else:
             a_message['message'] = m.content
+        print(a_message)
         # created_at
         a_message['created_at'] = m.get_create_time()
         messages.append(a_message)
@@ -274,6 +281,8 @@ def get_all_system_chatrooms(request: HttpRequest):
                 a_message['type'] = m.type
                 if(m.type == 'card'):
                     a_message["cardInfo"] = CardMessage(m).generate_card()
+                elif(m.type == 'report'):
+                    a_message['reportInfo'] = ReportMessage(m).generate_card()
                 else:
                     a_message['message'] = m.content
                 # created_at
@@ -302,6 +311,7 @@ def get_all_system_chatrooms(request: HttpRequest):
         - 成功信息
     
 """
+
 
 @jwt_auth()
 @require_POST

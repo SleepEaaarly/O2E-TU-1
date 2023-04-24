@@ -50,15 +50,26 @@ class ReportMessage(SystemMessage):
             new_report_message = ReportMessage(content=info, owner=owner,
                                              is_to_system=0, read_state=UNREAD,
                                              report_type=report_type, report_belong_id=involved_id,
-                                             report_title=title, report_name=name, report_logo_path=avatar)
+                                             report_title=title, report_name=name, report_logo_path=avatar,
+                                             type='report')
+            print("report_message step1")
             new_report_message.save()
+            print("report_message step2")
             return new_report_message.id
         except Exception:
             return -1
 
     def generate_card(self):
+        print("enter report card generation")
+        print(self.report_type)
+        print(self.REPORT_TYPE[self.report_type])
+        print(self.report_belong_id)
+        print(self.report_title)
+        print(self.report_logo_path)
+        print(self.content)
+        print(self.created_at)
         return {
-            "reportType": REPORT_TYPE[self.report_type],
+            "reportType": self.REPORT_TYPE[self.report_type],
             "reportId": self.report_belong_id,
             "reportTitle": self.report_title,
             "reportLogoPath": self.report_logo_path,

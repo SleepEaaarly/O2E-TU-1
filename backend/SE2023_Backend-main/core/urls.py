@@ -48,7 +48,7 @@ from core.api.ai_recommend import recommend, need_recommend, result_recommend_fo
 from core.api._platform.rate import rate_order, get_order_rate, get_user_rate
 
 
-# from core.api.ai_chat import answer_set_question, answer_free_question
+from core.api.ai_chat import answer_set_question, answer_free_question
 
 
 from core.tests.generate_avatar import avatar, get_user_num
@@ -62,7 +62,8 @@ from core.api.search_api import search_expert, search_enterprise, search_result,
 from core.api.system_chat import create_system_chat, get_system_chat, push_system_message, \
     system_message_read, alter_systemchat_visible, get_all_system_chatrooms, push_system_message_by_admin
 
-from core.api.admin_entity import get_all_result_info, change_result_info, delete_result, search_result_by_name
+from core.api.admin_entity import get_all_result_info, change_result_info, delete_result, search_result_by_name, \
+    get_all_unaudited_result_info
 
 
 from core.api.order_report import get_order_report
@@ -94,6 +95,7 @@ urlpatterns = [
     path('result/agree/<int:id>', agree_result),
     path('result/refuse/<int:id>', refuse_result),
     path('result/all/<int:page>', get_all_result_info),
+    path('result/all/unaudited/<int:page>', get_all_unaudited_result_info),
     path('result/delete', delete_result),
     path('result/changeinfo', change_result_info),
 
@@ -267,8 +269,8 @@ urlpatterns = [
     path('ai/resultRec/enterprise/<int:id>', result_recommend_for_enterprise),
     
     # # AI客服
-    # path('answer/set', answer_set_question),
-    # path('answer/free', answer_free_question),
+    path('answer/set', answer_set_question),
+    path('answer/free', answer_free_question),
 
     # 评价
     path('order/rate', rate_order),

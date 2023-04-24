@@ -175,10 +175,10 @@
 		onLoad() {		//页面显示,每次打开页面都会调用一次
 			console.log('works-onLoad()')
 		},
-		onPageScroll(res) {
+		onReachBottom(res) {
 			// console.log("页面滚动了")
 			this.requestData()
-			uni.$emit('onPageScroll', res.scrollTop);
+			uni.$emit('onReachBottom', res.scrollTop);
 		},
 		computed: { 
 			items_classified:  {
@@ -272,7 +272,7 @@
 					var rec_list = {}
 					
 					// TODO 成果推荐 Debug
-					// rec_list = await getWorkRec(paras)
+					rec_list = await getWorkRec(paras)
 					// TODO 成果推荐 Debug
 					
 					if(rec_list == null){
