@@ -122,6 +122,7 @@
 		data() {
 			return {
 				searchText:'',
+				cur_page: 1,
 				recommendList: {
 					loadtext: '没有更多数据了',
 					id: 'recommend',
@@ -173,6 +174,11 @@
 		},
 		onLoad() {		//页面显示,每次打开页面都会调用一次
 			console.log('works-onLoad()')
+		},
+		onPageScroll(res) {
+			// console.log("页面滚动了")
+			this.requestData()
+			uni.$emit('onPageScroll', res.scrollTop);
 		},
 		computed: { 
 			items_classified:  {
@@ -272,12 +278,18 @@
 					if(rec_list == null){
 						rec_list = {}
 					}
-					let work_list =  await getWorkList({
+					paras = {
 						"field": '',
 						"period": '',
-						"key_word": ''
-					})
-					this.recommendList.list = Object.assign(rec_list, work_list)
+						"key_word": this.searchText,
+						"page": this.cur_page
+					}
+					var work_list = await getWorkList(paras)
+					if(work_list.length===0||work_list==null||work_list==[]||work_list=={}){
+						this.finish_getting = true
+					}
+					this.recommendList.list = this.recommendList.list.concat(work_list)
+					this.cur_page = this.cur_page + 1
 				} catch (e) {
 					console.log(e)
 					return
