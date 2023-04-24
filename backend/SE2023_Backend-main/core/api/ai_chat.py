@@ -1,3 +1,4 @@
+import json
 import os
 
 import numpy as np
@@ -159,12 +160,14 @@ class Preprocessor:
         """
         分词，并将分词结果改为需要格式。
         """
-        segment, hidden = self.ltp.seg([sent_replaced])
-        pos = self.ltp.pos(hidden)
+        # segment, hidden = self.ltp.seg([sent_replaced])
+        # pos = self.ltp.pos(hidden)
+        seg = self.ltp.pipeline([sent_replaced], tasks=["cws", "pos"])
+        # print(segment.cws, segment.pos)
         i = 0
         sent_cut = []
-        segment = segment[0]
-        pos = pos[0]
+        segment = seg.cws[0]
+        pos = seg.pos[0]
         for cutword in segment:
             self.words['val'] = cutword
             self.words['note'] = pos[i]
@@ -418,12 +421,13 @@ def get_hitbert_embedding(sent):
     return hit.encode_2_list(sent)
 
 
-@require_GET
+@require_POST
 @response_wrapper
 def answer_set_question(request: HttpRequest):
     get_milvus_connection()
-    data = request.GET.dict()
+    data = request.POST.dict()
     question = data.get('input')
+    print()
     ques = process.replacesentword(question)
     flag, result = recognizer.recognize_whole(ques)
     if not flag:
@@ -494,18 +498,26 @@ def result_to_info_str(rst_id):
     return info_str, card_info
 
 
-@require_GET
+@require_POST
 @response_wrapper
 def answer_free_question(request: HttpRequest):
+    print(0)
     get_milvus_connection()
-    data = request.GET.dict()
+    print(1.1)
+    # data = request.POST.dict()
+    data: dict = json.loads(request.body.decode())
+    print(data)
     question = data.get('input')
+
     flag, result = process.preprocess(question)
+    print(1)
     if not flag:
         return failed_api_response(500, error_msg="非预设问题预处理过程失败")
     flag, result2 = recognizer.recognize_words(result)
+    print(2)
     if not flag:
         return failed_api_response(500, error_msg="非预设问题提取关键词过程失败")
+    print(3)
     """
     result2 = {
         "direct": "True/False（是否直接将问题输入给chatGPT）",
@@ -535,7 +547,7 @@ def answer_free_question(request: HttpRequest):
         system_chatroom = SystemChatroom(owner=sender, isai=SystemChatroom.MANUAL_REPLY,
                                          last_message_time=get_now_time(), unread_message_num=0)
         system_chatroom.save()
-
+    print(4)
     # 注：当result2["direct"] == "True"时，不需要查数据库，直接跳过该步骤
     # (1)
     #   在result2["entity"][?]拿id --> 数据库查这个id的属性 --> 把查到的东西拼接成一段话，放进final["answer"]
@@ -577,6 +589,7 @@ def answer_free_question(request: HttpRequest):
     # todo 荆睿涛：
     #   将final["answer"]和question拼接起来送进chatGPT，然后用chatGPT的回复替换final["answer"]的内容
      # 形成询问prompt
+    print(5)
     demand1 = "请结合已有的信息，回答以下的问题"
     partial_answer = "其中已知信息为" + final['answer']
     msg = demand1+partial_answer+", 问题是"+question

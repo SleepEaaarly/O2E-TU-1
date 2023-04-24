@@ -24,7 +24,7 @@ export const getBasicAISystemQuestionAns = async (question) => {
     axios.setLoading(false)
     let output = await axios.post("answer/set", {
         input: question
-    })
+    }, headers)
     axios.setLoading(true)
     return output
 }
@@ -33,10 +33,11 @@ export const getAdvanceAISystemQuestionAns = async (question) => {
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
+    console.log(question)
     axios.setLoading(false)
     let output = await axios.post("answer/free", {
         input: question
-    })
+    }, headers)
     axios.setLoading(true)
     return output
 }
