@@ -25,7 +25,8 @@ export const getWorkRec = async (paras) => {
 		    headers)
 	}
 	console.log(ret)
-    let result = ret.data
+    let result = ret.results
+	console.log(result)
     if (result && result.length) {
         result = result.map((item) => {
             return {

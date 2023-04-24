@@ -102,13 +102,13 @@ import { getWorkList } from "@/api/work_store.js"
 		},
 		watch: {
 			chosen_area(newVal, oldVal) {
-				this.requestData()
+				this.loadNewData()
 			},
 			chosen_period(newVal, oldVal) {
-				this.requestData()
+				this.loadNewData()
 			},
 			searchText(newVal, oldVal) {
-				this.requestData()
+				this.loadNewData()
 			}
 		},
 		onReachBottom(res) {
@@ -132,6 +132,25 @@ import { getWorkList } from "@/api/work_store.js"
 				uni.navigateTo({
 				 	url: '../../pages/work_detail/work_detail?rid=' + work['result_id'],
 				 })
+			},
+			async loadNewData(){
+				this.cur_page = 1
+				try {
+					let paras = {
+						"field": this.chosen_area,
+						"period": this.chosen_period,
+						"key_word": this.searchText,
+						"page": this.cur_page
+					}
+					var work_list = await getWorkList(paras)
+					if(work_list.length===0||work_list==null||work_list==[]||work_list=={}){
+						this.finish_getting = true
+					}
+					this.recommendList.list = work_list
+				} catch (e) {
+					console.log(e)
+					return
+				}
 			},
 			async requestData() {
 				if(this.finish_getting){

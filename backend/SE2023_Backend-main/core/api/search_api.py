@@ -86,10 +86,10 @@ def search_expert(request: HttpRequest, *args, **kwargs):
         }
     #    print(expert.id)
         data_results.append(expert_info)
-    print('dis')
-    print(page)
-    print(data)
-    print(data_results)
+    # print('dis')
+    # print(page)
+    # print(data)
+    # print(data_results)
     return success_api_response({"data": data_results})
 
 
@@ -245,10 +245,10 @@ def search_result(request: HttpRequest):
             "expert_icon": str(user.icon)
         }
         data_results.append(result_info)
-    print('dis')
-    print(page)
-    print(data)
-    print(data_results)
+    # print('dis')
+    # print(page)
+    # print(data)
+    # print(data_results)
     # data_results = data_results[:10]
     return success_api_response({"data": data_results})
 

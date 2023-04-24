@@ -84,16 +84,16 @@ import loadMore from '../../components/common/load-more.vue'
 		},
 		watch: {
 			chosen_institution(newVal, oldVal) {
-				this.requestData()
+				this.loadNewData()
 			},
 			chosen_area(newVal, oldVal) {
-				this.requestData()
+				this.loadNewData()
 			},
 			chosen_title(newVal, oldVal) {
-				this.requestData()
+				this.loadNewData()
 			},
 			searchText(newVal, oldVal) {
-				this.requestData()
+				this.loadNewData()
 			}
 		},
 		onReachBottom() {
@@ -118,6 +118,30 @@ import loadMore from '../../components/common/load-more.vue'
 				uni.navigateTo({
 					url: '../../pages/user-space/user-space?uid=' + expert['uid'],
 				})
+			},
+			async loadNewData(){
+				this.cur_page = 1
+				try {
+					let paras = {
+						"organization": this.chosen_institution,
+						"field": this.chosen_area,
+						"title": this.chosen_title,
+						"key_word": this.searchText,
+						"page": this.cur_page
+					}
+					let ret = await getExpertList(paras)
+					
+					console.log(this.cur_page)
+					if(ret.length===0||ret==null||ret==[]||ret=={}){
+						this.finish_getting = true
+						return 
+					}else{
+						this.recommendList.list = ret
+					}
+				} catch (e) {
+					console.log(e)
+					return
+				}
 			},
 			
 			async requestData() {
