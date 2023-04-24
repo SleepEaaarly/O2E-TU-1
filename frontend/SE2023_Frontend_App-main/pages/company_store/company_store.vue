@@ -67,10 +67,10 @@
 		onLoad() {		//页面显示,每次打开页面都会调用一次
 			console.log('companies-onLoad()')
 		},
-		onPageScroll(res) {
-			//console.log("页面滚动了")
+		onReachBottom(res) {
+			// console.log("页面滚动了")
 			this.requestData()
-			uni.$emit('onPageScroll', res.scrollTop);
+			uni.$emit('onReachBottom', res.scrollTop);
 		},
 		watch: {
 			chosen_address(newVal, oldVal) {

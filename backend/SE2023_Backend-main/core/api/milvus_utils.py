@@ -74,7 +74,25 @@ def discribe_milvus_collection(name):
 
     # 获取集合属性并访问 'num_entities' 属性
     desc = collection.describe()
-    # print(desc)
+    print(desc)
+    num_entities = collection.num_entities
+
+    print(f'集合 {name} 中有 {num_entities} 个向量')
+
+
+def list_milvus_entities(name, db_id_name):
+    """
+    展示collection的所有实体信息
+    """
+    collection = Collection(name)
+    # collection.load(verbose=True)
+
+    entities = collection.query(
+        expr=f"SELECT *",
+        output_fields=["milvus_id", "vector", db_id_name],
+    )
+    for i, ent in enumerate(entities):
+        print(ent)
     num_entities = collection.num_entities
 
     print(f'集合 {name} 中有 {num_entities} 个向量')
@@ -184,7 +202,7 @@ def milvus_query_set_question_by_id(query):
     """
     根据id获取预设问题ID
     """
-    collection = Collection("SET_QUESTION")
+    collection = Collection("SET_QUESTION_HIT")
     res = collection.query(
         expr=query,
         output_fields=["question_id"],
@@ -197,7 +215,7 @@ def milvus_query_expert_by_id(query):
     """
     根据id获取专家ID
     """
-    collection = Collection("O2E_EXPERT")
+    collection = Collection("O2E_EXPERT_HIT")
     res = collection.query(
         expr=query,
         output_fields=["expert_id"],
@@ -210,7 +228,7 @@ def milvus_query_enterprise_by_id(query):
     """
     根据id获取企业ID
     """
-    collection = Collection("O2E_ENTERPRISE")
+    collection = Collection("O2E_ENTERPRISE_HIT")
     res = collection.query(
         expr=query,
         output_fields=["enterprise_id"],
@@ -235,9 +253,20 @@ def milvus_query_result_hit_by_id(query):
 if __name__ == '__main__':
     from pymilvus import drop_collection, list_collections
     get_milvus_connection()
+    names = ["O2E_EXPERT_HIT"]
+    for name in names:
+        drop_collection(name)
+        create_milvus_collection("expert_id", name, 768)
     names = list_collections()
     print(names)
     for name in names:
         print()
         discribe_milvus_collection(name)
+
+    # collection_name = "O2E_EXPERT_HIT"
+    # db_id_name = "expert_id"
+    # list_milvus_entities(collection_name, db_id_name)
     disconnect_milvus()
+    # collection_name = "O2E_RESULT"
+    # collection = get_milvus_collection(collection_name)
+    # collection.load()

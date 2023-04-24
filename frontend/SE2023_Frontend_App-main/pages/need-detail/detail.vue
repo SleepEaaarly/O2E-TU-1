@@ -111,7 +111,7 @@
 		getNeedDetail,
 		createContact,
 	} from '@/api/need-detail.js'
-	import requireGenerateCard from '@/api/require_report.js'
+	import {requireGenerateCard} from '@/api/require_report.js'
 	import tuiCard from '@/components/thorui/tui-card/tui-card.vue'
 	import tuiListView from '@/components/thorui/tui-list-view/tui-list-view'
 	import tuiListCell from '@/components/thorui/tui-list-cell/tui-list-cell'
@@ -222,8 +222,10 @@
 		methods: {
 			// 生成报告
 			async generateNeedReport() {
+				console.log("generate report1")
 				// 调用生成报告的api，后端负责将报告插入到对应的用户系统聊天之中
-				requireGenerateCard(this.userInfo.id, this.detail.id)
+				await requireGenerateCard(this.userInfo.id, this.detail.id)
+				console.log("generate report2")
 			},
 			//点击fab后的动作
 			trigger(e) {
