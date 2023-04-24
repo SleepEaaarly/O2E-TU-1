@@ -2,9 +2,10 @@
 	<view>
 		<fui-card :footer-line="false" style ="height: 100px;">
 			 <u-row style="margin-bottom: 0%;">
+				 
 			        <u-col span="3">
 			            <image class="logo" :src="logoPath" 
-						style = "height: 70px;width: 70px;margin-left: 10px;margin-top: 15px;border-radius: 20px;">
+						style = "max-height: 70px;max-width: 70px;margin-left: 10px;margin-top: 15px;border-radius: 20px;">
 						</image>
 			        </u-col>
 			        <u-col span="9">
