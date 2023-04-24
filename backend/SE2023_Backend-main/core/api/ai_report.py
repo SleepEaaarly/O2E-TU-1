@@ -17,6 +17,10 @@ from core.api.auth import getUserInfo
 from django.core.exceptions import ObjectDoesNotExist
 from core.api.auth import jwt_auth
 from core.models.ai_report import AIReport
+from core.models.enterprise_info import Enterprise_info
+from core.models.system_chat import SystemChatroom
+from core.api._platform.utils import get_now_time
+from core.models.card_message import CardMessage
 
 """ 调用chatGPT生成需求报告
 
@@ -32,15 +36,7 @@ from core.models.ai_report import AIReport
     返回参数:
         - 无
 """
-
-
-@jwt_auth()
-@require_POST
-@response_wrapper
-def generate_requirement_report(request: HttpRequest):
-    # 解析传入数据
-    data = request.POST.dict()
-    need_id = data.get('id')
+def generate_requirement_report(need_id):
     try:
         need = Need.objects.get(id=need_id)
     except ObjectDoesNotExist:
@@ -71,7 +67,6 @@ def generate_requirement_report(request: HttpRequest):
     newAIReport = AIReport(type=AIReport.TO_EXPERT, involved_id=need_id,
                            content=response.content.decode('utf-8'))
     newAIReport.save()
-    return success_api_response()
 
 
 """ 调用chatGPT生成成果报告
@@ -83,17 +78,12 @@ def generate_requirement_report(request: HttpRequest):
         POST
         
     请求参数:
-        - id: 需求id
+        - id: 成果id
     
     返回参数:
         - 无
 """
-@jwt_auth()
-@require_POST
-@response_wrapper
-def generate_result_report(request: HttpRequest):
-    data = request.POST.dict()
-    result_id = data.get('id')
+def generate_result_report(result_id):
     try:
         result = Results.objects.get(id=result_id)
     except ObjectDoesNotExist:
@@ -123,7 +113,6 @@ def generate_result_report(request: HttpRequest):
     newAIReport = AIReport(type=AIReport.TO_ENTERPRISE,
                            involved_id=result_id, content=response.content.decode('utf-8'))
     newAIReport.save()
-    return success_api_response()
 
 
 """ 获取需求报告
@@ -140,6 +129,8 @@ def generate_result_report(request: HttpRequest):
     返回参数:
         - content: str, 需求报告内容
 """
+
+
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -151,8 +142,23 @@ def get_requirement_report(request: HttpRequest):
             involved_id=need_id, type=AIReport.TO_EXPERT)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Need ID.")
-
-    return success_api_response({"content": ret_report.content})
+    requirement: Need = Need.objects.get(id=need_id)
+    company: User = Need.objects.get(id=need_id).enterprise
+    companyInfo = {}
+    companyInfo['companyId'] = company.id
+    companyInfo['companyName'] = company.enterprise_info.name
+    companyInfo['companyAddress'] = company.enterprise_info.address
+    companyInfo['companyLogoPath'] = company.icon.path
+    companyInfo['companyArea'] = company.enterprise_info.address
+    requireInfo = {}
+    requireInfo['requireId'] = requirement.id
+    requireInfo['requireName'] = requirement.title
+    requireInfo['requireIntro'] = requirement.description
+    requireInfo['requireKeywords'] = requirement.key_word
+    return success_api_response({"content": ret_report.content,
+                                 "companyInfo": companyInfo,
+                                 "requireInfo": requireInfo,
+                                 })
 
 
 """ 获取成果报告
@@ -169,6 +175,8 @@ def get_requirement_report(request: HttpRequest):
     返回参数:
         - content: str, 成果报告内容
 """
+
+
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -180,5 +188,108 @@ def get_result_report(request: HttpRequest):
             involved_id=result_id, type=AIReport.TO_ENTERPRISE)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Result ID.")
+    involved_result = Results.objects.filter(id=result_id).first()
+    expert_id = involved_result.expert_results.filter(
+        results_id=result_id).first().expert_id
+    expert: User = User.objects.get(id=expert_id)
+    expertInfo = {}
+    expertInfo['expertId'] = expert.id
+    expertInfo['expertName'] = expert.username
+    expertInfo['expertTitle'] = expert.expert_info.title
+    expertInfo['expertOrganization'] = expert.institution
+    expertInfo['expertLogoPath'] = expert.icon.path
+    expertInfo['expertEmail'] = expert.email
+    workInfo = {}
+    workInfo['workId'] = involved_result.id
+    workInfo['workName'] = involved_result.title
+    workInfo['workAbstruct'] = involved_result.abstract
+    workInfo['workPic'] = involved_result.picture
+    workInfo['workPeriod'] = involved_result.period
+    workInfo['workField'] = involved_result.field
+    return success_api_response({"content": ret_report.content,
+                                 "workInfo": workInfo,
+                                 "expertInfo": expertInfo,
+                                 })
 
-    return success_api_response({"content": ret_report.content})
+"""发送成果报告的卡片，插入到用户-平台聊天中
+
+    路径：
+        api/work_report/generateCard
+    
+    请求方法：
+        POST
+        
+    请求参数:
+        - id: int, 成果id
+        - uId: int, 用户id
+    
+    返回参数:
+        - 无
+"""
+@jwt_auth()
+@require_POST
+@response_wrapper
+def generate_result_report_card(request: HttpRequest):
+    data = request.POST.dict()
+    user_id = data.get('uId')
+    result_id = data.get('id')
+    try:
+        owner = User.objects.get(id=user_id)
+        involved_report = AIReport.objects.get(
+            involved_id=result_id, type=AIReport.TO_ENTERPRISE)
+    except ObjectDoesNotExist:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Result ID or bad user id.")
+    system_chatroom: SystemChatroom = None
+    if owner.system_chatroom_list.all().exists():
+        system_chatroom = owner.system_chatroom_list.get().id
+    else:
+        system_chatroom = SystemChatroom(owner=owner, isai=SystemChatroom.MANUAL_REPLY,
+                                         last_message_time=get_now_time(), unread_message_num=0)
+        system_chatroom.save()
+    new_card_message_id = CardMessage.new_message(owner=owner, is_to_system=0, content=involved_report.content,
+                                                  type=CardMessage.ENTERPRISE)
+    system_chatroom.add_message(new_card_message_id)
+    return success_api_response()
+    
+
+"""发送需求报告的卡片，插入到用户-平台聊天中
+
+    路径：
+        api/need_report/generateCard
+    
+    请求方法：
+        POST
+        
+    请求参数:
+        - id: int, 成果id
+        - uId: int, 需求id
+    
+    返回参数:
+        - 无
+"""
+@jwt_auth()
+@require_POST
+@response_wrapper
+def generate_requirement_report_card(request: HttpRequest):
+    data = request.POST.dict()
+    user_id = data.get('uId')
+    requirement_id = data.get('id')
+    try:
+        owner = User.objects.get(id=user_id)
+        involved_report = AIReport.objects.get(
+            involved_id=requirement_id, type=AIReport.TO_EXPERT)
+    except ObjectDoesNotExist:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Requirement ID or bad user id.")
+    system_chatroom: SystemChatroom = None
+    if owner.system_chatroom_list.all().exists():
+        system_chatroom = owner.system_chatroom_list.get().id
+    else:
+        system_chatroom = SystemChatroom(owner=owner, isai=SystemChatroom.MANUAL_REPLY,
+                                         last_message_time=get_now_time(), unread_message_num=0)
+        system_chatroom.save()
+    new_card_message_id = CardMessage.new_message(owner=owner, is_to_system=0, content=involved_report.content,
+                                                  type=CardMessage.EXPERT)
+    system_chatroom.add_message(new_card_message_id)
+    return success_api_response()
+    
+    

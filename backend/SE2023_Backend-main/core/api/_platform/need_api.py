@@ -18,6 +18,7 @@ import pytz
 from django.utils import timezone
 from core.api._platform.utils import get_field, get_need_state
 
+from core.api.ai_report import generate_requirement_report
 from core.api.ai_recommend import get_scibert_embedding
 
 
@@ -81,11 +82,10 @@ def expert_recommend(request: HttpRequest, id: int):
 
     expert = experts[index]
     lst.append({"expert_id": expert.id, "scholar_id": expert.expert_info.scholarID, "name": expert.expert_info.name,
-                  "phone": expert.expert_info.phone, "profile": expert.expert_info.self_profile,
-                  "organization": expert.expert_info.organization, "paper": expert.expert_info.paper})
+                "phone": expert.expert_info.phone, "profile": expert.expert_info.self_profile,
+                "organization": expert.expert_info.organization, "paper": expert.expert_info.paper})
 
     # for expert in experts:
-
 
     # for expert in experts:
     #     if random.randint(1, 2) == 1:
@@ -121,7 +121,8 @@ def get_need_contact(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-expert user")
 
     if NeedContact.objects.filter(expert=expert, enterprise=enterprise).exists():
-        need_contact = NeedContact.objects.get(expert=expert, enterprise=enterprise)
+        need_contact = NeedContact.objects.get(
+            expert=expert, enterprise=enterprise)
         info: dict = {"need_id": need_contact.need.id}
         return success_api_response(info)
     else:
@@ -150,9 +151,11 @@ def create_need_contact(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-expert user")
 
     if NeedContact.objects.filter(expert=expert, enterprise=enterprise).exists():
-        NeedContact.objects.filter(expert=expert, enterprise=enterprise).update(need=need)
+        NeedContact.objects.filter(
+            expert=expert, enterprise=enterprise).update(need=need)
     else:
-        needContact = NeedContact(expert=expert, enterprise=enterprise, need=need)
+        needContact = NeedContact(
+            expert=expert, enterprise=enterprise, need=need)
         needContact.save()
     return success_api_response({})
 
@@ -221,7 +224,7 @@ def get_need_info(request: HttpRequest, id: int):
                  "start_time": need.start_time,
                  "end_time": need.end_time, "key_word": need.key_word, "field": need.field, "address": need.address,
                  "state": need.state,
-                 "emergency": need.emergency, 
+                 "emergency": need.emergency,
                  "enterprise_id": enterprise.id, "enterprise_name": enterprise.enterprise_info.name,
                  "enterprise_pic": str(enterprise.icon)}
     order = list()
@@ -233,8 +236,8 @@ def get_need_info(request: HttpRequest, id: int):
             "expert_id": o.user.id,
             "expert_icon": str(o.user.icon),
             "expert_name": o.user.expert_info.name,
-            "enterprise_id": o.enterprise.id  
-        } 
+            "enterprise_id": o.enterprise.id
+        }
         order.append(order_info)
     need_info['order'] = order
     return success_api_response(need_info)
@@ -308,6 +311,9 @@ def create_need(request: HttpRequest):
                 end_time=end_time, key_word=key_word, field=field, address=address,
                 enterprise=user, state=state, emergency=emergency, predict=4, real=0)
     need.save()
+    # 为需求生成报告
+    generate_requirement_report(need.id)
+    # 向milvus库插入向量
     sci_vec = get_scibert_embedding(title)
     get_milvus_connection()
     mid_sci = milvus_insert("O2E_NEED", data=[[sci_vec], [need.id]])
@@ -331,7 +337,7 @@ def get_needs_info(request: HttpRequest):
                      "start_time": str(need.start_time)[0:10], "money": need.money, "key_word": need.key_word,
                      "end_time": str(need.end_time)[0:10], "field": get_field(need.field),
                      "state": get_need_state(need.state),
-                     "emergency": need.emergency, 
+                     "emergency": need.emergency,
                      "enterprise_name": need.enterprise.enterprise_info.name,
                      "address": need.address}
         data.append(need_info)
@@ -392,7 +398,7 @@ def get_all_need(request: HttpRequest):
                 'expert_id': order.user.id,
                 'expert_icon': str(order.user.icon),
                 'expert_name': order.user.expert_info.name,
-                }
+            }
             if expert not in experts:
                 experts.append(expert)
         need_info['experts'] = experts
@@ -430,11 +436,11 @@ def get_finished_need(request: HttpRequest, uid: int):
                 'expert_id': order.user.id,
                 'expert_icon': str(order.user.icon),
                 'expert_name': order.user.expert_info.name,
-                }
+            }
             if expert not in experts:
                 experts.append(expert)
         need_info['experts'] = experts
-        data.append(need_info)                
+        data.append(need_info)
     data.sort(key=lambda x: x["end_time"])
     return success_api_response({"data": data})
 
@@ -465,7 +471,7 @@ def get_saved_need(request: HttpRequest, uid: int):
                 'expert_id': order.user.id,
                 'expert_icon': str(order.user.icon),
                 'expert_name': order.user.expert_info.name,
-                }
+            }
             if expert not in experts:
                 experts.append(expert)
         need_info['experts'] = experts
@@ -521,7 +527,7 @@ def get_proceeding_need(request: HttpRequest, uid: int):
                      "start_time": (need.start_time)[0:10], "money": need.money, "key_word": need.key_word,
                      "end_time": (need.end_time)[0:10], "field": need.field, "state": need.state,
                      "emergency": need.emergency, "address": need.address}
-        
+
         experts = list()
         orders = need.need_order.filter(Q(state=1) | Q(state=3) | Q(state=0))
         for order in orders:
@@ -529,10 +535,10 @@ def get_proceeding_need(request: HttpRequest, uid: int):
                 'expert_id': order.user.id,
                 'expert_icon': str(order.user.icon),
                 'expert_name': order.user.expert_info.name,
-                }
+            }
             if expert not in experts:
                 experts.append(expert)
-        need_info['experts'] = experts                    
+        need_info['experts'] = experts
         data.append(need_info)
     data.sort(key=lambda x: x["end_time"])
     return success_api_response({"data": data})
@@ -586,8 +592,8 @@ def edit_need(request: HttpRequest, uid: int, id: int):
                                       emergency=emergency)
 
     return success_api_response({})
-    
-    
+
+
 @response_wrapper
 # @jwt_auth()
 @require_http_methods(['DELETE'])

@@ -21,25 +21,38 @@ def get_order_report(request: HttpRequest):
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad order ID.")
     ret_data = {}
+    ret_data['orderInfo']={}
     ret_data['needInfo'] ={}
     ret_data['expertInfo'] = {}
     ret_data['enterpriseInfo'] = {}
     ref_need : Need = selected_order.need
     # 基本信息
-    ret_data['needInfo']['needPostTime'] = ref_need.start_time
-    ret_data['needInfo']['orderStartTime'] = selected_order.create_time
-    ret_data['needInfo']['orderEndTime'] = selected_order.end_time
+    ret_data['orderInfo']['needPostTime'] = ref_need.start_time
+    ret_data['orderInfo']['orderStartTime'] = selected_order.create_time
+    ret_data['orderInfo']['orderEndTime'] = selected_order.end_time
+    # 需求信息
+    ret_data['needInfo']['needId'] = ref_need.id
     ret_data['needInfo']['needName'] = ref_need.title
+    ret_data['needInfo']['needKeywords'] = ref_need.key_word
+    ret_data['needInfo']['needField'] = ref_need.field
+    ret_data['needInfo']['needLogoPath'] = ""
     # 专家信息
-    ref_expert = selected_order.user
+    ref_expert:User = selected_order.user
+    ret_data['expertInfo']['expertId'] = ref_expert.id
     ret_data['expertInfo']['expertLogoPath'] = ref_expert.icon.path
+    ret_data['expertInfo']['expertTitle'] = ref_expert.expert_info.title
     ret_data['expertInfo']['expertName'] = ref_expert.username
-    ret_data['expertInfo']['expertProfile'] = ref_expert.biogrpahy
+    ret_data['expertInfo']['expertOrganization'] = ref_expert.expert_info.organization
+    ret_data['expertInfo']['expertEmail'] = ref_expert.email
     # 企业信息
     ref_enterprise: Enterprise_info = selected_order.enterprise.enterprise_info
+    ret_data['enterpriseInfo']['enterpriseId'] = ref_enterprise.id
     ret_data['enterpriseInfo']['enterpriseLogoPath'] = ref_enterprise.legal_person_ID.path
     ret_data['enterpriseInfo']['enterpriseName'] = ref_enterprise.name
-    ret_data['enterpriseInfo']['enterProfile'] = ref_enterprise.instruction
+    ret_data['enterpriseInfo']['enterpriseAddress'] = ref_enterprise.address
+    ret_data['enterpriseInfo']['enterpriseArea'] = ref_enterprise.field
+    
+    return success_api_response(ret_data)
     
 
     

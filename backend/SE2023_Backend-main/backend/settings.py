@@ -165,8 +165,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 # SERVER_IP = '114.116.168.211'
-SERVER_IP = '122.9.14.73'
-# SERVER_IP = '127.0.0.1'
+# SERVER_IP = '122.9.14.73'
+SERVER_IP = '127.0.0.1'
 
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.163.com'

@@ -3,8 +3,8 @@ from django.http import HttpRequest
 from pytz import timezone
 import functools
 from core.api.utils import (failed_api_response, ErrorCode,
-                    success_api_response, parse_data,
-                    wrapped_api, response_wrapper)
+                            success_api_response, parse_data,
+                            wrapped_api, response_wrapper)
 from core.models.user import User
 from core.models.enterprise_info import Enterprise_info
 from core.api.auth import jwt_auth
@@ -15,12 +15,16 @@ from core.api._platform.need_api import finish_need
 import pytz
 from core.api._platform.utils import format_time, get_order_state
 
+from core.models.report_message import ReportMessage
+from core.models.ai_report import AIReport
+from core.models.system_chat import SystemChatroom
+
 def get_info(s):
     max = 20
     if len(s) > max:
         s = s[:20] + '...'
     return s
-        
+
 
 def get_now_time():
     """获取当前时间"""
@@ -46,7 +50,7 @@ def get_diff_time(time):
     elif diff.startswith('0:00'):
         return str(int(diff[5:7])) + "秒前"
     elif diff.startswith('0:'):
-        diff = diff[diff.find(':') + 1: diff.find(':')+ 3]
+        diff = diff[diff.find(':') + 1: diff.find(':') + 3]
         return str(int(diff)) + '分钟前'
     else:
         return diff[0:diff.find(':')] + "小时前"
@@ -57,15 +61,18 @@ def cmp(x, y):
         return -1
     elif x['state'] > y['state']:
         return 1
-    else: 
+    else:
         if x['state'] == 0 or x['state'] == 1:
             if x['create_time'] > y['create_time']:
                 return -1
-            else: return 1
+            else:
+                return 1
         else:
             if x['end_time'] > y['end_time']:
                 return -1
-            else: return 1
+            else:
+                return 1
+
 
 @response_wrapper
 # @jwt_auth()
@@ -77,14 +84,15 @@ def get_user_orderid_byneedID(request: HttpRequest, id: int):
         need = Need.objects.get(id=need_id)
     except:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist usr or need")
-    
+
     res = []
-    
+
     orders = need.need_order.exclude(state=2)
     for order in orders:
         res.append(order.id)
     return success_api_response({"data": res})
-    
+
+
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -93,7 +101,8 @@ def admin_get_all_order(request: HttpRequest):
     data = []
     for order in orders:
         data.append(order.to_dict())
-    return success_api_response({"data": data}) 
+    return success_api_response({"data": data})
+
 
 @response_wrapper
 # @jwt_auth()
@@ -120,6 +129,7 @@ def admin_delete_order(request: HttpRequest, id: int):
     Order.objects.filter(id=id).delete()
     return success_api_response({})
 
+
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -128,8 +138,7 @@ def get_all_order(request: HttpRequest, uid: int):
         user: User = User.objects.get(id=uid)
     except User.DoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist user")
-    
-    
+
     if user.state == 5:
         # 企业
         order_list = user.enterprise_order.all()
@@ -138,7 +147,7 @@ def get_all_order(request: HttpRequest, uid: int):
         order_list = user.expert_order.all()
     else:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "user type is not expert or company")
-    
+
     orders = []
     orders_reject = []
     for order in order_list:
@@ -146,16 +155,16 @@ def get_all_order(request: HttpRequest, uid: int):
         enterprise: User = order.enterprise
         need: Need = order.need
         order_info = {"order_id": order.id, "create_time": (order.create_time), "end_time": (order.end_time),
-            "state": order.state, "expert_id":expert.id, "expert_name": expert.expert_info.name, 
-            "expert_pic": str(expert.icon),
-            "need":{
-                "need_id": need.id,
-                "title": need.title,
-                "enterprise_id": enterprise.id,
-                "enterprise_name": enterprise.enterprise_info.name,
-                "enterprise_pic": str(enterprise.icon),
-                "enterprise_description": get_info(enterprise.enterprise_info.instruction),
-            }}
+                      "state": order.state, "expert_id": expert.id, "expert_name": expert.expert_info.name,
+                      "expert_pic": str(expert.icon),
+                      "need": {
+            "need_id": need.id,
+            "title": need.title,
+            "enterprise_id": enterprise.id,
+            "enterprise_name": enterprise.enterprise_info.name,
+            "enterprise_pic": str(enterprise.icon),
+            "enterprise_description": get_info(enterprise.enterprise_info.instruction),
+        }}
         expert_description = expert.expert_info.organization
         if expert.expert_info.title != None:
             expert_description += ' ' + expert.expert_info.title
@@ -172,7 +181,7 @@ def get_all_order(request: HttpRequest, uid: int):
     for order in orders:
         order["create_time"] = get_diff_time(order['create_time'])
         order["end_time"] = get_diff_time(order['end_time'])
-    
+
     return success_api_response({"data": orders})
 
 
@@ -184,7 +193,7 @@ def get_order_id(request: HttpRequest):
     enterprise_id = data.get('enterprise_id')
     expert_id = data.get("expert_id")
     need_id = data.get('need_id')
-    
+
     try:
         enterprise = User.objects.get(id=enterprise_id)
         expert = User.objects.get(id=expert_id)
@@ -194,12 +203,13 @@ def get_order_id(request: HttpRequest):
 
     if expert.state != 4:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-expert user")
-    if enterprise.state != 5 :
+    if enterprise.state != 5:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-enterprise user")
 
     if Order.objects.filter(enterprise=enterprise, need=need, user=expert).exclude(state=2).exists():
-        order = Order.objects.filter(enterprise=enterprise, need=need, user=expert).exclude(state=2)[0]
-        
+        order = Order.objects.filter(
+            enterprise=enterprise, need=need, user=expert).exclude(state=2)[0]
+
         return success_api_response({"order_id": order.id})
     else:
         return success_api_response({"order_id": 0})
@@ -216,13 +226,12 @@ def get_finished_order(request: HttpRequest, uid: int):
 
     parms:
         - uid: 企业或专家的id 
-    """ 
+    """
     try:
         user: User = User.objects.get(id=uid)
     except User.DoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist user")
-    
-    
+
     if user.state == 5:
         # 企业
         order_list = user.enterprise_order.filter(state__in=[3])
@@ -231,23 +240,23 @@ def get_finished_order(request: HttpRequest, uid: int):
         order_list = user.expert_order.filter(state__in=[3])
     else:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "user type is not expert or company")
-    
+
     orders = []
     for order in order_list:
         expert: User = order.user
         enterprise: User = order.enterprise
         need: Need = order.need
         order_info = {"order_id": order.id, "create_time": order.create_time, "end_time": order.end_time,
-            "state": order.state, "expert_id":expert.id, "expert_name": expert.expert_info.name, 
-            "expert_pic": str(expert.icon),
-            "need":{
-                "need_id": need.id,
-                "title": need.title,
-                "enterprise_id": enterprise.id,
-                "enterprise_name": enterprise.enterprise_info.name,
-                "enterprise_pic":  str(enterprise.icon),
-                "enterprise_description": get_info(enterprise.enterprise_info.instruction),
-            }}
+                      "state": order.state, "expert_id": expert.id, "expert_name": expert.expert_info.name,
+                      "expert_pic": str(expert.icon),
+                      "need": {
+                          "need_id": need.id,
+                          "title": need.title,
+                          "enterprise_id": enterprise.id,
+                          "enterprise_name": enterprise.enterprise_info.name,
+                          "enterprise_pic":  str(enterprise.icon),
+                          "enterprise_description": get_info(enterprise.enterprise_info.instruction),
+                      }}
         expert_description = expert.expert_info.organization
         if expert.expert_info.title != None:
             expert_description += ' ' + expert.expert_info.title
@@ -255,14 +264,13 @@ def get_finished_order(request: HttpRequest, uid: int):
             expert_description += " 副教授 硕导"
         order_info['expert_description'] = expert_description
         orders.append(order_info)
-    
+
     orders.sort(key=lambda x: (x['state'], x["end_time"]), reverse=True)
     for order in orders:
         order["create_time"] = get_diff_time(order['create_time'])
         order["end_time"] = get_diff_time(order['end_time'])
-    
-    return success_api_response({"data":orders})
 
+    return success_api_response({"data": orders})
 
 
 @response_wrapper
@@ -281,8 +289,7 @@ def get_pending_order(request: HttpRequest, uid: int):
         user: User = User.objects.get(id=uid)
     except User.DoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist user")
-    
-    
+
     if user.state == 5:
         # 企业
         order_list = user.enterprise_order.filter(state=0)
@@ -291,23 +298,23 @@ def get_pending_order(request: HttpRequest, uid: int):
         order_list = user.expert_order.filter(state=0)
     else:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "user type is not expert or company")
-    
+
     orders = []
     for order in order_list:
         expert: User = order.user
         enterprise: User = order.enterprise
         need: Need = order.need
         order_info = {"order_id": order.id, "create_time": order.create_time, "end_time": order.end_time,
-            "state": order.state, "expert_id":expert.id, "expert_name": expert.expert_info.name, 
-            "expert_pic": str(expert.icon),
-            "need":{
-                "need_id": need.id,
-                "title": need.title,
-                "enterprise_id": enterprise.id,
-                "enterprise_name": enterprise.enterprise_info.name,
-                "enterprise_pic":  str(enterprise.icon),
-                "enterprise_description": get_info(enterprise.enterprise_info.instruction),
-            }}
+                      "state": order.state, "expert_id": expert.id, "expert_name": expert.expert_info.name,
+                      "expert_pic": str(expert.icon),
+                      "need": {
+                          "need_id": need.id,
+                          "title": need.title,
+                          "enterprise_id": enterprise.id,
+                          "enterprise_name": enterprise.enterprise_info.name,
+                          "enterprise_pic":  str(enterprise.icon),
+                          "enterprise_description": get_info(enterprise.enterprise_info.instruction),
+                      }}
         expert_description = expert.expert_info.organization
         if expert.expert_info.title != None:
             expert_description += ' ' + expert.expert_info.title
@@ -322,6 +329,7 @@ def get_pending_order(request: HttpRequest, uid: int):
         order["end_time"] = get_diff_time(order['end_time'])
 
     return success_api_response({"data": orders})
+
 
 @response_wrapper
 # @jwt_auth()
@@ -339,8 +347,7 @@ def get_cooperating_order(request: HttpRequest, uid: int):
         user: User = User.objects.get(id=uid)
     except User.DoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist user")
-    
-    
+
     if user.state == 5:
         # 企业
         order_list = user.enterprise_order.filter(state=1)
@@ -349,23 +356,23 @@ def get_cooperating_order(request: HttpRequest, uid: int):
         order_list = user.expert_order.filter(state=1)
     else:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "user type is not expert or company")
-    
+
     orders = []
     for order in order_list:
         expert: User = order.user
         enterprise: User = order.enterprise
         need: Need = order.need
         order_info = {"order_id": order.id, "create_time": order.create_time, "end_time": order.end_time,
-            "state": order.state, "expert_id":expert.id, "expert_name": expert.expert_info.name, 
-            "expert_pic": str(expert.icon),
-            "need":{
-                "need_id": need.id,
-                "title": need.title,
-                "enterprise_id": enterprise.id,
-                "enterprise_name": enterprise.enterprise_info.name,
-                "enterprise_pic": str(enterprise.icon),
-                "enterprise_description": get_info(enterprise.enterprise_info.instruction),
-            }}
+                      "state": order.state, "expert_id": expert.id, "expert_name": expert.expert_info.name,
+                      "expert_pic": str(expert.icon),
+                      "need": {
+                          "need_id": need.id,
+                          "title": need.title,
+                          "enterprise_id": enterprise.id,
+                          "enterprise_name": enterprise.enterprise_info.name,
+                          "enterprise_pic": str(enterprise.icon),
+                          "enterprise_description": get_info(enterprise.enterprise_info.instruction),
+                      }}
         expert_description = expert.expert_info.organization
         if expert.expert_info.title != None:
             expert_description += ' ' + expert.expert_info.title
@@ -403,7 +410,7 @@ def finish_order(request: HttpRequest, uid: int, id: int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist enterprise")
     except Order.DoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist order")
-    
+
     if order.enterprise != enterprise:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "not the enterprise's order")
 
@@ -412,12 +419,40 @@ def finish_order(request: HttpRequest, uid: int, id: int):
 
     if order.state == 1 or order.state == 0:
         # if order.state == 1:
-            # need = order.need
-            # if need.need_order.filter(state=3).count() + 1 >= need.predict:
-            #     finish_need(request, uid, need.id)
+        # need = order.need
+        # if need.need_order.filter(state=3).count() + 1 >= need.predict:
+        #     finish_need(request, uid, need.id)
         order.state = 3
         order.end_time = get_now_time()
         order.save()
+        # 新增部分：完成订单后将订单的信息插入到企业用户-平台聊天和专家用户-平台聊天中
+        expert: User = order.user
+        # 给企业的，注意，订单报告id=订单id
+        new_order_report_message_for_enterprise_id: int = ReportMessage.new_report_message(enterprise,
+                                                                                           order.need.description, ReportMessage.ORDER,
+                                                                                           order.need.title, "", "", order.id)
+        # 给专家的
+        new_order_report_message_for_expert_id: int = ReportMessage.new_report_message(expert,
+                                                                                       order.need.description, ReportMessage.ORDER,
+                                                                                       order.need.title, "", "", order.id)
+        system_chatroom_for_expert: SystemChatroom=None
+        if expert.system_chatroom_list.all().exists():
+            system_chatroom_for_expert = expert.system_chatroom_list.get().id
+        else:
+            system_chatroom_for_expert = SystemChatroom(owner=expert, isai=SystemChatroom.MANUAL_REPLY,
+                                     last_message_time=get_now_time(), unread_message_num=0)
+            system_chatroom_for_expert.save()
+        system_chatroom_for_expert.add_message(new_order_report_message_for_expert_id)  # 插入数据库
+        
+        system_chatroom_for_enterprise: SystemChatroom=None
+        if enterprise.system_chatroom_list.all().exists():
+            system_chatroom_for_enterprise = enterprise.system_chatroom_list.get().id
+        else:
+            system_chatroom_for_enterprise = SystemChatroom(owner=enterprise, isai=SystemChatroom.MANUAL_REPLY,
+                                     last_message_time=get_now_time(), unread_message_num=0)
+            system_chatroom_for_enterprise.save()
+        system_chatroom_for_enterprise.add_message(new_order_report_message_for_enterprise_id)
+    
     else:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "The order is not in cooperation")
 
@@ -439,14 +474,14 @@ def accept_order(request: HttpRequest, uid: int, id: int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist expert")
     except Order.DoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist order")
-    
+
     if order.user != expert:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "not the expert's order")
 
     if expert.state != 4:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-expert user")
 
-    need: Need = order.need 
+    need: Need = order.need
     # if need.real >= need.predict:
     #     return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need is full")
 
@@ -475,7 +510,7 @@ def refuse_order(request: HttpRequest, uid: int, id: int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist expert")
     except Order.DoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist order")
-    
+
     if order.user != expert:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "not the expert's order")
 
@@ -483,7 +518,7 @@ def refuse_order(request: HttpRequest, uid: int, id: int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-expert user")
 
     if order.state == 0:
-        order.state=2
+        order.state = 2
         order.end_time = get_now_time()
         order.save()
     else:
@@ -499,18 +534,18 @@ def get_order_info(request: HttpRequest, id: int):
         order: Order = Order.objects.get(id=id)
     except Order.DoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist order")
-    
+
     expert: User = order.user
     enterprise: User = order.enterprise
     need: Need = order.need
     order_info = {"order_id": order.id, "create_time": format_time(order.create_time), "end_time": format_time(order.end_time),
-        "address": need.address, "description": need.description, "phone": enterprise.enterprise_info.phone,
-        "state": order.state, "expert_id":expert.id, "expert_name": expert.expert_info.name, "need":{
-            "need_id": need.id,
-            "title": need.title,
-            "enterprise_id": enterprise.id,
-            "enterprise_name": enterprise.enterprise_info.name
-        }}
+                  "address": need.address, "description": need.description, "phone": enterprise.enterprise_info.phone,
+                  "state": order.state, "expert_id": expert.id, "expert_name": expert.expert_info.name, "need": {
+        "need_id": need.id,
+        "title": need.title,
+        "enterprise_id": enterprise.id,
+        "enterprise_name": enterprise.enterprise_info.name
+    }}
 
     return success_api_response(order_info)
 
@@ -523,7 +558,6 @@ def create_order(request: HttpRequest):
     if not data:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
 
-
     need_id = data.get("need_id")
     expert_id = data.get("expert_id")
     enterprise_id = data.get("enterprise_id")
@@ -534,7 +568,7 @@ def create_order(request: HttpRequest):
         enterprise = User.objects.get(id=enterprise_id)
     except:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "cannot find need or expert or enterprise obj")
-    
+
     if expert.state != 4:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-expert user")
     if enterprise.state != 5:
@@ -546,7 +580,8 @@ def create_order(request: HttpRequest):
 
     # if need.real >= need.predict:
     #     return failed_api_response(ErrorCode.INVAzLID_REQUEST_ARGS, "the need recruitment is full")
-    order: Order = Order(user_id=expert_id, enterprise_id=enterprise_id, need_id=need_id, state=0)
+    order: Order = Order(
+        user_id=expert_id, enterprise_id=enterprise_id, need_id=need_id, state=0)
     order.save()
     return success_api_response({})
 
@@ -562,7 +597,7 @@ def abandon_order(request: HttpRequest, uid: int, id: int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist enterprise")
     except Order.DoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist order")
-    
+
     if order.enterprise != enterprise:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "not the enterprise's order")
 
@@ -582,7 +617,7 @@ def abandon_order(request: HttpRequest, uid: int, id: int):
 @response_wrapper
 # @jwt_auth()
 @require_GET
-def get_order_byID(request:HttpRequest, id:int):
+def get_order_byID(request: HttpRequest, id: int):
     need = Need.objects.get(id=id)
     orders = need.need_order.all()
     data = []
@@ -595,10 +630,10 @@ def get_order_byID(request:HttpRequest, id:int):
                       "address": need.address, "description": need.description,
                       "phone": enterprise.enterprise_info.phone,
                       "state": get_order_state(order.state), "expert_id": expert.id, "expert_name": expert.expert_info.name, "need": {
-                "need_id": need.id,
-                "title": need.title,
-                "enterprise_id": enterprise.id,
-                "enterprise_name": enterprise.enterprise_info.name
-            }}
+            "need_id": need.id,
+            "title": need.title,
+            "enterprise_id": enterprise.id,
+            "enterprise_name": enterprise.enterprise_info.name
+        }}
         data.append(order_info)
-    return success_api_response({"data":data})
+    return success_api_response({"data": data})

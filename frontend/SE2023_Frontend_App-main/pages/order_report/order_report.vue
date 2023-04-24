@@ -110,7 +110,7 @@
                     needId: null,			// 需求id
                     needName: null,		// 需求名称
                     needKeywords: null,		// 需求关键词
-                    needfield: null,		// 需求领域
+                    needField: null,		// 需求领域
                     needLogoPath: null,	// 需求图片
                 },
                 expertInfo: {	// 专家信息
