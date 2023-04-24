@@ -87,7 +87,7 @@
 					:area="item['field']"
 					:index="index1"></work-card>
 				</block> 
-				<block v-for="(item, index2) in recommendList.list" :key="index2">
+<!-- 				<block v-for="(item, index2) in recommendList.list" :key="index2">
 					<work-card
 					@click.native="workDetail(item)"  
 					:authorLogoPath="item['authorLogoPath']" 
@@ -99,7 +99,7 @@
 					:period="item['period']"
 					:area="item['field']"
 					:index="index2"></work-card>
-				</block> 
+				</block> -->
 				<uni-load-more :loadtext="recommendList.loadtext"></uni-load-more>
 			</template>
 		</view>
@@ -280,24 +280,24 @@
 			},
 			async loadRecData(){
 				// TODO 成果推荐 Debug
+				let paras = {
+					"id": this.userInfo.id,
+					"type": this.userInfo.type,
+				}
 				this.recommendList.rec_list = await getWorkRec(paras)
-				// console.log(this.recommendList.rec_list)
+				console.log('RecWork')
+				console.log(this.recommendList.rec_list)
 				// TODO 成果推荐 Debug
 			},
 			async requestData() {
 				try {
-					let paras = {
-						"id": this.userInfo.id,
-						"type": this.userInfo.type,
-					}
-					// var rec_list = {}
-					
 
-					
+					// var rec_list = {}
+
 					// if(rec_list == null){
 					// 	rec_list = {}
 					// }
-					paras = {
+					let paras = {
 						"field": '',
 						"period": '',
 						"key_word": this.searchText,

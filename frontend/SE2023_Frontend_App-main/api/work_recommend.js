@@ -32,7 +32,7 @@ export const getWorkRec = async (paras) => {
             return {
                 "result_id": item.result_id,
                 "expert_id": item.expert_id,
-                "userpic": picUrl + item.expert_icon, //picUrl + item.userpic,
+                "authorLogoPath": picUrl + item.expert_icon, //picUrl + item.userpic,
                 "field": item.field,
                 'author': item.scholars,
                 'title': item.title,
@@ -41,8 +41,8 @@ export const getWorkRec = async (paras) => {
                 'period': item.period,
                 'content': item.content,
                 'state': item.state,
-				'work_logo': item.picture,
-                'workpic': picUrl + file
+				"workLogoPath": picUrl + item.result_pic
+                // 'workpic': picUrl + file
             }
         })
     }
