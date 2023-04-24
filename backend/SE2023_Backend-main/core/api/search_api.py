@@ -24,7 +24,6 @@ def search_expert(request: HttpRequest, *args, **kwargs):
 
     page = int(data.get('page'))
 
-
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
@@ -46,13 +45,9 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     else:
         experts = Expert.objects.all()
 
-
-    # experts = experts[start:end]
-
     start = 10 * (page - 1)
     end = 10 * page
     experts_after = []
-
 
     for expert in experts:
         # print(expert.field)
@@ -105,7 +100,7 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
     address = data.get('address')
 
     # page从第1页开始
-    page = data.get('page')
+    page = int(data.get('page'))
 
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
@@ -126,7 +121,6 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
         # print(enterprises.count())
     else:
         enterprises = Enterprise_info.objects.all()
-
 
     start = 10 * (page - 1)
     end = 10 * page
@@ -184,7 +178,7 @@ def search_result(request: HttpRequest):
     key_word = data.get('key_word')
     period = data.get('period')
     field = data.get('field')
-    page = data.get('page')
+    page = int(data.get('page'))
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
@@ -259,7 +253,7 @@ def search_mixture(request: HttpRequest):
     data = request.GET.dict()
     key_word = data.get('key_word')
     key_words = ''
-    page = data.get('page')
+    page = int(data.get('page'))
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()
     data_res = []

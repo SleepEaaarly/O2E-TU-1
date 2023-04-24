@@ -82,20 +82,18 @@ class HitBert:
         return self.encode(sent)[0].cpu().numpy().tolist()
 
 
-d_name = "core_need"    # 换成专家、企业的表
-c_name = "O2E_NEED"
+d_name = "core_enterprise_info"    # 换成专家、企业的表
+c_name = "O2E_ENTERPRISE_HIT"
 rst = get_all_entity(d_name)
 inp = [[r[1], r[0]] for r in rst]
 # print(pap_titles)
-hit = HitBert(hitModelPath="D:\\大学学习\\大三下\\软件工程\\O2E-TU-1\\backend\\SE2023_Backend-main\\model.pt", device="cpu")
-disconnect_milvus()
-get_milvus_connection()
+hit = HitBert(hitModelPath="D:\\大学学习\\大三下\\软件工程\\O2E-TU-1\\backend\\SE2023_Backend-main\\resource\\bert", device="cpu")
 for i in inp:
     get_milvus_connection()
     vector = hit.encode_2_list(i[0])    # 可能不对，检查一下
     # vector = vector / vector.norm(dim=1, keepdim=True)
-    v = vector.tolist()[0]
-    mid = milvus_insert(c_name, data=[[v], [i[1]]])
+    # v = vector.tolist()[0]
+    mid = milvus_insert(c_name, data=[[vector], [i[1]]])
     disconnect_milvus()
     update_vector(d_name, str(mid[0]), i[1])
 
