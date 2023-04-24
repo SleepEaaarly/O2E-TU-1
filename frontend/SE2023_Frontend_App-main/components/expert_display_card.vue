@@ -15,8 +15,8 @@
 							<u-col span="7">
 								<u-row>
 									<text class = "expertTitle">{{name}}</text>
-								<u-tag v-if="title" :text="title" plain plainFill type="warning"  shape="circle" size = "mini" style="margin-left: 10px;"> </u-tag>
-							
+								<!-- <u-tag v-if="title" :text="title" plain plainFill type="warning"  shape="circle" size = "mini" style="margin-left: 10px;"> </u-tag>
+							 -->
 									
 								</u-row>
 								
@@ -29,12 +29,15 @@
 						</u-row>
 						<u-row style="margin-top: 10px;margin-bottom: 0%;margin-left: 5px;">
 							
-							<u-tag :text="institution" plain size="mini"> </u-tag>
-							<text style="font-size: 10px;margin-left: 5px;
+							<u-tag :text="institution" plain size="mini" class="my-tag"> </u-tag>
+							<u-tag v-if="title" :text="title" plain plainFill type="warning"  shape="circle" size = "mini" 
+							style="margin-left: 5px;" class="title-tag" ellipsis> </u-tag>
+														
+							<!-- <text style="font-size: 10px;margin-left: 5px;
 							text-overflow:ellipsis;
 							overflow:hidden;
 							white-space:nowrap;">
-							{{mail}}</text>
+							{{mail}}</text> -->
 						</u-row>
 			        </u-col>
 					
@@ -77,5 +80,15 @@
 		margin-bottom: 5px;
 		width: 70px;
 	}
+/* 	.title-tag {
+	
+		max-width: 150px; 
+		display: inline-block;
+		
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	} */
+	
 	
 </style>
