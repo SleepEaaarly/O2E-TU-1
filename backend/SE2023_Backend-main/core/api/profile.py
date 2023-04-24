@@ -1,7 +1,7 @@
 
 from core.models.interpretation import Interpretation
 from django.http import HttpRequest
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
 from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
@@ -10,9 +10,9 @@ from core.models.user import User
 
 @response_wrapper
 @jwt_auth()
-@require_GET
+@require_POST
 def get_profile(request: HttpRequest):
-    data: dict = request.GET.dict()
+    data: dict = request.POST.dict()
     user = request.user
     print(user.id)
     if data is not None:

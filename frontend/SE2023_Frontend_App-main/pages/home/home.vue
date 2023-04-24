@@ -209,7 +209,7 @@
 			async initDat() {
 				//console.log(this.homeinfo.userpic)
 				if (this.userInfo && this.userInfo.id) {
-					let userProfile = await getUserProfile()
+					let userProfile = await getUserProfile(this.userInfo.id)
 					
 					let temp = this.userInfo
 					temp.type = userProfile.type

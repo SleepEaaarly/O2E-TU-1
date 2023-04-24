@@ -36,7 +36,8 @@ from core.models import SwitchMessage, ImageMessage
 @response_wrapper
 def create_system_chat(request: HttpRequest):
 
-    data: dict = parse_data(request)
+    # data: dict = parse_data(request)
+    data: dict = request.POST.dict()
     if not data:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
                                    "Invalid request args.")

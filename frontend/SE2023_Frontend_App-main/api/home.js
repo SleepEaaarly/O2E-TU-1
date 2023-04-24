@@ -1,9 +1,11 @@
 import axios from '@/config/requestConfig.js';
-export const  getUserProfile =async () => {
+export const  getUserProfile =async (uId) => {
 	let headers = {
 		"Authorization":'Bearer ' + uni.getStorageSync('token')
 	}
-	let data = await axios.get('user/profile',{},headers)
+	let data = await axios.post('user/profile',{
+		user_id: uId
+	},headers)
 	return data
 }
 
