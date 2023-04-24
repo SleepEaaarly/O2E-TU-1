@@ -11,12 +11,18 @@
                     <uni-easyinput v-model="title" focus placeholder="请输入内容"></uni-easyinput>
                 </uni-section>
                 <uni-section title="摘要" subTitle="描述您的成果" type="line" padding>
-                    <uni-easyinput type="textarea" v-model="description" placeholder="请输入内容"
-                        ></uni-easyinput>
+                    <textarea style="border: 1px solid #e4e4e4;border-radius:5px;background-color:rgba(0,0,0,0);
+					height: 100px;padding: 10px;width: 93%;" 
+					maxlength="-1" v-model="description" placeholder="请输入内容" 
+					placeholder-style="font-size:15rpx;font-weight:300;color:#919191"
+					class="my-textarea"
+                        ></textarea>
                 </uni-section>
 				<uni-section title="内容" subTitle="介绍成果的内容" type="line" padding>
-				    <uni-easyinput type="textarea" v-model="content" placeholder="请输入内容"
-				        ></uni-easyinput>
+				    <textarea style="border: 1px solid #e4e4e4;border-radius:5px;background-color:rgba(0,0,0,0);
+					height: 100px;padding: 10px;width: 93%;" maxlength="-1" v-model="content" placeholder="请输入内容"
+				    placeholder-style="font-size:15rpx;font-weight:300;color:#919191"
+						></textarea>
 				</uni-section>
                 <uni-section title="成果作者" subTitle="多个作者用英文逗号分隔" type="line" padding>
                     <uni-easyinput v-model="scholars" focus placeholder="请输入作者" ></uni-easyinput>

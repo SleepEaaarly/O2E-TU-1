@@ -45,7 +45,7 @@
 <script>
 import ChengguoCard from './ChengguoCard.vue';
 import {BASE_URL_IP} from "../../services/api";
-import { getWorkAll, getWork, WorkApply, WorkRefuse } from '../../services/work';
+import { getWorkUnaudited, getWork, WorkApply, WorkRefuse } from '../../services/work';
 export default {
     name: "ChengguoList",
     components: {ChengguoCard},
@@ -68,7 +68,7 @@ export default {
             //翻页
             pagination: {
                 onChange: (page) => {
-                console.log(page);
+                    console.log(page);
                 },
                 pageSize: 10,
             },
@@ -94,7 +94,7 @@ export default {
         },
         loadPost: function () {
             this.loading = true;
-            getWorkAll(this.pagination.current).then((res) => {
+            getWorkUnaudited(this.pagination.current).then((res) => {
                 console.log(res);
                 console.log(res.data.data)
                 this.listData.length = 0;
