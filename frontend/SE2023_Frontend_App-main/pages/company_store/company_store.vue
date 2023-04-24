@@ -74,14 +74,14 @@
 		},
 		watch: {
 			chosen_address(newVal, oldVal) {
-				this.requestData()
+				this.loadNewData()
 			},
 			chosen_area(newVal, oldVal) {
-				this.requestData()
+				this.loadNewData()
 			},
 			searchText(newVal, oldVal) {
 				console.log('searchText->',this.searchText)
-				this.requestData()
+				this.loadNewData()
 			}
 		},
 		methods: {
@@ -97,6 +97,25 @@
 					url: '../../pages/user-space/user-space?uid=' + company['uid'],
 				})
 				// pages/user-space/user-space?uid=10
+			},
+			async loadNewData(){
+				this.cur_page = 1
+				try {
+					let paras = {
+						"field": this.chosen_area,
+						"address": this.chosen_address,
+						"key_word": this.searchText,
+						"page": this.cur_page
+					}
+					var company_list = await getCompanyList(paras)
+					if(company_list.length===0||company_list==null||company_list==[]||company_list=={}){
+						this.finish_getting = true
+					}
+					this.recommendList.list = company_list
+				} catch (e) {
+					console.log(e)
+					return
+				}
 			},
 			async requestData() {
 				if(this.finish_getting){
