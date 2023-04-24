@@ -56,7 +56,7 @@
 				
 			};
 		},
-		props:['title','companyName','companyLogoPath','intro','time'],
+		props:['title','companyName','companyLogoPath','intro','time', 'id'],
 		methods: {
 			gotoRequireReport() {
 				uni.navigateTo({url: '../../pages/require_report/require_report?reportId=' + this.id})

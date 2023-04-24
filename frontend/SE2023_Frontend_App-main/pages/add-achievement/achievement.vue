@@ -382,7 +382,8 @@ export default {
 				}
 				filelist.push({name:'picture', uri:this.picture})
 				uni.uploadFile({
-					url: 'http://127.0.0.1:8000/api/result/add',
+					// url: 'http://127.0.0.1:8000/api/result/add',
+					url: 'http://116.63.14.146:1234/api/result/add',
 				// url: 'http://122.9.14.73:8000/api/enterprise/setinfo',
 					files: filelist,
 					
