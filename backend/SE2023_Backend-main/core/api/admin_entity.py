@@ -11,6 +11,25 @@ from django.db.models import Q
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')
+def get_all_unaudited_result_info(request: HttpRequest, page: int):
+    start = 10 * (page - 1)
+    end = 10 * page
+    models = Results.objects.all()
+    page_num = models.__len__()
+    models = models[start:end]
+    data = list()
+    for rst in models:
+        if rst.state == 0:
+            data.append(rst.to_dict())
+    return success_api_response({
+        "page_num": page_num,
+        "data": data,
+    })
+
+
+@response_wrapper
+# @jwt_auth()
+@require_http_methods('GET')
 def get_all_result_info(request: HttpRequest, page: int):
     start = 10 * (page - 1)
     end = 10 * page

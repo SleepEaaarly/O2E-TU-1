@@ -50,7 +50,8 @@ class ReportMessage(SystemMessage):
             new_report_message = ReportMessage(content=info, owner=owner,
                                              is_to_system=0, read_state=UNREAD,
                                              report_type=report_type, report_belong_id=involved_id,
-                                             report_title=title, report_name=name, report_logo_path=avatar)
+                                             report_title=title, report_name=name, report_logo_path=avatar,
+                                             type='report')
             print("report_message step1")
             new_report_message.save()
             print("report_message step2")
