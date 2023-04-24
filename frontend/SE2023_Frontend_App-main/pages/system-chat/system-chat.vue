@@ -362,7 +362,7 @@
                 let obj = { // 插入前端列表的数据
                     isme: 1,
                     userpic: this.userInfo.userpic,
-                    type: 'card',
+                    type: 'text',
                     message: data,
                     // message: "http://127.0.0.1:8000/api/images/202205/07/icons/1651921131602.png",
                     time: time.gettime.gettime(now),
