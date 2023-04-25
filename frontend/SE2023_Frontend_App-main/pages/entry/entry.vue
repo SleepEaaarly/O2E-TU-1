@@ -87,7 +87,7 @@
 					:area="item['field']"
 					:index="index1"></work-card>
 				</block> 
-<!-- 				<block v-for="(item, index2) in recommendList.list" :key="index2">
+ 				<block v-for="(item, index2) in recommendList.list" :key="index2">
 					<work-card
 					@click.native="workDetail(item)"  
 					:authorLogoPath="item['authorLogoPath']" 
@@ -99,7 +99,7 @@
 					:period="item['period']"
 					:area="item['field']"
 					:index="index2"></work-card>
-				</block> -->
+				</block>
 				<uni-load-more :loadtext="recommendList.loadtext"></uni-load-more>
 			</template>
 		</view>
@@ -236,7 +236,7 @@
 								val.push(item)
 							}
 						}
-						console.log(val.length)
+						// console.log(val.length)
 						that.items_classified = val
 					} else {
 						that.items_classified = that.items
@@ -272,7 +272,7 @@
 			},
 			
 			workDetail(work) {
-				console.log(work['result_id'])
+				// console.log(work['result_id'])
 				// getExpertByID
 				uni.navigateTo({
 				 	url: '../../pages/work_detail/work_detail?rid=' + work['result_id'],
@@ -285,8 +285,8 @@
 					"type": this.userInfo.type,
 				}
 				this.recommendList.rec_list = await getWorkRec(paras)
-				console.log('RecWork')
-				console.log(this.recommendList.rec_list)
+				// console.log('RecWork')
+				// console.log(this.recommendList.rec_list)
 				// TODO 成果推荐 Debug
 			},
 			async requestData() {
@@ -309,6 +309,7 @@
 					}
 					this.recommendList.list = this.recommendList.list.concat(work_list)
 					this.cur_page = this.cur_page + 1
+					// console.log(this.recommendList.list)
 				} catch (e) {
 					console.log(e)
 					return

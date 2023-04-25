@@ -277,6 +277,7 @@ def refuse_result(request: HttpRequest, id: int):
 @require_GET
 def get_resultInfo(request: HttpRequest, id: int):
     print('get result info')
+    print(id)
     result = Results.objects.get(id=id)
     print(result)
     # if result.state != 1:

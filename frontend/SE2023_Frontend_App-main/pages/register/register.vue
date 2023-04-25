@@ -51,7 +51,7 @@
 			</view>
 			<view class="tui-cell-text">
 				注册代表同意
-				<view class="tui-color-primary" hover-class="tui-opcity" :hover-stay-time="150" @tap="protocol">PaperDaily用户服务协议、隐私政策</view>
+				<view class="tui-color-primary" hover-class="tui-opcity" :hover-stay-time="150" @tap="protocol">O2E_TH用户服务协议、隐私政策</view>
 			</view>
 		</view>
 	</view>

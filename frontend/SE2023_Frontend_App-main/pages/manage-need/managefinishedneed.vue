@@ -24,7 +24,7 @@
 		</template>
 		<template v-else>
 			<view class="u-f-ajc">
-				登陆PaperDaily，体验更多功能
+				登陆O2E_TH，体验更多功能
 			</view>
 			<view class="u-f-ajc" @tap="openLogin">
 				账号密码登陆 
