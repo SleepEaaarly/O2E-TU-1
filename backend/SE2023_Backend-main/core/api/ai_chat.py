@@ -415,7 +415,7 @@ process = Preprocessor(sentence_replace_dict,
                        word_replace_dict, "small", 4, ltpParticipleDict)
 
 recognizer = Recognizer(hit, ques_thresh=0.7,
-                        exp_thresh=0.95, ent_thresh=0.95, res_thresh=0.7)
+                        exp_thresh=0.95, ent_thresh=0.95, res_thresh=0.9)
 
 
 def get_hitbert_embedding(sent):
@@ -516,18 +516,18 @@ def answer_free_question(request: HttpRequest):
     data: dict = json.loads(request.body.decode())
     # print(data)
     question = data.get('input')
-    #
-    # flag, result = process.preprocess(question)
-    # print(result)
-    # print(1)
-    # if not flag:
-    #     return failed_api_response(500, error_msg="非预设问题预处理过程失败")
-    # flag, result2 = recognizer.recognize_words(result)
-    # print(result2)
-    # print(2)
-    # if not flag:
-    #     return failed_api_response(500, error_msg="非预设问题提取关键词过程失败")
-    # print(3)
+
+    flag, result = process.preprocess(question)
+    print(result)
+    print(1)
+    if not flag:
+        return failed_api_response(500, error_msg="非预设问题预处理过程失败")
+    flag, result2 = recognizer.recognize_words(result)
+    print(result2)
+    print(2)
+    if not flag:
+        return failed_api_response(500, error_msg="非预设问题提取关键词过程失败")
+    print(3)
     """
     result2 = {
         "direct": "True/False（是否直接将问题输入给chatGPT）",
@@ -538,14 +538,6 @@ def answer_free_question(request: HttpRequest):
         }
     }
     """
-    result2 = {
-        "direct": "True",
-        "entity": {
-            "expert": ["专家id1", "专家id2"],
-            "enterprise": ["企业id1", "企业id2"],
-            "result": ["成果id1", "成果id2"]
-        }
-    }
     for ent in ["expert", "enterprise", "result"]:
         result2["entity"][ent] = list(set(result2["entity"][ent]))
     final = {
