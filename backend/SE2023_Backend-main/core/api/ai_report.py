@@ -63,14 +63,18 @@ def generate_requirement_report(need_id):
                "Authorization": "Bearer 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"}
     sent_data = {}
     sent_data['model'] = "gpt-3.5-turbo"
-    sent_data['message'] = {"role": "user", "content": msg.encode("utf-8")}
+    sent_data['message'] = [{"role": "user", "content": msg}]
     sent_data['temperature'] = 0.7
     print(sent_data)
-    response = requests.post(url, headers=headers, data=sent_data)
-
+    jsonfy = json.dumps(sent_data)
+    print(jsonfy)
+    response = requests.post(url, headers=headers, data=jsonfy)
+    print(response.content.decode('utf-8'))
+    ret_json = json.loads(response.content.decode('utf-8'))
+    print(ret_json['choices'][0]['message']['content'])
     # 存储生成报告
     newAIReport = AIReport(type=AIReport.TO_EXPERT, involved_id=need_id,
-                           content=response.content.decode('utf-8'))
+                           content=ret_json['choices'][0]['message']['content'])
     newAIReport.save()
 
 
@@ -113,13 +117,13 @@ def generate_result_report(result_id):
                "Authorization": "Bearer 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"}
     sent_data = {}
     sent_data['model'] = "gpt-3.5-turbo"
-    sent_data['messages'] = [{"role": "user", "content": msg.encode('utf-8')}]
+    sent_data['messages'] = [{"role": "user", "content": msg}]
     sent_data['temperature'] = 0.7
     print(sent_data)
     jsonfy = json.dumps(sent_data)
     print(jsonfy)
     response = requests.post(url, headers=headers, data=jsonfy)
-
+    print(response.content.decode('utf-8'))
     ret_json = json.loads(response.content.decode('utf-8'))
     print(ret_json['choices'][0]['message']['content'])
     
