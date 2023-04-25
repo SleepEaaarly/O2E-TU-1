@@ -67,7 +67,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -166,7 +166,8 @@ USE_TZ = True
 
 # SERVER_IP = '114.116.168.211'
 # SERVER_IP = '122.9.14.73'
-SERVER_IP = '127.0.0.1'
+# SERVER_IP = '127.0.0.1'
+SERVER_IP = '43.138.27.92'
 
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.163.com'

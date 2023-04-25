@@ -271,13 +271,16 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     key_vector = key_vector.detach().numpy().tolist()
     id_lists = milvus_search(
         "O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
-    ids = '['
+
+    ids_set = []
     for id_list in id_lists:
         for milvus_id in id_list:
-            ids += str(milvus_id) + ','
-    if ids == '[':
+            ids_set.append(milvus_id)
+    ids_set = list(set(ids_set))
+    if len(ids_set) == 0:
         return success_api_response({"results": []})
-    ids = ids[:-1] + ']'
+
+    ids = str(ids_set)
     query = "milvus_id in " + ids
     result_ids = milvus_query_result_by_id(query)
     result_infos = []
@@ -320,13 +323,16 @@ def result_recommend_for_enterprise(request: HttpRequest, id: int):
     key_vector = key_vector.detach().numpy().tolist()
     id_lists = milvus_search(
         "O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
-    ids = '['
+
+    ids_set = []
     for id_list in id_lists:
         for milvus_id in id_list:
-            ids += str(milvus_id) + ','
-    if ids == '[':
+            ids_set.append(milvus_id)
+    ids_set = list(set(ids_set))
+    if len(ids_set) == 0:
         return success_api_response({"results": []})
-    ids = ids[:-1] + ']'
+
+    ids = str(ids_set)
     query = "milvus_id in " + ids
     result_ids = milvus_query_result_by_id(query)
     result_infos = []
