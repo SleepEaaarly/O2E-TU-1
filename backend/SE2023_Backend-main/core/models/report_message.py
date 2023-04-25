@@ -32,8 +32,8 @@ class ReportMessage(SystemMessage):
     """
     report_type = models.IntegerField()
     report_belong_id = models.IntegerField()
-    report_title = models.CharField(max_length=30)
-    report_name = models.CharField(max_length=30)
+    report_title = models.CharField(max_length=300)
+    report_name = models.CharField(max_length=300)
     report_logo_path = models.CharField(max_length=300)
 
     @classmethod
@@ -47,6 +47,8 @@ class ReportMessage(SystemMessage):
                            involved_id: int
                            ):
         try:
+            if(len(info)>1000):
+                info = info[:1000]
             new_report_message = ReportMessage(content=info, owner=owner,
                                              is_to_system=0, read_state=UNREAD,
                                              report_type=report_type, report_belong_id=involved_id,
@@ -60,6 +62,14 @@ class ReportMessage(SystemMessage):
             return -1
 
     def generate_card(self):
+        print("enter report card generation")
+        print(self.report_type)
+        print(self.REPORT_TYPE[self.report_type])
+        print(self.report_belong_id)
+        print(self.report_title)
+        print(self.report_logo_path)
+        print(self.content)
+        print(self.created_at)
         return {
             "reportType": self.REPORT_TYPE[self.report_type],
             "reportId": self.report_belong_id,

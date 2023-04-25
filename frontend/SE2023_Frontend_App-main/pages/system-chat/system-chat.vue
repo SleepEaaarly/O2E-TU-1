@@ -31,13 +31,42 @@
                         @goToUserInfo="goToUserInfo" 
                         :item="item" :index="index" :isHuman="isHuman"></system-chat-list>
                 </view>
-                <require_message_card v-if="item.type == 'report'"
+                <!-- <require_message_card v-if="item.type == 'report'"
                 title="请帮我写软工吧"
                 companyName="北京航空航天大学"
                 :companyLogoPath="testpic"
                 intro="Here is a summary of some of the most commonly used methods in machine learning."
                 time="上午 7:43"
-            ></require_message_card>
+            ></require_message_card> -->
+                <require_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'NEED'"
+                    :id="item.reportInfo.reportId"
+                    :title="item.reportInfo.reportTitle"
+                    :companyName="item.reportInfo.reportName"
+                    :companyLogoPath="item.reportInfo.reportLogoPath"
+                    :intro="item.reportInfo.reportInfo"
+                    :time="item.reportInfo.time"
+                >
+                </require_message_card>
+                
+                <work_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'WORK'"
+                    :id="item.reportInfo.reportId"
+                    :title="item.reportInfo.reportTitle"
+                    :expertName="item.reportInfo.reportName"
+                    :expertLogoPath="item.reportInfo.reportLogoPath"
+                    :intro="item.reportInfo.reportInfo"
+                    :time="item.reportInfo.time"
+                >
+                </work_message_card>
+
+                <!-- <order_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'order'">
+                </order_message_card> -->
+
+                <order_message_card v-if="item.type=='report' && item.reportInfo.reportType=='ORDER'"
+					:id="item.reportInfo.reportId"
+					:title="item.reportInfo.reportTitle"
+					:intro="item.reportInfo.reportInfo"
+					:time="item.reportInfo.time"
+				></order_message_card>
             </block>
             <!-- <require_message_card
                 title="请帮我写软工吧"
@@ -78,13 +107,15 @@
     // import {getNeedDetail} from '@/api/need-detail.js'
     import require_message_card from '../../components/require_message_card.vue'
     import work_message_card from '../../components/work_message_card.vue'
+    import order_message_card from '../../components/order_message_card.vue'
     export default {
         components: {
             systemChatBottom,
             systemChatCard,
             systemChatList,
             require_message_card,
-            work_message_card
+            work_message_card,
+            order_message_card
         },
         computed: {
             ...mapState(['system_chat', 'userInfo']),
@@ -343,6 +374,9 @@
                     message.type = result.messages[i].type
                     message.gstime = time.gettime.getChatTime(result.messages[i].created_at, last_time)
                     last_time = result.messages[i].created_at
+                    if (message.type == 'report') {
+                        message.reportInfo = result.messages[i].reportInfo
+                    }
                     load_system_chat.messages.push(message)
                     // console.log(message)
                 }

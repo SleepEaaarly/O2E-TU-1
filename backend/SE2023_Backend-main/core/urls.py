@@ -300,14 +300,11 @@ urlpatterns = [
     path('order_report/get', get_order_report),
 
     # 专家企业互释报告
-    path('work_report/submit', generate_requirement_report),
 
-    path('work_report/get', get_requirement_report),
+    path('work_report/get', get_result_report),
 
-    path("need_report/get", generate_result_report),
+    path("need_report/get", get_requirement_report),
 
-    path("need_report/generate", get_result_report),
-    
     path("work_report/generateCard", generate_result_report_card),
     
     path("need_report/generateCard", generate_requirement_report_card),

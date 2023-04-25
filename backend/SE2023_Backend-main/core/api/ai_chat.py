@@ -38,7 +38,7 @@ from core.api.milvus_utils import (
 from core.models.user import User
 from core.models.results import Results
 
-RES_PATH = os.path.abspath(os.getcwd()).split("\\core\\api")[0] + "\\resource"
+RES_PATH = os.path.abspath(os.getcwd()).split("\\core\\api")[0] + "/resource"
 # print(RES_PATH)
 # assert 0
 
@@ -405,7 +405,7 @@ class Recognizer:
         return cand_id
 
 
-hit = HitBert(hitModelPath=RES_PATH + "/bert", device="cpu")
+hit = HitBert(hitModelPath="hfl/chinese-bert-wwm-ext", device="cpu")
 
 sentence_replace_dict = read_json_data(
     RES_PATH + "/sentence_replace_dict.json")
@@ -415,7 +415,7 @@ process = Preprocessor(sentence_replace_dict,
                        word_replace_dict, "small", 4, ltpParticipleDict)
 
 recognizer = Recognizer(hit, ques_thresh=0.7,
-                        exp_thresh=0.95, ent_thresh=0.95, res_thresh=0.7)
+                        exp_thresh=0.95, ent_thresh=0.95, res_thresh=0.9)
 
 
 def get_hitbert_embedding(sent):
@@ -440,7 +440,7 @@ def answer_set_question(request: HttpRequest):
 
 def expert_to_info_str(exp_id):
     print("expert to info str")
-    user = User.objects.get(id=exp_id)
+    user = User.objects.get(expert_info_id=exp_id)
     print("expert to info str2")
     expert = user.expert_info
     info_str = f"{expert.name}，在{expert.organization}工作，" + \
@@ -477,27 +477,27 @@ def expert_to_info_str(exp_id):
             result_info += f"{index + 1}. {result.title}. "
         info_str += result_info
     card_info = {
-        "cardType": "expert", "id": exp_id, "title": expert.name,
+        "cardType": "expert", "id": user.id, "title": expert.name,
         "avatar": user.icon, "info": expert.self_profile
     }
     return info_str, card_info
 
 
 def enterprise_to_info_str(ent_id):
-    user = User.objects.get(id=ent_id)
+    user = User.objects.get(enterprise_info_id=ent_id)
     enterprise = user.enterprise_info
     info_str = f"{enterprise.name}，坐落在{enterprise.address}，" + \
                f"主营业务有{enterprise.field}，" + \
                f"企业简介：{enterprise.self_profile}。"
     card_info = {
-        "cardType": "enterprise", "id": ent_id, "title": enterprise.name,
+        "cardType": "enterprise", "id": user.id, "title": enterprise.name,
         "avatar": user.icon, "info": enterprise.instruction
     }
     return info_str, card_info
 
 
 def result_to_info_str(rst_id):
-    result = Results.get(id=rst_id)
+    result = Results.objects.get(id=rst_id)
     info_str = f"{result.field}领域的技术成果《{result.title}》，{result.abstract}。"
     card_info = {
         "cardType": "technique", "id": rst_id, "title": result.title,
@@ -509,25 +509,25 @@ def result_to_info_str(rst_id):
 @require_POST
 @response_wrapper
 def answer_free_question(request: HttpRequest):
-    # print(0)
-    # get_milvus_connection()
-    # print(1.1)
-    # # data = request.POST.dict()
+    print(0)
+    get_milvus_connection()
+    print(1.1)
+    # data = request.POST.dict()
     data: dict = json.loads(request.body.decode())
-    # print(data)
+    print(data)
     question = data.get('input')
-    #
-    # flag, result = process.preprocess(question)
-    # print(result)
-    # print(1)
-    # if not flag:
-    #     return failed_api_response(500, error_msg="非预设问题预处理过程失败")
-    # flag, result2 = recognizer.recognize_words(result)
-    # print(result2)
-    # print(2)
-    # if not flag:
-    #     return failed_api_response(500, error_msg="非预设问题提取关键词过程失败")
-    # print(3)
+
+    flag, result = process.preprocess(question)
+    print(result)
+    print(1)
+    if not flag:
+        return failed_api_response(500, error_msg="非预设问题预处理过程失败")
+    flag, result2 = recognizer.recognize_words(result)
+    print(result2)
+    print(2)
+    if not flag:
+        return failed_api_response(500, error_msg="非预设问题提取关键词过程失败")
+    print(3)
     """
     result2 = {
         "direct": "True/False（是否直接将问题输入给chatGPT）",
@@ -538,14 +538,8 @@ def answer_free_question(request: HttpRequest):
         }
     }
     """
-    result2 = {
-        "direct": "True",
-        "entity": {
-            "expert": ["专家id1", "专家id2"],
-            "enterprise": ["企业id1", "企业id2"],
-            "result": ["成果id1", "成果id2"]
-        }
-    }
+    for ent in ["expert", "enterprise", "result"]:
+        result2["entity"][ent] = list(set(result2["entity"][ent]))
     final = {
         "code": 200,
         "answer": "",
@@ -560,7 +554,7 @@ def answer_free_question(request: HttpRequest):
     sender: User = User.objects.get(id=user_id)
     system_chatroom: SystemChatroom = None
     if sender.system_chatroom_list.all().exists():
-        system_chatroom = sender.system_chatroom_list.get().id
+        system_chatroom = sender.system_chatroom_list.get(owner_id=user_id)
     else:
         system_chatroom = SystemChatroom(owner=sender, isai=SystemChatroom.MANUAL_REPLY,
                                          last_message_time=get_now_time(), unread_message_num=0)
@@ -584,7 +578,7 @@ def answer_free_question(request: HttpRequest):
             print(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
                                                                card_type=0, title=card_info['title'],
-                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
+                                                               avatar=card_info['avatar'].path, involved_id=card_info['id'])
             print(new_card_message_id)
             system_chatroom.add_message(new_card_message_id)
 
@@ -594,7 +588,8 @@ def answer_free_question(request: HttpRequest):
             final["card"]["enterprise"].append(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
                                                                card_type=1, title=card_info['title'],
-                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
+                                                               avatar=card_info['avatar'].path, involved_id=card_info['id'])
+            print("enterprise", new_card_message_id)
             system_chatroom.add_message(new_card_message_id)
 
         for rst_id in result2["entity"]["result"]:
@@ -603,27 +598,33 @@ def answer_free_question(request: HttpRequest):
             final["card"]["result"].append(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
                                                                card_type=3, title=card_info['title'],
-                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
+                                                               avatar=card_info['avatar'].path, involved_id=card_info['id'])
+            print("result", new_card_message_id)
             system_chatroom.add_message(new_card_message_id)
 
     # todo 荆睿涛：
     #   将final["answer"]和question拼接起来送进chatGPT，然后用chatGPT的回复替换final["answer"]的内容
      # 形成询问prompt
     print(5)
-    demand1 = "请结合已有的信息，回答以下的问题"
-    partial_answer = "其中已知信息为" + final['answer']
-    msg = demand1+partial_answer+", 问题是"+question
-
-    # 整合请求体
-    url = f"https://api.openai.com/v1/chat/completions"
-    headers = {"Content-Type": "application/json",
-               "Authorization": "Bearer $OPEN_API_KEY"}
-    sent_data = []
-    sent_data['model'] = "gpt-3.5-turbo"
-    sent_data['message'] = {"role": "user", "content": msg.encode("utf-8")}
-    sent_data['temperature'] = 0.7
-    response = requests.post(url, headers=headers, data=sent_data)
-
-    final['answer'] = response.content.decode('utf-8')
+    print(final)
+    print(5.5)
+    # demand1 = "请结合已有的信息，回答以下的问题："
+    # partial_answer = "其中已知信息为：" + final['answer']
+    # msg = demand1+partial_answer+", 问题是："+question
+    # print(msg)
+    # # 整合请求体
+    # url = f"https://api.openai.com/v1/chat/completions"
+    # headers = {"Content-Type": "application/json",
+    #            "Authorization": "Bearer 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"}
+    # sent_data = {}
+    # sent_data['model'] = "gpt-3.5-turbo"
+    # sent_data['messages'] = {"role": "user", "content": msg}
+    # sent_data['temperature'] = 0.7
+    # jsonfy = json.dumps(sent_data)
+    # print(jsonfy)
+    # response = requests.post(url, headers=headers, data=jsonfy)
+    # ret_json = json.loads(response.content.decode('utf-8'))
+    # print(ret_json['choices'][0]['message']['content'])
+    # final['answer'] = ret_json['choices'][0]['message']['content']
 
     return success_api_response(final)

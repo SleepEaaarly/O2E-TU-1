@@ -35,7 +35,8 @@
 		</u-row>
 		<u-row style="margin-top: 20rpx;margin-left: 20rpx;margin-right: 20rpx;">
 			<text>
-					成果报告：A summary of Machine Learning
+				{{ content }}
+					<!-- 成果报告：A summary of Machine Learning
 				介绍机器学习
 				机器学习是一种人工智能（AI）技术，通过使用数据和统计模型，让计算机系统自动改进和适应，从而实现高效的决策和预测。
 
@@ -55,7 +56,7 @@
 				随着人工智能技术的不断成熟，机器学习将继续向深度学习、增强学习、自然语言处理和模式识别等方面发展。在快速发展的机器学习领域里，我们可以期待着更多有趣的进展和应用。
 
 				结论
-				作为一种强有力的人工智能技术，机器学习已经改变和重新定义了许多行业，对未来的社会和经济都将产生深远的影响。
+				作为一种强有力的人工智能技术，机器学习已经改变和重新定义了许多行业，对未来的社会和经济都将产生深远的影响。 -->
 				</text>
 		</u-row>
 		
@@ -102,8 +103,8 @@
 			...mapState(['userInfo'])
 		},
 		methods: {
-			getWorkDetailInfo() {
-				let output = getWorkReport(this.inWorkId)
+			async getWorkDetailInfo() {
+				let output = await getWorkReport(this.inWorkId)
 				this.work_info.workName = output.workInfo.workName
 				this.work_info.expert_name = output.expertInfo.expertName
 				this.work_info.expert_title = output.expertInfo.expertTitle 

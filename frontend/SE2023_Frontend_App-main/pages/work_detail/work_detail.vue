@@ -76,7 +76,7 @@
 	import { mapState, mapMutations } from 'vuex'
 	import authorCard from"../../components/author_display_card.vue"
 	import { getWork } from "@/api/work_detail.js"
-	import workGenerateCard from '@/api/work_report.js'
+	import {workGenerateCard} from '@/api/work_report.js'
 	import uniCol from '@/components/uni-row/components/uni-col/uni-col.vue'
 	import uniRow from '@/components/uni-row/components/uni-row/uni-row.vue'
 	import {
@@ -126,11 +126,11 @@
 			goToExpertSpace() {
 				uni.navigateTo({ url:'../user-space/user-space?uid='+this.work_info.user_id })
 			},
-			generateWorkReport() {
+			async generateWorkReport() {
 				// 调用生成报告的 api，后端负责将报告插入到对应的用户-系统聊天之中
 				// console.log(this.userInfo.id)
 				// console.log(this.work_info.work_id)
-				workGenerateCard(this.userInfo.id, this.work_info.work_id)
+				await workGenerateCard(this.userInfo.id, this.work_info.work_id)
 			}
 		},
 		components: {
