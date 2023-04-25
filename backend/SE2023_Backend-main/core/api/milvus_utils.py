@@ -270,21 +270,21 @@ if __name__ == '__main__':
     #     create_milvus_collection("result_id", name, vim)
     names = list_collections()
     print(names)
-    for name in names:
-        print()
-        discribe_milvus_collection(name)
+    # for name in names:
+    #     print()
+    #     discribe_milvus_collection(name)
 
     # collection_name = "O2E_EXPERT_HIT"
     # db_id_name = "expert_id"
     # list_milvus_entities(collection_name, db_id_name)
 
-    # for collection_name in names:
-    #     try:
-    #         collection = get_milvus_collection(collection_name)
-    #         # loading_progress(collection_name, partition_names=None, using='default')
-    #         collection.load()
-    #     except Exception as e:
-    #         print(e)
+    for collection_name in names:
+        try:
+            collection = get_milvus_collection(collection_name)
+            # loading_progress(collection_name, partition_names=None, using='default')
+            collection.load()
+        except Exception as e:
+            print(e)
     # print(connections.list_connections())
     # print(utility.load_state(collection_name))
     disconnect_milvus()
