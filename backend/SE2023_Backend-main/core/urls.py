@@ -2,7 +2,7 @@
 define the url routes of core api
 """
 from django.urls import path
-from core.api.auth import obtain_jwt_token, refresh_jwt_token
+from core.api.auth import obtain_jwt_token, refresh_jwt_token, obtain_jwt_token_admin
 from core.api.chat import get_chat_list, delete_chat, message_read, create_chat, get_chat, push_message
 from core.api.friend import list_friends, list_full_friends
 
@@ -76,6 +76,7 @@ urlpatterns = [
 
     # user apis
     path('token-auth', obtain_jwt_token),
+    path('token-auth/admin', obtain_jwt_token_admin),
     path('token-refresh', refresh_jwt_token),
     path('user/create', CREATE_USER_API),
     path('user/change-password', change_password),
