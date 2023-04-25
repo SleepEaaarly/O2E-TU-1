@@ -34,32 +34,7 @@
 		</u-row>
 		<u-row style="margin-top: 20rpx;margin-left: 20rpx;margin-right: 20rpx;">
 			<text>
-				需求报告：请帮我写软工吧
-				1. 项目背景
-				该项目旨在为需要软工技术帮助的个人和企业提供一站式解决方案。许多人在软件开发过程中会遇到一些困难，而我们的目标是通过提供专业的软工服务来帮助他们克服这些困难。
-				2. 用户需求
-				我们的用户主要包括个人（如程序员、学生等）和企业。他们可能需要以下软工服务：
-				·软件设计和开发
-				·质量保证
-				·需求调研和分析
-				·系统架构设计
-				·软件部署和维护
-				·培训和咨询
-				3. 解决方案 我们将建立一个团队，由经验丰富的软工专家组成。我们将提供以下服务：
-				·线上咨询和支持：提供快速响应和贴心服务，为用户答疑解惑。
-				·定制化服务：根据用户需求，制定相应的计划和流程，并根据实际情况进行数据分析和优化。
-				·社群支持：建立讨论区和社区，为用户提供交流和互动的平台，增强用户对软工知识的学习和理解。
-				4. 技术实现 我们将采用以下技术实现我们的服务：
-				·ASP.NET MVC框架：利用成熟的软件架构来支持大规模并发。
-				·安全性：我们将采用正式认证和授权机制，保证数据的安全性。
-				·数据分析和学习：通过收集和处理大量的数据和反馈，我们会为用户提供更好的服务体验。
-				5. 项目计划 我们将按以下步骤进行软工服务的交付：
-				·需求调研和分析：确定客户需求和要解决的问题。
-				·方案设计：根据客户需求设计定制化的软工方案，包括流程、时间表和预算。
-				·设计开发：在设计阶段，开发团队将负责实施指定的程序建模、编码、测试等任务。
-				·应用部署：经过测试确认后，在线上运行本程序。
-				·训练和维护：在最终部署之前，用户将接受必要的培训，随后执行基本维护任务并获得技术支持。
-				6. 结论 通过该项目，我们可以填补市场空白，打造一站式的软工解决方案。同时，我们也可以帮助用户克服困难，提升软件开发和维护的水平和效率，促进软件行业的发展。
+				{{ content }}
 			</text>
 		</u-row>
 		</view>
@@ -107,8 +82,9 @@
 			...mapState(['userInfo'])
 		},
 		methods: {
-			getRequireDetailInfo() {
-				let output = getRequireReport(this.inRequireId)
+			async getRequireDetailInfo() {
+				let output = await getRequireReport(this.inRequireId)
+				console.log(output)
 				this.require_info.requireName = output.requireInfo.requireName
 				this.require_info.company_name = output.companyInfo.companyName 
 				this.require_info.require_intro = output.requireInfo.requireIntro 

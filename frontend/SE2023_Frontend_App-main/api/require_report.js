@@ -18,8 +18,8 @@ export const getRequireReport = async (id) => {
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
-    let output = await axios.get('require_report', {
-        id: id
+    let output = await axios.get('need_report/get', {
+        reportId: id
     }, headers)
     return output
 }

@@ -13,7 +13,7 @@
 				<!-- <u-tag :text="type" type="error" plain plainFill shape="circle" size = "mini"></u-tag> -->
 			</u-row>
 			<u-row style="margin-bottom: 5rpx;">
-				<u-tag :text="type" type="error" plain plainFill shape="circle" size = "mini"
+				<u-tag v-if="type" :text="type" type="error" plain plainFill shape="circle" size = "mini"
 				style="margin: auto;"></u-tag>
 				
 			</u-row>

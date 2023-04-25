@@ -256,8 +256,8 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     get_milvus_connection()
     user = User.objects.get(id=id)
     papers = user.expert_info.papers.all()
-    print('check milvus connection:[1]')
-    print('Papers:')
+    # print('check milvus connection:[1]')
+    # print('Papers:')
     print(papers)
     if not papers:
         return success_api_response({"results": []})
@@ -265,13 +265,12 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     for paper in papers:
         titles.append(paper.title)
     key_vector = model.get_embeds(titles)
-    print('check milvus connection:[2]')
+    # print('check milvus connection:[2]')
 
     key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
     id_lists = milvus_search(
         "O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
-    print(id_lists)
     ids = '['
     for id_list in id_lists:
         for milvus_id in id_list:
@@ -280,9 +279,7 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
         return success_api_response({"results": []})
     ids = ids[:-1] + ']'
     query = "milvus_id in " + ids
-    print(query)
     result_ids = milvus_query_result_by_id(query)
-    print(result_ids)
     result_infos = []
     for result_id in result_ids:
         result = Results.objects.get(pk=result_id['result_id'])
@@ -305,7 +302,6 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
                 "expert_icon": str(user.icon)
             }
             result_infos.append(result_info)
-    print(result_infos)
     return success_api_response({"results": result_infos})
 
 
