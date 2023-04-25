@@ -63,7 +63,6 @@ def delete_result(request: HttpRequest):
     result.multipic.remove(*result)
     # todo 图片删除
     result.delete()
-    result.save()
 
     return success_api_response({"result": "Ok, all result info has been provided."})
 
