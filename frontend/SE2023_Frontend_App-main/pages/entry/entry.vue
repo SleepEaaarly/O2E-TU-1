@@ -74,7 +74,7 @@
 			
 			<!-- 列表形式导入 -->
 			<template>
-				<block v-for="(item, index1) in recommendList.list" :key="index1">
+				<block v-for="(item, index1) in recommendList.rec_list" :key="index1">
 					<work-card
 					@click.native="workDetail(item)"  
 					:authorLogoPath="item['authorLogoPath']" 
@@ -87,6 +87,19 @@
 					:area="item['field']"
 					:index="index1"></work-card>
 				</block> 
+<!-- 				<block v-for="(item, index2) in recommendList.list" :key="index2">
+					<work-card
+					@click.native="workDetail(item)"  
+					:authorLogoPath="item['authorLogoPath']" 
+					:workLogoPath="item['workLogoPath']" 
+					:author="item['author']"
+					:title="item['title']"
+					:date="item['date']"
+					:intro="item['abstract']"
+					:period="item['period']"
+					:area="item['field']"
+					:index="index2"></work-card>
+				</block> -->
 				<uni-load-more :loadtext="recommendList.loadtext"></uni-load-more>
 			</template>
 		</view>
@@ -126,6 +139,7 @@
 				recommendList: {
 					loadtext: '没有更多数据了',
 					id: 'recommend',
+					rec_list:[],
 					list: [
 						// {
 						// 	'authorLogoPath': '/static/expert_test_head_logo (2).png',
@@ -170,6 +184,7 @@
 		},
 		onShow() {		//页面加载,一个页面只会调用一次
 			console.log('works-onShow()')
+			this.loadRecData()
 			this.requestData()
 		},
 		onLoad() {		//页面显示,每次打开页面都会调用一次
@@ -263,22 +278,26 @@
 				 	url: '../../pages/work_detail/work_detail?rid=' + work['result_id'],
 				 })
 			},
+			async loadRecData(){
+				// TODO 成果推荐 Debug
+				let paras = {
+					"id": this.userInfo.id,
+					"type": this.userInfo.type,
+				}
+				this.recommendList.rec_list = await getWorkRec(paras)
+				console.log('RecWork')
+				console.log(this.recommendList.rec_list)
+				// TODO 成果推荐 Debug
+			},
 			async requestData() {
 				try {
+
+					// var rec_list = {}
+
+					// if(rec_list == null){
+					// 	rec_list = {}
+					// }
 					let paras = {
-						"id": this.userInfo.id,
-						"type": this.userInfo.type,
-					}
-					var rec_list = {}
-					
-					// TODO 成果推荐 Debug
-					rec_list = await getWorkRec(paras)
-					// TODO 成果推荐 Debug
-					
-					if(rec_list == null){
-						rec_list = {}
-					}
-					paras = {
 						"field": '',
 						"period": '',
 						"key_word": this.searchText,

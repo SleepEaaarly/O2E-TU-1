@@ -54,7 +54,7 @@ def get_now_time():
 class HitBert:
     def __init__(self, hitModelPath, device):
         self.hit_tokenizer = BertTokenizer.from_pretrained(hitModelPath)
-        self.hit_model = BertModel.from_pretrained(hitModelPath)
+        self.hit_model = BertModel.from_pretrained(hitModelPath, local_files_only=True)
         self.device = device
         self.hit_model.to(device)
         self.hit_model.eval()
@@ -440,7 +440,7 @@ def answer_set_question(request: HttpRequest):
 
 def expert_to_info_str(exp_id):
     print("expert to info str")
-    user = User.objects.get(id=exp_id)
+    user = User.objects.get(expert_info_id=exp_id)
     print("expert to info str2")
     expert = user.expert_info
     info_str = f"{expert.name}，在{expert.organization}工作，" + \
@@ -477,27 +477,27 @@ def expert_to_info_str(exp_id):
             result_info += f"{index + 1}. {result.title}. "
         info_str += result_info
     card_info = {
-        "cardType": "expert", "id": exp_id, "title": expert.name,
+        "cardType": "expert", "id": user.id, "title": expert.name,
         "avatar": user.icon, "info": expert.self_profile
     }
     return info_str, card_info
 
 
 def enterprise_to_info_str(ent_id):
-    user = User.objects.get(id=ent_id)
+    user = User.objects.get(enterprise_info_id=ent_id)
     enterprise = user.enterprise_info
     info_str = f"{enterprise.name}，坐落在{enterprise.address}，" + \
                f"主营业务有{enterprise.field}，" + \
                f"企业简介：{enterprise.self_profile}。"
     card_info = {
-        "cardType": "enterprise", "id": ent_id, "title": enterprise.name,
+        "cardType": "enterprise", "id": user.id, "title": enterprise.name,
         "avatar": user.icon, "info": enterprise.instruction
     }
     return info_str, card_info
 
 
 def result_to_info_str(rst_id):
-    result = Results.get(id=rst_id)
+    result = Results.objects.get(id=rst_id)
     info_str = f"{result.field}领域的技术成果《{result.title}》，{result.abstract}。"
     card_info = {
         "cardType": "technique", "id": rst_id, "title": result.title,

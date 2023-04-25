@@ -4,6 +4,7 @@ from django.http import HttpRequest
 from django.views.decorators.http import require_GET
 
 from core.api.utils import (response_wrapper, success_api_response)
+from core.models.expert import Expert
 from core.models.papers import Papers
 from core.models.need import Need
 from core.models.user import User
@@ -255,8 +256,8 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     get_milvus_connection()
     user = User.objects.get(id=id)
     papers = user.expert_info.papers.all()
-    print('check milvus connection:[1]')
-    print('Papers:')
+    # print('check milvus connection:[1]')
+    # print('Papers:')
     print(papers)
     if not papers:
         return success_api_response({"results": []})
@@ -264,7 +265,7 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     for paper in papers:
         titles.append(paper.title)
     key_vector = model.get_embeds(titles)
-    print('check milvus connection:[2]')
+    # print('check milvus connection:[2]')
 
     key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
@@ -278,20 +279,29 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
         return success_api_response({"results": []})
     ids = ids[:-1] + ']'
     query = "milvus_id in " + ids
-
     result_ids = milvus_query_result_by_id(query)
     result_infos = []
     for result_id in result_ids:
         result = Results.objects.get(pk=result_id['result_id'])
+        expert = Expert.objects.filter(results__id=result.id)[0]
+        user = User.objects.get(expert_info__id=expert.id)
         if result.state == 1:
             result_info = {
-                "result_id": result.id, "title": result.title, "abstract": result.abstract,
-                "scholars": result.scholars, "pyear": result.pyear, "field": result.field,
-                "period": result.period, "picture": result.picture, "content": result.content,
-                "file": result.file, "state": result.state
+                "user_id": user.id,
+                "result_id": result.id,
+                "expert_id": expert.id,
+                "title": result.title,
+                "abstract": result.abstract,
+                "scholars": result.scholars,
+                "pyear": result.pyear,
+                "field": result.field,
+                "period": result.period,
+                "content": result.content,
+                "state": result.state,
+                "result_pic": result.get_pic(),
+                "expert_icon": str(user.icon)
             }
             result_infos.append(result_info)
-
     return success_api_response({"results": result_infos})
 
 
@@ -322,12 +332,23 @@ def result_recommend_for_enterprise(request: HttpRequest, id: int):
     result_infos = []
     for result_id in result_ids:
         result = Results.objects.get(pk=result_id['result_id'])
+        expert = Expert.objects.filter(results__id=result.id)[0]
+        user = User.objects.get(expert_info__id=expert.id)
         if result.state == 1:
             result_info = {
-                "result_id": result.id, "title": result.title, "abstract": result.abstract,
-                "scholars": result.scholars, "pyear": result.pyear, "field": result.field,
-                "period": result.period, "picture": result.picture, "content": result.content,
-                "file": result.file, "state": result.state
+                "user_id": user.id,
+                "result_id": result.id,
+                "expert_id": expert.id,
+                "title": result.title,
+                "abstract": result.abstract,
+                "scholars": result.scholars,
+                "pyear": result.pyear,
+                "field": result.field,
+                "period": result.period,
+                "content": result.content,
+                "state": result.state,
+                "result_pic": result.get_pic(),
+                "expert_icon": str(user.icon)
             }
             result_infos.append(result_info)
 
