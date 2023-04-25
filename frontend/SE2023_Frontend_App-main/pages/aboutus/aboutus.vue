@@ -17,7 +17,7 @@
 				<uni-list-item :border="false" title="关注微博" thumb="/static/images/share/icon_sina.png"
 				 	 thumb-size="lg" rightText="@PAPDaily"></uni-list-item>
 				<uni-list-item :border="false" title="邮箱联系" thumb="/static/images/share/icon_mail.jpeg"
-					 thumb-size="lg" rightText="paperdaily2022@163.com"></uni-list-item>
+					 thumb-size="lg" rightText="O2E_TH2022@163.com"></uni-list-item>
 				<uni-list-item showArrow :border="false" title="关注Github" thumb="/static/images/share/icon_github.png"
 				 	 thumb-size="lg" rightText="@SE-mcdb"></uni-list-item>
 				

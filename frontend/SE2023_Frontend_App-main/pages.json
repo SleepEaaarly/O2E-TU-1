@@ -459,7 +459,7 @@
 		}, {
 			"path": "pages/user-set-about/user-set-about",
 			"style": {
-				"navigationBarTitleText": "关于PaperDaily",
+				"navigationBarTitleText": "关于O2E_TH",
 				"app-plus": {
 					"scrollIndicator": "none"
 				}
@@ -871,7 +871,7 @@
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "PaperDaily",
+		"navigationBarTitleText": "O2E_TH",
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"backgroundColor": "#FFFFFF"
 
