@@ -52,7 +52,10 @@ def delete_result(request: HttpRequest):
     pid = data.get('id')
     if Results.objects.filter(pk=pid).exists() is False:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, 'Your required result to delete is not found!')
-    Results.objects.get(pk=pid).delete()
+
+    rst = Results.objects.get(pk=pid)
+    rst.expert_results.remove(*rst)
+    rst.delete()
     return success_api_response({"result": "Ok, all result info has been provided."})
 
 
