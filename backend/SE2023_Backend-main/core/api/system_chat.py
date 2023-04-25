@@ -14,6 +14,7 @@ from core.api._platform.utils import get_now_time
 
 from core.models import User, SystemMessage, SystemChatroom, CardMessage, Message
 
+from django.views.decorators.csrf import csrf_exempt
 
 from core.models import SwitchMessage, ImageMessage
 
@@ -31,7 +32,7 @@ from core.models.report_message import ReportMessage
         - id: system chatroom id
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -75,7 +76,7 @@ def create_system_chat(request: HttpRequest):
         - noreadnum: int 未读信息数
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -134,7 +135,7 @@ def get_system_chat(request: HttpRequest):
         'message_id': message_id
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -177,7 +178,7 @@ def push_system_message(request: HttpRequest):
         - 是否成功
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -214,7 +215,7 @@ def system_message_read(request: HttpRequest):
         - 成功或失败信息
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -253,7 +254,7 @@ def alter_systemchat_visible(request: HttpRequest):
         - 结构较为复杂，详情请见设计文档
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -312,7 +313,7 @@ def get_all_system_chatrooms(request: HttpRequest):
     
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 def push_system_message_by_admin(request: HttpRequest):
