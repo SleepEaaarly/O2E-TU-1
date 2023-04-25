@@ -1,6 +1,6 @@
 from django.http import HttpRequest
 
-from .milvus_utils import get_milvus_connection, milvus_delete
+from .milvus_utils import get_milvus_connection, milvus_delete, disconnect_milvus
 from .utils import (failed_api_response, ErrorCode,
                     success_api_response, parse_data,
                     wrapped_api, response_wrapper)
@@ -58,6 +58,8 @@ def delete_result(request: HttpRequest):
     get_milvus_connection()
     milvus_delete("O2E_RESULT_HIT", result.vector_hit)
     milvus_delete("O2E_RESULT", result.vector_sci)
+    disconnect_milvus()
+    result.expert_results.remove(*result)
     result.delete()
     return success_api_response({"result": "Ok, all result info has been provided."})
 

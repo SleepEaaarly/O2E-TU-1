@@ -82,10 +82,10 @@ class HitBert:
         return self.encode(sent)[0].cpu().numpy().tolist()
 
 
-d_name = "core_expert"    # 换成专家、企业的表
-c_name = "O2E_EXPERT_HIT"
+d_name = "core_question"    # 换成专家、企业的表
+c_name = "SET_QUESTION_HIT"
 rst = get_all_entity(d_name)
-inp = [[r[2], r[0]] for r in rst]
+inp = [[r[1], r[0]] for r in rst]
 # print(pap_titles)
 hit = HitBert(hitModelPath="D:\\大学学习\\大三下\\软件工程\\O2E-TU-1\\backend\\SE2023_Backend-main\\resource\\bert", device="cpu")
 for i in inp:
