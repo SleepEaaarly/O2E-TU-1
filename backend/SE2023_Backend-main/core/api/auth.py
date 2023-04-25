@@ -171,7 +171,7 @@ def obtain_jwt_token(request: HttpRequest):
 
     [method]: POST
     """
-    print("enter jwt token");
+    print("enter jwt token")
     data: dict = json.loads(request.body.decode())
     print(data)
     if not data:
@@ -199,6 +199,46 @@ def obtain_jwt_token(request: HttpRequest):
     print(userInfo)
     result = {
         "userInfo":userInfo,
+        "access_token": generate_access_token(user.id).decode('utf-8'),
+        "refresh_token": generate_refresh_token(user).decode('utf-8'),
+    }
+    print(result)
+    return success_api_response(result)
+
+
+@csrf_exempt
+@response_wrapper
+@require_POST
+def obtain_jwt_token_admin(request: HttpRequest):
+
+    data: dict = json.loads(request.body.decode())
+    print(data)
+    if not data:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
+    user = authenticate(username=data.get('username'), password=data.get('password'))
+    if user.is_superuser != 1:
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "You are not superuser.")
+    print(user)
+    '''
+    if not user:
+        user = super_authenticate(data.get('username'), data.get('password'))
+        if not user:
+            return failed_api_response(ErrorCode.UNAUTHORIZED, "Login or superuser Login required.")
+        userInfo = getAdminUserInfo(user)
+
+        result = {
+            "userInfo":userInfo,
+            "access_token": generate_access_token(user.id),
+            "refresh_token": generate_refresh_token2(user),
+        }
+
+        return failed_api_response(ErrorCode.UNAUTHORIZED, "Login required.")
+    '''
+
+    userInfo = getUserInfo(user)
+    print(userInfo)
+    result = {
+        "userInfo": userInfo,
         "access_token": generate_access_token(user.id).decode('utf-8'),
         "refresh_token": generate_refresh_token(user).decode('utf-8'),
     }

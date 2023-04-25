@@ -8,7 +8,7 @@ from core.api.auth import jwt_auth
 from django.views.decorators.http import require_http_methods
 from core.models import User, Results
 from django.db.models import Q
-
+from django.views.decorators.csrf import csrf_exempt
 
 @response_wrapper
 # @jwt_auth()
@@ -45,7 +45,7 @@ def get_all_result_info(request: HttpRequest, page: int):
         "data": data,
     })
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -60,7 +60,10 @@ def delete_result(request: HttpRequest):
     milvus_delete("O2E_RESULT", result.vector_sci)
     disconnect_milvus()
     result.expert_results.remove(*result)
+    result.multipic.remove(*result)
+    # todo 图片删除
     result.delete()
+
     return success_api_response({"result": "Ok, all result info has been provided."})
 
 

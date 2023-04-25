@@ -80,7 +80,7 @@ import fuiCard from "@/components/firstui/fui-card/fui-card.vue"
         },
         onLoad() {
             console.log("onReady")
-            this.initdata()
+            // this.initdata()
 
         },
         onShow() {
@@ -124,14 +124,14 @@ import fuiCard from "@/components/firstui/fui-card/fui-card.vue"
                 console.log(this.cardInfo)
             },
             gotoCardDetail() {
-                {  
-                    this.cardInfo = {},
-                    this.cardInfo.title = "测试专家"
-                    this.cardInfo.cardType = 'technique',
-                    this.cardInfo.id = 6,
-                    this.cardInfo.avatar = "http://localhost:8080/static/img/need_contracted.b69b28cb.jpg",
-                    this.cardInfo.info = "测试长消息测试长消息测试长消息测试场消息"
-                }
+                // {  
+                //     this.cardInfo = {},
+                //     this.cardInfo.title = "测试专家"
+                //     this.cardInfo.cardType = 'technique',
+                //     this.cardInfo.id = 6,
+                //     this.cardInfo.avatar = "http://localhost:8080/static/img/need_contracted.b69b28cb.jpg",
+                //     this.cardInfo.info = "测试长消息测试长消息测试长消息测试场消息"
+                // }
                 console.log(this.cardInfo)
                 if (this.cardInfo.cardType === 'expert') {
                     uni.navigateTo({url: '../../pages/user-space/user-space?uid=' + this.cardInfo.id})
