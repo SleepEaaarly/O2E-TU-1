@@ -14,9 +14,10 @@ from copy import deepcopy
 from core.models.ai_report import AIReport
 from core.models.card_message import CardMessage
 from core.models.system_chat import SystemChatroom
-
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 import pytz
+from core.api.utils import parse_data
 
 import traceback
 from ltp import LTP
@@ -421,15 +422,17 @@ recognizer = Recognizer(hit, ques_thresh=0.7,
 def get_hitbert_embedding(sent):
     return hit.encode_2_list(sent)
 
-
+@csrf_exempt
 @require_POST
 @response_wrapper
 def answer_set_question(request: HttpRequest):
+    print("enter answer set question")
     get_milvus_connection()
-    data = request.POST.dict()
+    data = parse_data(request)
     question = data.get('input')
-    print()
+    print(question)
     ques = process.replacesentword(question)
+    print(ques)
     flag, result = recognizer.recognize_whole(ques)
     if not flag:
         return failed_api_response(500, error_msg="预设问题识别过程失败")
@@ -505,7 +508,7 @@ def result_to_info_str(rst_id):
     }
     return info_str, card_info
 
-
+@csrf_exempt
 @require_POST
 @response_wrapper
 def answer_free_question(request: HttpRequest):
