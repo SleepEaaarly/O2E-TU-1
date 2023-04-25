@@ -571,37 +571,40 @@ def answer_free_question(request: HttpRequest):
     #   根据张凯歌给的前端卡片信息展示需求（cardInfo），把信息放到final["card"][?]。
     #   （列表元素是一个个dict：{"cardType": xx, "id": xx, "title": xx, "avatar": xx, "info": xx}）
     #   result2["entity"]有多少个元素，final["card"]就得对应上
-
+    print(result2)
     if result2["direct"] == "False":
 
         for exp_id in result2["entity"]["expert"]:
             info_str, card_info = expert_to_info_str(exp_id)
             final["answer"] += info_str
+            card_info['avatar'] = card_info['avatar'].path
             final["card"]["expert"].append(card_info)
             print(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
                                                                card_type=0, title=card_info['title'],
-                                                               avatar=card_info['avatar'].path, involved_id=card_info['id'])
+                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
             print(new_card_message_id)
             system_chatroom.add_message(new_card_message_id)
 
         for ent_id in result2["entity"]["enterprise"]:
             info_str, card_info = enterprise_to_info_str(ent_id)
             final["answer"] += info_str
+            card_info['avatar'] = card_info['avatar'].path
             final["card"]["enterprise"].append(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
                                                                card_type=1, title=card_info['title'],
-                                                               avatar=card_info['avatar'].path, involved_id=card_info['id'])
+                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
             print("enterprise", new_card_message_id)
             system_chatroom.add_message(new_card_message_id)
 
         for rst_id in result2["entity"]["result"]:
             info_str, card_info = result_to_info_str(rst_id)
             final["answer"] += info_str
+            card_info['avatar'] = card_info['avatar'].path
             final["card"]["result"].append(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
                                                                card_type=3, title=card_info['title'],
-                                                               avatar=card_info['avatar'].path, involved_id=card_info['id'])
+                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
             print("result", new_card_message_id)
             system_chatroom.add_message(new_card_message_id)
 

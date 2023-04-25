@@ -14,6 +14,7 @@ from core.api._platform.utils import get_now_time
 
 from core.models import User, SystemMessage, SystemChatroom, CardMessage, Message
 
+from django.views.decorators.csrf import csrf_exempt
 
 from core.models import SwitchMessage, ImageMessage
 
