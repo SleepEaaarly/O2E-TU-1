@@ -435,24 +435,25 @@ def finish_order(request: HttpRequest, uid: int, id: int):
         new_order_report_message_for_expert_id: int = ReportMessage.new_report_message(expert,
                                                                                        order.need.description, ReportMessage.ORDER,
                                                                                        order.need.title, "", "", order.id)
+        print(new_order_report_message_for_enterprise_id, new_order_report_message_for_expert_id)
         system_chatroom_for_expert: SystemChatroom=None
         if expert.system_chatroom_list.all().exists():
-            system_chatroom_for_expert = expert.system_chatroom_list.get().id
+            system_chatroom_for_expert = expert.system_chatroom_list.get(owner_id=expert.id)
         else:
             system_chatroom_for_expert = SystemChatroom(owner=expert, isai=SystemChatroom.MANUAL_REPLY,
                                      last_message_time=get_now_time(), unread_message_num=0)
             system_chatroom_for_expert.save()
         system_chatroom_for_expert.add_message(new_order_report_message_for_expert_id)  # 插入数据库
-        
+        print(system_chatroom_for_expert)
         system_chatroom_for_enterprise: SystemChatroom=None
         if enterprise.system_chatroom_list.all().exists():
-            system_chatroom_for_enterprise = enterprise.system_chatroom_list.get().id
+            system_chatroom_for_enterprise = enterprise.system_chatroom_list.get(owner_id=enterprise.id)
         else:
             system_chatroom_for_enterprise = SystemChatroom(owner=enterprise, isai=SystemChatroom.MANUAL_REPLY,
                                      last_message_time=get_now_time(), unread_message_num=0)
             system_chatroom_for_enterprise.save()
         system_chatroom_for_enterprise.add_message(new_order_report_message_for_enterprise_id)
-    
+        print(system_chatroom_for_enterprise)
     else:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "The order is not in cooperation")
 

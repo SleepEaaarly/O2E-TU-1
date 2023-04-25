@@ -28,8 +28,9 @@ def get_order_report(request: HttpRequest):
     ref_need : Need = selected_order.need
     # 基本信息
     ret_data['orderInfo']['needPostTime'] = ref_need.start_time
-    ret_data['orderInfo']['orderStartTime'] = selected_order.create_time
-    ret_data['orderInfo']['orderEndTime'] = selected_order.end_time
+    ret_data['orderInfo']['orderStartTime'] = selected_order.create_time.strftime("%Y-%m-%d %H:%M:%S")
+    ret_data['orderInfo']['orderEndTime'] = selected_order.end_time.strftime("%Y-%m-%d %H:%M:%S")
+    # print(ret_data['orderInfo']['orderStartTime'], ret_data)
     # 需求信息
     ret_data['needInfo']['needId'] = ref_need.id
     ret_data['needInfo']['needName'] = ref_need.title

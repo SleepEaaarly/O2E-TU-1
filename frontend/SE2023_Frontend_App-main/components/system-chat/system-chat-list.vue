@@ -17,7 +17,7 @@
                 <!-- <system-chat-card v-if="item.type == 'card'" :src="item.message" class="system-chat-card"></system-chat-card>  -->
                 <system-chat-card v-if="item.type == 'card'" :cardInfo="item.cardInfo" class="system-chat-card"></system-chat-card> 
                 <!-- 报告 -->
-                <require_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'need'"
+                <require_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'NEED'"
                     :id="item.reportInfo.reportId"
                     :title="item.reportInfo.reportTitle"
                     :companyName="item.reportInfo.reportName"
@@ -28,7 +28,7 @@
 
                 </require_message_card>
                 
-                <work_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'work'"
+                <work_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'WORK'"
                     :id="item.reportInfo.reportId"
                     :title="item.reportInfo.reportTitle"
                     :expertName="item.reportInfo.reportName"
@@ -42,7 +42,7 @@
                 <!-- <order_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'order'">
                 </order_message_card> -->
 
-                <order_message_card v-if="item.type=='report' && item.reportInfo.reportType=='order'"
+                <order_message_card v-if="item.type=='report' && item.reportInfo.reportType=='ORDER'"
 					:id="item.reportInfo.reportId"
 					:title="item.reportInfo.reportTitle"
 					:intro="item.reportInfo.reportInfo"

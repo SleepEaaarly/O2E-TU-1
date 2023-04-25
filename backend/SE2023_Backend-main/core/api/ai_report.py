@@ -140,7 +140,9 @@ def generate_result_report(result_id):
 @response_wrapper
 def get_requirement_report(request: HttpRequest):
     data = request.GET.dict()
-    need_id = data.get('id')
+    print(data)
+    need_id = data.get('reportId')
+    print(need_id)
     try:
         ret_report = AIReport.objects.get(
             involved_id=need_id, type=AIReport.TO_EXPERT)
@@ -154,11 +156,13 @@ def get_requirement_report(request: HttpRequest):
     companyInfo['companyAddress'] = company.enterprise_info.address
     companyInfo['companyLogoPath'] = company.icon.path
     companyInfo['companyArea'] = company.enterprise_info.address
+    print(companyInfo)
     requireInfo = {}
     requireInfo['requireId'] = requirement.id
     requireInfo['requireName'] = requirement.title
     requireInfo['requireIntro'] = requirement.description
     requireInfo['requireKeywords'] = requirement.key_word
+    print(requireInfo)
     return success_api_response({"content": ret_report.content,
                                  "companyInfo": companyInfo,
                                  "requireInfo": requireInfo,
@@ -192,24 +196,35 @@ def get_result_report(request: HttpRequest):
             involved_id=result_id, type=AIReport.TO_ENTERPRISE)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Result ID.")
-    involved_result = Results.objects.filter(id=result_id).first()
-    expert_id = involved_result.expert_results.filter(
-        results_id=result_id).first().expert_id
-    expert: User = User.objects.get(id=expert_id)
+    involved_result = Results.objects.get(id=result_id)
+    print("result", involved_result)
+    expert:Expert = involved_result.expert_results.first()
+    print("expert", expert.expert_info)
+    print(expert.expert_info.id)
+    print(expert.name)
+    print(expert.title)
+    print(expert.organization)
+    print(expert.ID_pic.path)
+    print(expert.expert_info.email)
     expertInfo = {}
-    expertInfo['expertId'] = expert.id
-    expertInfo['expertName'] = expert.username
-    expertInfo['expertTitle'] = expert.expert_info.title
-    expertInfo['expertOrganization'] = expert.institution
-    expertInfo['expertLogoPath'] = expert.icon.path
-    expertInfo['expertEmail'] = expert.email
+    expertInfo['expertId'] = expert.expert_info.id
+    expertInfo['expertName'] = expert.name
+    if(expert.title!=None):
+        expertInfo['expertTitle'] = expert.title
+    else:
+        expertInfo['expertTitle'] = ""
+    expertInfo['expertOrganization'] = expert.organization
+    expertInfo['expertLogoPath'] = expert.ID_pic.path
+    expertInfo['expertEmail'] = expert.expert_info.email
+    print(expertInfo)
     workInfo = {}
     workInfo['workId'] = involved_result.id
     workInfo['workName'] = involved_result.title
-    workInfo['workAbstruct'] = involved_result.abstract
-    workInfo['workPic'] = involved_result.picture
+    workInfo['workAbstract'] = involved_result.abstract
+    workInfo['workPic'] = involved_result.picture.path
     workInfo['workPeriod'] = involved_result.period
     workInfo['workField'] = involved_result.field
+    print(workInfo)
     return success_api_response({"content": ret_report.content,
                                  "workInfo": workInfo,
                                  "expertInfo": expertInfo,
@@ -237,26 +252,32 @@ def generate_result_report_card(request: HttpRequest):
     data = parse_data(request)
     user_id = data.get('uId')
     result_id = data.get('id')
+    print(user_id, result_id)
     try:
         owner = User.objects.get(id=user_id)
         involved_report = AIReport.objects.get(
             involved_id=result_id, type=AIReport.TO_ENTERPRISE)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Result ID or bad user id.")
+    print("owner", owner)
+    print("involved_report", involved_report)
     system_chatroom: SystemChatroom = None
     if owner.system_chatroom_list.all().exists():
-        system_chatroom = owner.system_chatroom_list.get(owner=user_id)
+        system_chatroom = owner.system_chatroom_list.get(owner_id=user_id)
     else:
         system_chatroom = SystemChatroom(owner=owner, isai=SystemChatroom.MANUAL_REPLY,
                                          last_message_time=get_now_time(), unread_message_num=0)
         system_chatroom.save()
-    involved_result:Results= Results.object.get(id=result_id)
-    expert:Expert = involved_result.expert_results.filter(results_id=result_id)
+    print("system chatroom", system_chatroom)
+    involved_result:Results= Results.objects.get(id=result_id)
+    print("involved_result", involved_result)
+    expert:Expert = involved_result.expert_results.first()
+    print("expert", expert)
     new_report_message_id = ReportMessage.new_report_message(owner=owner, info=involved_report.content,
                                                              report_type=ReportMessage.WORK, title=involved_result.title,
                                                              name=expert.name,avatar="",involved_id=result_id)
     system_chatroom.add_message(new_report_message_id)
-    return success_api_response()
+    return success_api_response({})
     
 
 """发送需求报告的卡片，插入到用户-平台聊天中

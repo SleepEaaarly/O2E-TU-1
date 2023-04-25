@@ -142,8 +142,8 @@
             ...mapState(['userInfo'])
         },
 		methods: {
-			getOrderDetailInfo() {
-                let output = getOrderReport(this.inReportId)
+			async getOrderDetailInfo() {
+                let output = await getOrderReport(this.inReportId)
                 console.log(output)
                 this.dataArray[0].time = output.orderInfo.needPostTime
                 this.dataArray[1].time = output.orderInfo.orderStartTime
