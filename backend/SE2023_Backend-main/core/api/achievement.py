@@ -10,6 +10,7 @@ from core.api.ai_report import generate_result_report
 from core.api.milvus_utils import milvus_insert, get_milvus_connection, disconnect_milvus
 from core.api.ai_chat import get_hitbert_embedding
 from core.api.ai_recommend import get_scibert_embedding
+from django.views.decorators.csrf import csrf_exempt
 
 '''
     add paper
@@ -29,7 +30,7 @@ from core.api.ai_recommend import get_scibert_embedding
         - OK
 '''
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -79,7 +80,7 @@ def add_paper(request: HttpRequest):
         - OK
 '''
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -129,7 +130,7 @@ def add_patent(request: HttpRequest):
         - OK
 '''
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -166,7 +167,7 @@ def add_project(request: HttpRequest):
 
     return success_api_response({})
 
-
+@csrf_exempt
 @require_POST
 @response_wrapper
 def add_result(request: HttpRequest):
@@ -220,7 +221,7 @@ def add_result(request: HttpRequest):
 """
 # @jwt_auth()
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def agree_result(request: HttpRequest, id: int):
@@ -257,7 +258,7 @@ def agree_result(request: HttpRequest, id: int):
 """
 # @jwt_auth()
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def refuse_result(request: HttpRequest, id: int):

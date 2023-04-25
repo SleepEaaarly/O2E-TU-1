@@ -22,7 +22,7 @@ from core.models.auth_record import AuthRecord
 from core.models.user import User
 # from core.models.user import AdminUser
 # from core.models.user import super_authenticate
-
+from django.views.decorators.csrf import csrf_exempt
 
 def auth_failed(message: str):
     """shorten
@@ -161,7 +161,7 @@ def verify_jwt_token2(request: HttpRequest) -> (bool, str, int):
     return (flag, message, user_id)
 '''
 
-
+@csrf_exempt
 @response_wrapper
 @require_POST
 def obtain_jwt_token(request: HttpRequest):
@@ -171,12 +171,14 @@ def obtain_jwt_token(request: HttpRequest):
 
     [method]: POST
     """
+    print("enter jwt token");
     data: dict = json.loads(request.body.decode())
+    print(data)
     if not data:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
 
     user = authenticate(username=data.get('username'), password=data.get('password'))
-
+    print(user)
     '''
     if not user:
         user = super_authenticate(data.get('username'), data.get('password'))
@@ -194,11 +196,13 @@ def obtain_jwt_token(request: HttpRequest):
     '''
 
     userInfo = getUserInfo(user)
+    print(userInfo)
     result = {
         "userInfo":userInfo,
-        "access_token": generate_access_token(user.id),
-        "refresh_token": generate_refresh_token(user),
+        "access_token": generate_access_token(user.id).decode('utf-8'),
+        "refresh_token": generate_refresh_token(user).decode('utf-8'),
     }
+    print(result)
     return success_api_response(result)
 
 

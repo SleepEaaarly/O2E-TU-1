@@ -54,7 +54,7 @@ def get_now_time():
 class HitBert:
     def __init__(self, hitModelPath, device):
         self.hit_tokenizer = BertTokenizer.from_pretrained(hitModelPath)
-        self.hit_model = BertModel.from_pretrained(hitModelPath, local_files_only=True)
+        self.hit_model = BertModel.from_pretrained(hitModelPath)
         self.device = device
         self.hit_model.to(device)
         self.hit_model.eval()
@@ -405,7 +405,7 @@ class Recognizer:
         return cand_id
 
 
-hit = HitBert(hitModelPath=RES_PATH + "/bert", device="cpu")
+hit = HitBert(hitModelPath="hfl/chinese-bert-wwm-ext", device="cpu")
 
 sentence_replace_dict = read_json_data(
     RES_PATH + "/sentence_replace_dict.json")
