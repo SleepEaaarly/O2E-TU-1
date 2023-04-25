@@ -29,7 +29,7 @@ class SystemMessage(models.Model):
         - type
     """
     type = models.CharField(max_length=30)
-    content = models.CharField(max_length=140)
+    content = models.CharField(max_length=16000)
     owner = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="chat_user")
     is_to_system = models.IntegerField()

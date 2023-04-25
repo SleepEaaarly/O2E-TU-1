@@ -41,36 +41,45 @@ from core.models.expert import Expert
         - 无
 """
 def generate_requirement_report(need_id):
+    print("enter requirement report")
     try:
         need = Need.objects.get(id=need_id)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Requirement ID.")
-
+    print(need)
+    print(need.title)
+    print(need.description)
+    print(need.key_word)
+    print(Need.NEED_FIELD_CHOICES[need.field][1])
     # 形成询问prompt
     demand1 = "请将以下的企业需求转化成一份详细的需求报告，包括功能点的划分，每个功能点的形式化表述、详细描述以及其参考技术路线。"
     require_title = "该需求的标题为"+need.title+", "
     require_description = "该需求的描述为"+need.description+", "
     require_keywords = "请同时考虑该需求的关键字"+need.key_word+", "
-    require_field = "以及该需求涉及的领域"+need.field+"。"
+    require_field = "以及该需求涉及的领域"+Need.NEED_FIELD_CHOICES[need.field][1]+"。"
     format = "报告采用markdown格式，设三级标题。对于每个功能点，形式化表述、详细描述和参考技术路线，请分条叙述。"
     demand2 = "报告首先有一个总标题，但是不用写引言、不用写总结、不用写参考文献。总字数不超过2000字，请对内容进行精炼。"
     msg = demand1+require_title+require_description + \
         require_keywords+require_field+format+demand2
-
+    print(msg)
     # 整合请求体
     url = f"https://api.openai.com/v1/chat/completions"
     headers = {"Content-Type": "application/json",
                "Authorization": "Bearer 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"}
     sent_data = {}
     sent_data['model'] = "gpt-3.5-turbo"
-    sent_data['message'] = {"role": "user", "content": msg.encode("utf-8")}
+    sent_data['messages'] = [{"role": "user", "content": msg}]
     sent_data['temperature'] = 0.7
     print(sent_data)
-    response = requests.post(url, headers=headers, data=sent_data)
-
+    jsonfy = json.dumps(sent_data)
+    print(jsonfy)
+    response = requests.post(url, headers=headers, data=jsonfy)
+    print(response.content.decode('utf-8'))
+    ret_json = json.loads(response.content.decode('utf-8'))
+    print(ret_json['choices'][0]['message']['content'])
     # 存储生成报告
     newAIReport = AIReport(type=AIReport.TO_EXPERT, involved_id=need_id,
-                           content=response.content.decode('utf-8'))
+                           content=ret_json['choices'][0]['message']['content'])
     newAIReport.save()
 
 
@@ -113,14 +122,13 @@ def generate_result_report(result_id):
                "Authorization": "Bearer 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"}
     sent_data = {}
     sent_data['model'] = "gpt-3.5-turbo"
-    # sent_data['messages'] = [{"role": "user", "content": msg.encode('utf-8')}]
-    sent_data['messages'] = [{"role": "user", "content": "张凯歌"}]
+    sent_data['messages'] = [{"role": "user", "content": msg}]
     sent_data['temperature'] = 0.7
     print(sent_data)
     jsonfy = json.dumps(sent_data)
     print(jsonfy)
     response = requests.post(url, headers=headers, data=jsonfy)
-
+    print(response.content.decode('utf-8'))
     ret_json = json.loads(response.content.decode('utf-8'))
     print(ret_json['choices'][0]['message']['content'])
     
