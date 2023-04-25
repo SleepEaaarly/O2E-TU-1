@@ -20,7 +20,7 @@
 			return {
 				list:[
 					{ icon:'',name:'新版本检测',clicktype:'',url:'' },
-					{ icon:'',name:'PaperDaily用户协议',clicktype:'',url:'' },
+					{ icon:'',name:'O2E_TH用户协议',clicktype:'',url:'' },
 				]
 			}
 		},
