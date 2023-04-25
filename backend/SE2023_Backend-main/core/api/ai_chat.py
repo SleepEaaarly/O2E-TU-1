@@ -14,9 +14,10 @@ from copy import deepcopy
 from core.models.ai_report import AIReport
 from core.models.card_message import CardMessage
 from core.models.system_chat import SystemChatroom
-
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 import pytz
+from core.api.utils import parse_data
 
 import traceback
 from ltp import LTP
@@ -246,19 +247,19 @@ class Recognizer:
         """
         self.hit = hit_obj
         self.thresh_dict = {
-            "SET_QUESTION": ques_thresh,
+            "SET_QUESTION_HIT": ques_thresh,
             "O2E_EXPERT_HIT": exp_thresh,
             "O2E_ENTERPRISE_HIT": ent_thresh,
             "O2E_RESULT_HIT": res_thresh,
         }
         self.milvus_key_dict = {
-            "SET_QUESTION": "question_id",
+            "SET_QUESTION_HIT": "question_id",
             "O2E_EXPERT_HIT": "expert_id",
             "O2E_ENTERPRISE_HIT": "enterprise_id",
             "O2E_RESULT_HIT": "result_id",
         }
         self.milvus_fn_dict = {
-            "SET_QUESTION": milvus_query_set_question_by_id,
+            "SET_QUESTION_HIT": milvus_query_set_question_by_id,
             "O2E_EXPERT_HIT": milvus_query_expert_by_id,
             "O2E_ENTERPRISE_HIT": milvus_query_enterprise_by_id,
             "O2E_RESULT_HIT": milvus_query_result_hit_by_id,
@@ -275,7 +276,7 @@ class Recognizer:
         """
         self.hit = hit_obj
         self.thresh_dict = {
-            "SET_QUESTION": ques_thresh,
+            "SET_QUESTION_HIT": ques_thresh,
             "O2E_EXPERT_HIT": exp_thresh,
             "O2E_ENTERPRISE_HIT": ent_thresh,
             "O2E_RESULT_HIT": res_thresh,
@@ -298,7 +299,7 @@ class Recognizer:
             if not ques:
                 print('未接收到数据')
                 return False, res
-            matched_id = self.matcher(ques, "SET_QUESTION")
+            matched_id = self.matcher(ques, "SET_QUESTION_HIT")
             if matched_id < 0:
                 return True, res
             q_info = Question.objects.get(pk=matched_id)
@@ -421,15 +422,17 @@ recognizer = Recognizer(hit, ques_thresh=0.7,
 def get_hitbert_embedding(sent):
     return hit.encode_2_list(sent)
 
-
+@csrf_exempt
 @require_POST
 @response_wrapper
 def answer_set_question(request: HttpRequest):
+    print("enter answer set question")
     get_milvus_connection()
-    data = request.POST.dict()
+    data = parse_data(request)
     question = data.get('input')
-    print()
+    print(question)
     ques = process.replacesentword(question)
+    print(ques)
     flag, result = recognizer.recognize_whole(ques)
     if not flag:
         return failed_api_response(500, error_msg="预设问题识别过程失败")
@@ -505,7 +508,7 @@ def result_to_info_str(rst_id):
     }
     return info_str, card_info
 
-
+@csrf_exempt
 @require_POST
 @response_wrapper
 def answer_free_question(request: HttpRequest):

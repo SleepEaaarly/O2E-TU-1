@@ -8,7 +8,7 @@ const BASE_URL_IP = 'http://43.138.27.92:8000'
 
 
 module.exports = {
-  LOGIN: `${BASE_URL_IP}/api/token-auth`,
+  LOGIN: `${BASE_URL_IP}/api/token-auth/admin`,
   ROUTES: `${BASE_URL}/routes`,
   GOODS: `${BASE_URL}/goods`,
   GOODS_COLUMNS: `${BASE_URL}/columns`,
