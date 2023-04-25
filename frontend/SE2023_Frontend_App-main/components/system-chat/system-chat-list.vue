@@ -72,10 +72,10 @@
             isHuman: Boolean,
         },
         mounted() {
-            uni.$on('system-chat-list-on-show', function() {
-                console.log("system-chat-list-on-show")
-                uni.$emit('system-chat-card-on-show')
-            })
+            // uni.$on('system-chat-list-on-show', function() {
+            //     console.log("system-chat-list-on-show")
+            //     uni.$emit('system-chat-card-on-show')
+            // })
         },
         methods: {
             navUserInfo() {
