@@ -246,6 +246,7 @@ def agree_result(request: HttpRequest, id: int):
     print('debug 4')
     result.save()
     # 审核通过后将生成成果报告
+    print(result.id)
     generate_result_report(result.id)
     print('debug 5')
     return success_api_response("success")
