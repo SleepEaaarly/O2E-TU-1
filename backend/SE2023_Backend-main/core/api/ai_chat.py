@@ -38,7 +38,7 @@ from core.api.milvus_utils import (
 from core.models.user import User
 from core.models.results import Results
 
-RES_PATH = os.path.abspath(os.getcwd()).split("\\core\\api")[0] + "\\resource"
+RES_PATH = os.path.abspath(os.getcwd()).split("\\core\\api")[0] + "/resource"
 # print(RES_PATH)
 # assert 0
 
@@ -554,7 +554,7 @@ def answer_free_question(request: HttpRequest):
     sender: User = User.objects.get(id=user_id)
     system_chatroom: SystemChatroom = None
     if sender.system_chatroom_list.all().exists():
-        system_chatroom = sender.system_chatroom_list.get().id
+        system_chatroom = sender.system_chatroom_list.get(owner_id=user_id)
     else:
         system_chatroom = SystemChatroom(owner=sender, isai=SystemChatroom.MANUAL_REPLY,
                                          last_message_time=get_now_time(), unread_message_num=0)
@@ -578,7 +578,7 @@ def answer_free_question(request: HttpRequest):
             print(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
                                                                card_type=0, title=card_info['title'],
-                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
+                                                               avatar=card_info['avatar'].path, involved_id=card_info['id'])
             print(new_card_message_id)
             system_chatroom.add_message(new_card_message_id)
 
@@ -588,7 +588,8 @@ def answer_free_question(request: HttpRequest):
             final["card"]["enterprise"].append(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
                                                                card_type=1, title=card_info['title'],
-                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
+                                                               avatar=card_info['avatar'].path, involved_id=card_info['id'])
+            print("enterprise", new_card_message_id)
             system_chatroom.add_message(new_card_message_id)
 
         for rst_id in result2["entity"]["result"]:
@@ -597,7 +598,8 @@ def answer_free_question(request: HttpRequest):
             final["card"]["result"].append(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
                                                                card_type=3, title=card_info['title'],
-                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
+                                                               avatar=card_info['avatar'].path, involved_id=card_info['id'])
+            print("result", new_card_message_id)
             system_chatroom.add_message(new_card_message_id)
 
     # todo 荆睿涛：
@@ -606,20 +608,23 @@ def answer_free_question(request: HttpRequest):
     print(5)
     print(final)
     print(5.5)
-    demand1 = "请结合已有的信息，回答以下的问题"
-    partial_answer = "其中已知信息为" + final['answer']
-    msg = demand1+partial_answer+", 问题是"+question
-
-    # 整合请求体
-    url = f"https://api.openai.com/v1/chat/completions"
-    headers = {"Content-Type": "application/json",
-               "Authorization": "Bearer $OPEN_API_KEY"}
-    sent_data = []
-    sent_data['model'] = "gpt-3.5-turbo"
-    sent_data['message'] = {"role": "user", "content": msg.encode("utf-8")}
-    sent_data['temperature'] = 0.7
-    response = requests.post(url, headers=headers, data=sent_data)
-
-    final['answer'] = response.content.decode('utf-8')
+    # demand1 = "请结合已有的信息，回答以下的问题："
+    # partial_answer = "其中已知信息为：" + final['answer']
+    # msg = demand1+partial_answer+", 问题是："+question
+    # print(msg)
+    # # 整合请求体
+    # url = f"https://api.openai.com/v1/chat/completions"
+    # headers = {"Content-Type": "application/json",
+    #            "Authorization": "Bearer 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"}
+    # sent_data = {}
+    # sent_data['model'] = "gpt-3.5-turbo"
+    # sent_data['messages'] = {"role": "user", "content": msg}
+    # sent_data['temperature'] = 0.7
+    # jsonfy = json.dumps(sent_data)
+    # print(jsonfy)
+    # response = requests.post(url, headers=headers, data=jsonfy)
+    # ret_json = json.loads(response.content.decode('utf-8'))
+    # print(ret_json['choices'][0]['message']['content'])
+    # final['answer'] = ret_json['choices'][0]['message']['content']
 
     return success_api_response(final)

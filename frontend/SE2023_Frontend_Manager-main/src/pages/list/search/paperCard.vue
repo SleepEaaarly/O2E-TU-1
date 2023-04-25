@@ -168,7 +168,8 @@ export default {
     userpic:{
       type: String,
       // default: 'http://122.9.14.73:8000/api/images/default_user_icon.jpg'
-      default: 'http://127.0.0.1:8000/api/images/default_user_icon.jpg'
+      // default: 'http://127.0.0.1:8000/api/images/default_user_icon.jpg'
+      default: 'http://43.138.27.92:8000/api/images/default_user_icon.jpg'
     }
   },
   data() {
@@ -258,7 +259,8 @@ export default {
         toId: x.to_user ? x.to_user.id : "",
         inputShow: false,
         // headImg: 'http://122.9.14.73:8000/api/'+x.userpic,
-        headImg: 'http://127.0.0.1:8000/api/'+x.userpic,
+        // headImg: 'http://127.0.0.1:8000/api/'+x.userpic,
+        headImg: 'http://43.138.27.92:8000/api/'+x.userpic,
         parent_comment_id: x.parent_comment_id,
         reply: [],
       }));
@@ -284,7 +286,8 @@ export default {
         userid = res.data.id
         username = res.data.username
         // userpic ='http://122.9.14.73:8000/api/'+res.data.userpic
-        userpic ='http://127.0.0.1:8000/api/'+res.data.userpic
+        // userpic ='http://127.0.0.1:8000/api/'+res.data.userpic
+        userpic ='http://43.138.27.92:8000/api/'+res.data.userpic
       }).catch(error => {
         console.log(error)
       })
