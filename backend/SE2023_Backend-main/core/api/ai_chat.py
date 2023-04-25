@@ -247,19 +247,19 @@ class Recognizer:
         """
         self.hit = hit_obj
         self.thresh_dict = {
-            "SET_QUESTION": ques_thresh,
+            "SET_QUESTION_HIT": ques_thresh,
             "O2E_EXPERT_HIT": exp_thresh,
             "O2E_ENTERPRISE_HIT": ent_thresh,
             "O2E_RESULT_HIT": res_thresh,
         }
         self.milvus_key_dict = {
-            "SET_QUESTION": "question_id",
+            "SET_QUESTION_HIT": "question_id",
             "O2E_EXPERT_HIT": "expert_id",
             "O2E_ENTERPRISE_HIT": "enterprise_id",
             "O2E_RESULT_HIT": "result_id",
         }
         self.milvus_fn_dict = {
-            "SET_QUESTION": milvus_query_set_question_by_id,
+            "SET_QUESTION_HIT": milvus_query_set_question_by_id,
             "O2E_EXPERT_HIT": milvus_query_expert_by_id,
             "O2E_ENTERPRISE_HIT": milvus_query_enterprise_by_id,
             "O2E_RESULT_HIT": milvus_query_result_hit_by_id,
@@ -276,7 +276,7 @@ class Recognizer:
         """
         self.hit = hit_obj
         self.thresh_dict = {
-            "SET_QUESTION": ques_thresh,
+            "SET_QUESTION_HIT": ques_thresh,
             "O2E_EXPERT_HIT": exp_thresh,
             "O2E_ENTERPRISE_HIT": ent_thresh,
             "O2E_RESULT_HIT": res_thresh,
@@ -299,7 +299,7 @@ class Recognizer:
             if not ques:
                 print('未接收到数据')
                 return False, res
-            matched_id = self.matcher(ques, "SET_QUESTION")
+            matched_id = self.matcher(ques, "SET_QUESTION_HIT")
             if matched_id < 0:
                 return True, res
             q_info = Question.objects.get(pk=matched_id)

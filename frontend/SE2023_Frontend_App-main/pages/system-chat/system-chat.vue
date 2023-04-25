@@ -376,6 +376,13 @@
                     last_time = result.messages[i].created_at
                     if (message.type == 'report') {
                         message.reportInfo = result.messages[i].reportInfo
+                        message.reportInfo.avatar = "http://127.0.0.1:8000/api" + message.reportInfo.avatar
+                    }
+                    if (message.type == 'card') {
+                        console.log("card start")
+                        console.log(result.messages[i])
+                        console.log("card end")
+                        message.cardInfo = result.messages[i].cardInfo
                     }
                     load_system_chat.messages.push(message)
                     // console.log(message)
