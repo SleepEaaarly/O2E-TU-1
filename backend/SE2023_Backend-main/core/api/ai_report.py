@@ -113,7 +113,8 @@ def generate_result_report(result_id):
                "Authorization": "Bearer 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"}
     sent_data = {}
     sent_data['model'] = "gpt-3.5-turbo"
-    sent_data['messages'] = [{"role": "user", "content": msg.encode('utf-8')}]
+    # sent_data['messages'] = [{"role": "user", "content": msg.encode('utf-8')}]
+    sent_data['messages'] = [{"role": "user", "content": "张凯歌"}]
     sent_data['temperature'] = 0.7
     print(sent_data)
     jsonfy = json.dumps(sent_data)

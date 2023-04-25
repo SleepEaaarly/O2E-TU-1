@@ -47,6 +47,8 @@ class ReportMessage(SystemMessage):
                            involved_id: int
                            ):
         try:
+            if(len(info)>1000):
+                info = info[:1000]
             new_report_message = ReportMessage(content=info, owner=owner,
                                              is_to_system=0, read_state=UNREAD,
                                              report_type=report_type, report_belong_id=involved_id,
