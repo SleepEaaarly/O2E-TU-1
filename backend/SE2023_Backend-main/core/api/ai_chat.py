@@ -614,23 +614,23 @@ def answer_free_question(request: HttpRequest):
     print(5)
     print(final)
     print(5.5)
-    # demand1 = "请结合已有的信息，回答以下的问题："
-    # partial_answer = "其中已知信息为：" + final['answer']
-    # msg = demand1+partial_answer+", 问题是："+question
-    # print(msg)
-    # # 整合请求体
-    # url = f"https://api.openai.com/v1/chat/completions"
-    # headers = {"Content-Type": "application/json",
-    #            "Authorization": "Bearer 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"}
-    # sent_data = {}
-    # sent_data['model'] = "gpt-3.5-turbo"
-    # sent_data['messages'] = {"role": "user", "content": msg}
-    # sent_data['temperature'] = 0.7
-    # jsonfy = json.dumps(sent_data)
-    # print(jsonfy)
-    # response = requests.post(url, headers=headers, data=jsonfy)
-    # ret_json = json.loads(response.content.decode('utf-8'))
-    # print(ret_json['choices'][0]['message']['content'])
-    # final['answer'] = ret_json['choices'][0]['message']['content']
+    demand1 = "请结合已有的信息，回答以下的问题："
+    partial_answer = "其中已知信息为：" + final['answer']
+    msg = demand1+partial_answer+", 问题是："+question
+    print(msg)
+    # 整合请求体
+    url = f"https://api.openai.com/v1/chat/completions"
+    headers = {"Content-Type": "application/json",
+               "Authorization": "Bearer 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"}
+    sent_data = {}
+    sent_data['model'] = "gpt-3.5-turbo"
+    sent_data['messages'] = {"role": "user", "content": msg}
+    sent_data['temperature'] = 0.7
+    jsonfy = json.dumps(sent_data)
+    print(jsonfy)
+    response = requests.post(url, headers=headers, data=jsonfy)
+    ret_json = json.loads(response.content.decode('utf-8'))
+    print(ret_json['choices'][0]['message']['content'])
+    final['answer'] = ret_json['choices'][0]['message']['content']
 
     return success_api_response(final)
