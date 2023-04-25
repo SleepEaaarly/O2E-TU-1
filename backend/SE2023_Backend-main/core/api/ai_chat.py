@@ -38,7 +38,7 @@ from core.api.milvus_utils import (
 from core.models.user import User
 from core.models.results import Results
 
-RES_PATH = os.path.abspath(os.getcwd()).split("\\core\\api")[0] + "\\resource"
+RES_PATH = os.path.abspath(os.getcwd()).split("\\core\\api")[0] + "/resource"
 # print(RES_PATH)
 # assert 0
 
@@ -53,7 +53,7 @@ def get_now_time():
 
 class HitBert:
     def __init__(self, hitModelPath, device):
-        self.hit_tokenizer = BertTokenizer.from_pretrained(hitModelPath)
+        self.hit_tokenizer = BertTokenizer.from_pretrained(hitModelPath, local_files_only=True)
         self.hit_model = BertModel.from_pretrained(hitModelPath, local_files_only=True)
         self.device = device
         self.hit_model.to(device)
