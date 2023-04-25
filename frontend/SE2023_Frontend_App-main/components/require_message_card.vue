@@ -21,7 +21,7 @@
 						
 						<text class = "content">
 							
-							简介：{{intro}}
+							简介：{{intro.toString().replace(/#*.*#/g, '').replace(/[^a-z0-9\u4e00-\u9fa5]/, '').replace(/\n(\n)*( )*(\n)*\n/g, "\n").substring(0, 200)}}
 							
 						</text>
 						
@@ -85,6 +85,12 @@
 		text-overflow:ellipsis;
 		overflow:hidden;
 		white-space:nowrap;
+		display: -webkit-box;
+		-webkit-line-clamp: 4;
+		-webkit-box-orient: vertical;
+		text-align: left;
+		word-wrap: break-word;
+		word-break: normal;
 	}
 
 </style>

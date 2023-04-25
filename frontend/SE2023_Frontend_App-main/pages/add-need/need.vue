@@ -235,7 +235,7 @@
 				return mPattern.test(key_word)
 			},
 			async submit() {
-				console.log("start_submit")
+				console.log("start_submit1")
 				let data = {
 					'company_id': this.company_id,
 					'title': this.title,
@@ -255,14 +255,14 @@
 					let result = await addneed(data)
 					if (result&&result.code) {
 						console.log("submit_fail!!")
-						this.$http.toast('需求创建失败！')
+						// this.$http.toast('需求创建失败！')
 					} else {
 						console.log("submit_success!")
 						this.$http.toast('需求创建成功！')
 						this.back()
 					}
 				} else {
-					this.$http.toast('需求创建失败！')
+					// this.$http.toast('需求创建失败！')
 				}
 			},
 			reset: function(e) {

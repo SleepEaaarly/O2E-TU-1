@@ -32,8 +32,8 @@ class ReportMessage(SystemMessage):
     """
     report_type = models.IntegerField()
     report_belong_id = models.IntegerField()
-    report_title = models.CharField(max_length=30)
-    report_name = models.CharField(max_length=30)
+    report_title = models.CharField(max_length=300)
+    report_name = models.CharField(max_length=300)
     report_logo_path = models.CharField(max_length=300)
 
     @classmethod
