@@ -624,11 +624,13 @@ def answer_free_question(request: HttpRequest):
                "Authorization": "Bearer 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"}
     sent_data = {}
     sent_data['model'] = "gpt-3.5-turbo"
-    sent_data['messages'] = {"role": "user", "content": msg}
+    sent_data['messages'] = [{"role": "user", "content": msg}]
     sent_data['temperature'] = 0.7
     jsonfy = json.dumps(sent_data)
     print(jsonfy)
     response = requests.post(url, headers=headers, data=jsonfy)
+    print(response)
+    print(response.content.decode('utf-8'))
     ret_json = json.loads(response.content.decode('utf-8'))
     print(ret_json['choices'][0]['message']['content'])
     final['answer'] = ret_json['choices'][0]['message']['content']
