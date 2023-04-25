@@ -14,18 +14,21 @@ export const getWorkRec = async (paras) => {
 	//path->ai/resultRec/expert/int
 	//path->ai/resultRec/enterprise/int
 	var ret
-	console.log(paras.type)
+	var result
+	// console.log(paras.type)
 	if(paras.type==4){
 		ret = await axios.get('ai/resultRec/expert/' + paras.id,
 		    {},
 		    headers)
-	}else{
+		result = ret.results
+	}else if(paras.type==5){
 		ret = await axios.get('ai/resultRec/enterprise/' + paras.id,
 		    {},
 		    headers)
+		result = ret.results
+	}else{
+		result = []
 	}
-	console.log(ret)
-    let result = ret.results
 	console.log(result)
     if (result && result.length) {
         result = result.map((item) => {

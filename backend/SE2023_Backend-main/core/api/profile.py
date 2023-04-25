@@ -6,15 +6,14 @@ from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 from core.models.user import User
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_POST
 def get_profile(request: HttpRequest):
-    data: dict = request.POST.dict()
-    user = request.user
-    print(user.id)
+    data: dict = parse_data(request)
     if data is not None:
         user_id = data.get('user_id')
         if user_id is not None:
