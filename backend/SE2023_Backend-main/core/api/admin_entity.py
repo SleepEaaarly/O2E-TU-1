@@ -60,7 +60,11 @@ def delete_result(request: HttpRequest):
     milvus_delete("O2E_RESULT", result.vector_sci)
     disconnect_milvus()
     result.expert_results.remove(*result)
+    result.multipic.remove(*result)
+    # todo 图片删除
     result.delete()
+    result.save()
+
     return success_api_response({"result": "Ok, all result info has been provided."})
 
 
