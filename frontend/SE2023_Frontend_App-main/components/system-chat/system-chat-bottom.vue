@@ -7,7 +7,7 @@
          v-model="text" 
          confirm-type="search" 
          @confirm="submit"/>
-        <view class="icon iconfont icon-fabu u-f-ajc" @click.native="submit"></view>
+        <view class="icon iconfont icon-fabu u-f-ajc" @click="submit"></view>
     </view>
 
 </template>
