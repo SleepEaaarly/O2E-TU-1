@@ -66,7 +66,6 @@ def delete_result(request: HttpRequest):
 
     return success_api_response({"result": "Ok, all result info has been provided."})
 
-
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('POST')
