@@ -7,7 +7,7 @@ import {
 
 //获取 专家-搜索
 export const getWorkRec = async (paras) => {
-    console.log("getWorkList OK.")
+    // console.log("getWorkList OK.")
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
@@ -29,7 +29,7 @@ export const getWorkRec = async (paras) => {
 	}else{
 		result = []
 	}
-	console.log(result)
+	// console.log(result)
     if (result && result.length) {
         result = result.map((item) => {
             return {
@@ -49,7 +49,7 @@ export const getWorkRec = async (paras) => {
             }
         })
     }
-	console.log('ret result is')
-    console.log(result)
+	// console.log('ret result is')
+ //    console.log(result)
     return result
 }

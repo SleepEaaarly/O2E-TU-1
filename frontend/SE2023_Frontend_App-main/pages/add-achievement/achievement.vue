@@ -402,14 +402,14 @@ export default {
 					'multipic': this.multipic
 				}
 				console.log(data)
-				// let validate_answer = this.validate(data)
-				// console.log(data.type)
-				// if (validate_answer) {
-				// 	console.log("validate_success!")
-				// } else{
-				// 	console.log("fail to validate!")
-				// 	return
-				// }
+				let validate_answer = this.validate(data)
+				console.log(data.type)
+				if (validate_answer) {
+					console.log("validate_success!")
+				} else{
+					console.log("fail to validate!")
+					return
+				}
 				console.log("start_submit")
 				console.log(this.id)
 				let filelist = []

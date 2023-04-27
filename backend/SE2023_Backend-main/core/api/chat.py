@@ -11,7 +11,7 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 
 from core.models import User, Chatroom, Message
-
+from django.views.decorators.csrf import csrf_exempt
 
 """
     create chatroom
@@ -26,6 +26,7 @@ from core.models import User, Chatroom, Message
     return:
         - chatroom id
 """
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -83,6 +84,7 @@ def create_chat(request: HttpRequest):
 	return:
 	    - chatroom id: int
 """
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -116,6 +118,7 @@ def delete_chat(request: HttpRequest):
 	return:
 	    - chatroom.to_dict()
 """
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -154,6 +157,7 @@ def get_chat(request: HttpRequest, id: int):
     return:
        current page of chatrooms
 """
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -225,6 +229,7 @@ def get_chat_list(request: HttpRequest):
        'chatroom_id': chatroom_id
         'message_id': message_id
 """
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -266,6 +271,7 @@ def message_read(request:HttpRequest):
        'chatroom_id': chatroom_id
         'message_id': message_id
 """
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper

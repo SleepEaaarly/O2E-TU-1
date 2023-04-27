@@ -15,7 +15,7 @@
  
 ## Description
 
-This is the app frontend code of the `PaperDaily` project based on [`uni-app`](https://uniapp.dcloud.io/) & [`Vue.js`](https://vuejs.org/). 
+This is the app frontend code of the `O2E_TH` project based on [`uni-app`](https://uniapp.dcloud.io/) & [`Vue.js`](https://vuejs.org/). 
 
 ## Quick Start
 

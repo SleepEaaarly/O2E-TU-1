@@ -171,9 +171,9 @@
             }
         },
         onShow() {
-            console.log("adfadfadfad")
+            // console.log("adfadfadfad")
             this.isShow = true
-            uni.$emit('system-chat-list-on-show')
+            // uni.$emit('system-chat-list-on-show')
         },
         beforeDestroy() {
             this.isShow = false
@@ -423,8 +423,9 @@
                     if (this.questionType === 'basic') {    // 对于操作的基础问题，可以直接输出结果
                         // 1. 将问题送入lcm的AI模型接口，获取输出
                         let output = await getBasicAISystemQuestionAns(data, this.userInfo.id)
+                        console.log(output)
                         // 1.5 判断code是否等于200，如果等于500不进行接下来的判断
-                        if (code !== 200) {
+                        if (output.code !== 200) {
                             // 我觉得还是提示一下比较好
                             console.log("基础问题：失败")
                             uni.showToast({
@@ -482,8 +483,9 @@
                     } else {    // 其他问题，流程：
                         // 1. 将问题送入自动回复模型接口2，回收楚珉output
                         let output = await getAdvanceAISystemQuestionAns(data, this.userInfo.id)
+                        console.log(output)
                         // 1.5 判断code
-                        if (code !== 200) {
+                        if (output.code !== 200) {
                             // 错误处理
                             console.log("其他问题：失败")
                             uni.showToast({
@@ -493,7 +495,7 @@
                             return
                         }
                         // 2.1 处理信息
-                        let now = new Data().getTime()
+                        let now = (new Date()).getTime()
                         let obj = { // 插入前端列表的数据
                             isme: 0,
                             userpic: this.aiPic,
