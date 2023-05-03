@@ -29,7 +29,7 @@
 		<author-card
             :name="'专家zkg'"
             :title="''"
-            :logoPath="'http://43.138.27.92:8000/api/images/202205/02/icons/zkg2.jpg'"
+            :logoPath="'http://116.63.14.146:8000/api/images/202205/02/icons/zkg2.jpg'"
             :mail="'1793030808@qq.com'"
             :institution="'123'"
             @click.native="gotoExpertDetail"
@@ -54,7 +54,7 @@
             :name="'企业zkg'"
             :area="'123'" 
             :address="'123'"
-            :logoPath="'http://43.138.27.92:8000/api/images/202205/02/icons/zkg.jpg'"
+            :logoPath="'http://116.63.14.146:8000/api/images/202205/02/icons/zkg.jpg'"
             @click.native="goToEnterpriseDetail"
 		></company-card>
 		<!-- <company-card

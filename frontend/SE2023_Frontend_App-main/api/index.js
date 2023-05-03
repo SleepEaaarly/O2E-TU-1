@@ -7,7 +7,7 @@ import time from '../common/time.js';
 
 //获取 首页-热榜
 export const getTopicList = async () => {
-	let picUrl = "http://43.138.27.92:8000/api"
+	let picUrl = "http://116.63.14.146:8000/api"
 	console.log("getTopicList OK.")
 	let headers = {
 		"Authorization":'Bearer ' + uni.getStorageSync('token')
