@@ -67,10 +67,8 @@ def delete_result(request: HttpRequest):
     # todo 图片删除
     print("delete_result 4")
     result.delete()
-    result.save()
     print("delete_result 5")
     return success_api_response({"result": "Ok, all result info has been provided."})
-
 
 @response_wrapper
 # @jwt_auth()
