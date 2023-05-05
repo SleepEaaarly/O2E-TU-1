@@ -40,6 +40,8 @@ from core.models.user import User
 from core.models.results import Results
 
 RES_PATH = os.path.abspath(os.getcwd()).split("\\core\\api")[0] + "/resource"
+
+
 # print(RES_PATH)
 # assert 0
 
@@ -422,6 +424,7 @@ recognizer = Recognizer(hit, ques_thresh=0.7,
 def get_hitbert_embedding(sent):
     return hit.encode_2_list(sent)
 
+
 @csrf_exempt
 @require_POST
 @response_wrapper
@@ -507,6 +510,7 @@ def result_to_info_str(rst_id):
         "avatar": result.picture, "info": result.abstract
     }
     return info_str, card_info
+
 
 @csrf_exempt
 @require_POST
@@ -610,13 +614,13 @@ def answer_free_question(request: HttpRequest):
 
     # todo 荆睿涛：
     #   将final["answer"]和question拼接起来送进chatGPT，然后用chatGPT的回复替换final["answer"]的内容
-     # 形成询问prompt
+    # 形成询问prompt
     print(5)
     print(final)
     print(5.5)
     demand1 = "请结合已有的信息，回答以下的问题："
     partial_answer = "其中已知信息为：" + final['answer']
-    msg = demand1+partial_answer+", 问题是："+question
+    msg = demand1 + partial_answer + ", 问题是：" + question
     print(msg)
     # 整合请求体
     url = f"https://api.openai.com/v1/chat/completions"
