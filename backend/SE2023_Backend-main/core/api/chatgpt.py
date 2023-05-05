@@ -1,5 +1,7 @@
 import json
 import requests
+
+
 def get_chatgpt_response(prompt: str):
     url = f"https://api.openai.com/v1/chat/completions"
     headers = {"Content-Type": "application/json",

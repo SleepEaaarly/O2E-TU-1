@@ -67,3 +67,5 @@ class Need(models.Model):
     real = models.IntegerField(default=0)
 
     vector_sci = models.TextField(blank=True, null=True)
+    # 英文标题
+    title_eng = models.TextField()
