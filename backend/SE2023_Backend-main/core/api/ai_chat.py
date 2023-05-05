@@ -319,7 +319,6 @@ class Recognizer:
         """
         识别传入分词结果能否匹配至数据库实体名
         :param sent_cut: 分词结果 [{'val':名字,'type':类型},{}]
-        :param sent_in: 句子 字符串
         :return: (
             未出错标志, {
                 "direct": "True/False（是否直接将问题输入给chatGPT）",

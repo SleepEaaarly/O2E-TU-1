@@ -256,14 +256,16 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     get_milvus_connection()
     user = User.objects.get(id=id)
     papers = user.expert_info.papers.all()
-    # print('check milvus connection:[1]')
-    # print('Papers:')
     print(papers)
-    if not papers:
+    achievements = user.expert_info.results.all()
+    print(achievements)
+    if not papers and not achievements:
         return success_api_response({"results": []})
     titles = []
     for paper in papers:
         titles.append(paper.title_eng)
+    for ach in achievements:
+        titles.append(ach.title_eng)
     key_vector = model.get_embeds(titles)
     # print('check milvus connection:[2]')
 
