@@ -1,3 +1,5 @@
+import json
+import requests
 def get_chatgpt_response(prompt: str):
     url = f"https://api.openai.com/v1/chat/completions"
     headers = {"Content-Type": "application/json",
@@ -8,4 +10,5 @@ def get_chatgpt_response(prompt: str):
     sent_data['temperature'] = 0.7
     jsonfy = json.dumps(sent_data)
     response = requests.post(url, headers=headers, data=jsonfy)
+    ret_json = json.loads(response.content.decode('utf-8'))
     return ret_json['choices'][0]['message']['content']
