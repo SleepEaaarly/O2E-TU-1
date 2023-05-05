@@ -290,7 +290,7 @@ export default {
                 avatar:
                 //  " http://122.9.14.73:8000/api/" + res.data[i].userpic,
                   // " http://127.0.0.1:8000/api/" + res.data[i].userpic,
-                  " http://43.138.27.92:8000/api/" + res.data[i].userpic,
+                  " http://116.63.14.146:8000/api/" + res.data[i].userpic,
 
                 description:
                   res.data[i].created_by.username +
