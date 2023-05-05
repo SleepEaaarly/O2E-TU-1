@@ -263,28 +263,33 @@ def milvus_query_result_hit_by_id(query):
 if __name__ == '__main__':
     from pymilvus import drop_collection, list_collections, loading_progress, utility
     get_milvus_connection()
-    # names = ["O2E_RESULT"]
-    # vims = [128]
-    # for name, vim in zip(names, vims):
-    #     drop_collection(name)
-    #     create_milvus_collection("result_id", name, vim)
+    names = ["O2E_RESULT", "O2E_PAPER", "O2E_NEED",
+             "O2E_RESULT_HIT", "SET_QUESTION_HIT", 
+             "O2E_EXPERT_HIT", "O2E_ENTERPRISE_HIT"]
+    id_names = ["result_id", "paper_id", "need_id",
+                "result_id", "question_id",
+                "expert_id", "enterprise_id"]
+    for name, id_name in zip(names, id_names):
+        vim = 768 if "HIT" in name else 128
+        drop_collection(name)
+        create_milvus_collection(id_name, name, vim)
     names = list_collections()
     print(names)
-    # for name in names:
-    #     print()
-    #     discribe_milvus_collection(name)
+    for name in names:
+        print()
+        discribe_milvus_collection(name)
 
     # collection_name = "O2E_EXPERT_HIT"
     # db_id_name = "expert_id"
     # list_milvus_entities(collection_name, db_id_name)
 
-    for collection_name in names:
-        try:
-            collection = get_milvus_collection(collection_name)
-            # loading_progress(collection_name, partition_names=None, using='default')
-            collection.load()
-        except Exception as e:
-            print(e)
+    # for collection_name in names:
+    #     try:
+    #         collection = get_milvus_collection(collection_name)
+    #         # loading_progress(collection_name, partition_names=None, using='default')
+    #         collection.load()
+    #     except Exception as e:
+    #         print(e)
     # print(connections.list_connections())
     # print(utility.load_state(collection_name))
     disconnect_milvus()
