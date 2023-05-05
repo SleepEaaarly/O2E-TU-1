@@ -14,11 +14,13 @@ from core.api._platform.utils import get_now_time
 
 from core.models import User, SystemMessage, SystemChatroom, CardMessage, Message
 
+from django.views.decorators.csrf import csrf_exempt
 
 from core.models import SwitchMessage, ImageMessage
 
 from core.models.report_message import ReportMessage
 
+from django.views.decorators.csrf import csrf_exempt
 """
     create system chatroom
     [method]: POST
@@ -31,14 +33,14 @@ from core.models.report_message import ReportMessage
         - id: system chatroom id
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
 def create_system_chat(request: HttpRequest):
-
-    # data: dict = parse_data(request)
-    data: dict = request.POST.dict()
+    print("enter create system chat")
+    data: dict = parse_data(request)
+    # data: dict = request.POST.dict()
     if not data:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
                                    "Invalid request args.")
@@ -48,7 +50,7 @@ def create_system_chat(request: HttpRequest):
         user = User.objects.get(id=uid)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad User ID.")
-
+    print(user)
     # 先查看是否已经存在聊天，则不用创建
     if user.system_chatroom_list.all().exists():
         return success_api_response({'id': user.system_chatroom_list.get().id})
@@ -75,7 +77,7 @@ def create_system_chat(request: HttpRequest):
         - noreadnum: int 未读信息数
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -89,8 +91,10 @@ def get_system_chat(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad System Chatroom ID.")
     ret_data = {}
     messages = []
+    print(owner)
     for m in system_chatroom.messages.all():
         a_message = {}
+        print(m)
         if(m.is_to_system == 1):
             a_message['isme'] = True
             a_message['user_pic'] = owner.icon.path
@@ -100,7 +104,8 @@ def get_system_chat(request: HttpRequest):
         # type, message, cardInfo
         a_message['type'] = m.type
         if(m.type == 'card'):
-            a_message['cardInfo'] = m.generate_card()
+            n:CardMessage = CardMessage.objects.get(id=m.id)
+            a_message['cardInfo'] = n.generate_card()
         elif(m.type == 'report'):
             print(m)
             n:ReportMessage = ReportMessage.objects.get(id=m.id)
@@ -134,7 +139,7 @@ def get_system_chat(request: HttpRequest):
         'message_id': message_id
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -177,7 +182,7 @@ def push_system_message(request: HttpRequest):
         - 是否成功
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -198,7 +203,7 @@ def system_message_read(request: HttpRequest):
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Message ID.")
 
-    return success_api_response(None)
+    return success_api_response({})
 
 
 """
@@ -214,7 +219,7 @@ def system_message_read(request: HttpRequest):
         - 成功或失败信息
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -253,7 +258,7 @@ def alter_systemchat_visible(request: HttpRequest):
         - 结构较为复杂，详情请见设计文档
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -280,9 +285,11 @@ def get_all_system_chatrooms(request: HttpRequest):
                 # type, message, cardInfo
                 a_message['type'] = m.type
                 if(m.type == 'card'):
-                    a_message["cardInfo"] = CardMessage(m).generate_card()
+                    n:CardMessage = CardMessage.objects.get(id=m.id)
+                    a_message["cardInfo"] = n.generate_card()
                 elif(m.type == 'report'):
-                    a_message['reportInfo'] = ReportMessage(m).generate_card()
+                    n:ReportMessage = ReportMessage.objects.get(id=m.id)
+                    a_message['reportInfo'] = n.generate_card()
                 else:
                     a_message['message'] = m.content
                 # created_at
@@ -312,7 +319,7 @@ def get_all_system_chatrooms(request: HttpRequest):
     
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 def push_system_message_by_admin(request: HttpRequest):

@@ -197,10 +197,12 @@ def obtain_jwt_token(request: HttpRequest):
 
     userInfo = getUserInfo(user)
     print(userInfo)
+    if(userInfo['institution']==None):
+        userInfo['institution'] = ""
     result = {
         "userInfo":userInfo,
-        "access_token": generate_access_token(user.id).decode('utf-8'),
-        "refresh_token": generate_refresh_token(user).decode('utf-8'),
+        "access_token": generate_access_token(user.id),
+        "refresh_token": generate_refresh_token(user),
     }
     print(result)
     return success_api_response(result)
@@ -239,8 +241,8 @@ def obtain_jwt_token_admin(request: HttpRequest):
     print(userInfo)
     result = {
         "userInfo": userInfo,
-        "access_token": generate_access_token(user.id).decode('utf-8'),
-        "refresh_token": generate_refresh_token(user).decode('utf-8'),
+        "access_token": generate_access_token(user.id),
+        "refresh_token": generate_refresh_token(user),
     }
     print(result)
     return success_api_response(result)

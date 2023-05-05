@@ -402,14 +402,14 @@ export default {
 					'multipic': this.multipic
 				}
 				console.log(data)
-				// let validate_answer = this.validate(data)
-				// console.log(data.type)
-				// if (validate_answer) {
-				// 	console.log("validate_success!")
-				// } else{
-				// 	console.log("fail to validate!")
-				// 	return
-				// }
+				let validate_answer = this.validate(data)
+				console.log(data.type)
+				if (validate_answer) {
+					console.log("validate_success!")
+				} else{
+					console.log("fail to validate!")
+					return
+				}
 				console.log("start_submit")
 				console.log(this.id)
 				let filelist = []
@@ -419,8 +419,8 @@ export default {
 				filelist.push({name:'picture', uri:this.picture})
 				uni.uploadFile({
 					// url: 'http://127.0.0.1:8000/api/result/add',
-					url: 'http://43.138.27.92:8000/api/result/add',
-					// url: 'http://116.63.14.146:1234/api/result/add',
+					url: 'http://116.63.14.146:8000/api/result/add',
+					// url: 'http://116.63.14.146:8000/api/result/add',
 				// url: 'http://122.9.14.73:8000/api/enterprise/setinfo',
 					files: filelist,
 					
