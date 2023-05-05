@@ -1,59 +1,11 @@
-import pymysql
-from milvus_utils import get_milvus_connection, milvus_insert, disconnect_milvus, milvus_query_paper_by_id, \
+from sql_util import get_all_entity, update_sci_vector, update_hit_vector
+from core.api.milvus_utils import get_milvus_connection, milvus_insert, disconnect_milvus, milvus_query_paper_by_id, \
     get_milvus_collection
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as ny
 from transformers import AutoTokenizer, AutoModel, BertTokenizer, BertModel
-
-
-def connect_database():
-    connection = pymysql.connect(host="116.63.14.146",
-                                 port=3306,
-                                 db="se2023",
-                                 user="root",
-                                 passwd="O2E-TH-1!",
-                                 charset="utf8")
-    cursor = connection.cursor()
-    return connection, cursor
-
-
-def close_database(connection, cursor):
-    connection.close()
-    cursor.close()
-
-
-def get_all_entity(entity: str):
-    connection, cursor = connect_database()
-
-    instruction = "select * from " + entity
-
-    try:
-        cursor.execute(instruction)
-        connection.commit()
-    except Exception as e:
-        connection.rollback()
-        print("执行MySQL错误")
-    result = cursor.fetchall()
-    close_database(connection, cursor)
-    return result
-
-
-def update_vector(entity: str, vector: str, id: int):
-    connection, cursor = connect_database()
-
-    instruction = "update " + entity + " set vector_hit=" + vector + " where id=" + str(id)
-
-    try:
-        cursor.execute(instruction)
-        connection.commit()
-    except Exception as e:
-        connection.rollback()
-        print("执行MySQL错误")
-    result = cursor.fetchall()
-    close_database(connection, cursor)
-    return result
 
 
 class HitBert:
@@ -96,5 +48,5 @@ for i in inp:
         # v = vector.tolist()[0]
         mid = milvus_insert(c_name, data=[[vector], [i[1]]])
         disconnect_milvus()
-        update_vector(d_name, str(mid[0]), i[1])
+        update_hit_vector(d_name, str(mid[0]), i[1])
 

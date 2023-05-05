@@ -10,6 +10,7 @@ class Papers(models.Model):
     url = models.TextField(blank=True, null=True)
     scholars = models.TextField(blank=True, null=True)
     vector_sci = models.TextField(blank=True, null=True)
+    title_eng = models.TextField()
 
     def to_dict(self) -> dict:
         return {"title": self.title, "cites": self.cites, "pyear": self.pyear,
