@@ -106,12 +106,12 @@ def milvus_insert(collection_name, data, partition_name=None):
     :param data: 待插⼊的数据，list-like(list, tuple)
     :return: Milvus⽣成的ids
     """
-    print("1")
+    # print("1")
     collection = get_milvus_collection(collection_name)
-    print("2")
+    # print("2")
     try:
         res = collection.insert(partition_name=partition_name, data=data)
-        print("3")
+        # print("3")
     except Exception as e:
         print(e)
     ids = res.primary_keys # 这个id是由Milvus⽣成的，⼤家注意要和论⽂id对应起来保存
@@ -266,11 +266,11 @@ def milvus_query_result_hit_by_id(query):
 if __name__ == '__main__':
     from pymilvus import drop_collection, list_collections, loading_progress, utility
     get_milvus_connection()
-    # names = ["O2E_RESULT"]
-    # vims = [128]
-    # for name, vim in zip(names, vims):
-    #     drop_collection(name)
-    #     create_milvus_collection("result_id", name, vim)
+    names = ["O2E_NEED"]
+    vims = [128]
+    for name, vim in zip(names, vims):
+        drop_collection(name)
+        create_milvus_collection("need_id", name, vim)
     names = list_collections()
     print(names)
     # for name in names:
@@ -281,15 +281,15 @@ if __name__ == '__main__':
     # db_id_name = "expert_id"
     # list_milvus_entities(collection_name, db_id_name)
 
-    for collection_name in names:
-        try:
-            collection = get_milvus_collection(collection_name)
-            # loading_progress(collection_name, partition_names=None, using='default')
-            collection.load()
-        except Exception as e:
-            print(e)
-    # print(connections.list_connections())
-    # print(utility.load_state(collection_name))
-    disconnect_milvus()
+    # for collection_name in names:
+    #     try:
+    #         collection = get_milvus_collection(collection_name)
+    #         # loading_progress(collection_name, partition_names=None, using='default')
+    #         collection.load()
+    #     except Exception as e:
+    #         print(e)
+    # # print(connections.list_connections())
+    # # print(utility.load_state(collection_name))
+    # disconnect_milvus()
 
 
