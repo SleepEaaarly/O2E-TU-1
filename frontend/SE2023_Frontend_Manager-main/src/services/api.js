@@ -4,7 +4,7 @@ const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.VUE_APP_API
 // const BASE_URL = process.env.VUE_APP_API_BASE_URL
 // const BASE_URL_IP = 'http://122.9.14.73:8000'
 // const BASE_URL_IP = 'http://127.0.0.1:8000'
-const BASE_URL_IP = 'http://43.138.27.92:8000'
+const BASE_URL_IP = 'http://116.63.14.146:8000'
 
 
 module.exports = {

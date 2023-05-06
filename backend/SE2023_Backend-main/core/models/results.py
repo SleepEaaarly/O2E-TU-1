@@ -29,6 +29,8 @@ class Results(models.Model):
     state = models.IntegerField(choices=RES_STATE_CHOICES, default=0)
     vector_sci = models.TextField(blank=True, null=True)
     vector_hit = models.TextField(blank=True, null=True)
+    title_eng = models.TextField()
+
 
     def get_pic(self):
         return str(self.picture)
