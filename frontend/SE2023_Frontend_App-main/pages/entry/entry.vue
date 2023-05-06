@@ -74,7 +74,7 @@
 			
 			<!-- 列表形式导入 -->
 			<template>
-				<block v-for="(item, index1) in recommendList.rec_list" :key="index1">
+				<block v-for="(item, index1) in recommendList.rec_list" :key="'rec_'+index1">
 					<work-card
 					@click.native="workDetail(item)"  
 					:authorLogoPath="item['authorLogoPath']" 
@@ -85,7 +85,7 @@
 					:intro="item['abstract']"
 					:period="item['period']"
 					:area="item['field']"
-					:index="index1"></work-card>
+					:index="'rec_'+index1"></work-card>
 				</block> 
  				<block v-for="(item, index2) in recommendList.list" :key="index2">
 					<work-card
