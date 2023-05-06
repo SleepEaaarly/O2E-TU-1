@@ -26,6 +26,8 @@ from core.api.milvus_utils import (
 from core.api.zhitu_utils import get_expertInfo_by_expertId, search_expertID_by_paperID
 import requests
 
+from django.views.decorators.csrf import csrf_exempt
+
 
 class ContrastiveSciBERT(nn.Module):
     def __init__(self, out_dim, tau, device='cpu'):
@@ -97,7 +99,7 @@ model.load_state_dict(state_dict)
 def get_scibert_embedding(sent):
     return model.get_embeds([sent]).tolist()[0]
 
-
+@csrf_exempt
 @require_GET
 @response_wrapper
 def recommend(request: HttpRequest, id: int):
@@ -196,7 +198,7 @@ def recommend(request: HttpRequest, id: int):
         "other": possible_experts[:3]
     })
 
-
+@csrf_exempt
 @require_GET
 @response_wrapper
 def need_recommend(request: HttpRequest, id: int):
@@ -249,10 +251,11 @@ def need_recommend(request: HttpRequest, id: int):
 
     return success_api_response({"needs": need_infos[:3]})
 
-
+@csrf_exempt
 @require_GET
 @response_wrapper
 def result_recommend_for_expert(request: HttpRequest, id: int):
+    print("enter resultRec expert")
     get_milvus_connection()
     user = User.objects.get(id=id)
     papers = user.expert_info.papers.all()
@@ -309,7 +312,7 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
             result_infos.append(result_info)
     return success_api_response({"results": result_infos})
 
-
+@csrf_exempt
 @require_GET
 @response_wrapper
 def result_recommend_for_enterprise(request: HttpRequest, id: int):
@@ -386,7 +389,7 @@ def result_recommend_for_enterprise(request: HttpRequest, id: int):
 #     print(milvus_id)
 #     return milvus_id
 
-
+@csrf_exempt
 @require_GET
 @response_wrapper
 def generate_requirement_book(request: HttpRequest, require):
