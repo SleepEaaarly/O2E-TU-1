@@ -141,7 +141,9 @@ client = Translate()
 
 def trans_zh2en(sent):
     ans = ""
-    lan = client.detach(sent)
+    lan = client.detect(sent)
+    if lan is None:
+        ans = sent
     if lan.language == 'en':
         ans = sent
     else:
