@@ -376,7 +376,7 @@
                     last_time = result.messages[i].created_at
                     if (message.type == 'report') {
                         message.reportInfo = result.messages[i].reportInfo
-                        message.reportInfo.avatar = "http://127.0.0.1:8000/api" + message.reportInfo.avatar
+                        message.reportInfo.avatar = "http://116.63.14.146:8000/api" + message.reportInfo.avatar
                     }
                     if (message.type == 'card') {
                         console.log("card start")
