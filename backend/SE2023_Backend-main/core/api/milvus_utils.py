@@ -106,12 +106,10 @@ def milvus_insert(collection_name, data, partition_name=None):
     :param data: 待插⼊的数据，list-like(list, tuple)
     :return: Milvus⽣成的ids
     """
-    # print("1")
+
     collection = get_milvus_collection(collection_name)
-    # print("2")
     try:
         res = collection.insert(partition_name=partition_name, data=data)
-        # print("3")
     except Exception as e:
         print(e)
     ids = res.primary_keys # 这个id是由Milvus⽣成的，⼤家注意要和论⽂id对应起来保存
@@ -266,16 +264,22 @@ def milvus_query_result_hit_by_id(query):
 if __name__ == '__main__':
     from pymilvus import drop_collection, list_collections, loading_progress, utility
     get_milvus_connection()
-    names = ["O2E_NEED"]
-    vims = [128]
-    for name, vim in zip(names, vims):
-        drop_collection(name)
-        create_milvus_collection("need_id", name, vim)
+
+    # names = ["O2E_RESULT", "O2E_PAPER", "O2E_NEED",
+    #          "O2E_RESULT_HIT", "SET_QUESTION_HIT",
+    #          "O2E_EXPERT_HIT", "O2E_ENTERPRISE_HIT"]
+    # id_names = ["result_id", "paper_id", "need_id",
+    #             "result_id", "question_id",
+    #             "expert_id", "enterprise_id"]
+    # for name, id_name in zip(names, id_names):
+    #     vim = 768 if "HIT" in name else 128
+    #     drop_collection(name)
+    #     create_milvus_collection(id_name, name, vim)
     names = list_collections()
     print(names)
-    # for name in names:
-    #     print()
-    #     discribe_milvus_collection(name)
+    for name in names:
+        print()
+        discribe_milvus_collection(name)
 
     # collection_name = "O2E_EXPERT_HIT"
     # db_id_name = "expert_id"
@@ -288,8 +292,10 @@ if __name__ == '__main__':
     #         collection.load()
     #     except Exception as e:
     #         print(e)
-    # # print(connections.list_connections())
-    # # print(utility.load_state(collection_name))
-    # disconnect_milvus()
+
+    # print(connections.list_connections())
+    # print(utility.load_state(collection_name))
+    disconnect_milvus()
+
 
 

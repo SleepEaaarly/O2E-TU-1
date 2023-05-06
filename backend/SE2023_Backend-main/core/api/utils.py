@@ -8,6 +8,8 @@ from enum import Enum, unique
 from django.http import JsonResponse, HttpRequest
 from django.views.decorators.http import require_http_methods
 
+from pygtrans import Translate
+
 
 @unique
 class ErrorCode(Enum):
@@ -132,3 +134,16 @@ def read_json_data(path):
         print(traceback.format_exc())
         print(e)
     return None
+
+
+client = Translate()
+
+
+def trans_zh2en(sent):
+    ans = ""
+    lan = client.detach(sent)
+    if lan.language == 'en':
+        ans = sent
+    else:
+        ans = client.translate(sent, target='en')
+    return ans

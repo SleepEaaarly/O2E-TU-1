@@ -25,7 +25,7 @@ from core.api._platform.utils import get_now_time
 from core.models.card_message import CardMessage
 from core.models.report_message import ReportMessage
 from core.models.expert import Expert
-
+from django.views.decorators.csrf import csrf_exempt
 """ 调用chatGPT生成需求报告
 
     路径：
@@ -153,7 +153,7 @@ def generate_result_report(result_id):
         - content: str, 需求报告内容
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -203,7 +203,7 @@ def get_requirement_report(request: HttpRequest):
         - content: str, 成果报告内容
 """
 
-
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -264,6 +264,7 @@ def get_result_report(request: HttpRequest):
     返回参数:
         - 无
 """
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -314,6 +315,7 @@ def generate_result_report_card(request: HttpRequest):
     返回参数:
         - 无
 """
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
