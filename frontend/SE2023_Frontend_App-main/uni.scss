@@ -150,4 +150,11 @@ $uni-font-size-subtitle:36rpx;
 $uni-color-paragraph: #3F536E; // 文章段落颜色
 $uni-font-size-paragraph:30rpx;
 
+
+nav {
+  height: 44px;
+  padding-top: constant(safe-area-inset-top); /* 兼容iOS12及之前版本 */
+  padding-top: env(safe-area-inset-top); /* 兼容iOS13及以上版本 */
+}
+
 @import "./uni_modules/uview-ui/theme.scss";
