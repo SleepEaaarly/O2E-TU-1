@@ -5,8 +5,9 @@
 				<div >
 					<span>
 						<a @click="showSystemChat(record)" >回复</a>
-						<a-modal v-model="showDetail" title="客服聊天" width="750px" footer="" ref="chatContent" >
-							
+						<!-- <div class="custom-wrapper" style="background-color: transparent;"> -->
+						<a-modal  v-model="showDetail" title="客服聊天" width="750px" footer="" ref="chatContent" :mask-closable="false" class="custom-modal">
+							<!-- <a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 500px;" > -->
 							<a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 500px;" >
 								<!-- <div v-for="(item, index) in record.messages" :key="index">abc</div> -->
 								<!-- <div v-show="false">{{selectData.messages[0].message}}</div>
@@ -65,6 +66,11 @@
 									</a-col>
 								</a-row>
 							</a-modal>
+ 				 		<!-- </div> -->
+						
+  							
+						
+						
 					</span>
 				</div>
 			</template>
@@ -83,27 +89,27 @@ const columns = [{
 		title: "姓名",
 		dataIndex: "name",
 		scopedSlots: {customRender: "name"},
-		width: 100,
+		width: "20%",
 	}, {
 		title: "邮箱",
 		dataIndex: "email",
 		scopedSlots: {customRender: "email"},
-		width: 150
+		width: "20%",
 	}, {
 		title: "时间",
 		dataIndex: "time",
 		scopedSlots: {customRender: "time"},
-		width: 150
+		width: "20%",
 	}, {
 		title: "最新消息",
 		dataIndex: "message",
 		scopedSlots: {customRender: "message"},
-		width: 150
+		width: "25%",
 	}, {
 		title: "操作",
 		dataIndex: "operation",
 		scopedSlots: {customRender: "operation"},
-		width: 150,
+		// width: "20%",
 		render: () => <a>回复</a>
 	}
 ];
@@ -370,6 +376,7 @@ export default {
 		showSystemChat(record) {	// 页面中展示聊天框，没有实际作用
 			// 感觉这里record只需要用户id这类的值
 			this.showDetail = true;
+			
 			this.selectData = record;
 			console.log(record)
 		}, 
@@ -459,4 +466,25 @@ export default {
 	color: #a2a2a2;
 	font-size: 24px;
 }
+
+/* .custom-modal .am-modal-wrap {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.custom-modal .am-modal-mask {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+} */
+.custom-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
+
+.custom-modal .a-modal-mask {
+  background-color: rgba(0,0,0,0.5); /* 将遮罩层的背景色修改为半透明的黑色 */
+}
+
 </style>
