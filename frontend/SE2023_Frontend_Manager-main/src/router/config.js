@@ -54,11 +54,11 @@ const options = {
                             name: '用户列表',
                             component: () => import('@/pages/form/advance/UserForm'),
                         },
-                        {
-                            path: 'resultList',
-                            name: '成果列表',
-                            component: () => import('@/pages/form/advance/ResultForm'),
-                        },
+                        // {
+                        //     path: 'resultList',
+                        //     name: '成果列表',
+                        //     component: () => import('@/pages/form/advance/ResultForm'),
+                        // },
 
                         {
                             path: 'ExpertCertificate',
@@ -72,14 +72,38 @@ const options = {
                             component: () => import('../pages/enterprise-certificate/EnterpriseList')
                         },
 
+                        // {
+                        //     path: 'chengguoCertificate',
+                        //     name: '成果审核',
+                        //     component: () => import('@/pages/chengguo-certificate/ChengguoList'),
+                        // }
+                        
+                    ]
+                }, 
+                
+                {
+                    path: 'result',
+                    name: '成果管理',
+                    meta: {
+                        icon: 'profile'
+                    },
+                    component: PageView,
+                    children: [
+                        {
+                            path: 'resultList',
+                            name: '成果列表',
+                            component: () => import('@/pages/form/advance/ResultForm'),
+                        },
                         {
                             path: 'chengguoCertificate',
                             name: '成果审核',
                             component: () => import('@/pages/chengguo-certificate/ChengguoList'),
                         }
-                        
+
                     ]
-                }, {
+                },
+                
+                {
                     path: 'interpretation',
                     name: '解读管理',
                     meta: {

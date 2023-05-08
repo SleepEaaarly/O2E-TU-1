@@ -13,6 +13,14 @@
           <a-select-option value="2">已认证</a-select-option>
           <a-select-option value="3">全部</a-select-option>
         </a-select>
+
+        <a-input-search
+          v-model:value="value"
+          placeholder="请输入成果关键词"
+          enter-button
+          @search="onSearch"
+          style="width: 300px;margin-left: 10px;"
+        />
       </a-space>
       <br/>
       <br/>
