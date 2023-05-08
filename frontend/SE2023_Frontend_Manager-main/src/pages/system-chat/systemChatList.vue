@@ -1,37 +1,4 @@
 <template>
-	<!-- <div>
-		<el-row >
-			<el-scrollbar style="height: 100%;">
-			<el-col :span="6" style="height: 600px; overflow: auto;">
-				<el-row v-for="(o, index) in 10" :key="o">
-					<el-card >
-						<el-row>
-							<el-col :span="4">
-								<el-avatar :size="100" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" rel="external nofollow"></el-avatar>
-								<el-avatar icon="el-icon-user-solid"></el-avatar>
-							</el-col>
-							
-							<el-col :span="18">
-								<h2>小明同学{{index}}</h2>
-								<h2></h2>
-							</el-col>
-						</el-row>
-					</el-card>
-				</el-row>
-				 <div v-for="fit in fits" :key="fit">
-					<el-ava
-				</div>
-			</el-col>
-			</el-scrollbar>
-			
-			<el-col :span="18">
-				<router-view>
-					
-				</router-view>
-			</el-col>
-		</el-row>
-	</div> -->
-	
 	<a-card :bordered="false">
 		<a-table :data-source="data" :columns="columns">
 			<template slot="operation" slot-scope="text, record">
@@ -40,7 +7,7 @@
 						<a @click="showSystemChat(record)" >回复</a>
 						<a-modal v-model="showDetail" title="客服聊天" width="750px" footer="" ref="chatContent" >
 							
-							<a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 600px;" >
+							<a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 500px;" >
 								<!-- <div v-for="(item, index) in record.messages" :key="index">abc</div> -->
 								<!-- <div v-show="false">{{selectData.messages[0].message}}</div>
 								<div v-show="false">{{ selectData.messages[1].message }}</div> -->
@@ -50,7 +17,8 @@
 									
 										<a-row v-if="item.gstime" class="system-chat-item">{{item.gstime}}</a-row>
 										<!-- 提示转换信息 -->
-										<a-row v-if="item.type == 'switch_info'" class="system-chat-time">对方已转换为{{item.message}}服务</a-row>
+										<a-row v-if="item.type == 'switch_info'" class="system-chat-time"
+										 style="font-size: small;">对方已转换为{{item.message}}服务</a-row>
 										<div v-if="item.type !== 'switch_info'" class="system-chat-list" :class="{'system-chat-me': item.isme}">
 											<!-- 显示管理员/AI头像 -->
 											<Image v-if="!item.isme" :src="item.userpic" mode="widthFix" lazy-load></Image> 
@@ -81,21 +49,21 @@
 									</div>
 								</span>
 							</a-card>
-							<a-card>
-								<a-row>
+							<a-row>
 									<a-col :span="20">
 										<a-textarea
 										v-model:value="reply"
 										placeholder="请输入回复，shift+回车换行"
 										:auto-size="{ minRows: 2, maxRows: 5 }"
 										@keydown.native="handleKeyCode($event)"
+										style="margin-top: 20px;height: 100px;"
 										/>
 									</a-col>
 									<a-col :span="4">
-										<a-button @click="handleSubmit(selectData)" >发送</a-button>
+										<a-button @click="handleSubmit(selectData)" type="primary" size = "large"
+										style="margin-left: 20px;margin-top: 50px;width: 100px;">发送</a-button>
 									</a-col>
 								</a-row>
-							</a-card>
 							</a-modal>
 					</span>
 				</div>
