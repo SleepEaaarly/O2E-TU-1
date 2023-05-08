@@ -296,7 +296,11 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     print("result_ids:", result_ids)
     result_infos = []
     for result_id in result_ids:
-        result = Results.objects.get(pk=result_id['result_id'])
+        try:
+            result = Results.objects.get(pk=result_id['result_id'])
+        except:
+            print(f"database not find: result id {result_id['result_id']}")
+            continue
         expert = Expert.objects.filter(results__id=result.id)[0]
         user = User.objects.get(expert_info__id=expert.id)
         if result.state == 1:

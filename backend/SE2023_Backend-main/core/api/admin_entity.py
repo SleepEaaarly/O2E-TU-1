@@ -6,7 +6,7 @@ from .utils import (failed_api_response, ErrorCode,
                     wrapped_api, response_wrapper)
 from core.api.auth import jwt_auth
 from django.views.decorators.http import require_http_methods
-from core.models import User, Results
+from core.models import User, Results, Expert, ResMultipic
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 
@@ -63,8 +63,10 @@ def delete_result(request: HttpRequest):
     milvus_delete("O2E_RESULT", result.vector_sci)
     disconnect_milvus()
     print("delete_result 3")
-    result.expert_results.remove(*result)
-    result.multipic.remove(*result)
+    experts = Expert.objects.all()
+    pics = ResMultipic.objects.all()
+    result.expert_results.remove(*experts)
+    result.multipic.remove(*pics)
     # todo 图片删除
     print("delete_result 4")
     result.delete()

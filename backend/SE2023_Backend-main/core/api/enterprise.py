@@ -69,7 +69,7 @@ def set_info(request:HttpRequest):
     user = User.objects.get(id=id)
     name_vec = get_scibert_embedding(name)
     get_milvus_connection()
-    mid = milvus_insert("O2E_ENTERPRISE_HIT", data=[[name_vec], [id]])
+    mid = milvus_insert("O2E_ENTERPRISE_HIT", data=[[name_vec], [int(id)]])
     disconnect_milvus()
     if user.enterprise_info is None:
         enterprise_info = Enterprise_info()

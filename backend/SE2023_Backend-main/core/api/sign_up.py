@@ -78,6 +78,7 @@ def change_email(request: HttpRequest):
 @response_wrapper
 @require_POST
 def create_user(request: HttpRequest):
+    print("enter create user")
     """create user
 
     [method]: POST

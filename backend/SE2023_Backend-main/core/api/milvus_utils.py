@@ -116,19 +116,21 @@ def milvus_insert(collection_name, data, partition_name=None):
     return ids
 
 
-def milvus_delete(collection_name, milvus_id, partition_name=None):
+def milvus_delete(collection_name, milvus_id: str):
     """
     插⼊数据。
     :param collection_name: collection名称
-    :param partition_name: partition名称
-    :param data: 待删除的数据，list-like(list, tuple)
-    :return: Milvus⽣成的ids
+    :param milvus_id: str
     """
     collection = get_milvus_collection(collection_name)
+    expr_str = "milvus_id" + " in [" + milvus_id + "]"
     try:
-        res = collection.delete(f"milvus_id == {milvus_id}", partition_name=partition_name)
+        res = collection.delete(expr_str)
+        collection.flush()
+        return res
     except Exception as e:
         print(e)
+
 
 
 def milvus_search(collection_name, partition_names, query_vectors, topk, eps=0, expr=None):

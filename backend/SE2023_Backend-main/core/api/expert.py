@@ -103,7 +103,7 @@ def setinfo(request:HttpRequest):
     user = User.objects.get(id=id)
     name_vec = get_hitbert_embedding(name)
     get_milvus_connection()
-    mid = milvus_insert("O2E_EXPERT_HIT", data=[[name_vec], [id]])
+    mid = milvus_insert("O2E_EXPERT_HIT", data=[[name_vec], [int(id)]])
     disconnect_milvus()
     if user.expert_info is not None:
         expert = user.expert_info
