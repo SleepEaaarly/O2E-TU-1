@@ -51,6 +51,7 @@
 	import companyCard from "../../components/company_rep_display_card.vue"
 	import fuiCard from "@/components/firstui/fui-card/fui-card.vue"
 	import require_message_card from 'components/require_message_card'
+	import { picUrl } from '@/common.js'
 	export default {
 		data() {
 			return {
@@ -89,7 +90,7 @@
 				this.require_info.company_name = output.companyInfo.companyName 
 				this.require_info.require_intro = output.requireInfo.requireIntro 
 				this.require_info.company_address = output.companyInfo.companyAddress
-				this.require_info.company_logoPath = output.companyInfo.companyLogoPath
+				this.require_info.company_logoPath = picUrl + output.companyInfo.companyLogoPath
 				this.require_info.company_area = output.companyInfo.companyArea
 				this.require_info.require_id = output.requireInfo.requireId 
 				this.require_info.company_id = output.companyInfo.companyId

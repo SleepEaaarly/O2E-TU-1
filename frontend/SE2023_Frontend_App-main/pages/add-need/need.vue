@@ -63,7 +63,7 @@
 				
 				<view class="uni-btn-v">
 					<button type="primary" form-type="submit">直接发布</button>
-					<button type="primary" @click="saveNeed">保存</button>
+					<!-- <button type="primary" @click="saveNeed">保存</button> -->
 					<button type="default" form-type="reset">清除</button>
 				</view>
 			</form>
@@ -253,16 +253,10 @@
 				if (validate_answer) {
 					console.log("validate_success!")
 					let result = await addneed(data)
-					if (result&&result.code) {
-						console.log("submit_fail!!")
-						// this.$http.toast('需求创建失败！')
-					} else {
-						console.log("submit_success!")
-						this.$http.toast('需求创建成功！')
-						this.back()
-					}
+					this.$http.toast('需求创建成功！')
+					this.back()
 				} else {
-					// this.$http.toast('需求创建失败！')
+					this.$http.toast('需求创建失败！')
 				}
 			},
 			reset: function(e) {

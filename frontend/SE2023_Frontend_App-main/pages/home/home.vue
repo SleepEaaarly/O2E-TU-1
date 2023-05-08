@@ -2,9 +2,9 @@
 	<view>
 		<!-- 未登录 -->
 		<template  v-if="userInfo && !userInfo.id">
-			<view class="u-f-ajc">登陆O2E_TH，体验更多功能</view>
-			<!-- 第三方登陆 -->
-			<view class="u-f-ajc" @tap="openLogin">账号密码登陆 <view class="icon iconfont icon-jinru"></view>
+			<view class="u-f-ajc">登录O2E_TH，体验更多功能</view>
+			<!-- 第三方登录 -->
+			<view class="u-f-ajc" @tap="openLogin">账号密码登录 <view class="icon iconfont icon-jinru"></view>
 			</view>
 		</template>
 		
@@ -59,7 +59,7 @@
 				</uni-list>
 			</uni-section>
 			
-			<button class="user-set-btn" type="primary" @tap="showActive" v-show="false">退出登陆</button>
+			<button class="user-set-btn" type="primary" @tap="showActive" v-show="false">退出登录</button>
 			
 			<!-- 分享链接弹窗 -->
 			<uni-popup ref="shareLink" type="share">

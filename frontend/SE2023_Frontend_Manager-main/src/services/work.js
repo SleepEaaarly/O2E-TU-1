@@ -6,6 +6,11 @@ export const getWorkAll = (page) => {
     return request(url, METHOD.GET);
 }
 
+export const searchWork = (params) => {
+    const url = `${BASE_URL_IP}/api/admin/search/result`
+    return request(url, METHOD.POST, params);
+}
+
 export const getWork = (id) => {
     const url = `${BASE_URL_IP}/api/result/getinfo/${id}`
     return request(url, METHOD.GET);
