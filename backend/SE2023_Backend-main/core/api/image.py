@@ -7,7 +7,9 @@ from core.models.image import Image
 from core.models.user import User
 import json
 
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -35,7 +37,7 @@ def create_image(request: HttpRequest):
         "message": "success add a image."
     })
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('PUT')
@@ -62,7 +64,7 @@ def remove_image(request: HttpRequest):
         "message": "image successfully remove."
     })
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('DELETE')
@@ -88,7 +90,7 @@ def delete_image(request: HttpRequest):
         "message": "image successfully delete."
     })
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('GET')

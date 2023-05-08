@@ -11,8 +11,9 @@ from core.models.tag import Tag
 from core.api.utils import response_wrapper, success_api_response, failed_api_response, ErrorCode
 from core.api.auth import jwt_auth
 from core.api.query_utils import query_page
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_GET

@@ -7,7 +7,9 @@ from core.api.auth import jwt_auth
 import os
 from django.http import HttpResponse
 from backend.settings import BASE_DIR
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 @jwt_auth()
 @response_wrapper
 @require_http_methods('GET')
@@ -22,7 +24,7 @@ def get_res_pic(request: HttpRequest):
         "pic": str(p.get_pic()),
     })
 
-
+@csrf_exempt
 #@jwt_auth()
 @response_wrapper
 @require_http_methods('POST')
@@ -44,7 +46,7 @@ def change_res_pic(request):
         "pic": str(res.picture),
     })
 
-
+@csrf_exempt
 @jwt_auth()
 @response_wrapper
 @require_http_methods('GET')
@@ -61,6 +63,7 @@ def get_res_pdf(request: HttpRequest):
 
 
 # @jwt_auth()
+@csrf_exempt
 @response_wrapper
 @require_http_methods('POST')
 def change_res_pdf(request):
@@ -81,7 +84,7 @@ def change_res_pdf(request):
         "pdf": str(res.file),
     })
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def read_pic(request: HttpRequest, year, day, file_name):
@@ -90,7 +93,7 @@ def read_pic(request: HttpRequest, year, day, file_name):
         image_data = f.read()
     return HttpResponse(image_data, content_type="image/png")
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def read_default_pic(request: HttpRequest):

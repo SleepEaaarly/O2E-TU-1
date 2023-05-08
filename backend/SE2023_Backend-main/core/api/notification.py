@@ -8,8 +8,9 @@ from core.models.notification import (Notification, UNREAD, READ)
 from core.models.pap_model import PapModel
 from core.models.user import User
 import json
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -50,7 +51,7 @@ def create_notification(request: HttpRequest):
     else:
         return failed_api_response(ErrorCode.SERVER_ERROR, "notification create error.")
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('GET')
@@ -71,7 +72,7 @@ def get_notifications_num(request: HttpRequest):
         "num": len(notification_list),
     })
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('GET')

@@ -12,6 +12,9 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
 
 from core.models import Topic, Discussion, User
 
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -66,6 +69,7 @@ def create_discussion(request: HttpRequest):
     ret_data = {'id': discussion.id}
     return success_api_response(ret_data)
 
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -94,6 +98,7 @@ def delete_discussion(request: HttpRequest):
     discussion.delete()
     return success_api_response({'id': discussion_id})
 
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -116,6 +121,7 @@ def get_discussion(request: HttpRequest, id: int):
     ret_data = discussion.to_dict()
     return success_api_response(ret_data)
 
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper

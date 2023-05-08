@@ -6,6 +6,9 @@ from .utils import (failed_api_response, ErrorCode,
 from core.models.feedback import Feedback
 from core.models.user import User
 
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')
@@ -34,7 +37,7 @@ def get_user_replied_feedback(request: HttpRequest, id: int):
     return success_api_response({"data": feedbacks_list})
 
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')
@@ -62,6 +65,7 @@ def get_user_unreplied_feedback(request: HttpRequest, id: int):
         feedbacks_list.append(data)
     return success_api_response({"data": feedbacks_list})
 
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('POST')
@@ -87,7 +91,7 @@ def reply_feedback(request: HttpRequest):
 
 
 
-
+@csrf_exempt
 @response_wrapper
 #@jwt_auth()
 @require_http_methods('GET')
@@ -141,7 +145,7 @@ def get_type(qtype):
         i += 1
     return ans
 
-
+@csrf_exempt
 @response_wrapper
 #@jwt_auth()
 @require_http_methods('POST')

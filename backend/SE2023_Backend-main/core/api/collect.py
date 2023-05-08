@@ -12,7 +12,9 @@ from django.views.decorators.http import require_GET,require_POST
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -25,7 +27,7 @@ def createCollect(request: HttpRequest):
     }
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('DELETE')
@@ -36,7 +38,7 @@ def deleteCollect(request: HttpRequest):
     ret = {}
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('GET')

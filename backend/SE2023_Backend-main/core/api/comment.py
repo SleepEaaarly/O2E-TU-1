@@ -12,6 +12,7 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
 
 from core.models import Comment, Interpretation, User
 
+from django.views.decorators.csrf import csrf_exempt
 
 def get_now_time():
     """获取当前时间"""
@@ -23,6 +24,7 @@ def get_now_time():
     now_time_str = now_time.strftime("%Y-%m-%d %H:%M:%S")
     return now_time_str
 
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -81,6 +83,7 @@ def create_comment(request: HttpRequest):
     ret_data = {'id': comment.pk}
     return success_api_response(ret_data)
 
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -124,6 +127,7 @@ def comment2json(comment: Comment) -> dict:
     data['userpic'] = comment.user.icon.url
     return data
 
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -146,6 +150,7 @@ def get_comment(request: HttpRequest, id: int):
     ret_data = comment2json(comment)
     return success_api_response(ret_data)
 
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper

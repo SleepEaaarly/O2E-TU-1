@@ -10,8 +10,9 @@ from core.models.user import User
 from core.models.expert import Expert
 from core.models.enterprise_info import Enterprise_info
 from core.models.results import Results
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')
@@ -92,7 +93,7 @@ def search_expert(request: HttpRequest, *args, **kwargs):
     # print(data_results)
     return success_api_response({"data": data_results})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')
@@ -173,7 +174,7 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
 
     return success_api_response({"data": data_results})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')
@@ -252,7 +253,7 @@ def search_result(request: HttpRequest):
     # data_results = data_results[:10]
     return success_api_response({"data": data_results})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')

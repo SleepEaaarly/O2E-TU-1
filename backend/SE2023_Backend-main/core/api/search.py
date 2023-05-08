@@ -10,8 +10,9 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 from ..models import User
 from django.db.models import Q
-
+from django.views.decorators.csrf import csrf_exempt
 'web PAGE'
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_GET
@@ -46,6 +47,7 @@ def search_user_list(request:HttpRequest,*args, **kwargs):
 
 
 'app ROLL'
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_GET

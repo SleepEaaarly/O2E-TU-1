@@ -6,8 +6,9 @@ from django.views.decorators.http import require_GET
 from core.api.auth import jwt_auth
 from core.api.utils import response_wrapper, success_api_response, failed_api_response, ErrorCode
 from core.models.tag import Tag
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_GET

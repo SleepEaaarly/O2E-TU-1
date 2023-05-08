@@ -10,6 +10,9 @@ from core.api.auth import jwt_auth
 from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -49,7 +52,7 @@ def get_papComment(request: HttpRequest, id: int):
     },]
     return success_api_response(ret)
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -58,7 +61,7 @@ def delete_papComment(request: HttpRequest,id):
     ret={}
     return success_api_response(ret)
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper

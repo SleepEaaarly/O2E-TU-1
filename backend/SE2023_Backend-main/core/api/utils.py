@@ -147,5 +147,5 @@ def trans_zh2en(sent):
     if lan.language == 'en':
         ans = sent
     else:
-        ans = client.translate(sent, target='en')
+        ans = client.translate(sent, target='en').translatedText
     return ans

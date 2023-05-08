@@ -20,6 +20,7 @@ import pdfkit
 from backend.settings import PDF_CACHE_DIR
 import random
 from bs4 import BeautifulSoup
+from django.views.decorators.csrf import csrf_exempt
 
 def filter_unsafe(string: str):
     soup = BeautifulSoup(string, "html.parser")
@@ -28,6 +29,7 @@ def filter_unsafe(string: str):
             _html_tag.decompose()
     return str(soup)
 
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -87,7 +89,7 @@ def createInterpretation(request: HttpRequest):
     print('[DEBUG] Successfully create Interpretation msg.')
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('DELETE')
@@ -106,7 +108,7 @@ def deleteInterpretation(request: HttpRequest, id: int):
     ret = {}
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('PUT')
@@ -143,7 +145,7 @@ def changeInterpretation(request: HttpRequest, id: int):
     ret = {}
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('GET')
@@ -194,6 +196,7 @@ def getInterpretation(request: HttpRequest, id: int):
 
 # @response_wrapper
 # @jwt_auth()
+@csrf_exempt
 @require_http_methods('GET')
 def downloadInterpretation(request: HttpRequest, id: int):
     print('[DEBUG] Downloading process called.')
@@ -212,7 +215,7 @@ def downloadInterpretation(request: HttpRequest, id: int):
     print('[DEBUG] Right before returning response of file download.')
     return response
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -227,7 +230,7 @@ def collectInterpretation(request: HttpRequest, eid: int):
     ret = {}
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -242,7 +245,7 @@ def uncollectInterpretation(request: HttpRequest, eid: int):
     ret = {}
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -272,7 +275,7 @@ def likeInterpretation(request: HttpRequest, id: int):
     ret = {}
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -288,7 +291,7 @@ def transmitInterpretation(request: HttpRequest, id: int):
     ret = {}
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')
@@ -304,7 +307,7 @@ def recommendInterpretation(request: HttpRequest):
     ret = [_inter.to_hash() for _inter in interpretations.all()[:min(NUM_RECOMMEND, len(interpretations))]]
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')
@@ -322,7 +325,7 @@ def randomWalkInterpretation(request: HttpRequest):
     ret = [_inter.to_hash() for _inter in interpretations]
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('GET')
@@ -371,7 +374,7 @@ def searchInterpretation(request: HttpRequest, pid: int):
     print(ret)
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('GET')
@@ -381,7 +384,7 @@ def getAllInterpretation(request: HttpRequest):
     ret = [_interpretation.to_hash(current_user=user) for _interpretation in _all_matches]
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('GET')
@@ -399,7 +402,7 @@ def queryVisitorNumber(request: HttpRequest):
 
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('GET')
@@ -409,7 +412,7 @@ def queryKeywordTops(request: HttpRequest):
     ret = [_keyword.to_hash() for _keyword in sorted_keywords[:TOP_COUNT]]
     return success_api_response(ret)
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('GET')
