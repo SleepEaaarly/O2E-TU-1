@@ -131,7 +131,7 @@
 		},
 		data() {
 			return {
-				testpic: "http://43.138.27.92:8000/api/images/202205/02/icons/zkg.jpg",
+				testpic: "http://116.63.14.146:8000/api/images/202205/02/icons/zkg.jpg",
 				scrollTop:0,
 				triggered:false,
 				index:-1,

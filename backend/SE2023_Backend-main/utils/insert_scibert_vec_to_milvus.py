@@ -1,58 +1,11 @@
 import pymysql
-from milvus_utils import get_milvus_connection, milvus_insert, disconnect_milvus, milvus_query_paper_by_id, \
+from core.api.milvus_utils import get_milvus_connection, milvus_insert, disconnect_milvus, milvus_query_paper_by_id, \
     get_milvus_collection
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModel
-
-
-def connect_database():
-    connection = pymysql.connect(host="116.63.14.146",
-                                 port=3306,
-                                 db="se2023",
-                                 user="root",
-                                 passwd="O2E-TH-1!",
-                                 charset="utf8")
-    cursor = connection.cursor()
-    return connection, cursor
-
-
-def close_database(connection, cursor):
-    connection.close()
-    cursor.close()
-
-
-def get_all_entity(entity: str):
-    connection, cursor = connect_database()
-
-    instruction = "select * from " + entity
-
-    try:
-        cursor.execute(instruction)
-        connection.commit()
-    except Exception as e:
-        connection.rollback()
-        print("执行MySQL错误")
-    result = cursor.fetchall()
-    close_database(connection, cursor)
-    return result
-
-
-def update_vector(entity: str, vector: str, id: int):
-    connection, cursor = connect_database()
-
-    instruction = "update " + entity + " set vector_sci=" + vector + " where id=" + str(id)
-
-    try:
-        cursor.execute(instruction)
-        connection.commit()
-    except Exception as e:
-        connection.rollback()
-        print("执行MySQL错误")
-    result = cursor.fetchall()
-    close_database(connection, cursor)
-    return result
+from sql_util import get_all_entity, update_sci_vector
 
 
 class ContrastiveSciBERT(nn.Module):
@@ -113,24 +66,35 @@ class ContrastiveSciBERT(nn.Module):
         return loss
 
 
-d_name = "core_results"
-c_name = "O2E_RESULT"
+d_name = "core_papers"
+c_name = "O2E_PAPER"
 rst = get_all_entity(d_name)
-inp = [[r[1], r[0], r[9]] for r in rst]
+inp = [[r[9], r[0]] for r in rst]
+# inp = [[r[1], r[0], r[9]] for r in rst]
 # print(pap_titles)
-state_dict = torch.load("D:\\大学学习\\大三下\\软件工程\\O2E-TU-1\\backend\\SE2023_Backend-main\\model.pt", map_location='cpu')
+state_dict = torch.load("../model.pt", map_location='cpu')
 model = ContrastiveSciBERT(out_dim=128, tau=0.07)
 model.load_state_dict(state_dict)
-get_milvus_connection()
 for i in inp:
-    if i[2] == 1:
-        get_milvus_connection()
-        vector = model.get_embeds(i[0])
-        # vector = vector / vector.norm(dim=1, keepdim=True)
-        v = vector.tolist()[0]
-        mid = milvus_insert(c_name, data=[[v], [i[1]]])
-        disconnect_milvus()
-        update_vector(d_name, str(mid[0]), i[1])
+    # 对results需要额外判断审核状态
+    get_milvus_connection()
+    vector = model.get_embeds(i[0])
+    # vector = vector / vector.norm(dim=1, keepdim=True)
+    v = vector.tolist()[0]
+    mid = milvus_insert(c_name, data=[[v], [i[1]]])
+    disconnect_milvus()
+    update_sci_vector(d_name, str(mid[0]), i[1])
+
+# for i in inp:
+#     # 对results需要额外判断审核状态
+#     if i[2] == 1:
+#         get_milvus_connection()
+#         vector = model.get_embeds(i[0])
+#         # vector = vector / vector.norm(dim=1, keepdim=True)
+#         v = vector.tolist()[0]
+#         mid = milvus_insert(c_name, data=[[v], [i[1]]])
+#         disconnect_milvus()
+#         update_sci_vector(d_name, str(mid[0]), i[1])
 
 # m = ContrastiveSciBERT(128, 25.0)
 # key_vector = m.get_embeds(pap_titles)

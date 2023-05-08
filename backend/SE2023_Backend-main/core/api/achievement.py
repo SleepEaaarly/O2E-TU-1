@@ -10,6 +10,7 @@ from core.api.ai_report import generate_result_report
 from core.api.milvus_utils import milvus_insert, get_milvus_connection, disconnect_milvus
 from core.api.ai_chat import get_hitbert_embedding
 from core.api.ai_recommend import get_scibert_embedding
+from core.api.utils import trans_zh2en
 from django.views.decorators.csrf import csrf_exempt
 
 '''
@@ -230,9 +231,10 @@ def agree_result(request: HttpRequest, id: int):
     if result.state != 0:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
     result.state = 1
+    result.title_eng = trans_zh2en(result.title)
     print('debug 1')
-    hit_vec = get_hitbert_embedding(result.title)
-    sci_vec = get_scibert_embedding(result.title)
+    hit_vec = get_hitbert_embedding(result.title_eng)
+    sci_vec = get_scibert_embedding(result.title_eng)
     print('debug 2')
 
     get_milvus_connection()
