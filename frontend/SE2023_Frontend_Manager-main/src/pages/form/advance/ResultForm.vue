@@ -81,26 +81,26 @@
     {
       title: "成果名",
       dataIndex: "name",
-      width: "20%",
+      width: "25%",
       scopedSlots: { customRender: "name" },
     },
     {
       title: "作者",
       dataIndex: "author",
-      width: "25%",
+      width: "20%",
       scopedSlots: { customRender: "author" },
     },
     {
       title: "阶段",
       dataIndex: "period",
-      width: "15%",
+      width: "20%",
       scopedSlots: { customRender: "period" },
       // onFilter: (value, record) => record.type.indexOf(value) === 0,
     },
     {
       title: "领域",
       dataIndex: "field",
-      width: "25%",
+      width: "20%",
       scopedSlots: { customRender: "field" },
     },
     {
