@@ -13,6 +13,14 @@
           <a-select-option value="2">已认证</a-select-option>
           <a-select-option value="3">全部</a-select-option>
         </a-select>
+
+        <a-input-search
+          v-model:value="value"
+          placeholder="请输入成果关键词"
+          enter-button
+          @search="onSearch"
+          style="width: 300px;margin-left: 10px;"
+        />
       </a-space>
       <br/>
       <br/>
@@ -73,26 +81,26 @@
     {
       title: "成果名",
       dataIndex: "name",
-      width: "20%",
+      width: "25%",
       scopedSlots: { customRender: "name" },
     },
     {
       title: "作者",
       dataIndex: "author",
-      width: "25%",
+      width: "20%",
       scopedSlots: { customRender: "author" },
     },
     {
       title: "阶段",
       dataIndex: "period",
-      width: "15%",
+      width: "20%",
       scopedSlots: { customRender: "period" },
       // onFilter: (value, record) => record.type.indexOf(value) === 0,
     },
     {
       title: "领域",
       dataIndex: "field",
-      width: "25%",
+      width: "20%",
       scopedSlots: { customRender: "field" },
     },
     {
