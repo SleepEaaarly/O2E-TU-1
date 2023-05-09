@@ -7,11 +7,26 @@ import { picUrl } from './common.js'
 function purifyPapers(item){
 	let purified_result = {
 		type: 0,	// 0=论文，1=专利，2=项目
-		strType: '论文',
+		strType: '成果',
 		title: item.title,		//标题
 		scholars: item.scholars,	//所有作者
 		pyear: String(item.pyear),		//发表年限
 		cites: '引用次数：' + item.cites,	//引用次数
+	}
+	if(purified_result.pyear === 'undefined' || purified_result.pyear === null || purified_result.pyear === ''){
+		purified_result.pyear = '未知年份'
+	}
+	return purified_result
+}
+
+function purifyResults(item){
+	let purified_result = {
+		type: 3,	// 3 = 成果
+		strType: '成果',
+		title: item.title,		//标题
+		scholars: item.scholars,	//所有作者
+		pyear: String(item.pyear),		//发表年限
+		description: '成果摘要: ' + item.abstract,
 	}
 	if(purified_result.pyear === 'undefined' || purified_result.pyear === null || purified_result.pyear === ''){
 		purified_result.pyear = '未知年份'
@@ -87,6 +102,8 @@ export const getExpertInfo = async(uid, type) => {
 					return purifyPatents(item)
 				case 'projects':
 					return purifyProjects(item)
+				case 'results':
+					return purifyResults(item)
 			}
 			
 		})
