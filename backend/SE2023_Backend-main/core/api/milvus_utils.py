@@ -266,11 +266,11 @@ def milvus_query_result_hit_by_id(query):
 if __name__ == '__main__':
     from pymilvus import drop_collection, list_collections, loading_progress, utility
     get_milvus_connection()
-    names = ["O2E_RESULT_HIT"]
+    names = ["O2E_RESULT_HIT", "O2E_RESULT"]
     # names = ["O2E_RESULT", "O2E_PAPER", "O2E_NEED",
     #          "O2E_RESULT_HIT", "SET_QUESTION_HIT",
     #          "O2E_EXPERT_HIT", "O2E_ENTERPRISE_HIT"]
-    id_names = ["result_id"]
+    id_names = ["result_id", "result_id"]
     # id_names = ["result_id", "paper_id", "need_id",
     #             "result_id", "question_id",
     #             "expert_id", "enterprise_id"]
