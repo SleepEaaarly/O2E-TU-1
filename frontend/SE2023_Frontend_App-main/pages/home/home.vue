@@ -27,10 +27,9 @@
 					<uni-list-item class="explore" :border="false" :show-extra-icon="false" clickable :extra-icon="rateIcon" title="测试页面" link @click="goToTest" />
 					<uni-list-item class="explore" 
 						:border="false" 
-						:show-extra-icon="false" 
+						:show-extra-icon="true" 
 						clickable 
-						thumb="/static/kefu.png" 
-						thumb-size="base" 
+						:extra-icon="aiIcon" 
 						title="AI/人工客服" link @click="goToSystemChat" />
 					
 					
@@ -148,6 +147,11 @@
 					},
 				],
 				//此处使用配色方案:https://coolors.co/palette/ff595e-ffca3a-8ac926-1982c4-6a4c93
+				aiIcon: {
+					color: '#f7b267',
+					size: '22',
+					type: 'contact-filled'
+				},
 				rateIcon: {
 					color: '#ff595e',
 					size: '22',
