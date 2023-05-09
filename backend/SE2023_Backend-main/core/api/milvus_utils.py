@@ -88,8 +88,8 @@ def list_milvus_entities(name, db_id_name):
     # collection.load(verbose=True)
 
     entities = collection.query(
-        expr=f"SELECT *",
-        output_fields=["milvus_id", "vector", db_id_name],
+        expr=db_id_name + " not in [0]",
+        output_fields=[db_id_name],
     )
     for i, ent in enumerate(entities):
         print(ent)
@@ -116,17 +116,18 @@ def milvus_insert(collection_name, data, partition_name=None):
     return ids
 
 
-def milvus_delete(collection_name, milvus_id, partition_name=None):
+def milvus_delete(collection_name, milvus_id: str):
     """
     插⼊数据。
     :param collection_name: collection名称
-    :param partition_name: partition名称
-    :param data: 待删除的数据，list-like(list, tuple)
-    :return: Milvus⽣成的ids
+    :param milvus_id: str
     """
     collection = get_milvus_collection(collection_name)
+    expr_str = "milvus_id" + " in [" + milvus_id + "]"
     try:
-        res = collection.delete(f"milvus_id == {milvus_id}", partition_name=partition_name)
+        res = collection.delete(expr_str)
+        collection.flush()
+        return res
     except Exception as e:
         print(e)
 
@@ -264,27 +265,27 @@ def milvus_query_result_hit_by_id(query):
 if __name__ == '__main__':
     from pymilvus import drop_collection, list_collections, loading_progress, utility
     get_milvus_connection()
-
+    names = ["O2E_RESULT_HIT"]
     # names = ["O2E_RESULT", "O2E_PAPER", "O2E_NEED",
     #          "O2E_RESULT_HIT", "SET_QUESTION_HIT",
     #          "O2E_EXPERT_HIT", "O2E_ENTERPRISE_HIT"]
+    id_names = ["result_id"]
     # id_names = ["result_id", "paper_id", "need_id",
     #             "result_id", "question_id",
     #             "expert_id", "enterprise_id"]
-    # for name, id_name in zip(names, id_names):
-    #     vim = 768 if "HIT" in name else 128
-    #     drop_collection(name)
-    #     create_milvus_collection(id_name, name, vim)
-    names = list_collections()
-    print(names)
-    for name in names:
-        print()
-        discribe_milvus_collection(name)
-
-    # collection_name = "O2E_EXPERT_HIT"
-    # db_id_name = "expert_id"
+    for name, id_name in zip(names, id_names):
+        vim = 768 if "HIT" in name else 128
+        drop_collection(name)
+        create_milvus_collection(id_name, name, vim)
+    # print(names)
+    # for name in names:
+    #     print()
+    #     discribe_milvus_collection(name)
+    # collection_name = "O2E_RESULT_HIT"
+    #
+    # milvus_delete(collection_name, "441254677606311614")
+    # db_id_name = "result_id"
     # list_milvus_entities(collection_name, db_id_name)
-
     # for collection_name in names:
     #     try:
     #         collection = get_milvus_collection(collection_name)
@@ -296,6 +297,3 @@ if __name__ == '__main__':
     # print(connections.list_connections())
     # print(utility.load_state(collection_name))
     disconnect_milvus()
-
-
-

@@ -322,6 +322,7 @@ def get_all_system_chatrooms(request: HttpRequest):
 @csrf_exempt
 @jwt_auth()
 @require_POST
+@response_wrapper
 def push_system_message_by_admin(request: HttpRequest):
     print(request)
     data: dict = parse_data(request)
