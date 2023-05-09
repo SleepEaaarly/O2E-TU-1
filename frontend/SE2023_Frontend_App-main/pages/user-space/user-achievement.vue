@@ -30,7 +30,6 @@
 			<uni-row class="description">
 				<uni-col class="description-text" :span="23">
 					{{item.description}}
-					{{item.cites}}
 				</uni-col>
 			</uni-row>
 		</uni-card>
@@ -108,8 +107,8 @@
 			},
 			generateDList(){	//刷新datalist
 				this.datalist = []
-				this.datalist.push.apply(this.datalist, this.paperlist)
-
+				this.datalist.push.apply(this.datalist, this.achievementList)
+				console.log(this.achievementList)
 				// TODO 获取成果列表
 				// this.datalist.push.apply(this.datalist, this.achievementList)
 				console.log(this.datalist)

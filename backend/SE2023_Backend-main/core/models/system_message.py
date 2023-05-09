@@ -62,7 +62,7 @@ class SystemMessage(models.Model):
                                         type = type,
                                         read_state=UNREAD)
             new_message.save()
-            print(new_message.id)
+            # print(new_message.id)
             return new_message.id
         except Exception:
             return -1

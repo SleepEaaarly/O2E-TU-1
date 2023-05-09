@@ -322,7 +322,6 @@ def create_need(request: HttpRequest):
     need.save()
     return success_api_response({})
 
-@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
