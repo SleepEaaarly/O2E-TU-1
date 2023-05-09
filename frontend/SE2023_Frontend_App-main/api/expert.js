@@ -21,6 +21,7 @@ function purifyPapers(item){
 
 function purifyResults(item){
 	let purified_result = {
+		rid: item.id,
 		type: 3,	// 3 = 成果
 		strType: '成果',
 		title: item.title,		//标题

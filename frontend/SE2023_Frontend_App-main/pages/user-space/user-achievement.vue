@@ -10,7 +10,7 @@
 		</view> -->
 		
 		<!-- 具体数据卡片 -->
-		<uni-card v-for="(item, index) in datalist" :key="index" @click="openResultDetail()">
+		<uni-card v-for="(item, index) in datalist" :key="index" @click="openResultDetail(item)">
 			<uni-row :span="24" class="title">
 				<uni-col class="title">
 					<uni-tag custom-style="background-color: #d6d6d6; border-color: #d6d6d6; color: #000000;"
@@ -113,9 +113,12 @@
 				// this.datalist.push.apply(this.datalist, this.achievementList)
 				console.log(this.datalist)
 			},
-			openResultDetail(){
-				// 什么都没有, 未打算做详情页面
-				console.log('点击了成果卡片，但什么也没发生...')
+			openResultDetail(work){
+				// console.log(work['result_id'])
+				// getExpertByID
+				uni.navigateTo({
+				 	url: '../../pages/work_detail/work_detail?rid=' + work['rid'],
+				 })
 			}
 		},
 	}
