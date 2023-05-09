@@ -125,6 +125,7 @@
             return {
                 testpic: "/static/head.jpg",
                 aiPic: "/static/head.jpg",
+                picUrl: '',
                 isShow: false,
                 isHuman: false,
                 currentState: 'AI',
@@ -173,6 +174,7 @@
         onShow() {
             // console.log("adfadfadfad")
             this.isShow = true
+            this.picUrl = picUrl
             // uni.$emit('system-chat-list-on-show')
         },
         beforeDestroy() {
@@ -441,7 +443,7 @@
                             let now = new Date().getTime()
                             let obj = { // 插入前端列表的数据
                                 isme: 0,
-                                userpic: this.aiPic,
+                                userpic: picUrl + this.aiPic,
                                 type: 'text',
                                 message: "啊哦，遇到我不会的了，建议您转人工哦",
                                 time: time.gettime.gettime(now),
@@ -463,7 +465,7 @@
                             let now = new Date().getTime()
                             let obj = { // 插入前端列表的数据
                                 isme: 0,
-                                userpic: this.aiPic,
+                                userpic: picUrl + this.aiPic,
                                 type: 'text',
                                 message: output.answer,
                                 time: time.gettime.gettime(now),
@@ -498,7 +500,7 @@
                         let now = (new Date()).getTime()
                         let obj = { // 插入前端列表的数据
                             isme: 0,
-                            userpic: this.aiPic,
+                            userpic: picUrl + this.aiPic,
                             type: 'text',
                             message: output.answer,
                             time: time.gettime.gettime(now),
@@ -520,7 +522,7 @@
                             // 2.4.1.1 构建专家信息
                             let obj = {
                                 isme: 0,
-                                userpic: this.aiPic,
+                                userpic: picUrl + this.aiPic,
                                 type: 'card',
                                 message: "一条卡片信息~",
                                 time: time.gettime.gettime(now),
@@ -539,7 +541,7 @@
                             // 2.4.2.1 构建企业信息
                             let obj = {
                                 isme: 0,
-                                userpic: this.aiPic,
+                                userpic: picUrl + this.aiPic,
                                 type: 'card',
                                 message: "一条卡片信息~",
                                 time: time.gettime.gettime(now),
@@ -558,7 +560,7 @@
                             // 2.4.3.1 构建企业信息
                             let obj = {
                                 isme: 0,
-                                userpic: this.aiPic,
+                                userpic: picUrl + this.aiPic,
                                 type: 'card',
                                 message: "一条卡片信息~",
                                 time: time.gettime.gettime(now),

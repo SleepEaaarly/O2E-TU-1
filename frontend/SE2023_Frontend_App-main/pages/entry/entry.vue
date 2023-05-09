@@ -320,7 +320,7 @@
 				}
 				var ret = await getWorkRec(paras)
 				this.recommendList.rec_list = ret
-				if(ret == [] || ret == {} || ret == null){
+				if(ret == [] || ret == {} || ret == null || ret.length === 0){
 					this.recFinish = true
 				}
 				console.log('RecWork')

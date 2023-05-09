@@ -7,7 +7,7 @@ import { picUrl } from './common.js'
 function purifyPapers(item){
 	let purified_result = {
 		type: 0,	// 0=论文，1=专利，2=项目
-		strType: '成果',
+		strType: '论文',
 		title: item.title,		//标题
 		scholars: item.scholars,	//所有作者
 		pyear: String(item.pyear),		//发表年限
@@ -20,10 +20,17 @@ function purifyPapers(item){
 }
 
 function purifyResults(item){
+	var state_txt
+	if(item.state==1){
+		state_txt = '已审核'
+	}else{
+		state_txt = '待审核'
+	}
 	let purified_result = {
 		rid: item.id,
+		state: item.state,
 		type: 3,	// 3 = 成果
-		strType: '成果',
+		strType: state_txt,
 		title: item.title,		//标题
 		scholars: item.scholars,	//所有作者
 		pyear: String(item.pyear),		//发表年限
