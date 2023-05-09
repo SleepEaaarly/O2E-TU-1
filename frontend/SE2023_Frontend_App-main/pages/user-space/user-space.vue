@@ -18,7 +18,7 @@
 			:tabBars="tabBarsExpert" 
 			:tabIndex="tabIndex"
 			@tabtap="tabtap"
-			scrollItemStyle="width:25%;"
+			scrollItemStyle="width:33%;"
 			scrollStyle="border-bottom:0;"
 			v-if="info.type==4">
 		</swiper-tab-head>
@@ -28,7 +28,7 @@
 			:tabBars="tabBarsUser" 
 			:tabIndex="tabIndex"
 			@tabtap="tabtap"
-			scrollItemStyle="width:50%;"
+			scrollItemStyle="width:100%;"
 			scrollStyle="border-bottom:0;"
 			v-else>
 		</swiper-tab-head>
@@ -43,18 +43,18 @@
 		</template>
 		
 		<!-- 统一规定第二栏为“动态” -->
-		<template v-if="tabIndex==1">
+		<!-- <template v-if="tabIndex==1">
 			<wordCloud></wordCloud>
-			<!-- <no-permit-see></no-permit-see> -->
-		</template>
+			<no-permit-see></no-permit-see> -->
+		<!-- </template> -->
 		
 		<!-- 成果 -->
-		<template v-if="tabIndex==2 && info.type==4">
+		<template v-if="tabIndex==1 && info.type==4">
 			<userAchievement :id="info.id" :isSelf="info.id==userInfo.id"></userAchievement>	
 		</template>
 		
 		<!-- 评价 -->
-		<template v-if="tabIndex==3 && info.type==4">
+		<template v-if="tabIndex==2 && info.type==4">
 			<userRate :id='info.id'></userRate>	
 		</template>
 
@@ -66,7 +66,7 @@
 			@heimingdan="heimingdan"
 			@jubao="jubao">
 		</user-space-popup>
-		
+	
 	</view>
 </template>
 
@@ -177,14 +177,14 @@
 				// 专家用户Bar
 				tabBarsExpert:[
 					{ name:'主页', id:'homepage' },
-					{ name:'动态', id:'dynamic' },
+					// { name:'动态', id:'dynamic' },
 					{ name:'成果', id:'masterpiece' },
 					{ name:'评价', id:'rate' },					
 				],
 				// 普通/企业用户Bar
 				tabBarsUser:[
 					{ name:'主页', id:'homepage' },
-					{ name:'动态', id:'dynamic' },
+					// { name:'动态', id:'dynamic' },
 				],
 				
 				tablist:[ {},
