@@ -24,7 +24,7 @@
 			
 			<uni-section title="探索" type="circle">
 				<uni-list :border="false">
-					<uni-list-item class="explore" :border="false" :show-extra-icon="false" clickable :extra-icon="rateIcon" title="测试页面" link @click="goToTest" />
+					<!-- <uni-list-item class="explore" :border="false" :show-extra-icon="false" clickable :extra-icon="rateIcon" title="测试页面" link @click="goToTest" /> -->
 					<uni-list-item class="explore" 
 						:border="false" 
 						:show-extra-icon="true" 
