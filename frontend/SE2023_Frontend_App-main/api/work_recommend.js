@@ -17,12 +17,12 @@ export const getWorkRec = async (paras) => {
 	var result
 	// console.log(paras.type)
 	if(paras.type==4){
-		ret = await axios.get('ai/resultRec/expert/' + paras.id,
+		ret = await axios.get('ai/resultRec/expert/' + paras.id + '/' + paras.shuffle,
 		    {},
 		    headers)
 		result = ret.results
 	}else if(paras.type==5){
-		ret = await axios.get('ai/resultRec/enterprise/' + paras.id,
+		ret = await axios.get('ai/resultRec/enterprise/' + paras.id + '/' + paras.shuffle,
 		    {},
 		    headers)
 		result = ret.results

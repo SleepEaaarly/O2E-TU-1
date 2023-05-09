@@ -100,7 +100,7 @@
 					:area="item['field']"
 					:index="index2"></work-card>
 				</block>
-				<uni-load-more :loadtext="recommendList.loadtext" :status="data_status"></uni-load-more>
+				<uni-load-more v-if="this.recFinish" :loadtext="recommendList.loadtext" :status="data_status"></uni-load-more>
 			</template>
 		</view>
 		
@@ -189,7 +189,7 @@
 		},
 		onShow() {		//页面加载,一个页面只会调用一次
 			console.log('works-onShow()')
-			this.loadRecData()
+			this.loadRecData(0)
 			this.requestData()
 		},
 		onLoad() {		//页面显示,每次打开页面都会调用一次
@@ -308,17 +308,21 @@
 				this.cur_page = 1
 				this.recommendList.rec_list = []
 				this.recommendList.list = []
-				this.loadRecData()
+				this.loadRecData(1)
 				this.requestData()
 			},
-			async loadRecData(){
+			async loadRecData(shuffle){
 				// TODO 成果推荐 Debug
 				let paras = {
 					"id": this.userInfo.id,
 					"type": this.userInfo.type,
+					"shuffle": shuffle
 				}
-				this.recommendList.rec_list = await getWorkRec(paras)
-				this.recFinish = true
+				var ret = await getWorkRec(paras)
+				this.recommendList.rec_list = ret
+				if(ret == [] || ret == {} || ret == null){
+					this.recFinish = true
+				}
 				console.log('RecWork')
 				console.log(this.recommendList.rec_list)
 				// TODO 成果推荐 Debug
