@@ -10,9 +10,10 @@ from .utils import (failed_api_response, ErrorCode,
 from core.api.auth import jwt_auth, getUserInfo
 from core.models.user import User
 from core.api.milvus_utils import milvus_insert, get_milvus_connection, disconnect_milvus
-
+from django.views.decorators.csrf import csrf_exempt
 
 #@jwt_auth()
+@csrf_exempt
 @response_wrapper
 @require_http_methods('POST')
 def set_info(request:HttpRequest):
@@ -68,7 +69,7 @@ def set_info(request:HttpRequest):
     user = User.objects.get(id=id)
     name_vec = get_scibert_embedding(name)
     get_milvus_connection()
-    mid = milvus_insert("O2E_ENTERPRISE_HIT", data=[[name_vec], [id]])
+    mid = milvus_insert("O2E_ENTERPRISE_HIT", data=[[name_vec], [int(id)]])
     disconnect_milvus()
     if user.enterprise_info is None:
         enterprise_info = Enterprise_info()
@@ -136,6 +137,7 @@ def get_info(request:HttpRequest):
 应该添加一个认证成功提示
 """
 #@jwt_auth()
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def agree_enterprise(request:HttpRequest, id: int):
@@ -152,6 +154,7 @@ def agree_enterprise(request:HttpRequest, id: int):
 对于企业信息的删除可能有bug，这里需要测试一下
 """
 #@jwt_auth()
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def refuse_enterprise(request:HttpRequest, id: int):
@@ -168,6 +171,7 @@ def refuse_enterprise(request:HttpRequest, id: int):
 """
 
 #@jwt_auth()
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def get_enterpriseInfo(request: HttpRequest, id: int):
@@ -193,6 +197,7 @@ def get_enterpriseInfo(request: HttpRequest, id: int):
 获取全部申请企业的用户基本信息
 """
 #@jwt_auth()
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def get_all_enterprise(request:HttpRequest):

@@ -26,6 +26,8 @@ from core.api.milvus_utils import (
 from core.api.zhitu_utils import get_expertInfo_by_expertId, search_expertID_by_paperID
 import requests
 
+from django.views.decorators.csrf import csrf_exempt
+
 
 class ContrastiveSciBERT(nn.Module):
     def __init__(self, out_dim, tau, device='cpu'):
@@ -97,7 +99,7 @@ model.load_state_dict(state_dict)
 def get_scibert_embedding(sent):
     return model.get_embeds([sent]).tolist()[0]
 
-
+@csrf_exempt
 @require_GET
 @response_wrapper
 def recommend(request: HttpRequest, id: int):
@@ -196,7 +198,7 @@ def recommend(request: HttpRequest, id: int):
         "other": possible_experts[:3]
     })
 
-
+@csrf_exempt
 @require_GET
 @response_wrapper
 def need_recommend(request: HttpRequest, id: int):
@@ -249,28 +251,33 @@ def need_recommend(request: HttpRequest, id: int):
 
     return success_api_response({"needs": need_infos[:3]})
 
-
+@csrf_exempt
 @require_GET
 @response_wrapper
 def result_recommend_for_expert(request: HttpRequest, id: int):
+    print("enter resultRec expert")
     get_milvus_connection()
+    print("get_milvus_connection")
     user = User.objects.get(id=id)
     papers = user.expert_info.papers.all()
     print(papers)
     achievements = user.expert_info.results.all()
     print(achievements)
     if not papers and not achievements:
+        print("without paper and result")
         return success_api_response({"results": []})
     titles = []
     for paper in papers:
         titles.append(paper.title_eng)
     for ach in achievements:
         titles.append(ach.title_eng)
+    print("titles added")
     key_vector = model.get_embeds(titles)
     # print('check milvus connection:[2]')
 
     key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
+    print("ready to milvus_search")
     id_lists = milvus_search(
         "O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
 
@@ -284,10 +291,16 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
 
     ids = str(ids_set)
     query = "milvus_id in " + ids
+    print("query:", query)
     result_ids = milvus_query_result_by_id(query)
+    print("result_ids:", result_ids)
     result_infos = []
     for result_id in result_ids:
-        result = Results.objects.get(pk=result_id['result_id'])
+        try:
+            result = Results.objects.get(pk=result_id['result_id'])
+        except:
+            print(f"database not find: result id {result_id['result_id']}")
+            continue
         expert = Expert.objects.filter(results__id=result.id)[0]
         user = User.objects.get(expert_info__id=expert.id)
         if result.state == 1:
@@ -309,7 +322,7 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
             result_infos.append(result_info)
     return success_api_response({"results": result_infos})
 
-
+@csrf_exempt
 @require_GET
 @response_wrapper
 def result_recommend_for_enterprise(request: HttpRequest, id: int):
@@ -386,7 +399,7 @@ def result_recommend_for_enterprise(request: HttpRequest, id: int):
 #     print(milvus_id)
 #     return milvus_id
 
-
+@csrf_exempt
 @require_GET
 @response_wrapper
 def generate_requirement_book(request: HttpRequest, require):

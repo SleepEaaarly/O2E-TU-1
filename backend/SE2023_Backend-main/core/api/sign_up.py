@@ -15,8 +15,9 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
 from core.api.send_email import make_confirm_string, send_email, send_forget
 from core.models.auth_record import AuthRecord
 from core.models.user import User, ConfirmString
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_POST
@@ -45,7 +46,7 @@ def change_password(request: HttpRequest):
     return success_api_response({"result": "Ok, password has been updated."})
 
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_POST
@@ -73,10 +74,11 @@ def change_email(request: HttpRequest):
     return success_api_response({"result": "Ok, email has been updated."})
 
 
-
+@csrf_exempt
 @response_wrapper
 @require_POST
 def create_user(request: HttpRequest):
+    print("enter create user")
     """create user
 
     [method]: POST
@@ -113,6 +115,7 @@ def get_avatar(mail):
     # with open('image.jpg', 'wb') as f:
     #     f.write(res.content)
 
+@csrf_exempt
 @response_wrapper
 @require_http_methods('PUT')
 def confirm_create(request: HttpRequest):
@@ -163,7 +166,7 @@ def confirm_create(request: HttpRequest):
     data = {"id": new_user.id}
     return success_api_response(data)
 
-
+@csrf_exempt
 @response_wrapper
 @require_POST
 def forget_password(request: HttpRequest):
@@ -185,7 +188,7 @@ def forget_password(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Email is not exist!")
     return success_api_response({'id': user.id})
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('PUT')
 def confirm_forget_password(request: HttpRequest):

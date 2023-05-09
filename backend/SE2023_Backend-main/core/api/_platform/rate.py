@@ -12,11 +12,11 @@ from core.models.order import Order
 from django.utils import timezone
 from core.models.rate import Rate
 from django.db.models import Avg
-
+from django.views.decorators.csrf import csrf_exempt
 ##############################################################
 # POST METHOD
 ##############################################################
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_POST
@@ -61,7 +61,7 @@ def rate_order(request: HttpRequest):
 # GET METHOD
 ##############################################################
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -85,7 +85,7 @@ def get_order_rate(request: HttpRequest, id: int):
 
     return success_api_response({"flag": flag, "data": data})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET

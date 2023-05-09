@@ -117,7 +117,7 @@ export default {
             start_time: '',
             end_time: '',
             key_word: '',
-            field: 0,
+            field: '信息技术',
             address: '',
             state: 0,
             type: '',

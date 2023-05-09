@@ -9,7 +9,9 @@ from core.api._platform.utils import get_now_time
 from core.models import User, SystemMessage, SystemChatroom, CardMessage
 from core.models import SwitchMessage, ImageMessage
 from core.models import Order, Need, Enterprise_info
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper

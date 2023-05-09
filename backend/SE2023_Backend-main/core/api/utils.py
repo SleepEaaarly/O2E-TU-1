@@ -10,6 +10,7 @@ from django.views.decorators.http import require_http_methods
 
 from pygtrans import Translate
 
+from django.views.decorators.csrf import csrf_exempt
 
 @unique
 class ErrorCode(Enum):
@@ -98,8 +99,10 @@ def wrapped_api(api_dict: dict):
     api_dict = {k.upper(): v for k, v in api_dict.items()}
     assert set(api_dict.keys()).issubset(['GET', 'POST', 'PUT', 'DELETE'])
 
+    @csrf_exempt
     @require_http_methods(api_dict.keys())
     def _api(request, *args, **kwargs):
+        print("wrapped api")
         return api_dict[request.method](request, *args, **kwargs)
 
     return _api
@@ -147,5 +150,5 @@ def trans_zh2en(sent):
     if lan.language == 'en':
         ans = sent
     else:
-        ans = client.translate(sent, target='en')
+        ans = client.translate(sent, target='en').translatedText
     return ans

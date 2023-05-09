@@ -11,8 +11,10 @@ from core.models.interpretation import Interpretation
 from .auth import getUserInfo
 from django.db.models import Q
 from core.models.feedback import Feedback
+from django.views.decorators.csrf import csrf_exempt
 # follow apis
 
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -35,7 +37,7 @@ def follow(request: HttpRequest, pid: int):
     else:
         return failed_api_response({"code":0})
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -61,6 +63,7 @@ def unfollow(request: HttpRequest, pid: int):
     return:
         lists of follower recent 
 """
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('GET')
@@ -108,7 +111,7 @@ def list_favorite_recent(request: HttpRequest, pindex: int):
     })
 
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -133,7 +136,7 @@ def change_organization(request: HttpRequest):
     user.save()
     return success_api_response({"result": "Ok, your instituition has been updated."})
 
-
+@csrf_exempt
 @response_wrapper
 #@jwt_auth()
 @require_http_methods('GET')
@@ -154,7 +157,7 @@ def get_all_user_info(request: HttpRequest, type: int, page: int):
         "data": data
     })
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_http_methods('POST')
@@ -168,7 +171,7 @@ def delete_user(request: HttpRequest):
     return success_api_response({"result": "Ok, all user info has been provided."})
 
 
-
+@csrf_exempt
 @response_wrapper
 #@jwt_auth()
 @require_http_methods('POST')

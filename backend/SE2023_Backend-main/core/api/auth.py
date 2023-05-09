@@ -247,7 +247,7 @@ def obtain_jwt_token_admin(request: HttpRequest):
     print(result)
     return success_api_response(result)
 
-
+@csrf_exempt
 @response_wrapper
 @require_GET
 def refresh_jwt_token(request: HttpRequest):

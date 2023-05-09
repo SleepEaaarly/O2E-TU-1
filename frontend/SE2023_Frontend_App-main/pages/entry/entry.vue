@@ -118,11 +118,11 @@
 			<u-tabbar-item text="我的" icon="account" @click="click1" ></u-tabbar-item>
 		</u-tabbar> -->
 		
-		
+		<expert-create-achievement v-if="userInfo.type=='4'"  @hide="hidepopup" @addachievement="addachievement">
+		</expert-create-achievement>
 	</view>
 	
-	
-	
+
 	
 </template>
 
@@ -131,10 +131,13 @@
 	import { getWorkRec } from "@/api/work_recommend.js"
 	import { mapState } from 'vuex'
 	import { getWorkList } from "@/api/work_store.js"
+	import expertCreateAchievement from '@/components/user-space/expert-create-achievement.vue'
 	export default {
+		computed:{ ...mapState(['userInfo']) },
 		data() {
 			return {
 				searchText:'',
+				show: true,
 				cur_page: 1,
 				recommendList: {
 					loadtext: '没有更多数据了',
@@ -278,6 +281,17 @@
 				 	url: '../../pages/work_detail/work_detail?rid=' + work['result_id'],
 				 })
 			},
+			hidepopup() {
+				this.show = false
+			},
+			addachievement() {
+				uni.navigateTo({ url: '../add-achievement/achievement' })
+				this.hidepopup()
+			},
+			manageachievement() {
+				uni.navigateTo({ url: '../manage-achievement/manage-achievement' })
+				// this.hidepopup()
+			},
 			async loadRecData(){
 				// TODO 成果推荐 Debug
 				let paras = {
@@ -309,7 +323,7 @@
 					}
 					this.recommendList.list = this.recommendList.list.concat(work_list)
 					this.cur_page = this.cur_page + 1
-					// console.log(this.recommendList.list)
+					// console.log(work_list)
 				} catch (e) {
 					console.log(e)
 					return
@@ -317,7 +331,8 @@
 			},
 		},
 		components : {
-			workCard
+			workCard,
+			expertCreateAchievement
 		}
 	}
 </script>

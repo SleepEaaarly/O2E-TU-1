@@ -19,6 +19,7 @@ from core.models.report_message import ReportMessage
 from core.models.ai_report import AIReport
 from core.models.system_chat import SystemChatroom
 
+from django.views.decorators.csrf import csrf_exempt
 def get_info(s):
     max = 20
     if len(s) > max:
@@ -73,7 +74,7 @@ def cmp(x, y):
             else:
                 return 1
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -92,7 +93,7 @@ def get_user_orderid_byneedID(request: HttpRequest, id: int):
         res.append(order.id)
     return success_api_response({"data": res})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -103,7 +104,7 @@ def admin_get_all_order(request: HttpRequest):
         data.append(order.to_dict())
     return success_api_response({"data": data})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods("DELETE")
@@ -129,7 +130,7 @@ def admin_delete_order(request: HttpRequest, id: int):
     Order.objects.filter(id=id).delete()
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -184,7 +185,7 @@ def get_all_order(request: HttpRequest, uid: int):
 
     return success_api_response({"data": orders})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -214,7 +215,7 @@ def get_order_id(request: HttpRequest):
     else:
         return success_api_response({"order_id": 0})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -272,7 +273,7 @@ def get_finished_order(request: HttpRequest, uid: int):
 
     return success_api_response({"data": orders})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -330,7 +331,7 @@ def get_pending_order(request: HttpRequest, uid: int):
 
     return success_api_response({"data": orders})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -398,7 +399,7 @@ ok  path('user/<int:uid>/order/pending', get_pending_order), # 获取某个用�
 ok  path('user/<int:uid>/order/cooperating', get_cooperating_order), # 获取某个用户（企业或专家）正在合作的订单
 """
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_POST
@@ -459,7 +460,7 @@ def finish_order(request: HttpRequest, uid: int, id: int):
 
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_POST
@@ -495,7 +496,7 @@ def accept_order(request: HttpRequest, uid: int, id: int):
     need.save()
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_POST
@@ -526,7 +527,7 @@ def refuse_order(request: HttpRequest, uid: int, id: int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "The order is not pending state(state=0)")
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -550,7 +551,7 @@ def get_order_info(request: HttpRequest, id: int):
 
     return success_api_response(order_info)
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_POST
@@ -586,7 +587,7 @@ def create_order(request: HttpRequest):
     order.save()
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_POST
@@ -614,7 +615,7 @@ def abandon_order(request: HttpRequest, uid: int, id: int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "The order is not in cooperation")
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET

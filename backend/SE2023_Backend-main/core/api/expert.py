@@ -15,8 +15,9 @@ from core.models.projects import Projects
 from core.models.patents import Patents
 from core.api.milvus_utils import milvus_insert, get_milvus_connection, disconnect_milvus
 from core.api.ai_chat import get_hitbert_embedding
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth
 @require_http_methods("GET")
@@ -67,7 +68,7 @@ def get_expert_info(request: HttpRequest, uid: int):
     
 
     
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('POST')
 def setinfo(request:HttpRequest):
@@ -102,7 +103,7 @@ def setinfo(request:HttpRequest):
     user = User.objects.get(id=id)
     name_vec = get_hitbert_embedding(name)
     get_milvus_connection()
-    mid = milvus_insert("O2E_EXPERT_HIT", data=[[name_vec], [id]])
+    mid = milvus_insert("O2E_EXPERT_HIT", data=[[name_vec], [int(id)]])
     disconnect_milvus()
     if user.expert_info is not None:
         expert = user.expert_info
@@ -143,6 +144,7 @@ def setinfo(request:HttpRequest):
 应该添加一个认证成功提示
 """
 #@jwt_auth()
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def agree_expert(request:HttpRequest, id:int):
@@ -169,6 +171,7 @@ def agree_expert(request:HttpRequest, id:int):
 对于专家信息的删除可能有bug，这里需要测试一下
 """
 #@jwt_auth()
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def refuse_expert(request:HttpRequest, id:int):
@@ -187,6 +190,7 @@ def refuse_expert(request:HttpRequest, id:int):
 通过id获得相应用户申请成为企业的信息
 """
 #@jwt_auth()
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def get_expertInfo(request:HttpRequest, id:int):
@@ -211,6 +215,7 @@ def get_expertInfo(request:HttpRequest, id:int):
 获取全部申请专家的用户基本信息
 """
 #@jwt_auth()
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def get_all_expert(request:HttpRequest):
@@ -274,6 +279,7 @@ def field_encode(field):
 """
 以下为更新数据库所用的api
 """
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def get_json(request:HttpRequest):
@@ -352,7 +358,7 @@ def add_expert(dic):
             new_user.expert_info = expert_info
             new_user.save()
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def add_papers(request:HttpRequest):
@@ -388,7 +394,7 @@ def add_papers(request:HttpRequest):
 
     return success_api_response("success")
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def add_patents(request:HttpRequest):
@@ -421,7 +427,7 @@ def add_patents(request:HttpRequest):
 
     return success_api_response("success")
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def add_projects(request:HttpRequest):
@@ -458,7 +464,7 @@ def add_projects(request:HttpRequest):
 
     return success_api_response("success")
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def add_patents_scholars(request:HttpRequest):
@@ -478,7 +484,7 @@ def add_patents_scholars(request:HttpRequest):
         patent.save()
     return success_api_response("success")
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def add_papers_scholars(request:HttpRequest):
@@ -498,7 +504,7 @@ def add_papers_scholars(request:HttpRequest):
             paper.save()
     return success_api_response("success")
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def add_projects_scholars(request:HttpRequest):
@@ -510,7 +516,7 @@ def add_projects_scholars(request:HttpRequest):
         project.save()
     return success_api_response("success")
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')

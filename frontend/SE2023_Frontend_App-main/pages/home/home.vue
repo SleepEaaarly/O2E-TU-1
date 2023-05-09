@@ -2,9 +2,9 @@
 	<view>
 		<!-- 未登录 -->
 		<template  v-if="userInfo && !userInfo.id">
-			<view class="u-f-ajc">登陆O2E_TH，体验更多功能</view>
-			<!-- 第三方登陆 -->
-			<view class="u-f-ajc" @tap="openLogin">账号密码登陆 <view class="icon iconfont icon-jinru"></view>
+			<view class="u-f-ajc">登录O2E_TH，体验更多功能</view>
+			<!-- 第三方登录 -->
+			<view class="u-f-ajc" @tap="openLogin">账号密码登录 <view class="icon iconfont icon-jinru"></view>
 			</view>
 		</template>
 		
@@ -27,10 +27,9 @@
 					<uni-list-item class="explore" :border="false" :show-extra-icon="false" clickable :extra-icon="rateIcon" title="测试页面" link @click="goToTest" />
 					<uni-list-item class="explore" 
 						:border="false" 
-						:show-extra-icon="false" 
+						:show-extra-icon="true" 
 						clickable 
-						thumb="/static/kefu.png" 
-						thumb-size="base" 
+						:extra-icon="aiIcon" 
 						title="AI/人工客服" link @click="goToSystemChat" />
 					
 					
@@ -59,7 +58,7 @@
 				</uni-list>
 			</uni-section>
 			
-			<button class="user-set-btn" type="primary" @tap="showActive" v-show="false">退出登陆</button>
+			<button class="user-set-btn" type="primary" @tap="showActive" v-show="false">退出登录</button>
 			
 			<!-- 分享链接弹窗 -->
 			<uni-popup ref="shareLink" type="share">
@@ -148,6 +147,11 @@
 					},
 				],
 				//此处使用配色方案:https://coolors.co/palette/ff595e-ffca3a-8ac926-1982c4-6a4c93
+				aiIcon: {
+					color: '#f7b267',
+					size: '22',
+					type: 'contact-filled'
+				},
 				rateIcon: {
 					color: '#ff595e',
 					size: '22',

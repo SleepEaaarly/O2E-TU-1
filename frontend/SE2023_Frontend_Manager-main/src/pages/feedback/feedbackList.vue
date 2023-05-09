@@ -6,7 +6,7 @@
           <span>
             <a @click="checkFeedback(record)" v-if="record.flag==0">回复</a>
             <a  v-else>已成功回复</a>
-            <a-modal v-model="showDetail" title="回复反馈" @ok="handleOk()" width="750px">
+            <a-modal v-model="showDetail" title="回复反馈" @ok="handleOk()" width="750px" :mask-closable="false">
               <a-card :bordered="false" dis-hover>
                 <a-row>姓名：{{selectData.name}}</a-row>
                 <br/>
@@ -201,5 +201,8 @@ export default {
 }
 .editable-row-operations a {
   margin-right: 8px;
+}
+.a-modal-mask {
+  background-color: rgba(0,0,0,0.5); /* 将遮罩层的背景色修改为半透明的黑色 */
 }
 </style>

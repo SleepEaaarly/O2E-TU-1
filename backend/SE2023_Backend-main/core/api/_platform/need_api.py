@@ -20,7 +20,7 @@ from core.api._platform.utils import get_field, get_need_state
 
 from core.api.ai_report import generate_requirement_report
 from core.api.ai_recommend import get_scibert_embedding
-
+from django.views.decorators.csrf import csrf_exempt
 
 def get_now_time():
     """获取当前时间"""
@@ -37,7 +37,7 @@ def get_info(s):
         s = s[:max] + '...'
     return s
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_POST
@@ -62,7 +62,7 @@ def transform_need(request: HttpRequest, uid: int, id: int):
     need.save()
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -102,7 +102,7 @@ def expert_recommend(request: HttpRequest, id: int):
 
     return success_api_response({"data": lst})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -128,7 +128,7 @@ def get_need_contact(request: HttpRequest):
     else:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "cannot find need")
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_POST
@@ -159,7 +159,7 @@ def create_need_contact(request: HttpRequest):
         needContact.save()
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -187,7 +187,7 @@ def search_need(request: HttpRequest, *args, **kwargs):
         results.append(need_info)
     return success_api_response({"data": results})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods(['DELETE'])
@@ -208,7 +208,7 @@ def delete_need(request: HttpRequest, uid: int, id: int):
     need.delete()
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -242,7 +242,7 @@ def get_need_info(request: HttpRequest, id: int):
     need_info['order'] = order
     return success_api_response(need_info)
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_POST
@@ -322,7 +322,7 @@ def create_need(request: HttpRequest):
     need.save()
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -345,6 +345,7 @@ def get_needs_info(request: HttpRequest):
 
 
 # 获取需求已对接全部专家id与头像url
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -368,7 +369,7 @@ def get_oneneed_allexperts(request: HttpRequest, id: int):
 
     return success_api_response({"data": data})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -406,7 +407,7 @@ def get_all_need(request: HttpRequest):
     data.sort(key=lambda x: x["end_time"])
     return success_api_response({"data": data})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -444,7 +445,7 @@ def get_finished_need(request: HttpRequest, uid: int):
     data.sort(key=lambda x: x["end_time"])
     return success_api_response({"data": data})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -479,7 +480,7 @@ def get_saved_need(request: HttpRequest, uid: int):
     data.sort(key=lambda x: x["end_time"])
     return success_api_response({"data": data})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_POST
@@ -508,7 +509,7 @@ def finish_need(request: HttpRequest, uid: int, id: int):
 
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_GET
@@ -543,7 +544,7 @@ def get_proceeding_need(request: HttpRequest, uid: int):
     data.sort(key=lambda x: x["end_time"])
     return success_api_response({"data": data})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_POST
@@ -593,7 +594,7 @@ def edit_need(request: HttpRequest, uid: int, id: int):
 
     return success_api_response({})
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods(['DELETE'])

@@ -34,10 +34,10 @@
 			</view>
 			<template v-else>
 				<view class="u-f-ajc">
-					登陆O2E_TH，体验更多功能
+					登录O2E_TH，体验更多功能
 				</view>
 				<view class="u-f-ajc" @tap="openLogin">
-					账号密码登陆 
+					账号密码登录 
 					<view class="icon iconfont icon-jinru">
 						
 					</view>

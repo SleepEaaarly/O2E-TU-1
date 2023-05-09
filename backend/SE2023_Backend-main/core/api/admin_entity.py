@@ -10,6 +10,7 @@ from core.models import User, Results, Expert, ResMultipic
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')
@@ -27,7 +28,7 @@ def get_all_unaudited_result_info(request: HttpRequest, page: int):
         "data": data,
     })
 
-
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('GET')
@@ -72,6 +73,7 @@ def delete_result(request: HttpRequest):
     print("delete_result 5")
     return success_api_response({"result": "Ok, all result info has been provided."})
 
+@csrf_exempt
 @response_wrapper
 # @jwt_auth()
 @require_http_methods('POST')
@@ -131,7 +133,7 @@ def change_result_info(request: HttpRequest):
 
 '''
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('POST')
 def search_result_by_name(request: HttpRequest):

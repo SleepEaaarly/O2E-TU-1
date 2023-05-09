@@ -9,9 +9,11 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
                             response_wrapper, success_api_response)
 from core.models.pap_model import PapModel
 from core.models.user import User
+from django.views.decorators.csrf import csrf_exempt
 
 'unfinished'
 'required pap comment'
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_GET

@@ -13,6 +13,14 @@
           <a-select-option value="2">已认证</a-select-option>
           <a-select-option value="3">全部</a-select-option>
         </a-select>
+
+        <a-input-search
+          v-model="searchText"
+          placeholder="请输入成果关键词"
+          enter-button
+          @search="onSearch()"
+          style="width: 300px;margin-left: 10px;"
+        />
       </a-space>
       <br/>
       <br/>
@@ -68,31 +76,31 @@
   </template>
   
   <script>
-  import { getWorkAll, WorkDel, WorkModify} from '../../../services/work';
+  import { searchWork, getWorkAll, WorkDel, WorkModify} from '../../../services/work';
   const columns = [
     {
       title: "成果名",
       dataIndex: "name",
-      width: "20%",
+      width: "25%",
       scopedSlots: { customRender: "name" },
     },
     {
       title: "作者",
       dataIndex: "author",
-      width: "25%",
+      width: "20%",
       scopedSlots: { customRender: "author" },
     },
     {
       title: "阶段",
       dataIndex: "period",
-      width: "15%",
+      width: "20%",
       scopedSlots: { customRender: "period" },
       // onFilter: (value, record) => record.type.indexOf(value) === 0,
     },
     {
       title: "领域",
       dataIndex: "field",
-      width: "25%",
+      width: "20%",
       scopedSlots: { customRender: "field" },
     },
     {
@@ -116,6 +124,7 @@
         columns,
         editingKey: "",
         editData: {},
+        searchText: '',
         changeable: true,
         selectedType: "全部",
         pagination: {
@@ -420,6 +429,57 @@
           this.loading = false;
           this.pagination.total = res.page_num;
           this.itemKey = Math.random();
+        }).catch((error) => {
+          console.log(error);
+        });
+      },
+      onSearch(){
+        this.loading = true;
+        data.length=0;
+        this.pagination.current = 1;
+        var params = {
+          "title": this.searchText,
+          "page": this.pagination.current
+        }
+        searchWork(params).then((oriRes) => {
+          // const target = data.filter((item) => key === item.key)[0];
+          // this.editingKey = key;
+          // if (target) {
+          //   target.editable = true;
+          // }
+        for (let i = 0; i < data.length; i++) {
+          data[i].target = false;
+        }
+        console.log('response')
+        console.log(oriRes);
+        let res = oriRes.data
+        console.log(res);
+        data.length = 0;
+        for (let i = 0; i < res.data.length; i++) {
+            if (res.data[i].state==0) {
+                this.type="认证中"
+            } else if (res.data[i].state==1){
+                this.type="已认证"
+            } else if (res.data[i].state==2){
+                this.type="认证失败"
+            }
+            data.push({
+                key: res.data[i].id,
+                name: res.data[i].title,
+                author: res.data[i].scholars,
+                type: this.type,
+                period: res.data[i].period,
+                field: res.data[i].field,
+                editable: false
+            });
+        }
+            
+        this.cacheData = data.map((item) => ({ ...item }));
+        this.totalCnt = res.data.total_count;
+        this.loading = false;
+        this.pagination.total = res.page_num;
+        console.log(data)
+        console.log(this.cacheData)
         }).catch((error) => {
           console.log(error);
         });

@@ -3,8 +3,9 @@ from core.api.utils import (wrapped_api, response_wrapper, success_api_response,
 from django.views.decorators.http import require_http_methods
 from django.http import HttpRequest
 from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 @response_wrapper
 @require_http_methods('GET')
 def list_tags(request: HttpRequest, pindex):

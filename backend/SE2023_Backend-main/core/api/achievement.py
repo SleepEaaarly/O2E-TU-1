@@ -205,15 +205,15 @@ def add_result(request: HttpRequest):
         result.multipic.add(a)
 
     result.save()
-    print("4")
+    # print("4")
     user = User.objects.get(id=id)
     expert_id = user.expert_info_id
     expert = Expert.objects.get(id=expert_id)
-    print("5")
-    print(expert)
+    # print("5")
+    # print(expert)
     expert.results.add(result)
     expert.save()
-    print("6")
+    # print("6")
     return success_api_response({})
 
 
@@ -231,27 +231,29 @@ def agree_result(request: HttpRequest, id: int):
     if result.state != 0:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid result state")
     result.state = 1
-    result.title_eng = trans_zh2en(result.title)
-    print('debug 1')
-    hit_vec = get_hitbert_embedding(result.title_eng)
-    sci_vec = get_scibert_embedding(result.title_eng)
-    print('debug 2')
+    title_en = trans_zh2en(result.title)
+    result.title_eng = title_en
+    # print('debug 1')
+    hit_vec = get_hitbert_embedding(title_en)
+    # print('debug 1.5')
+    sci_vec = get_scibert_embedding(title_en)
+    # print('debug 2')
 
     get_milvus_connection()
     mid_hit = milvus_insert("O2E_RESULT_HIT", data=[[hit_vec], [id]])
-    print('debug 2.5')
+    # print('debug 2.5')
     mid_sci = milvus_insert("O2E_RESULT", data=[[sci_vec], [id]])
-    print('debug 3')
+    # print('debug 3')
 
     disconnect_milvus()
     result.vector_sci = mid_sci[0]
     result.vector_hit = mid_hit[0]
-    print('debug 4')
+    # print('debug 4')
     result.save()
     # 审核通过后将生成成果报告
     print(result.id)
     generate_result_report(result.id)
-    print('debug 5')
+    # print('debug 5')
     return success_api_response("success")
 
 
@@ -275,6 +277,7 @@ def refuse_result(request: HttpRequest, id: int):
 
 
 # @jwt_auth()
+@csrf_exempt
 @response_wrapper
 @require_GET
 def get_resultInfo(request: HttpRequest, id: int):

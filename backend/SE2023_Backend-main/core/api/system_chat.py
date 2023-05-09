@@ -341,6 +341,10 @@ def push_system_message_by_admin(request: HttpRequest):
         system_chatroom.save()
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad System Chatroom ID or add message failed.")
-
-    return success_api_response({'system_chatroom_id': system_chatroom.id,
-                                 'message_id': message_id})
+    system_chatroom_id = str(system_chatroom.id)
+    print(type(system_chatroom_id))
+    print(type(message_id))
+    print(1)
+    return success_api_response({})
+   # return success_api_response({"system_chatroom_id": system_chatroom_id})
+                                 # "message_id": str(message_id)})

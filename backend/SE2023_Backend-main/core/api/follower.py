@@ -5,8 +5,9 @@ from core.api.query_utils import query_page
 from core.api.auth import jwt_auth
 from core.api.utils import response_wrapper, success_api_response, failed_api_response, ErrorCode
 from core.models.user import User
+from django.views.decorators.csrf import csrf_exempt
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_GET
@@ -46,7 +47,7 @@ def list_followers(request: HttpRequest, uid: int, *args, **kwargs):
     return success_api_response(data)
 
 
-
+@csrf_exempt
 @response_wrapper
 @jwt_auth()
 @require_GET

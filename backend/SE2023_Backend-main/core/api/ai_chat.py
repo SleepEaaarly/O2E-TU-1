@@ -421,6 +421,7 @@ recognizer = Recognizer(hit, ques_thresh=0.7,
 
 
 def get_hitbert_embedding(sent):
+    print("get_hitbert_embedding:", sent)
     return hit.encode_2_list(sent)
 
 

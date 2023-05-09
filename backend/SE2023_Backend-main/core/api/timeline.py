@@ -14,7 +14,9 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
 
 from core.models import Project, User, Timeline
 
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -39,7 +41,7 @@ def create_timeline(request: HttpRequest):
     timeline.save()
     return success_api_response({'id': timeline.id})
 
-
+@csrf_exempt
 @jwt_auth()
 @require_POST
 @response_wrapper
@@ -66,7 +68,7 @@ def update_timeline(request: HttpRequest, id: int):
     timeline.save()
     return success_api_response({})
 
-
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
@@ -82,7 +84,7 @@ def get_timeline(request: HttpRequest, id: int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "ID NOT EXIST.")
     return success_api_response(timeline.to_dict())
 
-
+@csrf_exempt
 @jwt_auth()
 @require_http_methods('DELETE')
 @response_wrapper
@@ -96,7 +98,7 @@ def delete_timeline(request: HttpRequest, id: int):
     timeline.delete()
     return success_api_response({})
 
-
+@csrf_exempt
 @jwt_auth()
 @require_GET
 @response_wrapper
