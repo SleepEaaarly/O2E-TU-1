@@ -15,7 +15,7 @@
 				<uni-col class="title">
 					<uni-tag v-if="item.state==1" custom-style="background-color: #1AE66B; border-color: #1AE66B; color: #000000;"
 					:circle="true" :text="item.strType" type="warning" size="middle"/>
-					<uni-tag v-else custom-style="background-color: red; border-color: red; color: #000000;"
+					<uni-tag v-else-if="isSelf" custom-style="background-color: red; border-color: red; color: #000000;"
 					:circle="true" :text="item.strType" type="warning" size="middle"/>
 					<text>{{item.title}}</text>
 				</uni-col>
