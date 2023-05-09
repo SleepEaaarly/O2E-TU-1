@@ -238,13 +238,13 @@ def obtain_jwt_token_admin(request: HttpRequest):
     '''
 
     userInfo = getUserInfo(user)
-    print(userInfo)
+    # print(userInfo)
     result = {
         "userInfo": userInfo,
         "access_token": generate_access_token(user.id),
         "refresh_token": generate_refresh_token(user),
     }
-    print(result)
+    # print(result)
     return success_api_response(result)
 
 @csrf_exempt

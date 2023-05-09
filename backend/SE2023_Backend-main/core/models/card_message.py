@@ -50,18 +50,18 @@ class CardMessage(SystemMessage):
                          avatar: str,
                          involved_id: int):
         try:
-            print("enter new card message")
-            print(card_type)
-            print(content)
-            print(title)
-            print(avatar)
-            print(involved_id)
+            # print("enter new card message")
+            # print(card_type)
+            # print(content)
+            # print(title)
+            # print(avatar)
+            # print(involved_id)
             new_card_message = CardMessage(content=content, owner=owner,
                                            is_to_system=is_to_system, read_state=UNREAD,type='card',
                                            card_type=card_type, title=title, avatar=avatar, involved_id=involved_id)
-            print("finish card message step 1")
+            # print("finish card message step 1")
             new_card_message.save()
-            print("finish insert into database")
+            # print("finish insert into database")
             return new_card_message.id
         except Exception:
             return -1

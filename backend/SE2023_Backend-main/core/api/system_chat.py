@@ -38,7 +38,7 @@ from django.views.decorators.csrf import csrf_exempt
 @require_POST
 @response_wrapper
 def create_system_chat(request: HttpRequest):
-    print("enter create system chat")
+    # print("enter create system chat")
     data: dict = parse_data(request)
     # data: dict = request.POST.dict()
     if not data:
@@ -50,7 +50,7 @@ def create_system_chat(request: HttpRequest):
         user = User.objects.get(id=uid)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad User ID.")
-    print(user)
+    # print(user)
     # 先查看是否已经存在聊天，则不用创建
     if user.system_chatroom_list.all().exists():
         return success_api_response({'id': user.system_chatroom_list.get().id})
@@ -91,10 +91,10 @@ def get_system_chat(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad System Chatroom ID.")
     ret_data = {}
     messages = []
-    print(owner)
+    # print(owner)
     for m in system_chatroom.messages.all():
         a_message = {}
-        print(m)
+        # print(m)
         if(m.is_to_system == 1):
             a_message['isme'] = True
             a_message['user_pic'] = owner.icon.path
@@ -107,13 +107,13 @@ def get_system_chat(request: HttpRequest):
             n:CardMessage = CardMessage.objects.get(id=m.id)
             a_message['cardInfo'] = n.generate_card()
         elif(m.type == 'report'):
-            print(m)
+            # print(m)
             n:ReportMessage = ReportMessage.objects.get(id=m.id)
             a_message['reportInfo'] = n.generate_card()
-            print(a_message['reportInfo'])
+            # print(a_message['reportInfo'])
         else:
             a_message['message'] = m.content
-        print(a_message)
+        # print(a_message)
         # created_at
         a_message['created_at'] = m.get_create_time()
         messages.append(a_message)
@@ -189,12 +189,12 @@ def push_system_message(request: HttpRequest):
 def system_message_read(request: HttpRequest):
     data: dict = parse_data(request)
     user: User = User.objects.get(id=data.get('uId'))
-
+    # print("debug1")
     try:
         system_chatroom = SystemChatroom.objects.get(owner=user)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad System Chatroom.")
-
+    # print("debug2")
     try:
         for message in system_chatroom.messages.all():
             message.set_read()
@@ -202,7 +202,7 @@ def system_message_read(request: HttpRequest):
         system_chatroom.save()
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Message ID.")
-
+    # print("debug3")
     return success_api_response({})
 
 
@@ -226,7 +226,7 @@ def system_message_read(request: HttpRequest):
 def alter_systemchat_visible(request: HttpRequest):
     data: dict = parse_data(request)
     user: User = User.objects.get(id=data.get('uId'))
-    print(data)
+    # print(data)
     try:
         system_chatroom = SystemChatroom.objects.get(owner=user)
     except ObjectDoesNotExist:
@@ -238,7 +238,7 @@ def alter_systemchat_visible(request: HttpRequest):
         content = "Manual"
     switch_message = SystemMessage.new_message(is_to_system=1, owner=user,
                                                content=content, type='switch_info')
-    print("swicth_", switch_message)
+    # print("swicth_", switch_message)
     system_chatroom.add_message(switch_message)
     system_chatroom.alter_mode(data.get('show'))
     system_chatroom.save()
@@ -299,7 +299,7 @@ def get_all_system_chatrooms(request: HttpRequest):
             ret_data['noreadnum'] = sys_chat.unread_message_num
             ret_data['userInfo'] = user_info
             ret_all_list.append(ret_data)
-            print({"system_chat_list": ret_all_list})
+            # print({"system_chat_list": ret_all_list})
         return success_api_response({"system_chat_list": ret_all_list})
     except Exception:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Fail to get all system chatrooms information")
@@ -322,8 +322,9 @@ def get_all_system_chatrooms(request: HttpRequest):
 @csrf_exempt
 @jwt_auth()
 @require_POST
+@response_wrapper
 def push_system_message_by_admin(request: HttpRequest):
-    print(request)
+    # print(request)
     data: dict = parse_data(request)
     user: User = User.objects.get(id=data.get('uId'))
     content = data.get('content')
@@ -341,9 +342,8 @@ def push_system_message_by_admin(request: HttpRequest):
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad System Chatroom ID or add message failed.")
     system_chatroom_id = str(system_chatroom.id)
-    print(type(system_chatroom_id))
-    print(type(message_id))
-    print(1)
-    return success_api_response({})
-   # return success_api_response({"system_chatroom_id": system_chatroom_id})
-                                 # "message_id": str(message_id)})
+    # print(type(system_chatroom_id))
+    # print(type(message_id))
+    # print(1)
+    return success_api_response({"system_chatroom_id": system_chatroom_id,
+                                 "message_id": str(message_id)})

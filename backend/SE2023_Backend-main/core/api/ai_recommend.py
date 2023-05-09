@@ -266,11 +266,12 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     if not papers and not achievements:
         print("without paper and result")
         return success_api_response({"results": []})
-    titles = []
+    titles, ach_ids = [], []
     for paper in papers:
         titles.append(paper.title_eng)
     for ach in achievements:
         titles.append(ach.title_eng)
+        ach_ids.append(ach.id)
     print("titles added")
     key_vector = model.get_embeds(titles)
     # print('check milvus connection:[2]')
@@ -279,7 +280,7 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     key_vector = key_vector.detach().numpy().tolist()
     print("ready to milvus_search")
     id_lists = milvus_search(
-        "O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
+        "O2E_RESULT", query_vectors=key_vector, topk=5, partition_names=None)
 
     ids_set = []
     for id_list in id_lists:
@@ -293,6 +294,12 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     query = "milvus_id in " + ids
     print("query:", query)
     result_ids = milvus_query_result_by_id(query)
+    # result_ids = [i if i not in ach_ids for i in result_ids]
+    tmp = []
+    for rid in result_ids:
+        if rid not in ach_ids:
+            tmp.append(rid)
+    result_ids = tmp
     print("result_ids:", result_ids)
     result_infos = []
     for result_id in result_ids:
@@ -337,7 +344,7 @@ def result_recommend_for_enterprise(request: HttpRequest, id: int):
     key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
     id_lists = milvus_search(
-        "O2E_RESULT", query_vectors=key_vector, topk=20, partition_names=None)
+        "O2E_RESULT", query_vectors=key_vector, topk=5, partition_names=None)
 
     ids_set = []
     for id_list in id_lists:

@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from transformers import BertModel, BertTokenizer
 from django.http import HttpRequest
-from core.models import Question
+from core.models import Question, Expert, Enterprise_info, Results
 from django.views.decorators.http import require_POST, require_GET
 
 import requests
@@ -17,7 +17,7 @@ from core.models.system_chat import SystemChatroom
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 import pytz
-from core.api.utils import parse_data
+from core.api.utils import parse_data, cos_simi
 
 import traceback
 from ltp import LTP
@@ -126,10 +126,13 @@ class Preprocessor:
                 print('未接收到数据')
                 flag = False
             sent_replaced = self.replacesentword(sent)
+            print("sent_replaced:", sent_replaced)
             if not sent_replaced:
                 flag = False
             sent_cut = self.segment(sent_replaced)
+            print("sent_cut:", sent_cut)
             sent_cut_replaced = self.replacecutword(sent_cut)
+            print("sent_cut_replaced:", sent_cut_replaced)
             if not sent_cut_replaced:
                 flag = False
             result = self.joinword(sent_cut_replaced)
@@ -357,19 +360,24 @@ class Recognizer:
             for word in sent_cut:
                 if sentence.find(word['val']) == -1:
                     continue
-                matched_id = self.matcher(word['val'], "O2E_EXPERT_HIT")
+                # matched_id = self.matcher(word['val'], "O2E_EXPERT_HIT")
+                candid = Expert.objects.filter(name=word['val'])
+                matched_id = Expert.objects.filter(name=word['val'])[0].id if candid else -1
                 if matched_id != -1:
                     res["direct"] = "False"
                     res["entity"]["expert"].append(matched_id)
                     sentence = sentence.replace(word['val'], '')
                     continue
-                matched_id = self.matcher(word['val'], "O2E_ENTERPRISE_HIT")
+                # matched_id = self.matcher(word['val'], "O2E_ENTERPRISE_HIT")
+                match_ents = Enterprise_info.objects.filter(name__icontains=word['val'])
+                matched_id = self.selector4ents(match_ents, word['val'])
                 if matched_id != -1:
                     res["direct"] = "False"
                     res["entity"]["enterprise"].append(matched_id)
                     sentence = sentence.replace(word['val'], '')
                     continue
                 matched_id = self.matcher(word['val'], "O2E_RESULT_HIT")
+                # match_ent = Results.objects.filter(title__icontains=word['val'])
                 if matched_id != -1:
                     res["direct"] = "False"
                     res["entity"]["result"].append(matched_id)
@@ -406,6 +414,23 @@ class Recognizer:
         cand_id = ques_ids[0][self.milvus_key_dict[milvus_collection]]
         return cand_id
 
+    def selector4ents(self, ents, tgt):
+        # print("selector4ents")
+        max_dtc = 0
+        selected_id = -1
+        for ent in ents:
+            vec_1 = self.hit.encode_2_list(ent.name)
+            vec_2 = self.hit.encode_2_list(tgt)
+            vec_1 = np.array(vec_1)
+            vec_2 = np.array(vec_2)
+            dtc = cos_simi(vec_1, vec_2)
+            # print("dtc:", dtc)
+            if dtc > max_dtc:
+                max_dtc = dtc
+                selected_id = ent.id
+        return selected_id
+        
+
 
 hit = HitBert(hitModelPath="hfl/chinese-bert-wwm-ext", device="cpu")
 
@@ -414,10 +439,10 @@ sentence_replace_dict = read_json_data(
 word_replace_dict = read_json_data(RES_PATH + "/word_replace_dict.json")
 ltpParticipleDict = []  # todo: 要从数据库得到
 process = Preprocessor(sentence_replace_dict,
-                       word_replace_dict, "small", 4, ltpParticipleDict)
+                       word_replace_dict, "small", 1, ltpParticipleDict)
 
 recognizer = Recognizer(hit, ques_thresh=0.7,
-                        exp_thresh=0.95, ent_thresh=0.95, res_thresh=0.9)
+                        exp_thresh=0.99, ent_thresh=0.99, res_thresh=0.99)
 
 
 def get_hitbert_embedding(sent):
@@ -492,6 +517,7 @@ def expert_to_info_str(exp_id):
 def enterprise_to_info_str(ent_id):
     user = User.objects.get(enterprise_info_id=ent_id)
     enterprise = user.enterprise_info
+    print("enterprise", ent_id)
     info_str = f"{enterprise.name}，坐落在{enterprise.address}，" + \
                f"主营业务有{enterprise.field}，" + \
                f"企业简介：{enterprise.self_profile}。"
@@ -618,8 +644,12 @@ def answer_free_question(request: HttpRequest):
     print(5)
     print(final)
     print(5.5)
-    demand1 = "请结合已有的信息，回答以下的问题："
-    partial_answer = "其中已知信息为：" + final['answer']
+    demand1 = "请结合已有的信息，回答以下的问题，如果已知信息不充足，请根据实际情况和常识回答："
+    if(final['answer']!=""):
+        partial_answer = "其中已知信息为：" + final['answer']
+    else:
+        demand1 = ""
+        partial_answer = ""
     msg = demand1 + partial_answer + ", 问题是：" + question
     print(msg)
     # 整合请求体
@@ -631,6 +661,9 @@ def answer_free_question(request: HttpRequest):
     sent_data['messages'] = [{"role": "user", "content": msg}]
     sent_data['temperature'] = 0.7
     jsonfy = json.dumps(sent_data)
+    print("=================================分隔符=========================================")
+    print("=================================分隔符=========================================")
+    # input()
     print(jsonfy)
     response = requests.post(url, headers=headers, data=jsonfy)
     print(response)
@@ -638,5 +671,4 @@ def answer_free_question(request: HttpRequest):
     ret_json = json.loads(response.content.decode('utf-8'))
     print(ret_json['choices'][0]['message']['content'])
     final['answer'] = ret_json['choices'][0]['message']['content']
-
     return success_api_response(final)

@@ -3,6 +3,7 @@ utils for generating api responses
 """
 import json
 import traceback
+import numpy as np
 from enum import Enum, unique
 
 from django.http import JsonResponse, HttpRequest
@@ -152,3 +153,9 @@ def trans_zh2en(sent):
     else:
         ans = client.translate(sent, target='en').translatedText
     return ans
+
+
+def cos_simi(x,y):
+   num = x.dot(y.T)
+   denom = np.linalg.norm(x) * np.linalg.norm(y)
+   return num / denom
