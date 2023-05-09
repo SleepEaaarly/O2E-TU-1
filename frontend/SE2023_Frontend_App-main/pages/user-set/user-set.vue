@@ -14,7 +14,7 @@
 			</view>
 		</view> -->
 		
-		<button class="user-set-btn" type="primary" @tap="showActive">退出登陆</button>
+		<button class="user-set-btn" type="primary" @tap="showActive">退出登录</button>
 		<my-action-sheet :showActionSheet="showActionSheet" @toggleAction="toggleAction"></my-action-sheet>
 	</view>
 </template>

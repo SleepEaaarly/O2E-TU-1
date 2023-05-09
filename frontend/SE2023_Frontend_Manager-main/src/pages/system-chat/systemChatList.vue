@@ -1,46 +1,14 @@
 <template>
-	<!-- <div>
-		<el-row >
-			<el-scrollbar style="height: 100%;">
-			<el-col :span="6" style="height: 600px; overflow: auto;">
-				<el-row v-for="(o, index) in 10" :key="o">
-					<el-card >
-						<el-row>
-							<el-col :span="4">
-								<el-avatar :size="100" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" rel="external nofollow"></el-avatar>
-								<el-avatar icon="el-icon-user-solid"></el-avatar>
-							</el-col>
-							
-							<el-col :span="18">
-								<h2>小明同学{{index}}</h2>
-								<h2></h2>
-							</el-col>
-						</el-row>
-					</el-card>
-				</el-row>
-				 <div v-for="fit in fits" :key="fit">
-					<el-ava
-				</div>
-			</el-col>
-			</el-scrollbar>
-			
-			<el-col :span="18">
-				<router-view>
-					
-				</router-view>
-			</el-col>
-		</el-row>
-	</div> -->
-	
 	<a-card :bordered="false">
 		<a-table :data-source="data" :columns="columns">
 			<template slot="operation" slot-scope="text, record">
 				<div >
 					<span>
 						<a @click="showSystemChat(record)" >回复</a>
-						<a-modal v-model="showDetail" title="客服聊天" width="750px" footer="" ref="chatContent" >
-							
-							<a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 600px;" >
+						<!-- <div class="custom-wrapper" style="background-color: transparent;"> -->
+						<a-modal  v-model="showDetail" title="客服聊天" width="750px" footer="" ref="chatContent" :mask-closable="false" class="custom-modal">
+							<!-- <a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 500px;" > -->
+							<a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 500px;" >
 								<!-- <div v-for="(item, index) in record.messages" :key="index">abc</div> -->
 								<!-- <div v-show="false">{{selectData.messages[0].message}}</div>
 								<div v-show="false">{{ selectData.messages[1].message }}</div> -->
@@ -50,7 +18,8 @@
 									
 										<a-row v-if="item.gstime" class="system-chat-item">{{item.gstime}}</a-row>
 										<!-- 提示转换信息 -->
-										<a-row v-if="item.type == 'switch_info'" class="system-chat-time">对方已转换为{{item.message}}服务</a-row>
+										<a-row v-if="item.type == 'switch_info'" class="system-chat-time"
+										 style="font-size: small;">对方已转换为{{item.message}}服务</a-row>
 										<div v-if="item.type !== 'switch_info'" class="system-chat-list" :class="{'system-chat-me': item.isme}">
 											<!-- 显示管理员/AI头像 -->
 											<Image v-if="!item.isme" :src="item.userpic" mode="widthFix" lazy-load></Image> 
@@ -81,22 +50,27 @@
 									</div>
 								</span>
 							</a-card>
-							<a-card>
-								<a-row>
+							<a-row>
 									<a-col :span="20">
 										<a-textarea
 										v-model:value="reply"
 										placeholder="请输入回复，shift+回车换行"
 										:auto-size="{ minRows: 2, maxRows: 5 }"
 										@keydown.native="handleKeyCode($event)"
+										style="margin-top: 20px;height: 100px;"
 										/>
 									</a-col>
 									<a-col :span="4">
-										<a-button @click="handleSubmit(selectData)" >发送</a-button>
+										<a-button @click="handleSubmit(selectData)" type="primary" size = "large"
+										style="margin-left: 20px;margin-top: 50px;width: 100px;">发送</a-button>
 									</a-col>
 								</a-row>
-							</a-card>
 							</a-modal>
+ 				 		<!-- </div> -->
+						
+  							
+						
+						
 					</span>
 				</div>
 			</template>
@@ -115,27 +89,27 @@ const columns = [{
 		title: "姓名",
 		dataIndex: "name",
 		scopedSlots: {customRender: "name"},
-		width: 100,
+		width: "20%",
 	}, {
 		title: "邮箱",
 		dataIndex: "email",
 		scopedSlots: {customRender: "email"},
-		width: 150
+		width: "20%",
 	}, {
 		title: "时间",
 		dataIndex: "time",
 		scopedSlots: {customRender: "time"},
-		width: 150
+		width: "20%",
 	}, {
 		title: "最新消息",
 		dataIndex: "message",
 		scopedSlots: {customRender: "message"},
-		width: 150
+		width: "25%",
 	}, {
 		title: "操作",
 		dataIndex: "operation",
 		scopedSlots: {customRender: "operation"},
-		width: 150,
+		// width: "20%",
 		render: () => <a>回复</a>
 	}
 ];
@@ -402,6 +376,7 @@ export default {
 		showSystemChat(record) {	// 页面中展示聊天框，没有实际作用
 			// 感觉这里record只需要用户id这类的值
 			this.showDetail = true;
+			
 			this.selectData = record;
 			console.log(record)
 		}, 
@@ -491,4 +466,25 @@ export default {
 	color: #a2a2a2;
 	font-size: 24px;
 }
+
+/* .custom-modal .am-modal-wrap {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.custom-modal .am-modal-mask {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+} */
+.custom-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+}
+
+.custom-modal .a-modal-mask {
+  background-color: rgba(0,0,0,0.5); /* 将遮罩层的背景色修改为半透明的黑色 */
+}
+
 </style>
