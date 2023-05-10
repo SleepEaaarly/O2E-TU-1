@@ -19,6 +19,29 @@ function purifyPapers(item){
 	return purified_result
 }
 
+function purifyResults(item){
+	var state_txt
+	if(item.state==1){
+		state_txt = '已审核'
+	}else{
+		state_txt = '待审核'
+	}
+	let purified_result = {
+		rid: item.id,
+		state: item.state,
+		type: 3,	// 3 = 成果
+		strType: state_txt,
+		title: item.title,		//标题
+		scholars: item.scholars,	//所有作者
+		pyear: String(item.pyear),		//发表年限
+		description: '成果摘要: ' + item.abstract,
+	}
+	if(purified_result.pyear === 'undefined' || purified_result.pyear === null || purified_result.pyear === ''){
+		purified_result.pyear = '未知年份'
+	}
+	return purified_result
+}
+
 function purifyPatents(item){
 	let purified_result = {
 		type: 1,	// 0=论文，1=专利，2=项目
@@ -87,6 +110,8 @@ export const getExpertInfo = async(uid, type) => {
 					return purifyPatents(item)
 				case 'projects':
 					return purifyProjects(item)
+				case 'results':
+					return purifyResults(item)
 			}
 			
 		})

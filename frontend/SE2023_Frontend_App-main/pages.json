@@ -902,7 +902,7 @@
 			},
 			{
 				"pagePath": "pages/platform/platform",
-				"text": "平台",
+				"text": "需求",
 				"iconPath": "/static/images/tabbar/platform.png",
 				"selectedIconPath": "/static/images/tabbar/platformed.png"
 			},

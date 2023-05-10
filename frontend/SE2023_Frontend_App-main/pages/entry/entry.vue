@@ -68,8 +68,8 @@
 		</view>
 		<view style="background-color: #F7F7F7;margin-top: 10px; margin-top:15px;padding-bottom: 20px;padding-top: 8px;height: 100%;">
 			<u-row style="margin-left: 5px;margin-bottom: 8px;">
-				<u-icon name="reload" size="20" ></u-icon>
-				<text style="color: dimgrey;font-weight: 600;margin-left: 5px;">推荐成果</text>
+				<u-icon name="reload" size="20" @click="refreshRec()"></u-icon>
+				<text style="color: dimgrey;font-weight: 600;margin-left: 5px;" >推荐成果</text>
 			</u-row>
 			
 			<!-- 列表形式导入 -->
@@ -100,7 +100,7 @@
 					:area="item['field']"
 					:index="index2"></work-card>
 				</block>
-				<uni-load-more :loadtext="recommendList.loadtext"></uni-load-more>
+				<uni-load-more v-if="this.recFinish" :loadtext="recommendList.loadtext" :status="data_status"></uni-load-more>
 			</template>
 		</view>
 		
@@ -137,8 +137,10 @@
 		data() {
 			return {
 				searchText:'',
-				show: true,
+				recFinish: false,
 				cur_page: 1,
+				finish_getting: false,
+				data_status: 'more',
 				recommendList: {
 					loadtext: '没有更多数据了',
 					id: 'recommend',
@@ -187,7 +189,7 @@
 		},
 		onShow() {		//页面加载,一个页面只会调用一次
 			console.log('works-onShow()')
-			this.loadRecData()
+			this.loadRecData(0)
 			this.requestData()
 		},
 		onLoad() {		//页面显示,每次打开页面都会调用一次
@@ -199,6 +201,14 @@
 			uni.$emit('onReachBottom', res.scrollTop);
 		},
 		computed: { 
+			data_status_text(){
+				if(this.finish_getting){
+					this.data_status = 'noMore'
+					console.log('status change')
+				}else{
+					this.data_status = 'more'
+				}
+			},
 			items_classified:  {
 				get: 	function() {
 							if(this.field !== this.field_items.length) {
@@ -292,18 +302,35 @@
 				uni.navigateTo({ url: '../manage-achievement/manage-achievement' })
 				// this.hidepopup()
 			},
-			async loadRecData(){
+			refreshRec(){
+				this.recFinish = false
+				this.data_status = 'more'
+				this.cur_page = 1
+				this.recommendList.rec_list = []
+				this.recommendList.list = []
+				this.loadRecData(1)
+				this.requestData()
+			},
+			async loadRecData(shuffle){
 				// TODO 成果推荐 Debug
 				let paras = {
 					"id": this.userInfo.id,
 					"type": this.userInfo.type,
+					"shuffle": shuffle
 				}
-				this.recommendList.rec_list = await getWorkRec(paras)
-				// console.log('RecWork')
-				// console.log(this.recommendList.rec_list)
+				var ret = await getWorkRec(paras)
+				this.recommendList.rec_list = ret
+				if(ret == [] || ret == {} || ret == null || ret.length === 0){
+					this.recFinish = true
+				}
+				console.log('RecWork')
+				console.log(this.recommendList.rec_list)
 				// TODO 成果推荐 Debug
 			},
 			async requestData() {
+				if(!this.recFinish || this.finish_getting){
+					return
+				}
 				try {
 
 					// var rec_list = {}
@@ -320,6 +347,7 @@
 					var work_list = await getWorkList(paras)
 					if(work_list.length===0||work_list==null||work_list==[]||work_list=={}){
 						this.finish_getting = true
+						this.data_status = 'noMore'
 					}
 					this.recommendList.list = this.recommendList.list.concat(work_list)
 					this.cur_page = this.cur_page + 1

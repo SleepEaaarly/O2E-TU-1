@@ -10,12 +10,13 @@
 		</view> -->
 		
 		<!-- 具体数据卡片 -->
-		<uni-card v-for="(item, index) in datalist" :key="index" @click="openResultDetail()">
+		<uni-card v-for="(item, index) in datalist" :key="index" @click="openResultDetail(item)">
 			<uni-row :span="24" class="title">
 				<uni-col class="title">
-					<uni-tag custom-style="background-color: #d6d6d6; border-color: #d6d6d6; color: #000000;"
-					:circle="true" :text="item.strType" type="warning" size="small"/>
-
+					<uni-tag v-if="item.state==1" custom-style="background-color: #1AE66B; border-color: #1AE66B; color: #000000;"
+					:circle="true" :text="item.strType" type="warning" size="middle"/>
+					<uni-tag v-else-if="isSelf" custom-style="background-color: red; border-color: red; color: #000000;"
+					:circle="true" :text="item.strType" type="warning" size="middle"/>
 					<text>{{item.title}}</text>
 				</uni-col>
 			</uni-row>
@@ -30,7 +31,6 @@
 			<uni-row class="description">
 				<uni-col class="description-text" :span="23">
 					{{item.description}}
-					{{item.cites}}
 				</uni-col>
 			</uni-row>
 		</uni-card>
@@ -61,9 +61,14 @@
 			this.initData()
 			console.log('Achievement onLoad')
 		},
+		activated() {
+    		this.initData();
+			console.log('activated onLoad')
+  		},
 		props: { id: { type: Number, }, isSelf:{type: Boolean}},
 		data() {
 			return {
+				isRefresh:false,
 				paperlist:[],	//论文列表
 				patentlist:[],	//专利列表
 				projectlist: [],	//项目列表
@@ -86,9 +91,9 @@
 		},
 		methods: {
 			async initData(){		
-				this.paperlist = await getExpertInfo(this.id, 'papers')
-				this.patentlist = await getExpertInfo(this.id, 'patents')
-				this.projectlist = await getExpertInfo(this.id, 'projects')
+				// this.paperlist = await getExpertInfo(this.id, 'papers')
+				// this.patentlist = await getExpertInfo(this.id, 'patents')
+				// this.projectlist = await getExpertInfo(this.id, 'projects')
 				this.achievementList = await getExpertInfo(this.id, 'results')
 				this.generateDList()
 			},
@@ -108,15 +113,18 @@
 			},
 			generateDList(){	//刷新datalist
 				this.datalist = []
-				this.datalist.push.apply(this.datalist, this.paperlist)
-
+				this.datalist.push.apply(this.datalist, this.achievementList)
+				console.log(this.achievementList)
 				// TODO 获取成果列表
 				// this.datalist.push.apply(this.datalist, this.achievementList)
 				console.log(this.datalist)
 			},
-			openResultDetail(){
-				// 什么都没有, 未打算做详情页面
-				console.log('点击了成果卡片，但什么也没发生...')
+			openResultDetail(work){
+				// console.log(work['result_id'])
+				// getExpertByID
+				uni.navigateTo({
+				 	url: '../../pages/work_detail/work_detail?rid=' + work['rid'],
+				 })
 			}
 		},
 	}

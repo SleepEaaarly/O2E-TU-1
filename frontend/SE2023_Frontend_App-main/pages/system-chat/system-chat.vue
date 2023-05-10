@@ -1,23 +1,7 @@
 <template>
     <view>
-        <tui-button v-if="!isHuman" @click="openmenu" :size="28" :plain="true">
-            当前问题类型为{{questionType==='basic'?"平台功能问题":"其他问题"}}
-        </tui-button>
-        <template v-if="!isHuman">
-            <tui-bubble-popup :show="show" :mask="true" position="absolute" width="370rpx" translateY="0rpx" triangleTop="-50rpx" borderWidth="0" @close="openmenu()">
-				<tui-list-cell :hover="true" :arrow="true" backgroundColor="#dcdcdc" @click="switchQuestionType(0)">
-					<tui-icon name="search"></tui-icon>
-						平台功能问题
-				</tui-list-cell>
-				
-			</tui-bubble-popup>
-            <tui-bubble-popup :show="show" :mask="false" position="absolute" width="370rpx" translateY="0rpx" translateX="380rpx" triangleTop="-20rpx" borderWidth="0" @close="openmenu()">
-				<tui-list-cell :hover="true" :arrow="true" backgroundColor="#dcdcdc" @click="switchQuestionType(1)">
-					<tui-icon name="search"></tui-icon>
-					其他问题
-				</tui-list-cell>
-			</tui-bubble-popup>
-        </template>
+
+
         <scroll-view id="scrollview" scroll-y :scroll-top="scrollTop"
         :scroll-with-animation="true"
         refresher-enabled
@@ -86,7 +70,24 @@
                 time="上午 7:45">
             </work_message_card> -->
         </scroll-view>
-        
+        <tui-button v-if="!isHuman" @click="openmenu" :size="28" :plain="true">
+            当前问题类型为{{questionType==='basic'?"平台功能问题":"其他问题"}}
+        </tui-button>
+        <template v-if="!isHuman">
+            <tui-bubble-popup :show="show" :mask="true" position="absolute" width="370rpx" translateY="0rpx" triangleTop="-50rpx" borderWidth="0" @close="openmenu()">
+				<tui-list-cell :hover="true" :arrow="true" backgroundColor="#dcdcdc" @click="switchQuestionType(0)">
+					<tui-icon name="search"></tui-icon>
+						平台功能问题
+				</tui-list-cell>
+				
+			</tui-bubble-popup>
+            <tui-bubble-popup :show="show" :mask="false" position="absolute" width="370rpx" translateY="0rpx" translateX="380rpx" triangleTop="-20rpx" borderWidth="0" @close="openmenu()">
+				<tui-list-cell :hover="true" :arrow="true" backgroundColor="#dcdcdc" @click="switchQuestionType(1)">
+					<tui-icon name="search"></tui-icon>
+					其他问题
+				</tui-list-cell>
+			</tui-bubble-popup>
+        </template>
         <system-chat-bottom @submit="submit" @isHuman="getHuman" :notAI="isHuman"></system-chat-bottom>
     </view>
 </template>
@@ -125,6 +126,7 @@
             return {
                 testpic: "/static/head.jpg",
                 aiPic: "/static/head.jpg",
+                picUrl: '',
                 isShow: false,
                 isHuman: false,
                 currentState: 'AI',
@@ -173,6 +175,7 @@
         onShow() {
             // console.log("adfadfadfad")
             this.isShow = true
+            this.picUrl = picUrl
             // uni.$emit('system-chat-list-on-show')
         },
         beforeDestroy() {
@@ -441,7 +444,7 @@
                             let now = new Date().getTime()
                             let obj = { // 插入前端列表的数据
                                 isme: 0,
-                                userpic: this.aiPic,
+                                userpic: picUrl + this.aiPic,
                                 type: 'text',
                                 message: "啊哦，遇到我不会的了，建议您转人工哦",
                                 time: time.gettime.gettime(now),
@@ -463,7 +466,7 @@
                             let now = new Date().getTime()
                             let obj = { // 插入前端列表的数据
                                 isme: 0,
-                                userpic: this.aiPic,
+                                userpic: picUrl + this.aiPic,
                                 type: 'text',
                                 message: output.answer,
                                 time: time.gettime.gettime(now),
@@ -498,7 +501,7 @@
                         let now = (new Date()).getTime()
                         let obj = { // 插入前端列表的数据
                             isme: 0,
-                            userpic: this.aiPic,
+                            userpic: picUrl + this.aiPic,
                             type: 'text',
                             message: output.answer,
                             time: time.gettime.gettime(now),
@@ -520,7 +523,7 @@
                             // 2.4.1.1 构建专家信息
                             let obj = {
                                 isme: 0,
-                                userpic: this.aiPic,
+                                userpic: picUrl + this.aiPic,
                                 type: 'card',
                                 message: "一条卡片信息~",
                                 time: time.gettime.gettime(now),
@@ -539,7 +542,7 @@
                             // 2.4.2.1 构建企业信息
                             let obj = {
                                 isme: 0,
-                                userpic: this.aiPic,
+                                userpic: picUrl + this.aiPic,
                                 type: 'card',
                                 message: "一条卡片信息~",
                                 time: time.gettime.gettime(now),
@@ -558,7 +561,7 @@
                             // 2.4.3.1 构建企业信息
                             let obj = {
                                 isme: 0,
-                                userpic: this.aiPic,
+                                userpic: picUrl + this.aiPic,
                                 type: 'card',
                                 message: "一条卡片信息~",
                                 time: time.gettime.gettime(now),
