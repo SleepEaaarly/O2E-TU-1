@@ -53,15 +53,16 @@ def get_all_result_info(request: HttpRequest, page: int):
 def delete_result(request: HttpRequest):
     data: dict = parse_data(request)
     pid = data.get('id')
-    print("delete_result 1")
+    print("delete_result 1", pid)
     if Results.objects.filter(pk=pid).exists() is False:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, 'Your required result to delete is not found!')
     result = Results.objects.get(pk=pid)
-    print("delete_result 2")
-    get_milvus_connection()
-    milvus_delete("O2E_RESULT_HIT", result.vector_hit)
-    milvus_delete("O2E_RESULT", result.vector_sci)
-    disconnect_milvus()
+    print("delete_result 2", result)
+    if result.state == 1:
+        get_milvus_connection()
+        milvus_delete("O2E_RESULT_HIT", result.vector_hit)
+        milvus_delete("O2E_RESULT", result.vector_sci)
+        disconnect_milvus()
     print("delete_result 3")
     experts = Expert.objects.all()
     pics = ResMultipic.objects.all()

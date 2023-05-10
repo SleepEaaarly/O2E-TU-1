@@ -117,6 +117,7 @@ def get_system_chat(request: HttpRequest):
         # created_at
         a_message['created_at'] = m.get_create_time()
         messages.append(a_message)
+    # print(messages)
     ret_data['messages'] = messages
     ret_data['noreadnum'] = system_chatroom.unread_message_num
     ret_data['isai'] = system_chatroom.isai
@@ -189,12 +190,12 @@ def push_system_message(request: HttpRequest):
 def system_message_read(request: HttpRequest):
     data: dict = parse_data(request)
     user: User = User.objects.get(id=data.get('uId'))
-    # print("debug1")
+    print("/system_chat/read debug1")
     try:
         system_chatroom = SystemChatroom.objects.get(owner=user)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad System Chatroom.")
-    # print("debug2")
+    print("/system_chat/read debug2")
     try:
         for message in system_chatroom.messages.all():
             message.set_read()
@@ -202,7 +203,7 @@ def system_message_read(request: HttpRequest):
         system_chatroom.save()
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad Message ID.")
-    # print("debug3")
+    print("/system_chat/read debug3")
     return success_api_response({})
 
 

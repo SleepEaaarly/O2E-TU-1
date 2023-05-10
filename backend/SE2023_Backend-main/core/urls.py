@@ -266,8 +266,8 @@ urlpatterns = [
     # AI推荐
     path('ai/recommend/<int:id>', recommend),
     path('ai/needRecommend/<int:id>', need_recommend),
-    path('ai/resultRec/expert/<int:id>', result_recommend_for_expert),
-    path('ai/resultRec/enterprise/<int:id>', result_recommend_for_enterprise),
+    path('ai/resultRec/expert/<int:id>/<int:shuffle>', result_recommend_for_expert),
+    path('ai/resultRec/enterprise/<int:id>/<int:shuffle>', result_recommend_for_enterprise),
     
     # # AI客服
     path('answer/set', answer_set_question),
