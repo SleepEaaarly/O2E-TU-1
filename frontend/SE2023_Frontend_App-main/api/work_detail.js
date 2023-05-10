@@ -29,3 +29,11 @@ export const getWork = async (id) => {
 	}
     return result
 }
+export const resDel = async (params) => {
+    let headers = {
+        "Authorization": 'Bearer ' + uni.getStorageSync('token')
+    }
+	// console.log("Get work before call " + id)
+    let result = await axios.post("result/delete", params, headers)
+    return result
+}

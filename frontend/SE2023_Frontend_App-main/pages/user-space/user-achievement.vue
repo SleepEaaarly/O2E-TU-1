@@ -13,9 +13,10 @@
 		<uni-card v-for="(item, index) in datalist" :key="index" @click="openResultDetail(item)">
 			<uni-row :span="24" class="title">
 				<uni-col class="title">
-					<uni-tag custom-style="background-color: #d6d6d6; border-color: #d6d6d6; color: #000000;"
-					:circle="true" :text="item.strType" type="warning" size="small"/>
-
+					<uni-tag v-if="item.state==1" custom-style="background-color: #1AE66B; border-color: #1AE66B; color: #000000;"
+					:circle="true" :text="item.strType" type="warning" size="middle"/>
+					<uni-tag v-else-if="isSelf" custom-style="background-color: red; border-color: red; color: #000000;"
+					:circle="true" :text="item.strType" type="warning" size="middle"/>
 					<text>{{item.title}}</text>
 				</uni-col>
 			</uni-row>
@@ -60,9 +61,14 @@
 			this.initData()
 			console.log('Achievement onLoad')
 		},
+		activated() {
+    		this.initData();
+			console.log('activated onLoad')
+  		},
 		props: { id: { type: Number, }, isSelf:{type: Boolean}},
 		data() {
 			return {
+				isRefresh:false,
 				paperlist:[],	//论文列表
 				patentlist:[],	//专利列表
 				projectlist: [],	//项目列表
@@ -85,9 +91,9 @@
 		},
 		methods: {
 			async initData(){		
-				this.paperlist = await getExpertInfo(this.id, 'papers')
-				this.patentlist = await getExpertInfo(this.id, 'patents')
-				this.projectlist = await getExpertInfo(this.id, 'projects')
+				// this.paperlist = await getExpertInfo(this.id, 'papers')
+				// this.patentlist = await getExpertInfo(this.id, 'patents')
+				// this.projectlist = await getExpertInfo(this.id, 'projects')
 				this.achievementList = await getExpertInfo(this.id, 'results')
 				this.generateDList()
 			},

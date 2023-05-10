@@ -15,25 +15,11 @@
 					height: 100px;padding: 10px;width: 93%;" 
 					maxlength="-1" v-model="description" placeholder="请输入内容" 
 					placeholder-style="font-size:15rpx;font-weight:300;color:#919191"
-					class="my-textarea"
-                        ></textarea>
+					class="my-textarea"></textarea>
                 </uni-section>
-				<uni-section title="内容" subTitle="介绍成果的内容" type="line" padding>
-				    <textarea style="border: 1px solid #e4e4e4;border-radius:5px;background-color:rgba(0,0,0,0);
-					height: 100px;padding: 10px;width: 93%;" maxlength="-1" v-model="content" placeholder="请输入内容"
-				    placeholder-style="font-size:15rpx;font-weight:300;color:#919191"
-						></textarea>
-				</uni-section>
+
                 <uni-section title="成果作者" subTitle="多个作者用英文逗号分隔" type="line" padding>
                     <uni-easyinput v-model="scholars" focus placeholder="请输入作者" ></uni-easyinput>
-                </uni-section>
-                <!-- <uni-section title="成果链接" subTitle="给出您的成果链接" type="line" padding>
-                    <uni-easyinput v-model="achievement_url" focus placeholder="请输入链接" @input="inputachievement_url"></uni-easyinput>
-                </uni-section> -->
-                <uni-section title="成果发布日期" subTitle="请选择成果发布日期" type="line" padding>
-                    <view class="date-set">
-                        <uni-datetime-picker type="datetime" v-model="pyear" @change="changeLogStart" />
-                    </view>
                 </uni-section>
                 <uni-section title="领域" subTitle="请为您的成果确定主要领域方向" type="line" padding>
                     <view class="uni-list">
@@ -49,6 +35,15 @@
                         </view>
                     </view>
                 </uni-section>
+                <!-- <uni-section title="成果链接" subTitle="给出您的成果链接" type="line" padding>
+                    <uni-easyinput v-model="achievement_url" focus placeholder="请输入链接" @input="inputachievement_url"></uni-easyinput>
+                </uni-section> -->
+                <uni-section title="成果发布日期" subTitle="请选择成果发布日期" type="line" padding>
+                    <view class="date-set">
+                        <uni-datetime-picker type="datetime" v-model="pyear" @change="changeLogStart" />
+                    </view>
+                </uni-section>
+
                 <uni-section title="成果阶段" subTitle="请选择成果阶段" type="line" padding>
 					<view class="uni-list">
 						<radio-group @change="radioChange">
@@ -67,6 +62,13 @@
 						<uploadID @getIDpic="getWorkLogo"></uploadID>
 					</view>
                 </uni-section>
+				<uni-section title="内容" subTitle="介绍成果的内容" type="line" padding>
+                    <textarea style="border: 1px solid #e4e4e4;border-radius:5px;background-color:rgba(0,0,0,0);
+					height: 100px;padding: 10px;width: 93%;" 
+					maxlength="-1" v-model="content" placeholder="请输入内容" 
+					placeholder-style="font-size:15rpx;font-weight:300;color:#919191"
+					class="my-textarea"></textarea>
+				</uni-section>
 				<uni-section title="成果详情" subTitle="请选择附件" type="line" padding>
 					<view class="add-btn">
 					   <uploadWorkPic @getWorkPic="getWorkPic"></uploadWorkPic>

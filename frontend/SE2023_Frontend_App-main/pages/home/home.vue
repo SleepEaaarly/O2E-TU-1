@@ -22,7 +22,7 @@
 			<!-- (主页+评论+收藏)数据 -->
 			<home-data @goToSpace="goToSpace" :homedata="homedata"></home-data>
 			
-			<uni-section title="探索" type="circle">
+			<uni-section>
 				<uni-list :border="false">
 					<!-- <uni-list-item class="explore" :border="false" :show-extra-icon="false" clickable :extra-icon="rateIcon" title="测试页面" link @click="goToTest" /> -->
 					<uni-list-item class="explore" 
