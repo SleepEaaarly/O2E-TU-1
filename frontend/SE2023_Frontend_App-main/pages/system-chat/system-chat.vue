@@ -1,23 +1,7 @@
 <template>
     <view>
-        <tui-button v-if="!isHuman" @click="openmenu" :size="28" :plain="true">
-            当前问题类型为{{questionType==='basic'?"平台功能问题":"其他问题"}}
-        </tui-button>
-        <template v-if="!isHuman">
-            <tui-bubble-popup :show="show" :mask="true" position="absolute" width="370rpx" translateY="0rpx" triangleTop="-50rpx" borderWidth="0" @close="openmenu()">
-				<tui-list-cell :hover="true" :arrow="true" backgroundColor="#dcdcdc" @click="switchQuestionType(0)">
-					<tui-icon name="search"></tui-icon>
-						平台功能问题
-				</tui-list-cell>
-				
-			</tui-bubble-popup>
-            <tui-bubble-popup :show="show" :mask="false" position="absolute" width="370rpx" translateY="0rpx" translateX="380rpx" triangleTop="-20rpx" borderWidth="0" @close="openmenu()">
-				<tui-list-cell :hover="true" :arrow="true" backgroundColor="#dcdcdc" @click="switchQuestionType(1)">
-					<tui-icon name="search"></tui-icon>
-					其他问题
-				</tui-list-cell>
-			</tui-bubble-popup>
-        </template>
+
+
         <scroll-view id="scrollview" scroll-y :scroll-top="scrollTop"
         :scroll-with-animation="true"
         refresher-enabled
@@ -86,7 +70,24 @@
                 time="上午 7:45">
             </work_message_card> -->
         </scroll-view>
-        
+        <tui-button v-if="!isHuman" @click="openmenu" :size="28" :plain="true">
+            当前问题类型为{{questionType==='basic'?"平台功能问题":"其他问题"}}
+        </tui-button>
+        <template v-if="!isHuman">
+            <tui-bubble-popup :show="show" :mask="true" position="absolute" width="370rpx" translateY="0rpx" triangleTop="-50rpx" borderWidth="0" @close="openmenu()">
+				<tui-list-cell :hover="true" :arrow="true" backgroundColor="#dcdcdc" @click="switchQuestionType(0)">
+					<tui-icon name="search"></tui-icon>
+						平台功能问题
+				</tui-list-cell>
+				
+			</tui-bubble-popup>
+            <tui-bubble-popup :show="show" :mask="false" position="absolute" width="370rpx" translateY="0rpx" translateX="380rpx" triangleTop="-20rpx" borderWidth="0" @close="openmenu()">
+				<tui-list-cell :hover="true" :arrow="true" backgroundColor="#dcdcdc" @click="switchQuestionType(1)">
+					<tui-icon name="search"></tui-icon>
+					其他问题
+				</tui-list-cell>
+			</tui-bubble-popup>
+        </template>
         <system-chat-bottom @submit="submit" @isHuman="getHuman" :notAI="isHuman"></system-chat-bottom>
     </view>
 </template>
