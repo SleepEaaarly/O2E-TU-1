@@ -271,6 +271,7 @@ def create_need(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-enterprise user")
 
     title = data.get('title')
+    title_en = trans_zh2en(title)
     description = data.get('description')
     start_time = data.get('start_time')
     end_time = data.get('end_time')
@@ -288,6 +289,7 @@ def create_need(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-digit value(some digit value is wrong)")
 
     print("title", title)
+    print("title_eng", title_en)
     print("descrption", description)
     print("money", money)
     print("start_time", start_time)
@@ -307,14 +309,14 @@ def create_need(request: HttpRequest):
     if not title or not description or not start_time:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "title or description or start_time cannot be empty")
 
-    need = Need(title=title, description=description, money=money, start_time=start_time,
+    need = Need(title=title, title_eng=title_en, description=description, money=money, start_time=start_time,
                 end_time=end_time, key_word=key_word, field=field, address=address,
                 enterprise=user, state=state, emergency=emergency, predict=4, real=0)
     need.save()
     # 为需求生成报告
     generate_requirement_report(need.id)
     # 向milvus库插入向量
-    sci_vec = get_scibert_embedding(title)
+    sci_vec = get_scibert_embedding(title_en)
     get_milvus_connection()
     mid_sci = milvus_insert("O2E_NEED", data=[[sci_vec], [need.id]])
     disconnect_milvus()
