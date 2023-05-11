@@ -304,12 +304,14 @@
 			},
 			refreshRec(){
 				this.recFinish = false
+				this.finish_getting = false
 				this.data_status = 'more'
 				this.cur_page = 1
 				this.recommendList.rec_list = []
 				this.recommendList.list = []
 				this.loadRecData(1)
 				this.requestData()
+				location.reload();
 			},
 			async loadRecData(shuffle){
 				// TODO 成果推荐 Debug
