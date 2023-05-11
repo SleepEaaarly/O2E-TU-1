@@ -133,6 +133,11 @@ export const UserModify = (params) => {
   return request(url, "post", params)
 }
 
+export const searchUser = (params) => {
+  const url = BASE_URL_IP + `/api/admin/search/user`
+  return request(url, METHOD.POST, params)
+}
+
 export default {
   goodsList,
   goodsColumns,
