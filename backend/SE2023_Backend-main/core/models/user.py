@@ -13,7 +13,6 @@ USER_TYPE_CHOICES = (
     (2, 'Company'),
 )
 
-
 #用户状态
 USER_STATE_CHOICES = (
     (0, '普通用户'),
@@ -23,6 +22,8 @@ USER_STATE_CHOICES = (
     (4, '认证专家'),
     (5, '认证企业')
 )
+
+STATE_LIST = ['普通用户', '专家认证中', '企业认证中', '封禁中', '认证专家', '认证企业']
 
 BASE_DIR = 'http://127.0.0.1:8000/api/'
 
@@ -36,6 +37,10 @@ class AdminUser(models.Model):
     def super_authenticate(self,name,password):
         return self.nick_name == name and self.password == password
 '''
+
+
+def decode_user_state(state):
+    return STATE_LIST[state]
 
 
 class User(AbstractUser):
@@ -76,7 +81,7 @@ class User(AbstractUser):
     #super users
     #objects = AdminUser()
 
-    REQUIRED_FIELDS = ['email',]
+    # REQUIRED_FIELDS = ['email',]
     #chatroom = models.ManyToManyField('Chatroom', related_name='chatroom_list')
 
     #user_tags = models.CharField(validators=[validate_comma_separated_integer_list],
@@ -90,14 +95,16 @@ class User(AbstractUser):
     def get_icon(self):
         return str(self.icon)
 
-    def simple_to_dict(self):
+    def to_dict(self):
         return {
             'username': self.username,
             'id': self.id,
             'email': self.email,
             'userpic': self.get_icon(),
             'nickname': self.nick_name,
-            'institution': self.institution
+            'institution': self.institution,
+            'is_confirmed': self.is_confirmed,
+            'state': decode_user_state(self.state),
         }
     
     # def to_dict(self):
@@ -109,7 +116,7 @@ class User(AbstractUser):
     #         'created_at': self.created_at,
     #     })
 
-    def is_followed(self,pid:int):
+    def is_followed(self, pid:int):
         return self.followers.filter(id=pid).exists()
 
     def get_fans(self):

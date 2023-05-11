@@ -18,9 +18,12 @@ class ContrastiveSciBERT(nn.Module):
         super().__init__()
         self.tau = tau
         self.device = device
-        self.tokenizer = AutoTokenizer.from_pretrained('allenai/scibert_scivocab_uncased')
-        self.model = AutoModel.from_pretrained('allenai/scibert_scivocab_uncased').to(device)
-        self.linear = nn.Linear(self.model.config.hidden_size, out_dim).to(device)
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            'allenai/scibert_scivocab_uncased')
+        self.model = AutoModel.from_pretrained(
+            'allenai/scibert_scivocab_uncased').to(device)
+        self.linear = nn.Linear(
+            self.model.config.hidden_size, out_dim).to(device)
 
     def get_embeds(self, texts, max_length=64):
         """将⽂本编码为向量
@@ -70,7 +73,7 @@ d_name = "core_results"
 c_name = "O2E_RESULT"
 rst = get_all_entity(d_name)
 # inp = [[r[9], r[0]] for r in rst]
-inp = [[r[1], r[0], r[9]] for r in rst]
+inp = [[r[12], r[0], r[9]] for r in rst]
 # print(pap_titles)
 state_dict = torch.load("../model.pt", map_location='cpu')
 model = ContrastiveSciBERT(out_dim=128, tau=0.07)

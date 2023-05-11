@@ -50,6 +50,7 @@ def create_milvus_collection(db_id_name, collection_name, vec_dim):
     )
 
 
+
 def del_milvus_collection(name):
     """
     删除指定collection
@@ -266,11 +267,11 @@ def milvus_query_result_hit_by_id(query):
 if __name__ == '__main__':
     from pymilvus import drop_collection, list_collections, loading_progress, utility
     get_milvus_connection()
-    names = ["O2E_RESULT_HIT", "O2E_RESULT"]
+    names = ["O2E_RESULT"]
     # names = ["O2E_RESULT", "O2E_PAPER", "O2E_NEED",
     #          "O2E_RESULT_HIT", "SET_QUESTION_HIT",
     #          "O2E_EXPERT_HIT", "O2E_ENTERPRISE_HIT"]
-    id_names = ["result_id", "result_id"]
+    id_names = ["result_id"]
     # id_names = ["result_id", "paper_id", "need_id",
     #             "result_id", "question_id",
     #             "expert_id", "enterprise_id"]
@@ -287,13 +288,13 @@ if __name__ == '__main__':
     # milvus_delete(collection_name, "441254677606311614")
     # db_id_name = "result_id"
     # list_milvus_entities(collection_name, db_id_name)
-    # for collection_name in names:
-    #     try:
-    #         collection = get_milvus_collection(collection_name)
-    #         # loading_progress(collection_name, partition_names=None, using='default')
-    #         collection.load()
-    #     except Exception as e:
-    #         print(e)
+    for collection_name in names:
+        try:
+            collection = get_milvus_collection(collection_name)
+            # loading_progress(collection_name, partition_names=None, using='default')
+            collection.load()
+        except Exception as e:
+            print(e)
 
     # print(connections.list_connections())
     # print(utility.load_state(collection_name))

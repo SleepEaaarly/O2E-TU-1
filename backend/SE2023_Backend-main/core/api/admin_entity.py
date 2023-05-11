@@ -153,3 +153,24 @@ def search_result_by_name(request: HttpRequest):
         "data": d
     })
 
+
+@csrf_exempt
+@response_wrapper
+@require_http_methods('POST')
+def search_user_by_name(request: HttpRequest):
+    data = parse_data(request)
+    username = data.get('username')
+    page = int(data.get('page'))
+    users = User.objects.filter(Q(username__icontains=username))
+
+    start = 10 * (page - 1)
+    end = 10 * page
+
+    d = list()
+    for user in users:
+        d.append(user.to_dict())
+    return success_api_response({
+        "page_num": page,
+        "data": d
+    })
+

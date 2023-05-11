@@ -63,7 +63,7 @@ from core.api.system_chat import create_system_chat, get_system_chat, push_syste
     system_message_read, alter_systemchat_visible, get_all_system_chatrooms, push_system_message_by_admin
 
 from core.api.admin_entity import get_all_result_info, change_result_info, delete_result, search_result_by_name, \
-    get_all_unaudited_result_info
+    get_all_unaudited_result_info, search_user_by_name
 
 
 from core.api.order_report import get_order_report
@@ -296,6 +296,7 @@ urlpatterns = [
 
     # 管理端search
     path('admin/search/result', search_result_by_name),
+    path('admin/search/user', search_user_by_name),
 
     # 获得订单报告
     path('order_report/get', get_order_report),
