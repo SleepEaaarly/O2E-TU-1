@@ -24,6 +24,8 @@ USER_STATE_CHOICES = (
     (5, '认证企业')
 )
 
+STATE_LIST = ['普通用户', '专家认证中', '企业认证中', '封禁中', '认证专家', '认证企业']
+
 BASE_DIR = 'http://127.0.0.1:8000/api/'
 
 '''
@@ -37,6 +39,8 @@ class AdminUser(models.Model):
         return self.nick_name == name and self.password == password
 '''
 
+def decode_user_state(state):
+    return STATE_LIST[state]
 
 class User(AbstractUser):
     """
@@ -100,14 +104,17 @@ class User(AbstractUser):
             'institution': self.institution
         }
     
-    # def to_dict(self):
-    #     return ({
-    #         'id': self.id,
-    #         'content':self.content,
-    #         'from_user': self.from_user,
-    #         'to_user': self.to_user,
-    #         'created_at': self.created_at,
-    #     })
+    def to_dict(self):
+        return {
+            'username': self.username,
+            'id': self.id,
+            'email': self.email,
+            'userpic': self.get_icon(),
+            'nickname': self.nick_name,
+            'institution': self.institution,
+            'is_confirmed': self.is_confirmed,
+            'state': decode_user_state(self.state),
+        }
 
     def is_followed(self,pid:int):
         return self.followers.filter(id=pid).exists()
