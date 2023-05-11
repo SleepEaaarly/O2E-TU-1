@@ -10,3 +10,6 @@ class Question(models.Model):
     ans = models.TextField(blank=True, null=True)
     multipic = models.ManyToManyField(to=QuesMultipic, related_name="question_multipic")
     vector_hit = models.TextField(blank=True, null=True)
+
+    def get_multipic(self):
+        return self.multipic.all()

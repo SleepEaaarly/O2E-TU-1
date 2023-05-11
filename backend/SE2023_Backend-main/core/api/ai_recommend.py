@@ -1,4 +1,5 @@
 import torch
+import random
 from django.db.models import Avg
 from django.http import HttpRequest
 from django.views.decorators.http import require_GET
@@ -254,10 +255,10 @@ def need_recommend(request: HttpRequest, id: int):
 @csrf_exempt
 @require_GET
 @response_wrapper
-def result_recommend_for_expert(request: HttpRequest, id: int):
-    print("enter resultRec expert")
+def result_recommend_for_expert(request: HttpRequest, id: int, shuffle: int):
+    # print("enter resultRec expert")
     get_milvus_connection()
-    print("get_milvus_connection")
+    # print("get_milvus_connection")
     user = User.objects.get(id=id)
     papers = user.expert_info.papers.all()
     print(papers)
@@ -272,34 +273,60 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
     for ach in achievements:
         titles.append(ach.title_eng)
         ach_ids.append(ach.id)
+    all_titles_num = len(titles)
+    if len(titles) > 2:
+        # titles = random.sample(titles, 2)
+        titles = titles[:2]
+        print(titles)
     print("titles added")
     key_vector = model.get_embeds(titles)
     # print('check milvus connection:[2]')
 
-    key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
+    # key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
+    # print(key_vector[0][:10])
     print("ready to milvus_search")
+    top_k = int(0.2 * len(Results.objects.all())) + len(ach_ids)
+    # print("top_k:" + str(top_k))
     id_lists = milvus_search(
-        "O2E_RESULT", query_vectors=key_vector, topk=5, partition_names=None)
-
+        "O2E_RESULT", query_vectors=key_vector, topk=top_k, partition_names=None)
+    # print("id_lists_len:" + str(len(id_lists)))
     ids_set = []
-    for id_list in id_lists:
-        for milvus_id in id_list:
-            ids_set.append(milvus_id)
-    ids_set = list(set(ids_set))
+    # for id_list in id_lists:
+    #     for milvus_id in id_list:
+    #         ids_set.append(milvus_id)
+    for i in range(top_k):
+        for list_id in range(len(id_lists)):
+            ids_set.append(id_lists[list_id][i])
+    tmp = []
+    for i in ids_set:
+        if i not in tmp:
+            tmp.append(i)
+    ids_set = tmp.copy()
+    # print("ids_set:", ids_set)
     if len(ids_set) == 0:
         return success_api_response({"results": []})
 
-    ids = str(ids_set)
-    query = "milvus_id in " + ids
-    print("query:", query)
-    result_ids = milvus_query_result_by_id(query)
-    # result_ids = [i if i not in ach_ids for i in result_ids]
-    tmp = []
-    for rid in result_ids:
-        if rid not in ach_ids:
-            tmp.append(rid)
-    result_ids = tmp
+    result_ids = []
+    for i in ids_set:
+        rid = milvus_query_result_by_id(f"milvus_id in [{i}]")[0]
+        # print(i, rid)
+        if rid["result_id"] not in ach_ids:
+            result_ids.append(rid)
+            # if len(result_ids) >= top_k - len(ach_ids):
+            #     break
+    if shuffle == 1 and all_titles_num <= 2:
+        random.shuffle(result_ids)
+    # ids = str(ids_set)
+    # query = "milvus_id in " + ids
+    # print("query:", query)
+    # result_ids = milvus_query_result_by_id(query)
+    # # result_ids = [i if i not in ach_ids for i in result_ids]
+    # tmp = []
+    # for rid in result_ids:
+    #     if rid not in ach_ids:
+    #         tmp.append(rid)
+    # result_ids = tmp.copy()
     print("result_ids:", result_ids)
     result_infos = []
     for result_id in result_ids:
@@ -332,7 +359,7 @@ def result_recommend_for_expert(request: HttpRequest, id: int):
 @csrf_exempt
 @require_GET
 @response_wrapper
-def result_recommend_for_enterprise(request: HttpRequest, id: int):
+def result_recommend_for_enterprise(request: HttpRequest, id: int, shuffle: int):
     get_milvus_connection()
     needs = Need.objects.filter(enterprise_id=id)
     if not needs:
@@ -340,23 +367,42 @@ def result_recommend_for_enterprise(request: HttpRequest, id: int):
     titles = []
     for need in needs:
         titles.append(need.title_eng)
+    if len(titles) > 2:
+        titles = random.sample(titles, 2)
     key_vector = model.get_embeds(titles)
     key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
+    top_k = int(0.2 * len(Results.objects.all()))
     id_lists = milvus_search(
-        "O2E_RESULT", query_vectors=key_vector, topk=5, partition_names=None)
+        "O2E_RESULT", query_vectors=key_vector, topk=top_k, partition_names=None)
 
     ids_set = []
-    for id_list in id_lists:
-        for milvus_id in id_list:
-            ids_set.append(milvus_id)
-    ids_set = list(set(ids_set))
+    # for id_list in id_lists:
+    #     for milvus_id in id_list:
+    #         ids_set.append(milvus_id)
+    for i in range(top_k):
+        for list_id in range(len(id_lists)):
+            ids_set.append(id_lists[list_id][i])
+    tmp = []
+    for i in ids_set:
+        if i not in tmp:
+            tmp.append(i)
+    ids_set = tmp.copy()
     if len(ids_set) == 0:
         return success_api_response({"results": []})
 
-    ids = str(ids_set)
-    query = "milvus_id in " + ids
-    result_ids = milvus_query_result_by_id(query)
+    result_ids = []
+    for i in ids_set:
+        rid = milvus_query_result_by_id(f"milvus_id in [{i}]")[0]
+        if rid["result_id"] not in ach_ids:
+            result_ids.append(rid)
+            if len(result_ids) >= top_k:
+                break
+    if shuffle == 1 and len(titles) <= 2:
+        random.shuffle(result_ids)
+    # ids = str(ids_set)
+    # query = "milvus_id in " + ids
+    # result_ids = milvus_query_result_by_id(query)
     result_infos = []
     for result_id in result_ids:
         result = Results.objects.get(pk=result_id['result_id'])

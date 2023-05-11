@@ -7,7 +7,7 @@ from core.api.utils import (ErrorCode, failed_api_response, parse_data,
 
 from core.models import Papers, Patents, Projects, User, Expert, Results, ResMultipic
 from core.api.ai_report import generate_result_report
-from core.api.milvus_utils import milvus_insert, get_milvus_connection, disconnect_milvus
+from core.api.milvus_utils import milvus_insert, get_milvus_connection, disconnect_milvus, milvus_confirm_item_exist
 from core.api.ai_chat import get_hitbert_embedding
 from core.api.ai_recommend import get_scibert_embedding
 from core.api.utils import trans_zh2en
@@ -237,17 +237,22 @@ def agree_result(request: HttpRequest, id: int):
     hit_vec = get_hitbert_embedding(title_en)
     # print('debug 1.5')
     sci_vec = get_scibert_embedding(title_en)
-    # print('debug 2')
+    print('debug 2')
 
     get_milvus_connection()
-    mid_hit = milvus_insert("O2E_RESULT_HIT", data=[[hit_vec], [id]])
-    # print('debug 2.5')
-    mid_sci = milvus_insert("O2E_RESULT", data=[[sci_vec], [id]])
-    # print('debug 3')
+    mid_hit = milvus_confirm_item_exist("O2E_RESULT_HIT", "result_id", id)
+    if mid_hit < 0:
+        mid_hit = milvus_insert("O2E_RESULT_HIT", data=[[hit_vec], [id]])[0]
+        
+    print('debug 2.5')
+    mid_sci = milvus_confirm_item_exist("O2E_RESULT", "result_id", id)
+    if mid_sci < 0:
+        mid_sci = milvus_insert("O2E_RESULT", data=[[sci_vec], [id]])[0]
+    print('debug 3')
 
     disconnect_milvus()
-    result.vector_sci = mid_sci[0]
-    result.vector_hit = mid_hit[0]
+    result.vector_sci = mid_sci
+    result.vector_hit = mid_hit
     # print('debug 4')
     result.save()
     # 审核通过后将生成成果报告

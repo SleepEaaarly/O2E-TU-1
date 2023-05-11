@@ -304,14 +304,19 @@ class Recognizer:
             if not ques:
                 print('未接收到数据')
                 return False, res
+            # print(1)
             matched_id = self.matcher(ques, "SET_QUESTION_HIT")
             if matched_id < 0:
                 return True, res
+            # print(2)
             q_info = Question.objects.get(pk=matched_id)
+            # print(3)
             res["matched_q"] = q_info.question
             res["answer"] = q_info.ans
-            res["multipic"] = q_info.multipic
+            # res["multipic"] = q_info.get_multipic()
             res["transfer"] = "False"
+            # print(4)
+            print(res)
             return True, res
         except Exception as e:
             print(traceback.format_exc())
@@ -375,20 +380,20 @@ class Recognizer:
                     res["direct"] = "False"
                     res["entity"]["enterprise"].append(matched_id)
                     sentence = sentence.replace(word['val'], '')
-                    continue
-                matched_id = self.matcher(word['val'], "O2E_RESULT_HIT")
-                # match_ent = Results.objects.filter(title__icontains=word['val'])
-                if matched_id != -1:
-                    res["direct"] = "False"
-                    res["entity"]["result"].append(matched_id)
-                    sentence = sentence.replace(word['val'], '')
+                #     continue
+                # matched_id = self.matcher(word['val'], "O2E_RESULT_HIT")
+                # # match_ent = Results.objects.filter(title__icontains=word['val'])
+                # if matched_id != -1:
+                #     res["direct"] = "False"
+                #     res["entity"]["result"].append(matched_id)
+                #     sentence = sentence.replace(word['val'], '')
             return True, res
         except Exception as e:
             print(traceback.format_exc())
             print(e)
             return False, None
 
-    def matcher(self, target_sent, milvus_collection, n_cand=5):
+    def matcher(self, target_sent, milvus_collection, n_cand=1):
         """
         计算句向量，寻找编码矩阵中离该句向量最近的n_cand个向量
         :param target_sent: 待计算问句
@@ -446,7 +451,6 @@ recognizer = Recognizer(hit, ques_thresh=0.7,
 
 
 def get_hitbert_embedding(sent):
-    print("get_hitbert_embedding:", sent)
     return hit.encode_2_list(sent)
 
 
@@ -460,7 +464,6 @@ def answer_set_question(request: HttpRequest):
     question = data.get('input')
     print(question)
     ques = process.replacesentword(question)
-    print(ques)
     flag, result = recognizer.recognize_whole(ques)
     if not flag:
         return failed_api_response(500, error_msg="预设问题识别过程失败")
@@ -509,7 +512,7 @@ def expert_to_info_str(exp_id):
         info_str += result_info
     card_info = {
         "cardType": "expert", "id": user.id, "title": expert.name,
-        "avatar": user.icon, "info": expert.self_profile
+        "avatar": user.get_icon(), "info": expert.self_profile
     }
     return info_str, card_info
 
@@ -517,24 +520,27 @@ def expert_to_info_str(exp_id):
 def enterprise_to_info_str(ent_id):
     user = User.objects.get(enterprise_info_id=ent_id)
     enterprise = user.enterprise_info
-    print("enterprise", ent_id)
+    # print("enterprise", ent_id, enterprise, type(user))
     info_str = f"{enterprise.name}，坐落在{enterprise.address}，" + \
-               f"主营业务有{enterprise.field}，" + \
-               f"企业简介：{enterprise.self_profile}。"
+            f"主营业务有{enterprise.field}，" + \
+            f"企业简介：{enterprise.instruction}。"
     card_info = {
         "cardType": "enterprise", "id": user.id, "title": enterprise.name,
-        "avatar": user.icon, "info": enterprise.instruction
+        "avatar": user.get_icon(), "info": enterprise.instruction
     }
+    # print("enterprise_to_info_str end")
     return info_str, card_info
 
 
 def result_to_info_str(rst_id):
     result = Results.objects.get(id=rst_id)
+    print("result", rst_id, result)
     info_str = f"{result.field}领域的技术成果《{result.title}》，{result.abstract}。"
     card_info = {
         "cardType": "technique", "id": rst_id, "title": result.title,
-        "avatar": result.picture, "info": result.abstract
+        "avatar": result.get_pic(), "info": result.abstract
     }
+    print("result_to_info_str end")
     return info_str, card_info
 
 
@@ -607,7 +613,7 @@ def answer_free_question(request: HttpRequest):
         for exp_id in result2["entity"]["expert"]:
             info_str, card_info = expert_to_info_str(exp_id)
             final["answer"] += info_str
-            card_info['avatar'] = card_info['avatar'].path
+            card_info['avatar'] = card_info['avatar']
             final["card"]["expert"].append(card_info)
             print(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
@@ -619,7 +625,7 @@ def answer_free_question(request: HttpRequest):
         for ent_id in result2["entity"]["enterprise"]:
             info_str, card_info = enterprise_to_info_str(ent_id)
             final["answer"] += info_str
-            card_info['avatar'] = card_info['avatar'].path
+            card_info['avatar'] = card_info['avatar']
             final["card"]["enterprise"].append(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
                                                                card_type=1, title=card_info['title'],
@@ -630,11 +636,11 @@ def answer_free_question(request: HttpRequest):
         for rst_id in result2["entity"]["result"]:
             info_str, card_info = result_to_info_str(rst_id)
             final["answer"] += info_str
-            card_info['avatar'] = card_info['avatar'].path
+            card_info['avatar'] = card_info['avatar']
             final["card"]["result"].append(card_info)
             new_card_message_id = CardMessage.new_card_message(sender, 0, card_info['info'],
-                                                               card_type=3, title=card_info['title'],
-                                                               avatar=card_info['avatar'], involved_id=card_info['id'])
+                                                            card_type=3, title=card_info['title'],
+                                                            avatar=card_info['avatar'], involved_id=card_info['id'])
             print("result", new_card_message_id)
             system_chatroom.add_message(new_card_message_id)
 
@@ -644,13 +650,13 @@ def answer_free_question(request: HttpRequest):
     print(5)
     print(final)
     print(5.5)
-    demand1 = "请结合已有的信息，回答以下的问题，如果已知信息不充足，请根据实际情况和常识回答："
+    demand1 = "请结合已有的信息，回答以下的问题，如果已知信息不相关，请根据实际情况和常识回答："
     if(final['answer']!=""):
-        partial_answer = "其中已知信息为：" + final['answer']
+        partial_answer = "其中已知信息为：" + final['answer'] + " 问题是："
     else:
         demand1 = ""
         partial_answer = ""
-    msg = demand1 + partial_answer + ", 问题是：" + question
+    msg = demand1 + partial_answer + question
     print(msg)
     # 整合请求体
     url = f"https://api.openai.com/v1/chat/completions"
@@ -665,10 +671,13 @@ def answer_free_question(request: HttpRequest):
     print("=================================分隔符=========================================")
     # input()
     print(jsonfy)
-    response = requests.post(url, headers=headers, data=jsonfy)
-    print(response)
-    print(response.content.decode('utf-8'))
-    ret_json = json.loads(response.content.decode('utf-8'))
-    print(ret_json['choices'][0]['message']['content'])
-    final['answer'] = ret_json['choices'][0]['message']['content']
+    try:
+        response = requests.post(url, headers=headers, data=jsonfy)
+        print(response)
+        print(response.content.decode('utf-8'))
+        ret_json = json.loads(response.content.decode('utf-8'))
+        print(ret_json['choices'][0]['message']['content'])
+        final['answer'] = ret_json['choices'][0]['message']['content']
+    except Exception:
+        final['answer'] += "您的问题可能违规。"
     return success_api_response(final)
