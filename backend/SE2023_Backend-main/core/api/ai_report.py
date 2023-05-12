@@ -40,6 +40,8 @@ from django.views.decorators.csrf import csrf_exempt
     返回参数:
         - 无
 """
+
+
 def generate_requirement_report(need_id):
     print("enter requirement report")
     try:

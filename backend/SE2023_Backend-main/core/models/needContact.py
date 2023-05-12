@@ -9,6 +9,6 @@ class NeedContact(models.Model):
     # enterprise
     enterprise = models.ForeignKey(User, on_delete=models.CASCADE, related_name="enterprise_need_contact")
     # need
-    need = models.ForeignKey(Need,on_delete=models.CASCADE, related_name="need_contact")
+    need = models.ForeignKey(Need, on_delete=models.CASCADE, related_name="need_contact")
 
     

@@ -179,7 +179,7 @@
                 <div v-else v-for="item in data" :key="item.id">
                   <Row>
                     <i-col span="2">
-                      <Avatar :src="['http://122.9.14.73:8000/api/' + item.icon]" style="width: 100%;height: 100%" />
+                      <Avatar :src="['http://116.63.14.146:8000/api/' + item.icon]" style="width: 100%;height: 100%" />
                     </i-col>
                     <i-col span="5">
                       <div class="user-name">
@@ -236,7 +236,7 @@
                 <div v-else v-for="item in data" :key="item.id">
                   <Row>
                     <i-col span="2">
-                      <Avatar :src="['http://122.9.14.73:8000/api/' + item.icon]" style="width: 100%;height: 100%" />
+                      <Avatar :src="['http://116.63.14.146:8000/api/' + item.icon]" style="width: 100%;height: 100%" />
                     </i-col>
                     <i-col span="5">
                       <div class="user-name">
@@ -540,7 +540,7 @@ export default {
         this.totalFollow = this.$store.state.user.userTotalFan
         getUserInfo(this.$route.params.id).then(res => {
           this.totalPub = res.data.total_post
-          this.userpic = 'http://122.9.14.73:8000/api/' + res.data.userpic
+          this.userpic = 'http://116.63.14.146:8000/api/' + res.data.userpic
           console.log(res.data.userpic)
         }).catch(error => {
           this.$Modal.error(getErrModalOptions(error))
@@ -555,7 +555,7 @@ export default {
           this.totalLike = res.data.total_like
           this.totalFollow = res.data.total_fan
           this.totalPub = res.data.total_post
-          this.userpic = 'http://122.9.14.73:8000/api/' + res.data.userpic
+          this.userpic = 'http://116.63.14.146:8000/api/' + res.data.userpic
         }).catch(error => {
           this.$Modal.error(getErrModalOptions(error))
         })

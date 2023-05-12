@@ -100,8 +100,6 @@ def create_user(request: HttpRequest):
     code = make_confirm_string(email)
     send_email(email, str(code))
 
-
-
     return success_api_response({'msg': 'Check code is sent'})
 
 
@@ -114,6 +112,7 @@ def get_avatar(mail):
     return res
     # with open('image.jpg', 'wb') as f:
     #     f.write(res.content)
+
 
 @csrf_exempt
 @response_wrapper
@@ -159,7 +158,7 @@ def confirm_create(request: HttpRequest):
     try:
         avatar = get_avatar(email)
         print(BASE_DIR)
-        with open(BASE_DIR + "/static/" + "images/202205/02/icons/"  + username + ".jpg", 'wb') as f:
+        with open(BASE_DIR + "/static/" + "images/202205/02/icons/" + username + ".jpg", 'wb') as f:
             f.write(avatar.content)
         new_user.icon = 'images/202205/02/icons/' + username + ".jpg"
     except Exception:
@@ -167,6 +166,7 @@ def confirm_create(request: HttpRequest):
     new_user.save()
     data = {"id": new_user.id}
     return success_api_response(data)
+
 
 @csrf_exempt
 @response_wrapper
@@ -224,6 +224,7 @@ def confirm_forget_password(request: HttpRequest):
     user.save()
 
     return success_api_response({'id': user.id, 'msg': 'Update successfully'})
+
 
 CREATE_USER_API = wrapped_api({
     'POST': create_user,

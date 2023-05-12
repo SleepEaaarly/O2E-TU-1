@@ -65,7 +65,7 @@ class Need(models.Model):
     predict = models.IntegerField()
     # 实际已招募人数
     real = models.IntegerField(default=0)
-
+    # sci向量
     vector_sci = models.TextField(blank=True, null=True)
     # 英文标题
     title_eng = models.TextField()

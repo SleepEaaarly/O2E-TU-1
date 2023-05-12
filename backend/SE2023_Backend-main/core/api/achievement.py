@@ -168,18 +168,11 @@ def add_project(request: HttpRequest):
 
     return success_api_response({})
 
+
 @csrf_exempt
 @require_POST
 @response_wrapper
 def add_result(request: HttpRequest):
-    # print('in func')
-    # print(request.FILES)
-
-    # data: dict = parse_data(request)
-    # if not data:
-    #     return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
-    #                                "Invalid request args.")
-    # print(data)
     title = request.POST.get('title')
     abstract = request.POST.get('abstract')
     scholars = request.POST.get('scholars')

@@ -17,6 +17,19 @@
         <a-select-option value="5">认证企业</a-select-option>
         <a-select-option value="6">全部</a-select-option>
       </a-select>
+      <a-input-search
+          v-model="searchText"
+          placeholder="请输入用户名"
+          enter-button
+          @search="onSearch()"
+          style="width: 300px;margin-left: 10px;"
+        />
+        <a-button
+                  type="primary"
+                  @click="adminCreateUser()"
+                >
+                创建用户
+        </a-button>
     </a-space>
     <br/>
     <br/>
@@ -72,7 +85,7 @@
 </template>
 
 <script>
-import { getUserAll,UserDel,UserModify, getSelectUser} from "../../../services/dataSource";
+import { getUserAll, UserDel, UserModify, getSelectUser, searchUser } from "../../../services/dataSource";
 const columns = [
   {
     title: "用户名",
@@ -118,6 +131,7 @@ export default {
       type1:0,
       data,
       columns,
+      searchText: '',
       editingKey: "",
       editData: {},
       changeable: true,
@@ -404,6 +418,40 @@ export default {
 //       }
 //       console.log(data)
 // >>>>>>> 27da2901a4f9cddd7dcaaa8106ab332cd6de4a7b
+    },
+    adminCreateUser(){
+      console.log('Admin Create User')
+      
+    },
+    onSearch(){
+      this.pagination.current = 1;
+      var params = {
+          "username": this.searchText,
+          "page": this.pagination.current
+      }
+      searchUser(params).then((oriRes) => {
+        console.log(oriRes);
+        let res = oriRes.data
+        console.log(res);
+        data.length = 0;
+        console.log(data);
+        for (let i = 0; i < res.data.length; i++) {
+          data.push({
+            key: res.data[i].id,
+            name: res.data[i].username,
+            ins: res.data[i].institution,
+            type: res.data[i].state,
+            email: res.data[i].email,
+            editable: false
+          });
+        }
+        this.totalCnt = res.data.total_count;
+        this.loading = false;
+        this.pagination.total = res.page_num;
+        this.itemKey = Math.random();
+      }).catch((error) => {
+        console.log(error);
+      });
     },
     selectChange(value) {
       if (!this.changeable) {

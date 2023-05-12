@@ -62,10 +62,13 @@
 			console.log('companies-onShow()')
 			this.finish_getting = false
 			this.recommendList.list = []
-			this.requestData()
+			this.loadNewData()
 		},
 		onLoad() {		//页面显示,每次打开页面都会调用一次
 			console.log('companies-onLoad()')
+			this.finish_getting = false
+			this.recommendList.list = []
+			this.loadNewData()
 		},
 		onReachBottom(res) {
 			// console.log("页面滚动了")

@@ -34,7 +34,7 @@ export default {
   },
   mutations: {
     setAvatar (state, userpic) {
-      state.userpic = 'http://122.9.14.73:8000/api/' + userpic
+      state.userpic = 'http://116.63.14.146:8000/api/' + userpic
     },
     setUserName (state, name) {
       state.userName = name
@@ -48,7 +48,7 @@ export default {
       state.userTotalLike = params.total_like
       state.userTotalPost = params.total_post
       state.userIsSponsor = params.is_sponsor
-      state.userpic = 'http://122.9.14.73:8000/api/' + params.userpic
+      state.userpic = 'http://116.63.14.146:8000/api/' + params.userpic
     },
     setAccess (state, access) {
       state.access = access

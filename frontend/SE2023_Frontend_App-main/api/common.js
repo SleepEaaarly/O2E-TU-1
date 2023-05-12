@@ -16,3 +16,4 @@ export const  giveLike = async (id) => {
 
 // export const picUrl = "http://122.9.14.73:8000/api/"
 export const picUrl = "http://116.63.14.146:8000/api/"
+export const picUrl_noSlash = "http://116.63.14.146:8000/api"

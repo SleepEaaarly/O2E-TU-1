@@ -1,6 +1,7 @@
 import json
 import numpy as np
 
+
 class recommender:
     '''
     users：用户集

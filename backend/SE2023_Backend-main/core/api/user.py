@@ -14,6 +14,7 @@ from core.models.feedback import Feedback
 from django.views.decorators.csrf import csrf_exempt
 # follow apis
 
+
 @csrf_exempt
 @response_wrapper
 @jwt_auth()
