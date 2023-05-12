@@ -231,7 +231,7 @@ export default {
     },
     userpic: {
       type: String,
-      default: 'http://122.9.14.73:8000/api/images/default_user_icon.jpg'
+      default: 'http://116.63.14.146:8000/api/images/default_user_icon.jpg'
     }
   },
 
@@ -384,7 +384,7 @@ export default {
         to: x.to_user ? x.to_user.username : 0,
         toId: x.to_user ? x.to_user.id : '',
         inputShow: false,
-        headImg: 'http://122.9.14.73:8000/api/' + x.userpic,
+        headImg: 'http://116.63.14.146:8000/api/' + x.userpic,
         parent_comment_id: x.parent_comment_id,
         reply: []
       }))
@@ -407,7 +407,7 @@ export default {
       await getUserInfo().then(res => {
         userid = res.data.id
         username = res.data.username
-        userpic = 'http://122.9.14.73:8000/api/' + res.data.userpic
+        userpic = 'http://116.63.14.146:8000/api/' + res.data.userpic
       }).catch(error => {
         this.$Modal.error(getErrModalOptions(error))
       })
@@ -434,7 +434,7 @@ export default {
       getUserInfo(this.$props.creator.id).then(res => {
         this.showUserControl = true
         this.userInfo = res.data
-        this.userpic = 'http://122.9.14.73:8000/api/' + res.data.userpic
+        this.userpic = 'http://116.63.14.146:8000/api/' + res.data.userpic
       }).catch(error => {
         this.$Modal.error(getErrModalOptions(error))
       })

@@ -186,6 +186,7 @@ def search_result_by_name(request: HttpRequest):
 @require_http_methods('POST')
 def search_user_by_name(request: HttpRequest):
     data: dict = request.POST
+
     username = data.get('username')
     page = int(data.get('page'))
     users = User.objects.filter(Q(username__icontains=username))
@@ -336,3 +337,4 @@ def set_user(request: HttpRequest):
 
     user.save()
     return success_api_response({})
+

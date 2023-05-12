@@ -1,5 +1,6 @@
 import axios from '@/config/requestConfig.js';
 import time from '../common/time.js';
+import { picUrl_noSlash } from '@/api/common.js';
 
 // import {
 // 	picUrl
@@ -7,7 +8,6 @@ import time from '../common/time.js';
 
 //获取 首页-热榜
 export const getTopicList = async () => {
-	let picUrl = "http://116.63.14.146:8000/api"
 	console.log("getTopicList OK.")
 	let headers = {
 		"Authorization":'Bearer ' + uni.getStorageSync('token')
@@ -18,11 +18,12 @@ export const getTopicList = async () => {
 	if(result && result.length){
 		result = result.map((item)=>{
 			index = index + 1
+			console.log(picUrl_noSlash + item.userpic)
 			return{
 				"createTime": time.gettime.gettime(item.created_at),
 				"content": item.title,
 				"id": item.id,
-				"userpic": picUrl + item.userpic,
+				"userpic": picUrl_noSlash + item.userpic,
 				"username": item.created_by.username,
 				"index": index,
 			}
@@ -39,8 +40,10 @@ export const getRecommendList = async () => {
 		"Authorization":'Bearer ' + uni.getStorageSync('token')
 	}
 	let result = await axios.get('Interpretation/popup',{},headers)
+	// console.log(result)
 	if(result && result.length){
 		result = result.map((item)=>{
+			console.log(picUrl_noSlash + item.userpic)
 			return{
 				"created_at": time.gettime.gettime(item.created_at),
 				"content": item.content,
@@ -52,7 +55,7 @@ export const getRecommendList = async () => {
 				"like_num": item.like_num,
 				"favor_num": item.favor_num,
 				"id":item.id,
-				"userpic": picUrl+item.userpic,
+				"userpic": picUrl_noSlash + item.userpic,
 				"username" : item.created_by.username,
 				"uid":item.uid,
 				"tags":item.tags

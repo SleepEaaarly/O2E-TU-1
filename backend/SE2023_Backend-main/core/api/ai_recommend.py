@@ -199,6 +199,7 @@ def recommend(request: HttpRequest, id: int):
         "other": possible_experts[:3]
     })
 
+
 @csrf_exempt
 @require_GET
 @response_wrapper
@@ -252,6 +253,36 @@ def need_recommend(request: HttpRequest, id: int):
 
     return success_api_response({"needs": need_infos[:3]})
 
+
+def get_all_results(shuffle: int):
+    results = Results.objects.all()
+    return_infos = []
+    for result in results:
+        if result.state != 1:
+            continue
+        expert = Expert.objects.filter(results__id=result.id)[0]
+        user = User.objects.get(expert_info__id=expert.id)
+        result_info = {
+            "user_id": user.id,
+            "result_id": result.id,
+            "expert_id": expert.id,
+            "title": result.title,
+            "abstract": result.abstract,
+            "scholars": result.scholars,
+            "pyear": result.pyear,
+            "field": result.field,
+            "period": result.period,
+            "content": result.content,
+            "state": result.state,
+            "result_pic": result.get_pic(),
+            "expert_icon": str(user.icon)
+        }
+        return_infos.append(result_info)
+    if shuffle == 1:
+        random.shuffle(return_infos)
+    return return_infos
+
+
 @csrf_exempt
 @require_GET
 @response_wrapper
@@ -266,7 +297,8 @@ def result_recommend_for_expert(request: HttpRequest, id: int, shuffle: int):
     print(achievements)
     if not papers and not achievements:
         print("without paper and result")
-        return success_api_response({"results": []})
+        return success_api_response({"results": get_all_results(shuffle)})
+
     titles, ach_ids = [], []
     for paper in papers:
         titles.append(paper.title_eng)
@@ -275,8 +307,8 @@ def result_recommend_for_expert(request: HttpRequest, id: int, shuffle: int):
         ach_ids.append(ach.id)
     all_titles_num = len(titles)
     if len(titles) > 2:
-        # titles = random.sample(titles, 2)
-        titles = titles[:2]
+        titles = random.sample(titles, 2)
+        # titles = titles[:1]
         print(titles)
     print("titles added")
     key_vector = model.get_embeds(titles)
@@ -305,7 +337,7 @@ def result_recommend_for_expert(request: HttpRequest, id: int, shuffle: int):
     ids_set = tmp.copy()
     # print("ids_set:", ids_set)
     if len(ids_set) == 0:
-        return success_api_response({"results": []})
+        return success_api_response({"results": get_all_results(shuffle)})
 
     result_ids = []
     for i in ids_set:
@@ -313,8 +345,8 @@ def result_recommend_for_expert(request: HttpRequest, id: int, shuffle: int):
         # print(i, rid)
         if rid["result_id"] not in ach_ids:
             result_ids.append(rid)
-            # if len(result_ids) >= top_k - len(ach_ids):
-            #     break
+            if len(result_ids) >= top_k - len(ach_ids):
+                break
     if shuffle == 1 and all_titles_num <= 2:
         random.shuffle(result_ids)
     # ids = str(ids_set)
@@ -362,20 +394,23 @@ def result_recommend_for_expert(request: HttpRequest, id: int, shuffle: int):
 def result_recommend_for_enterprise(request: HttpRequest, id: int, shuffle: int):
     get_milvus_connection()
     needs = Need.objects.filter(enterprise_id=id)
+    print(needs)
     if not needs:
-        return success_api_response({"results": []})
+        return success_api_response({"results": get_all_results(shuffle)})
     titles = []
     for need in needs:
         titles.append(need.title_eng)
     if len(titles) > 2:
         titles = random.sample(titles, 2)
+    print(titles)
     key_vector = model.get_embeds(titles)
     key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
+    print("ready to milvus_search")
     top_k = int(0.2 * len(Results.objects.all()))
     id_lists = milvus_search(
         "O2E_RESULT", query_vectors=key_vector, topk=top_k, partition_names=None)
-
+    print("finish milvus_search")
     ids_set = []
     # for id_list in id_lists:
     #     for milvus_id in id_list:
@@ -388,16 +423,17 @@ def result_recommend_for_enterprise(request: HttpRequest, id: int, shuffle: int)
         if i not in tmp:
             tmp.append(i)
     ids_set = tmp.copy()
+    print(ids_set)
     if len(ids_set) == 0:
-        return success_api_response({"results": []})
+        return success_api_response({"results": get_all_results(shuffle)})
 
     result_ids = []
     for i in ids_set:
         rid = milvus_query_result_by_id(f"milvus_id in [{i}]")[0]
-        if rid["result_id"] not in ach_ids:
-            result_ids.append(rid)
-            if len(result_ids) >= top_k:
-                break
+        result_ids.append(rid)
+        if len(result_ids) >= top_k:
+            break
+    print("shuffle:", shuffle)
     if shuffle == 1 and len(titles) <= 2:
         random.shuffle(result_ids)
     # ids = str(ids_set)
