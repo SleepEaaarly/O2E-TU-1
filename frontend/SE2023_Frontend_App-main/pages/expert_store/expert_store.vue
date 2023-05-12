@@ -142,6 +142,7 @@ import loadMore from '../../components/common/load-more.vue'
 					console.log(e)
 					return
 				}
+				location.reload()
 			},
 			
 			async requestData() {

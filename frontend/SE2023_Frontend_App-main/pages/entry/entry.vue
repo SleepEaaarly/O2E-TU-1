@@ -194,6 +194,8 @@
 		},
 		onLoad() {		//页面显示,每次打开页面都会调用一次
 			console.log('works-onLoad()')
+			this.loadRecData(0)
+			this.requestData()
 		},
 		onReachBottom(res) {
 			// console.log("页面滚动了")
@@ -324,6 +326,7 @@
 				this.recommendList.rec_list = ret
 				if(ret == [] || ret == {} || ret == null || ret.length === 0){
 					this.recFinish = true
+					this.requestData()
 				}
 				console.log('RecWork')
 				console.log(this.recommendList.rec_list)
