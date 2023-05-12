@@ -114,10 +114,10 @@ def verify_jwt_token(request: HttpRequest) -> (bool, str, int):
 
         if auth_type != "Bearer":
             raise jwt.InvalidTokenError
-        print("Before decode")
+        # print("Before decode")
         token = jwt.decode(
             auth_token, settings.SECRET_KEY, algorithms="HS256")
-        print("After decode")
+        # print("After decode")
         if token.get("type") != "access_token":
             raise jwt.InvalidTokenError
         user_id = token["user_id"]

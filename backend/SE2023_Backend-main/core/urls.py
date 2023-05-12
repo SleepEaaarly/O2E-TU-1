@@ -63,7 +63,8 @@ from core.api.system_chat import create_system_chat, get_system_chat, push_syste
     system_message_read, alter_systemchat_visible, get_all_system_chatrooms, push_system_message_by_admin
 
 from core.api.admin_entity import get_all_result_info, change_result_info, delete_result, search_result_by_name, \
-    get_all_unaudited_result_info, search_user_by_name
+    get_all_unaudited_result_info, search_user_by_name, multi_pic_test, add_user, add_expert, add_enterprise,\
+    set_result, set_user
 
 
 from core.api.order_report import get_order_report
@@ -266,9 +267,9 @@ urlpatterns = [
     # AI推荐
     path('ai/recommend/<int:id>', recommend),
     path('ai/needRecommend/<int:id>', need_recommend),
-    path('ai/resultRec/expert/<int:id>', result_recommend_for_expert),
-    path('ai/resultRec/enterprise/<int:id>', result_recommend_for_enterprise),
-    
+    path('ai/resultRec/expert/<int:id>/<int:shuffle>', result_recommend_for_expert),
+    path('ai/resultRec/enterprise/<int:id>/<int:shuffle>', result_recommend_for_enterprise),
+
     # # AI客服
     path('answer/set', answer_set_question),
     path('answer/free', answer_free_question),
@@ -298,6 +299,13 @@ urlpatterns = [
     path('admin/search/result', search_result_by_name),
     path('admin/search/user', search_user_by_name),
 
+    # 管理端add
+    path('admin/add/user', add_user),
+    path('admin/add/expert', add_expert),
+    path('admin/add/enterprise', add_enterprise),
+    path('admin/set/result', set_result),
+    path('admin/set/user', set_user),
+
     # 获得订单报告
     path('order_report/get', get_order_report),
 
@@ -310,5 +318,7 @@ urlpatterns = [
     path("work_report/generateCard", generate_result_report_card),
     
     path("need_report/generateCard", generate_requirement_report_card),
-    
+
+    # test
+    path('test', multi_pic_test),
 ]

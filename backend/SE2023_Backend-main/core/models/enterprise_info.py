@@ -18,11 +18,11 @@ class Enterprise_info(models.Model):
     #电话
     phone = models.CharField(max_length=20, blank=True, null=True)
     #法定代表人
-    legal_representative = models.CharField(max_length=100)
+    legal_representative = models.CharField(max_length=100, blank=True, null=True)
     #注册资本
-    register_capital = models.IntegerField()
+    register_capital = models.IntegerField(default=0)
     #主营业务
-    field = models.CharField(max_length=100)
+    field = models.CharField(max_length=100, blank=True, null=True)
     #营业执照
     business_license = models.ImageField(upload_to="images/%Y%m/%d/icons",
                                          default='images/default_user_icon.jpg')

@@ -159,6 +159,8 @@ def milvus_search(collection_name, partition_names, query_vectors, topk, eps=0, 
         ids = []
         for p in item:
             ids.append(p.id)
+            # print(p.id, p.distance)
+        # print(ids)
         ids_list.append(ids)
     return ids_list
 
@@ -171,6 +173,19 @@ def milvus_get_by_id(collection_name, id):
     res = collection.query("milvus_id == {}".format(id))
     for item in res:
         print(item)
+
+
+def milvus_confirm_item_exist(collection_name, id_name, id_value):
+    """
+    查询某项是否存在
+    """
+    collection = get_milvus_collection(collection_name)
+    res = collection.query("{} == {}".format(id_name, id_value))
+    if res:
+        print(res)
+        return res[0]["milvus_id"]
+    else: 
+        return -1
 
 
 def milvus_query_paper_by_id(query):

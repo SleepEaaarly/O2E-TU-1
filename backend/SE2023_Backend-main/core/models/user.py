@@ -6,6 +6,9 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .enterprise_info import Enterprise_info
 from django.core.validators import validate_comma_separated_integer_list
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+
 
 USER_TYPE_CHOICES = (
     (0, 'Individual'),
@@ -43,6 +46,7 @@ def decode_user_state(state):
     return STATE_LIST[state]
 
 
+
 class User(AbstractUser):
     """
     Field:
@@ -60,13 +64,13 @@ class User(AbstractUser):
     nick_name = models.CharField(max_length=20)
 
     email = models.CharField(max_length=30)
-    institution = models.CharField(max_length=20,blank=True,null=True)
-    icon = models.ImageField(upload_to= "images/%Y%m/%d/icons",
-                             default= 'images/default_user_icon.jpg')
+    institution = models.CharField(max_length=20, blank=True, null=True)
+    icon = models.ImageField(upload_to="images/%Y%m/%d/icons",
+                             default='images/default_user_icon.jpg')
 
-    biogrpahy = models.CharField(max_length=50, null=True)
+    biogrpahy = models.CharField(max_length=50, null=True, blank=True)
 
-    user_type = models.IntegerField(choices=USER_TYPE_CHOICES,default= 0)
+    user_type = models.IntegerField(choices=USER_TYPE_CHOICES, default=0)
     followers = models.ManyToManyField('User', null=True, blank=True)
     favorites = models.ManyToManyField('PapModel', related_name='favorites', null=True, blank=True)
     is_confirmed = models.BooleanField(default=False)
@@ -77,16 +81,6 @@ class User(AbstractUser):
     enterprise_info = models.OneToOneField("Enterprise_info", on_delete=models.CASCADE, related_name="enterprise_info", null=True, blank=True)
 
     expert_info = models.OneToOneField("Expert", on_delete=models.CASCADE, related_name="expert_info", null=True, blank=True)
-    
-    #super users
-    #objects = AdminUser()
-
-    # REQUIRED_FIELDS = ['email',]
-    #chatroom = models.ManyToManyField('Chatroom', related_name='chatroom_list')
-
-    #user_tags = models.CharField(validators=[validate_comma_separated_integer_list],
-    #                             max_length=70000,
-    #                                blank=True, null=True, default='')
 
     class Meta(AbstractUser.Meta):
         default_permissions = ()
@@ -101,7 +95,6 @@ class User(AbstractUser):
             'id': self.id,
             'email': self.email,
             'userpic': self.get_icon(),
-            'nickname': self.nick_name,
             'institution': self.institution,
             'is_confirmed': self.is_confirmed,
             'state': decode_user_state(self.state),
@@ -170,6 +163,10 @@ class User(AbstractUser):
     #     "Is the user a member of staff?"
     #     return self.is_staff
 
+
+@receiver(pre_delete, sender=User)
+def icon_delete(instance):
+    instance.icon.delete(False)
 
 
 class ConfirmString(models.Model):

@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 
 RES_STATE_CHOICES = (
@@ -31,7 +33,6 @@ class Results(models.Model):
     vector_hit = models.TextField(blank=True, null=True)
     title_eng = models.TextField()
 
-
     def get_pic(self):
         return str(self.picture)
 
@@ -40,3 +41,12 @@ class Results(models.Model):
                 "pyear": self.pyear, "field": self.field, "period": self.period, "picture": self.get_pic(),
                 "content": self.content, "state": self.state}
 
+
+@receiver(pre_delete, sender=Results)
+def rst_pic_delete(instance):
+    instance.picture.delete(True)
+
+
+@receiver(pre_delete, sender=ResMultipic)
+def multipic_delete(instance):
+    instance.picture.delete(False)

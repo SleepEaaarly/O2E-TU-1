@@ -27,7 +27,7 @@ class SystemChatroom(models.Model):
     messages = models.ManyToManyField(
         'SystemMessage', related_name='system_message_list')
     isai = models.IntegerField()
-    last_message_time = models.DateTimeField()
+    last_message_time = models.DateTimeField(max_length=60)
     unread_message_num = models.IntegerField()
 
     # 新加入一条消息

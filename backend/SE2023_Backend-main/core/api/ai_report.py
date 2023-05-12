@@ -40,6 +40,8 @@ from django.views.decorators.csrf import csrf_exempt
     返回参数:
         - 无
 """
+
+
 def generate_requirement_report(need_id):
     print("enter requirement report")
     try:
@@ -338,6 +340,7 @@ def generate_requirement_report_card(request: HttpRequest):
     else:
         system_chatroom = SystemChatroom(owner=owner, isai=SystemChatroom.MANUAL_REPLY,
                                          last_message_time=get_now_time(), unread_message_num=0)
+        print("system_chatroom",system_chatroom)
         system_chatroom.save()
     print("system_chatroom",system_chatroom)
     involved_need:Need = Need.objects.get(id=requirement_id)
