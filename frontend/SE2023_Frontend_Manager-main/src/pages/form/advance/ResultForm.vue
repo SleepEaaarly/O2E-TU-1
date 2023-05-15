@@ -21,6 +21,37 @@
           @search="onSearch()"
           style="width: 300px;margin-left: 10px;"
         />
+        <a-button
+                  type="primary"
+                  @click="adminCreateResult()"
+        >
+                添加成果
+        </a-button>
+        <a-modal v-model="result_visible" title="添加成果" @ok="handleOk">
+          <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
+            <a-form-item label="用户名">
+              <a-input
+                placeholder="请输入用户名"
+                v-decorator="['note', { rules: [{ required: true, message: 'Please input your usename!' }] }]"
+              />
+            </a-form-item>
+            <a-form-item label="密码">
+              <a-input
+                placeholder="请输入密码"
+                v-decorator="['note', { rules: [{ required: true, message: 'Please input your password!' }] }]"
+                type="password"
+              />
+            </a-form-item>
+            <a-form-item label="邮箱">
+              <a-input
+                placeholder="请输入邮箱"
+                v-decorator="['note', { rules: [{ required: true, message: 'Please input your email!' }] }]"
+              />
+            </a-form-item>
+          
+          </a-form>
+        </a-modal>
+        
       </a-space>
       <br/>
       <br/>
@@ -392,6 +423,12 @@
   //       console.log(data)
   // >>>>>>> 27da2901a4f9cddd7dcaaa8106ab332cd6de4a7b
       },
+      adminCreateResult(){
+      this.result_visible = true;
+      console.log('Admin Create Reult');
+      
+      
+    },
       selectChange(value) {
         if (!this.changeable) {
   

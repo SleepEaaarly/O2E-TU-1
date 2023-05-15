@@ -25,11 +25,128 @@
           style="width: 300px;margin-left: 10px;"
         />
         <a-button
-                  type="primary"
-                  @click="adminCreateUser()"
-                >
-                创建用户
+          type="primary"
+          @click="adminCreateUser()"
+          style="margin-left: 10px;"
+        >
+                添加普通用户
         </a-button>
+        <a-modal v-model="user_visible" title="添加普通用户" @ok="handleOk">
+          <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
+            <a-form-item label="用户名">
+              <a-input
+                placeholder="请输入用户名"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的用户名!' }] }]"
+              />
+            </a-form-item>
+            <a-form-item label="密码">
+              <a-input
+                placeholder="请输入密码"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的密码!' }] }]"
+                type="password"
+              />
+            </a-form-item>
+            <a-form-item label="邮箱">
+              <a-input
+                placeholder="请输入邮箱"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的邮箱!' }] }]"
+              />
+            </a-form-item>
+          
+          </a-form>
+        </a-modal>
+        <a-button
+          type="primary"
+          @click="adminCreateExpert()"
+        >
+                添加专家
+        </a-button>
+        <a-modal v-model="expert_visible" title="添加专家" @ok="handleOk">
+          <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
+            <a-form-item label="用户名">
+              <a-input
+                placeholder="请输入用户名"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的用户名!' }] }]"
+              />
+            </a-form-item>
+            <a-form-item label="密码">
+              <a-input
+                placeholder="请输入密码"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的密码!' }] }]"
+                type="password"
+              />
+            </a-form-item>
+            <a-form-item label="邮箱">
+              <a-input
+                placeholder="请输入邮箱"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的邮箱!' }] }]"
+              />
+            </a-form-item>
+            <a-form-item label="专家实名">
+              <a-input
+                placeholder="请输入专家实名"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的专家实名!' }] }]"
+              />
+            </a-form-item>
+            <a-form-item label="机构">
+              <a-input
+                placeholder="请输入机构"
+          
+              />
+            </a-form-item>
+            <a-form-item label="身份证号">
+              <a-input
+                placeholder="请输入身份证号"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的身份证号!' }] }]"
+              />
+            </a-form-item>
+          
+          </a-form>
+        </a-modal>
+        <a-button
+          type="primary"
+          @click="adminCreateCompany()"
+        >
+                添加企业
+        </a-button>
+        <a-modal v-model="cpmpany_visible" title="添加企业" @ok="handleOk">
+          <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
+            <a-form-item label="用户名">
+              <a-input
+                placeholder="请输入用户名"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的用户名!' }] }]"
+              />
+            </a-form-item>
+            <a-form-item label="密码">
+              <a-input
+                placeholder="请输入密码"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的密码!' }] }]"
+                type="password"
+              />
+            </a-form-item>
+            <a-form-item label="邮箱">
+              <a-input
+                placeholder="请输入邮箱"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的邮箱!' }] }]"
+              />
+            </a-form-item>
+
+            <a-form-item label="企业名称">
+              <a-input
+                placeholder="请输入企业名称"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的企业名称!' }] }]"
+              />
+            </a-form-item>
+            <a-form-item label="企业所在地">
+              <a-input
+                placeholder="请输入企业所在地"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的企业所在地区!' }] }]"
+              />
+            </a-form-item>
+          
+          </a-form>
+        </a-modal>
+        
     </a-space>
     <br/>
     <br/>
@@ -419,9 +536,20 @@ export default {
 //       console.log(data)
 // >>>>>>> 27da2901a4f9cddd7dcaaa8106ab332cd6de4a7b
     },
+    
     adminCreateUser(){
-      console.log('Admin Create User')
+      this.user_visible = true;
+      console.log('Admin Create User');
       
+      
+    },
+    adminCreateExpert(){
+      this.expert_visible = true;
+      console.log('Admin Create expert');
+    },
+    adminCreateCompany(){
+      this.company_visible = true;
+      console.log('Admin Create company');
     },
     onSearch(){
       this.pagination.current = 1;
