@@ -140,11 +140,11 @@ def read_json_data(path):
     return None
 
 
-client = Translate()
-
-
 def trans_zh2en(sent):
+    print("enter trans_zh2en")
+    client = Translate()
     ans = ""
+    print("initiate translate")
     lan = client.detect(sent)
     print(lan.language)
     if lan is None:
