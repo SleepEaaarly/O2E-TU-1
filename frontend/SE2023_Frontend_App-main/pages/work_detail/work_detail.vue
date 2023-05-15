@@ -78,6 +78,11 @@
 				</uni-col>
 			</view>
 		</uni-row>
+		<uni-popup ref="alertDialog" type="dialog">
+			<uni-popup-dialog type="success" confirmText="同意" cancelText="关闭" title="报告已生成，是否跳转到具体页面？"  @confirm="gotoSystemChat"
+				@close="dialogClose">
+			</uni-popup-dialog>
+		</uni-popup>
 	</view>
 	
 </template>
@@ -89,10 +94,16 @@
 	import { workGenerateCard } from '@/api/work_report.js'
 	import uniCol from '@/components/uni-row/components/uni-col/uni-col.vue'
 	import uniRow from '@/components/uni-row/components/uni-row/uni-row.vue'
+	import uniPopup from '@/components/uni_popup_modules/uni-popup/components/uni-popup/uni-popup.vue'
+	import uniPopupDialog from '@/components/uni_popup_modules/uni-popup/components/uni-popup-dialog/uni-popup-dialog.vue'
 	import {
 		picUrl
 	} from '@/api/common.js'
 	export default {
+		components: {
+			uniPopup,
+			uniPopupDialog
+		},
 		computed: {
 			...mapState(['userInfo']),
 		},
@@ -128,6 +139,13 @@
 			this.picUrl = picUrl
 		},
 		methods: {
+			gotoSystemChat() {
+				console.log('gogogo')
+				uni.navigateTo({ url: '/pages/system-chat/system-chat?uid=' + this.userInfo.id })
+			},
+			dialogClose() {
+				console.log('点击关闭')
+			},
 			async loadData(){
 				// console.log('get work detail')
 				this.work_info = await getWork(this.work_id)
@@ -144,7 +162,9 @@
 				// 调用生成报告的 api，后端负责将报告插入到对应的用户-系统聊天之中
 				// console.log(this.userInfo.id)
 				// console.log(this.work_info.work_id)
+				
 				await workGenerateCard(this.userInfo.id, this.work_info.work_id)
+				this.$refs.alertDialog.open()
 			},
 			resultDelete(){
 				let params = {

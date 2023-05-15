@@ -32,7 +32,7 @@ export const WorkDel = (params) => {
 }
   
 export const WorkModify = (params) => {
-    const url = BASE_URL_IP + `/api/result/changeinfo`
+    const url = BASE_URL_IP + `/api/admin/set/result`
 return request(url, METHOD.POST, params)
 }
 

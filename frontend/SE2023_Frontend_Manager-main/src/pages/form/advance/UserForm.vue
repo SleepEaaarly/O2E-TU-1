@@ -25,11 +25,135 @@
           style="width: 300px;margin-left: 10px;"
         />
         <a-button
-                  type="primary"
-                  @click="adminCreateUser()"
-                >
-                创建用户
+          type="primary"
+          @click="adminCreateUser()"
+          style="margin-left: 10px;"
+        >
+                添加普通用户
         </a-button>
+        <a-modal v-model="user_visible" title="添加普通用户" :footer="null">
+          <a-form :model="user_info" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+            <a-form-item label="用户名">
+              <a-input
+                placeholder="请输入用户名"
+                v-model="user_info.username"
+              />
+            </a-form-item>
+            <a-form-item label="密码">
+              <a-input
+                placeholder="请输入密码"
+                v-model="user_info.password"
+                type="password"
+              />
+            </a-form-item>
+            <a-form-item label="邮箱">
+              <a-input
+                placeholder="请输入邮箱"
+                v-model="user_info.email"
+              />
+            </a-form-item>
+            <a-form-item style="text-align: right;">
+                <a-button  type="primary" @click="handleSubmit"> 确定 </a-button>
+            </a-form-item>
+
+          </a-form>
+        </a-modal>
+        <a-button
+          type="primary"
+          @click="adminCreateExpert()"
+        >
+                添加专家
+        </a-button>
+        <a-modal v-model="expert_visible" title="添加专家" :footer="null">
+          <a-form :form="expert_info" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
+            <a-form-item label="用户名">
+              <a-input
+                placeholder="请输入用户名"
+                v-model="expert_info.username"
+              />
+            </a-form-item>
+            <a-form-item label="密码">
+              <a-input
+                placeholder="请输入密码"
+                v-model="expert_info.password"
+                type="password"
+              />
+            </a-form-item>
+            <a-form-item label="邮箱">
+              <a-input
+                placeholder="请输入邮箱"
+                v-model="expert_info.email"
+              />
+            </a-form-item>
+            <a-form-item label="专家实名">
+              <a-input
+                placeholder="请输入专家实名"
+                v-model="expert_info.name"
+              />
+            </a-form-item>
+            <a-form-item label="机构">
+              <a-input
+                placeholder="请输入机构"
+                v-model="expert_info.organization"
+              />
+            </a-form-item>
+            <a-form-item label="身份证号">
+              <a-input
+                placeholder="请输入身份证号"
+                v-model="expert_info.ID_num"
+              />
+            </a-form-item>
+            <a-form-item style="text-align: right;">
+                <a-button  type="primary" @click="handleSubmit"> 确定 </a-button>
+            </a-form-item>
+          </a-form>
+        </a-modal>
+        <a-button
+          type="primary"
+          @click="adminCreateCompany()"
+        >
+                添加企业
+        </a-button>
+        <a-modal v-model="company_visible" title="添加企业" :footer="null">
+          <a-form :form="company_info" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
+            <a-form-item label="用户名">
+              <a-input
+                placeholder="请输入用户名"
+                v-model="company_info.username"
+              />
+            </a-form-item>
+            <a-form-item label="密码">
+              <a-input
+                placeholder="请输入密码"
+                v-model="company_info.password"
+                type="password"
+              />
+            </a-form-item>
+            <a-form-item label="邮箱">
+              <a-input
+                placeholder="请输入邮箱"
+                v-model="company_info.email"
+              />
+            </a-form-item>
+
+            <a-form-item label="企业名称">
+              <a-input
+                placeholder="请输入企业名称"
+                v-model="company_info.name"
+              />
+            </a-form-item>
+            <a-form-item label="企业所在地">
+              <a-input
+                placeholder="请输入企业所在地"
+                v-model="company_info.address"
+              />
+            </a-form-item>
+            <a-form-item style="text-align: right;">
+                <a-button  type="primary" @click="handleSubmit"> 确定 </a-button>
+            </a-form-item>
+          </a-form>
+        </a-modal>
+        
     </a-space>
     <br/>
     <br/>
@@ -85,7 +209,14 @@
 </template>
 
 <script>
-import { getUserAll, UserDel, UserModify, getSelectUser, searchUser } from "../../../services/dataSource";
+import { getUserAll,
+        UserDel, 
+        UserModify,
+        getSelectUser,
+        adminCreateCompanyAPI,
+        adminCreateExpertAPI,
+        adminCreateUserAPI,
+        searchUser } from "../../../services/dataSource";
 const columns = [
   {
     title: "用户名",
@@ -131,6 +262,30 @@ export default {
       type1:0,
       data,
       columns,
+      form: this.$form.createForm(this),
+      user_info:{
+        username:'',
+        password:'',
+        email:''
+      },
+      expert_info:{
+        username:'',
+        password:'',
+        email:'',
+        name:'',
+        organization:'',
+        ID_num:''        
+      },
+      company_info:{
+        username:'',
+        password:'',
+        email:'',
+        name:'',
+        address:''
+      },
+      company_visible: false,
+      expert_visible: false,
+      user_visible: false,
       searchText: '',
       editingKey: "",
       editData: {},
@@ -419,9 +574,76 @@ export default {
 //       console.log(data)
 // >>>>>>> 27da2901a4f9cddd7dcaaa8106ab332cd6de4a7b
     },
+    check_user_info(){
+      return false
+    },
     adminCreateUser(){
-      console.log('Admin Create User')
-      
+      this.user_visible = true;
+      console.log('Admin Create User');
+      // console.log(this.user_visible)
+      // console.log(this.expert_visible)
+      // console.log(this.company_visible)
+    },
+    adminCreateExpert(){
+      this.expert_visible = true;
+      console.log('Admin Create expert');
+    },
+    adminCreateCompany(){
+      this.company_visible = true;
+      console.log('Admin Create company');
+    },
+    handleSubmit(){
+      if(!this.check_user_info()){
+        return
+      }
+      console.log('submit')
+      if(this.user_visible){
+        // add user
+        console.log(this.user_info)
+        adminCreateUserAPI(this.user_info)
+        this.resetUserInfo()
+        this.user_visible = false
+      }else if(this.expert_visible){
+        // add expert
+        console.log(this.expert_info)
+        adminCreateExpertAPI(this.expert_info)
+        this.resetExpertInfo()
+        this.expert_visible = false
+      }else if(this.company_visible){
+        // add company
+        console.log(this.company_info)
+        adminCreateCompanyAPI(this.company_info)
+        this.resetCompanyInfo()
+        this.company_visible = false
+      }else{
+        console.log('Create Type Error!')
+      }
+    },
+    resetUserInfo(){
+      this.user_info = {
+        username:'',
+        password:'',
+        email:''
+      }
+    },
+    resetExpertInfo(){
+      this.expert_info = {
+        username:'',
+        password:'',
+        email:'',
+        name:'',
+        organization:'',
+        ID_num:''  
+      }
+    },
+    resetCompanyInfo(){
+      this.company_info = {
+        username:'',
+        password:'',
+        email:'',
+        name:'',
+        address:''
+      }
     },
     onSearch(){
       this.pagination.current = 1;

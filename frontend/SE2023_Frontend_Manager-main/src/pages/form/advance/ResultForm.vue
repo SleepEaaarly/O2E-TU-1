@@ -21,19 +21,153 @@
           @search="onSearch()"
           style="width: 300px;margin-left: 10px;"
         />
+        <!-- <a-button
+                  type="primary"
+                  @click="adminCreateResult()"
+        >
+                添加成果
+        </a-button> -->
+        <a-modal v-model="result_visible" title="添加成果" @ok="handleOk">
+          <a-form :form="result_info" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
+            
+            <a-form-item label="成果标题">
+              <a-input
+                placeholder="请输入成果标题"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的成果标题!' }] }]"
+              />
+            </a-form-item>
+
+            <a-form-item label="成果摘要">
+              <a-input
+                type="textarea"
+                placeholder="请输入成果摘要"
+              />
+            </a-form-item>
+
+            <a-form-item label="成果作者">
+              <a-input
+                placeholder="多个作者用英文逗号分隔"
+              />
+            </a-form-item>
+
+
+            <a-form-model-item label="成果领域">
+              <a-select placeholder="请为您的成果确定主要领域方向">
+                <a-select-option value="0">
+                  信息技术
+                </a-select-option>
+                <a-select-option value="1">
+                  装备制造
+                </a-select-option>
+                <a-select-option value="2">
+                  新材料
+                </a-select-option>
+                <a-select-option value="3">
+                  新能源
+                </a-select-option>
+                <a-select-option value="4">
+                  节能环保
+                </a-select-option>
+                <a-select-option value="5">
+                  生物医药
+                </a-select-option>
+                <a-select-option value="6">
+                  科学创意
+                </a-select-option>
+                <a-select-option value="7">
+                  检验检测
+                </a-select-option>
+                <a-select-option value="8">
+                  其他
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+
+            <a-form-model-item label="成果阶段">
+              <a-radio-group>
+                <a-radio value="0">
+                  实验室
+                </a-radio>
+                <a-radio value="1">
+                  样品
+                </a-radio>
+                <a-radio value="2">
+                  中试
+                </a-radio>
+                <a-radio value="3">
+                  产业化
+                </a-radio>
+              </a-radio-group>
+            </a-form-model-item>
+
+            <!-- <a-form-item label="成果示意图">
+              <a-upload
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                list-type="picture-card"
+                :file-list="fileList"
+                @preview="handlePreview"
+                @change="handleChange"
+              >
+                <div v-if="fileList.length < 1">
+                  <a-icon type="plus" />
+                  <div class="ant-upload-text">
+                    Upload
+                  </div>
+                </div>
+              </a-upload>
+              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                <img alt="example" style="width: 100%" :src="previewImage" />
+              </a-modal>
+            </a-form-item> -->
+
+            <a-form-item label="成果内容">
+              <a-input
+                type="textarea"
+                placeholder="介绍成果的内容"
+              />
+            </a-form-item>
+
+            <!-- <a-form-item label="成果详情图">
+              <a-upload
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                list-type="picture-card"
+                :file-list="fileList"
+                @preview="handlePreview"
+                @change="handleChange"
+              >
+                <div v-if="fileList.length < 9">
+                  <a-icon type="plus" />
+                  <div class="ant-upload-text">
+                    Upload
+                  </div>
+                </div>
+              </a-upload>
+              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                <img alt="example" style="width: 100%" :src="previewImage" />
+              </a-modal>
+            </a-form-item> -->
+          
+          </a-form>
+        </a-modal>
+        
       </a-space>
       <br/>
       <br/>
       <a-table :data-source="data" :columns="columns" :pagination="pagination" :key="itemKey">
+        <!-- <template
+          v-for="col in ['name', 'pyear', 'field', 'period', 'abstract', 'content']"
+          :slot="col"
+          slot-scope="text, record"
+        > -->
         <template
-          v-for="col in ['name', 'author', 'period', 'field']"
+          v-for="col in ['name', 'pyear', 'field', 'period']"
           :slot="col"
           slot-scope="text, record"
         >
-          <div :key="col">
+          <div :key="col" style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">
             <a-input
               v-if="record.editable"
-              style="margin: -5px 0"
+              style="margin: -5px 0;"
               :value="text"
               @change="(e) => handleChange(e.target.value, record, col)"
             />
@@ -81,28 +215,40 @@
     {
       title: "成果名",
       dataIndex: "name",
-      width: "25%",
+      width: "20%",
       scopedSlots: { customRender: "name" },
     },
     {
-      title: "作者",
-      dataIndex: "author",
-      width: "20%",
-      scopedSlots: { customRender: "author" },
-    },
-    {
-      title: "阶段",
-      dataIndex: "period",
-      width: "20%",
-      scopedSlots: { customRender: "period" },
-      // onFilter: (value, record) => record.type.indexOf(value) === 0,
+      title: "年份",
+      dataIndex: "pyear",
+      width: "10%",
+      scopedSlots: { customRender: "pyear" },
     },
     {
       title: "领域",
       dataIndex: "field",
-      width: "20%",
+      width: "10%",
       scopedSlots: { customRender: "field" },
     },
+    {
+      title: "阶段",
+      dataIndex: "period",
+      width: "10%",
+      scopedSlots: { customRender: "period" },
+      // onFilter: (value, record) => record.type.indexOf(value) === 0,
+    },
+    // {
+    //   title: "摘要",
+    //   dataIndex: "abstract",
+    //   width: "20%",
+    //   scopedSlots: { customRender: "abstract" },
+    // },
+    // {
+    //   title: "内容",
+    //   dataIndex: "content",
+    //   width: "20%",
+    //   scopedSlots: { customRender: "content" },
+    // },
     {
       title: "操作",
       dataIndex: "operation",
@@ -152,7 +298,9 @@
                 data.push({
                   key: res.data[i].id,
                   name: res.data[i].title,
-                  author: res.data[i].scholars,
+                  pyear: res.data[i].pyear,
+                  abstract: res.data[i].abstract,
+                  content: res.data[i].content, 
                   type: this.type,
                   period: res.data[i].period,
                   field: res.data[i].field,
@@ -225,7 +373,9 @@
             data.push({
                 key: res.data[i].id,
                 name: res.data[i].title,
-                author: res.data[i].scholars,
+                abstract: res.data[i].abstract,
+                content: res.data[i].content, 
+                pyear: res.data[i].pyear,
                 type: this.type,
                 period: res.data[i].period,
                 field: res.data[i].field,
@@ -253,7 +403,9 @@
           name: target.name,
           type:this.type,
           period: target.period,
-          author:target.author,
+          abstract:target.abstract,
+          content: target.content, 
+          pyear: target.pyear,
           field: target.field,
         };
         let that = this
@@ -277,12 +429,16 @@
         console.log(this.editData.key)
         if (col === "name") {
           this.editData.name = value;
-        } else if (col === 'author') {
-          this.editData.author = value;
+        } else if (col === 'abstract') {
+          this.editData.abstract = value;
         } else if (col === 'field') {
           this.editData.field = value;
         } else if (col === 'period') {
           this.editData.period = value
+        } else if(col === 'pyear'){
+          this.editData.pyear = value
+        } else if(col === 'content'){
+          this.editData.content = value
         }
         console.log(this.editData)
   
@@ -325,7 +481,9 @@
           id: this.editData.key,
           title: this.editData.name,
           period: this.editData.period,
-          scholars:this.editData.author,
+          abstract:this.editData.abstract,
+          content: this.data[i].content, 
+          pyear: this.data[i].pyear,
           field: this.editData.field,
         };
   
@@ -392,6 +550,12 @@
   //       console.log(data)
   // >>>>>>> 27da2901a4f9cddd7dcaaa8106ab332cd6de4a7b
       },
+      adminCreateResult(){
+      this.result_visible = true;
+      console.log('Admin Create Reult');
+      
+      
+    },
       selectChange(value) {
         if (!this.changeable) {
   
@@ -418,7 +582,9 @@
             data.push({
                 key: res.data[i].id,
                 name: res.data[i].title,
-                author: res.data[i].scholars,
+                abstract: res.data[i].abstract,
+                content: res.data[i].content, 
+                pyear: res.data[i].pyear,
                 period: res.data[i].period,
                 field: res.data[i].field,
                 type: this.type,
@@ -466,7 +632,9 @@
             data.push({
                 key: res.data[i].id,
                 name: res.data[i].title,
-                author: res.data[i].scholars,
+                abstract: res.data[i].abstract,
+                pyear: res.data[i].pyear,
+                content: res.data[i].content, 
                 type: this.type,
                 period: res.data[i].period,
                 field: res.data[i].field,
