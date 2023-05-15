@@ -105,26 +105,22 @@ def get_scibert_embedding(sent):
 @require_GET
 @response_wrapper
 def recommend(request: HttpRequest, id: int):
-    print("start recommend")
     get_milvus_connection()
     need = Need.objects.get(id=id)
     keyword = [trans_zh2en(w) for w in need.key_word.split(";")]
     key_vector = model.get_embeds(keyword)
     # key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     b = key_vector.detach().numpy().tolist()
-    print("ready to milvus search")
     id_lists = milvus_search(collection_name="O2E_PAPER", query_vectors=b, topk=10,
                             partition_names=None)[0]
 
     cites = []
     register_experts = []
     scholarIDs = []
-    print(id_lists)
     for id in id_lists:
         paper = Papers.objects.get(vector_sci=str(id))
         title = paper.title
         expert_possible = paper.expert_papers.all()
-        print(expert_possible)
         for expert in expert_possible:
             cite = 0
             papers = expert.papers.all()

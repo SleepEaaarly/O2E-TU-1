@@ -154,22 +154,24 @@
       <br/>
       <br/>
       <a-table :data-source="data" :columns="columns" :pagination="pagination" :key="itemKey">
-        <!-- <template
+        <template
           v-for="col in ['name', 'pyear', 'field', 'period', 'abstract', 'content']"
           :slot="col"
           slot-scope="text, record"
-        > -->
-        <template
+        >
+        <!-- <template
           v-for="col in ['name', 'pyear', 'field', 'period']"
           :slot="col"
           slot-scope="text, record"
-        >
-          <div :key="col" style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">
+        > -->
+        
+          <div :key="col" class="ellipsis" style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">
             <a-input
               v-if="record.editable"
               style="margin: -5px 0;"
               :value="text"
               @change="(e) => handleChange(e.target.value, record, col)"
+              class="ellipsis"
             />
             <template v-else>
               {{ text }}
@@ -237,18 +239,20 @@
       scopedSlots: { customRender: "period" },
       // onFilter: (value, record) => record.type.indexOf(value) === 0,
     },
-    // {
-    //   title: "摘要",
-    //   dataIndex: "abstract",
-    //   width: "20%",
-    //   scopedSlots: { customRender: "abstract" },
-    // },
-    // {
-    //   title: "内容",
-    //   dataIndex: "content",
-    //   width: "20%",
-    //   scopedSlots: { customRender: "content" },
-    // },
+    {
+      title: "摘要",
+      dataIndex: "abstract",
+      width: "20%",
+      scopedSlots: { customRender: "abstract" },
+      //class: "my-cell"
+    },
+    {
+      title: "内容",
+      dataIndex: "content",
+      width: "20%",
+      scopedSlots: { customRender: "content" },
+      // class: "my-cell"
+    },
     {
       title: "操作",
       dataIndex: "operation",
@@ -664,5 +668,14 @@
   .editable-row-operations a {
     margin-right: 8px;
   }
+
+  .ellipsis {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  }
+
+  
   </style>
   

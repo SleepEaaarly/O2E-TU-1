@@ -187,35 +187,32 @@ def search_result_by_name(request: HttpRequest):
 @response_wrapper
 @require_http_methods('POST')
 def search_user_by_name(request: HttpRequest):
-    data: dict = request.POST
-
+    data: dict = parse_data(request)
     username = data.get('username')
     page = int(data.get('page'))
     users = User.objects.filter(Q(username__icontains=username))
-
     start = 10 * (page - 1)
     end = 10 * page
-
     d = list()
     for user in users:
         d.append(user.to_dict())
+        print(user.to_dict())
     return success_api_response({
         "page_num": page,
-        "user_data": d
+        "data": d
     })
 
 
 def create_a_user(username, password, email):
-    print("create_user:" + password)
     user = User.objects.create_user(username=username, email=email, password=password, is_confirmed=True)
-    try:
-        avatar = get_avatar(email)
-        print(BASE_DIR)
-        with open(BASE_DIR + "/static/" + "images/default/icons/" + username + ".jpg", 'wb') as f:
-            f.write(avatar.content)
-        user.icon = 'images/default/icons/' + username + ".jpg"
-    except Exception:
-        print("error")
+    # try:
+    #     avatar = get_avatar(email)
+    #     print(BASE_DIR)
+    #     with open(BASE_DIR + "/static/" + "images/default/icons/" + username + ".jpg", 'wb') as f:
+    #         f.write(avatar.content)
+    #     user.icon = 'images/default/icons/' + username + ".jpg"
+    # except Exception:
+    #     print("error")
     user.save()
     return user
 
@@ -224,11 +221,15 @@ def create_a_user(username, password, email):
 @response_wrapper
 @require_http_methods('POST')
 def add_user(request: HttpRequest):
-    data: dict = request.POST
+    data: dict = parse_data(request)
     username = data.get('username')
     password = data.get('password')
     email = data.get('email')
-    user = create_a_user(username, password, email)
+    try:
+        user = create_a_user(username, password, email)
+    except Exception:
+        return success_api_response({'code': 410})
+    
     return success_api_response({'id': user.id})
 
 
@@ -236,29 +237,37 @@ def add_user(request: HttpRequest):
 @response_wrapper
 @require_http_methods('POST')
 def add_expert(request: HttpRequest):
-    data: dict = request.POST
+    print(0)
+    data: dict = parse_data(request)
     username = data.get('username')
     password = data.get('password')
     email = data.get('email')
     print('add_expert:password' + password)
-    user = create_a_user(username, password, email)
-    print(user.password)
+    try:
+        user = create_a_user(username, password, email)
+    except Exception:
+        return success_api_response({'code': 410})
+    # print(user.password)
+    print(1)
     name = data.get('name')
     organization = data.get('organization')
     ID_num = data.get('ID_num')
+    print(2)
     expert = Expert.objects.create(name=name, organization=organization, ID_num=ID_num)
+    print(3)
     expert.save()
-    # 插向量
-    get_milvus_connection()
-    vec = get_hitbert_embedding(name)
-    mid = milvus_confirm_item_exist("O2E_EXPERT_HIT", "expert_id", expert.id)
-    if mid < 0:
-        mid = milvus_insert("O2E_EXPERT_HIT", data=[[vec], [expert.id]])[0]
-    disconnect_milvus()
-    expert.vector_hit = mid
-    expert.save()
+    # # 插向量
+    # get_milvus_connection()
+    # vec = get_hitbert_embedding(name)
+    # mid = milvus_confirm_item_exist("O2E_EXPERT_HIT", "expert_id", expert.id)
+    # if mid < 0:
+    #     mid = milvus_insert("O2E_EXPERT_HIT", data=[[vec], [expert.id]])[0]
+    # disconnect_milvus()
+    # expert.vector_hit = mid
+    # expert.save()
     user.state = 4
     user.expert_info = expert
+    print(4)
     user.save()
     return success_api_response({'user_id': user.id, 'expert_id': expert.id})
 
@@ -267,25 +276,28 @@ def add_expert(request: HttpRequest):
 @response_wrapper
 @require_http_methods('POST')
 def add_enterprise(request: HttpRequest):
-    data: dict = request.POST
+    data: dict = parse_data(request)
     username = data.get('username')
     password = data.get('password')
     email = data.get('email')
-    user = create_a_user(username, password, email)
+    try:
+        user = create_a_user(username, password, email)
+    except Exception:
+        return success_api_response({'code': 410})
     name = data.get('name')
     address = data.get('address')
     enterprise = Enterprise_info.objects.create(name=name, address=address)
     enterprise.save()
     enterprise_id = enterprise.id
-    # 插向量
-    get_milvus_connection()
-    vec = get_hitbert_embedding(name)
-    mid = milvus_confirm_item_exist("O2E_ENTERPRISE_HIT", "enterprise_id", enterprise.id)
-    if mid < 0:
-        mid = milvus_insert("O2E_ENTERPRISE_HIT", data=[[vec], [enterprise.id]])[0]
-    disconnect_milvus()
-    enterprise.vector_hit = mid
-    enterprise.save()
+    # # 插向量
+    # get_milvus_connection()
+    # vec = get_hitbert_embedding(name)
+    # mid = milvus_confirm_item_exist("O2E_ENTERPRISE_HIT", "enterprise_id", enterprise.id)
+    # if mid < 0:
+    #     mid = milvus_insert("O2E_ENTERPRISE_HIT", data=[[vec], [enterprise.id]])[0]
+    # disconnect_milvus()
+    # enterprise.vector_hit = mid
+    # enterprise.save()
     user.enterprise_info = enterprise
     user.state = 5
     user.save()

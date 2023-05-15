@@ -97,7 +97,7 @@ def get_system_chat(request: HttpRequest):
         # print(m)
         if(m.is_to_system == 1):
             a_message['isme'] = True
-            a_message['user_pic'] = owner.icon.path
+            a_message['user_pic'] = owner.icon.url
         else:
             a_message['isme'] = False
             a_message['user_pic'] = ''
