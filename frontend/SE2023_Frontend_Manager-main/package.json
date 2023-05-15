@@ -51,7 +51,9 @@
     "vuedraggable": "^2.23.2",
     "vuepress": "^1.8.2",
     "vuex": "^3.4.0",
-    "wangeditor": "^4.7.1"
+    "wangeditor": "^4.7.1",
+    "webpack-theme-color-replacer": "^1.4.7",
+    "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
     "compression-webpack-plugin": "^6.1.1"

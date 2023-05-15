@@ -6,7 +6,9 @@
 					<span>
 						<a @click="showSystemChat(record)" >回复</a>
 						<!-- <div class="custom-wrapper" style="background-color: transparent;"> -->
-						<a-modal  v-model="showDetail" title="客服聊天" width="750px" footer="" ref="chatContent" :mask-closable="false" class="custom-modal">
+						<a-modal  v-model="showDetail" title="客服聊天" width="750px" 
+							footer="" ref="chatContent"  class="custom-modal"
+							:mask="true" :maskStyle="{'opacity':'0.2','background':'#FFFFFF','animation':'none'}">
 							<!-- <a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 500px;" > -->
 							<a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 500px;" >
 								<!-- <div v-for="(item, index) in record.messages" :key="index">abc</div> -->
@@ -19,7 +21,7 @@
 										<a-row v-if="item.gstime" class="system-chat-item">{{item.gstime}}</a-row>
 										<!-- 提示转换信息 -->
 										<a-row v-if="item.type == 'switch_info'" class="system-chat-time"
-										 style="font-size: small;">对方已转换为{{item.message}}服务</a-row>
+										 style="font-size: small;">对方已转换为{{item.message === 'AI' ? 'AI': '人工'}}服务</a-row>
 										<div v-if="item.type !== 'switch_info'" class="system-chat-list" :class="{'system-chat-me': item.isme}">
 											<!-- 显示管理员/AI头像 -->
 											<Image v-if="!item.isme" :src="item.userpic" mode="widthFix" lazy-load></Image> 
@@ -40,9 +42,10 @@
 												</a-row>
 												<a-row v-if="item.type == 'card' && item.cardInfo.cardType == 'demand'">{{item.message}}</a-row>
 												<a-row v-if="item.type == 'card' && item.cardInfo.cardType == 'technique'">{{item.message}}</a-row>
-												<a-row v-if="item.type == 'report' && item.reportInfo.reportType == 'work'">{{item.message}}</a-row>
+												<!-- <a-row v-if="item.type == 'report' && item.reportInfo.reportType == 'work'">{{item.message}}</a-row>
 												<a-row v-if="item.type == 'report' && item.reportInfo.reportType == 'need'">{{item.message}}</a-row>
-												<a-row v-if="item.type == 'report' && item.reportInfo.reportType == 'order'">{{item.message}}</a-row>
+												<a-row v-if="item.type == 'report' && item.reportInfo.reportType == 'order'">{{item.message}}</a-row> -->
+												<a-row v-if="item.type == 'report'">{{item.message}}</a-row>
 												<!-- 待会实现 -->
 												
 											</a-row>
@@ -113,118 +116,7 @@ const columns = [{
 		render: () => <a>回复</a>
 	}
 ];
-// const data = [
-// 	{
-// 		name: "usr1",
-// 		sex: "男",
-// 		email: "123@qq.com",
-// 		time: "4/3",
-// 		message: "你好你好",
-// 		messages: [
-// 			{
-// 				isme: false,
-// 				userpic: "usrpiclink",
-// 				type: 'text',
-// 				message: "sdfadfadfadfadfa",
-// 				gstime: "text gstime",
-// 				created_at: "test created"
-// 			},
-// 			{
-// 				isme: true,
-// 				userpic: "usrpiclink",
-// 				type: 'text',
-// 				message: "msg2",
-// 				gstime: null,
-// 				created_at: "test created"
-// 			},
-// 			{
-// 				isme: false,
-// 				userpic: "usrpiclink",
-// 				type: 'text',
-// 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
-// 				gstime: null,
-// 				created_at: "test created"
-// 			},
-// 			{
-// 				isme: false,
-// 				userpic: "usrpiclink",
-// 				type: 'text',
-// 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
-// 				gstime: null,
-// 				created_at: "test created"
-// 			},
-// 			{
-// 				isme: false,
-// 				userpic: "usrpiclink",
-// 				type: 'text',
-// 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
-// 				gstime: null,
-// 				created_at: "test created"
-// 			},
-// 			{
-// 				isme: false,
-// 				userpic: "usrpiclink",
-// 				type: 'text',
-// 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
-// 				gstime: null,
-// 				created_at: "test created"
-// 			},
-// 			{
-// 				isme: true,
-// 				userpic: "usrpiclink",
-// 				type: 'text',
-// 				message: "回复回复回复回复",
-// 				gstime: null,
-// 				created_at: "test created"
-// 			},
-// 			{
-// 				isme: false,
-// 				userpic: "usrpiclink",
-// 				type: 'text',
-// 				message: "一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息一个长消息",
-// 				gstime: null,
-// 				created_at: "test created"
-// 			},{
-// 				isme: false,
-// 				userpic: "usrpiclink",
-// 				type: 'text',
-// 				message: "你好你好",
-// 				gstime: null,
-// 				created_at: "test created"
-// 			}
-// 		],
-// 	}, 
-// 	{
-// 		name: "usr2",
-// 		sex: "女",
-// 		email: "456@qq.com",
-// 		time: "4/2",
-// 		message: "你好你好",
-// 		messages: [{
-// 				isme: false,
-// 				userpic: "usrpiclink",
-// 				type: 'text',
-// 				message: "sdfadfadfadfadfa",
-// 				gstime: "text gstime",
-// 				created_at: "test created"
-// 			}],
-// 	},
-// 	{
-// 		name: "usr3",
-// 		sex: "武装直升机",
-// 		email: "abc@buaa.edu.cn",
-// 		time: "4/3",
-// 		message: "测试长消息测试长消息测试长消息测试长消息测试长消息测试长消息测试长消息",
-// 		messages: [{
-// 				isme: false,
-// 				userpic: "usrpiclink",
-// 				type: 'text',
-// 				message: "sdfadfadfadfadfa",
-// 				gstime: "text gstime",
-// 				created_at: "test created"
-// 			}],
-// 	}
-// ];
+
 export default {
 	name: "systemChatList",
 	inject: ['reload'],
@@ -319,7 +211,18 @@ export default {
 						data_message.isme = res_message.isme
 						data_message.userpic = res_message.userpic
 						data_message.type = res_message.type
-						data_message.message = res_message.message
+						if (res_message.type === 'report') {
+							if (res_message.reportInfo.reportType === 'WORK') {
+								data_message.message = "[成果报告卡片]主题是：" + res_message.reportInfo.reportTitle + "\n详情请在移动端查看"
+							} else if (res_message.reportInfo.reportType === 'NEED') {
+								data_message.message = "[需求报告卡片]主题是：" + res_message.reportInfo.reportTitle + "\n详情请在移动端查看"
+							} else if (res_message.reportInfo.reportType === 'ORDER') {
+								data_message.message = "[订单报告卡片]主题是：" + res_message.reportInfo.reportTitle + "\n详情请在移动端查看"
+							}
+ 						} else {
+							data_message.message = res_message.message
+						}
+						
 						data_message.cardInfo = res_message.cardInfo
 						data_message.created_at = res_message.created_at
 						if (bef_time === null) {
@@ -350,6 +253,8 @@ export default {
 		handleSubmit(selectData) {	// 用户选择提交之后，将信息数据提交给后端
 			// console.log(this.selectData)
 			console.log("abc")
+			console.log(this.reply)
+			let reply = this.reply
 			// 发送回复的 submit 函数，需要确定数据类型
 			pushSystemChat({
 				"uId": this.selectData.uId,
@@ -360,14 +265,15 @@ export default {
 				// if res.data.recode == 200 | 500
 				let now = new Date().getTime()
 				let obj = {
-					isme: false,
+					isme: true,
 					userpic: "",
 					type: "text",
-					message: this.reply,
-					gstime: gettime.gettime(now, selectData.messages[selectData.messages.length - 1].created_at),
+					message: reply,
+					gstime: gettime.gettime(now, this.selectData.messages[this.selectData.messages.length - 1].created_at),
 					created_at: now
 				}
-				selectData.messages.push(obj)
+				console.log(obj)
+				this.selectData.messages.push(obj)
 			}).catch((error) => {
 				console.log(error)
 			})
