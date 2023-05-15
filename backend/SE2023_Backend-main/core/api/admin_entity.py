@@ -205,14 +205,14 @@ def search_user_by_name(request: HttpRequest):
 
 def create_a_user(username, password, email):
     user = User.objects.create_user(username=username, email=email, password=password, is_confirmed=True)
-    try:
-        avatar = get_avatar(email)
-        print(BASE_DIR)
-        with open(BASE_DIR + "/static/" + "images/default/icons/" + username + ".jpg", 'wb') as f:
-            f.write(avatar.content)
-        user.icon = 'images/default/icons/' + username + ".jpg"
-    except Exception:
-        print("error")
+    # try:
+    #     avatar = get_avatar(email)
+    #     print(BASE_DIR)
+    #     with open(BASE_DIR + "/static/" + "images/default/icons/" + username + ".jpg", 'wb') as f:
+    #         f.write(avatar.content)
+    #     user.icon = 'images/default/icons/' + username + ".jpg"
+    # except Exception:
+    #     print("error")
     user.save()
     return user
 
