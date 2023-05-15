@@ -67,10 +67,6 @@ def set_info(request:HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need a valid legal_person_ID")
 
     user = User.objects.get(id=id)
-    name_vec = get_scibert_embedding(name)
-    get_milvus_connection()
-    mid = milvus_insert("O2E_ENTERPRISE_HIT", data=[[name_vec], [int(id)]])
-    disconnect_milvus()
     if user.enterprise_info is None:
         enterprise_info = Enterprise_info()
         enterprise_info.name = name
@@ -83,7 +79,6 @@ def set_info(request:HttpRequest):
         enterprise_info.field = field
         enterprise_info.business_license = business_license
         enterprise_info.legal_person_ID = legal_person_ID
-        enterprise_info.vector_hit = mid[0]
         enterprise_info.save()
         user.enterprise_info = enterprise_info
         user.state = 2
@@ -100,7 +95,6 @@ def set_info(request:HttpRequest):
         enterprise_info.field = field
         enterprise_info.business_license = business_license
         enterprise_info.legal_person_ID = legal_person_ID
-        enterprise_info.vector_hit = mid[0]
         enterprise_info.save()
         user.state = 2
         user.save()
@@ -162,6 +156,7 @@ def refuse_enterprise(request:HttpRequest, id: int):
     if user.state != 2:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "wrong user state")
     user.state = 0
+    user.enterprise_info = None
     user.save()
     return success_api_response("success")
 

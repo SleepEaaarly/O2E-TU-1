@@ -22,6 +22,9 @@ from core.api.ai_report import generate_requirement_report
 from core.api.ai_recommend import get_scibert_embedding
 from django.views.decorators.csrf import csrf_exempt
 
+from core.api.utils import trans_zh2en
+
+
 def get_now_time():
     """获取当前时间"""
     tz = pytz.timezone('Asia/Shanghai')
@@ -254,24 +257,28 @@ def create_need(request: HttpRequest):
 
     [route]: /api/need
     """
+    print("enter create_need")
     data: dict = parse_data(request)
+    print(data)
     if not data:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "data is none")
 
     id = data.get('company_id')
     if not id:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "id not found")
-
+    print("id=", id)
     try:
         user: User = User.objects.get(id=id)
     except User.DoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist user")
-
+    print("user=", user)
     if user.state != 5:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-enterprise user")
 
     title = data.get('title')
+    print("before trans",type(title))
     title_en = trans_zh2en(title)
+    print("after trans")
     description = data.get('description')
     start_time = data.get('start_time')
     end_time = data.get('end_time')

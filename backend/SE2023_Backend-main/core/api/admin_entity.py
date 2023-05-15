@@ -13,6 +13,8 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from core.models.results import rst_pic_delete, multipic_delete
 from core.models.user import icon_delete
+from core.api.ai_chat import get_hitbert_embedding
+import time
 
 @csrf_exempt
 @response_wrapper
@@ -246,6 +248,15 @@ def add_expert(request: HttpRequest):
     ID_num = data.get('ID_num')
     expert = Expert.objects.create(name=name, organization=organization, ID_num=ID_num)
     expert.save()
+    # 插向量
+    get_milvus_connection()
+    vec = get_hitbert_embedding(name)
+    mid = milvus_confirm_item_exist("O2E_EXPERT_HIT", "expert_id", expert.id)
+    if mid < 0:
+        mid = milvus_insert("O2E_EXPERT_HIT", data=[[vec], [expert.id]])[0]
+    disconnect_milvus()
+    expert.vector_hit = mid
+    expert.save()
     user.state = 4
     user.expert_info = expert
     user.save()
@@ -266,6 +277,15 @@ def add_enterprise(request: HttpRequest):
     enterprise = Enterprise_info.objects.create(name=name, address=address)
     enterprise.save()
     enterprise_id = enterprise.id
+    # 插向量
+    get_milvus_connection()
+    vec = get_hitbert_embedding(name)
+    mid = milvus_confirm_item_exist("O2E_ENTERPRISE_HIT", "enterprise_id", enterprise.id)
+    if mid < 0:
+        mid = milvus_insert("O2E_ENTERPRISE_HIT", data=[[vec], [enterprise.id]])[0]
+    disconnect_milvus()
+    enterprise.vector_hit = mid
+    enterprise.save()
     user.enterprise_info = enterprise
     user.state = 5
     user.save()
@@ -296,6 +316,39 @@ def set_result(request: HttpRequest):
     res_multipic.delete()
 
     result.save()
+    # 改向量
+    if result.state == 1 and title != result.title:
+        title_en = trans_zh2en(title)
+        result.title_eng = title_en
+
+        hit_vec = get_hitbert_embedding(title_en)
+        sci_vec = get_scibert_embedding(title_en)
+
+        get_milvus_connection()
+
+        milvus_delete("O2E_RESULT_HIT", result.vector_hit)
+        milvus_delete("O2E_RESULT", result.vector_sci)
+
+
+        mid_hit = milvus_confirm_item_exist("O2E_RESULT_HIT", "result_id", id)
+        while mid_hit >= 0:
+            print("waiting vec_hit to be delete...")
+            time.sleep(1)
+            mid_hit = milvus_confirm_item_exist("O2E_RESULT_HIT", "result_id", id)
+        mid_hit = milvus_insert("O2E_RESULT_HIT", data=[[hit_vec], [id]])[0]
+        
+        mid_sci = milvus_confirm_item_exist("O2E_RESULT", "result_id", id)
+        while mid_sci >= 0:
+            print("waiting vec_sci to be delete...")
+            time.sleep(1)
+            mid_sci = milvus_confirm_item_exist("O2E_RESULT", "result_id", id)
+        mid_sci = milvus_insert("O2E_RESULT", data=[[sci_vec], [id]])[0]
+
+        disconnect_milvus()
+
+        result.vector_sci = mid_sci
+        result.vector_hit = mid_hit
+
     result.title = title
     result.abstract = abstract
     result.pyear = pyear

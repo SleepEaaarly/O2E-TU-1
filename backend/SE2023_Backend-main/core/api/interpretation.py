@@ -315,14 +315,19 @@ def randomWalkInterpretation(request: HttpRequest):
     NUM_SELECT = 10
 
     interpretations = Interpretation.objects
+    print("1")
     interpretations = interpretations.filter(~Q(created_by__pk=request.user.pk))
+    print("2")
     interpretations = interpretations.distinct()
+    print("3")
     interpretations = [_inter for _inter in interpretations.all()]
+    print("4")
     _num_select = min(NUM_SELECT, len(interpretations))
     interpretations = random.sample(population=interpretations, k=_num_select)
     random.shuffle(interpretations)
 
     ret = [_inter.to_hash() for _inter in interpretations]
+    print(ret)
     return success_api_response(ret)
 
 @csrf_exempt

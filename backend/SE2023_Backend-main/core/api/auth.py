@@ -178,6 +178,10 @@ def obtain_jwt_token(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
 
     user = authenticate(username=data.get('username'), password=data.get('password'))
+
+    state = user.state
+    if state == 3:
+        return failed_api_response(ErrorCode.REFUSE_ACCESS, "This user is banned!")
     print(user)
     '''
     if not user:

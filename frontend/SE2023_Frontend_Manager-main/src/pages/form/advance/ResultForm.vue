@@ -21,14 +21,14 @@
           @search="onSearch()"
           style="width: 300px;margin-left: 10px;"
         />
-        <a-button
+        <!-- <a-button
                   type="primary"
                   @click="adminCreateResult()"
         >
                 添加成果
-        </a-button>
+        </a-button> -->
         <a-modal v-model="result_visible" title="添加成果" @ok="handleOk">
-          <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
+          <a-form :form="result_info" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
             
             <a-form-item label="成果标题">
               <a-input
@@ -154,15 +154,20 @@
       <br/>
       <br/>
       <a-table :data-source="data" :columns="columns" :pagination="pagination" :key="itemKey">
+        <!-- <template
+          v-for="col in ['name', 'pyear', 'field', 'period', 'abstract', 'content']"
+          :slot="col"
+          slot-scope="text, record"
+        > -->
         <template
-          v-for="col in ['name', 'author', 'period', 'field']"
+          v-for="col in ['name', 'pyear', 'field', 'period']"
           :slot="col"
           slot-scope="text, record"
         >
-          <div :key="col">
+          <div :key="col" style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">
             <a-input
               v-if="record.editable"
-              style="margin: -5px 0"
+              style="margin: -5px 0;"
               :value="text"
               @change="(e) => handleChange(e.target.value, record, col)"
             />
@@ -210,28 +215,40 @@
     {
       title: "成果名",
       dataIndex: "name",
-      width: "25%",
+      width: "20%",
       scopedSlots: { customRender: "name" },
     },
     {
-      title: "作者",
-      dataIndex: "author",
-      width: "20%",
-      scopedSlots: { customRender: "author" },
-    },
-    {
-      title: "阶段",
-      dataIndex: "period",
-      width: "20%",
-      scopedSlots: { customRender: "period" },
-      // onFilter: (value, record) => record.type.indexOf(value) === 0,
+      title: "年份",
+      dataIndex: "pyear",
+      width: "10%",
+      scopedSlots: { customRender: "pyear" },
     },
     {
       title: "领域",
       dataIndex: "field",
-      width: "20%",
+      width: "10%",
       scopedSlots: { customRender: "field" },
     },
+    {
+      title: "阶段",
+      dataIndex: "period",
+      width: "10%",
+      scopedSlots: { customRender: "period" },
+      // onFilter: (value, record) => record.type.indexOf(value) === 0,
+    },
+    // {
+    //   title: "摘要",
+    //   dataIndex: "abstract",
+    //   width: "20%",
+    //   scopedSlots: { customRender: "abstract" },
+    // },
+    // {
+    //   title: "内容",
+    //   dataIndex: "content",
+    //   width: "20%",
+    //   scopedSlots: { customRender: "content" },
+    // },
     {
       title: "操作",
       dataIndex: "operation",
@@ -281,7 +298,9 @@
                 data.push({
                   key: res.data[i].id,
                   name: res.data[i].title,
-                  author: res.data[i].scholars,
+                  pyear: res.data[i].pyear,
+                  abstract: res.data[i].abstract,
+                  content: res.data[i].content, 
                   type: this.type,
                   period: res.data[i].period,
                   field: res.data[i].field,
@@ -354,7 +373,9 @@
             data.push({
                 key: res.data[i].id,
                 name: res.data[i].title,
-                author: res.data[i].scholars,
+                abstract: res.data[i].abstract,
+                content: res.data[i].content, 
+                pyear: res.data[i].pyear,
                 type: this.type,
                 period: res.data[i].period,
                 field: res.data[i].field,
@@ -382,7 +403,9 @@
           name: target.name,
           type:this.type,
           period: target.period,
-          author:target.author,
+          abstract:target.abstract,
+          content: target.content, 
+          pyear: target.pyear,
           field: target.field,
         };
         let that = this
@@ -406,12 +429,16 @@
         console.log(this.editData.key)
         if (col === "name") {
           this.editData.name = value;
-        } else if (col === 'author') {
-          this.editData.author = value;
+        } else if (col === 'abstract') {
+          this.editData.abstract = value;
         } else if (col === 'field') {
           this.editData.field = value;
         } else if (col === 'period') {
           this.editData.period = value
+        } else if(col === 'pyear'){
+          this.editData.pyear = value
+        } else if(col === 'content'){
+          this.editData.content = value
         }
         console.log(this.editData)
   
@@ -454,7 +481,9 @@
           id: this.editData.key,
           title: this.editData.name,
           period: this.editData.period,
-          scholars:this.editData.author,
+          abstract:this.editData.abstract,
+          content: this.data[i].content, 
+          pyear: this.data[i].pyear,
           field: this.editData.field,
         };
   
@@ -553,7 +582,9 @@
             data.push({
                 key: res.data[i].id,
                 name: res.data[i].title,
-                author: res.data[i].scholars,
+                abstract: res.data[i].abstract,
+                content: res.data[i].content, 
+                pyear: res.data[i].pyear,
                 period: res.data[i].period,
                 field: res.data[i].field,
                 type: this.type,
@@ -601,7 +632,9 @@
             data.push({
                 key: res.data[i].id,
                 name: res.data[i].title,
-                author: res.data[i].scholars,
+                abstract: res.data[i].abstract,
+                pyear: res.data[i].pyear,
+                content: res.data[i].content, 
                 type: this.type,
                 period: res.data[i].period,
                 field: res.data[i].field,
