@@ -279,8 +279,9 @@
 						need_id:this.item.need_id,
 					}
 					let temp1 = await getOrder(temp)
+					console.log(temp1)
 					//console.log(this.item.need_id)
-					if(temp1){
+					if(temp1 && temp1.order_id != 0){
 						let temp2 = await getOrderDetail(temp1.order_id)
 						if(temp2.order_id){
 							this.order = temp2

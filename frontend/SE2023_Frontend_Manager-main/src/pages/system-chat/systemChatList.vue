@@ -221,6 +221,9 @@ export default {
 							}
  						} else {
 							data_message.message = res_message.message
+							if (data_message.message === "") {
+								data_message.message = "[空]"
+							}
 						}
 						
 						data_message.cardInfo = res_message.cardInfo
@@ -353,12 +356,11 @@ export default {
 .system-chat-me .system-chat-list-body:after {
     left: auto;
 	right: -30px;
-	border-color: transparent transparent transparent #F4F4F4;
+	border-color: transparent transparent transparent #00ff33;
 }
-
-.system-chat-list-body>image {
-    max-width: 150px;
-	max-height: 200px;
+.system-chat-me .system-chat-list-body {
+    background: #00ff33;
+	margin-right: 12upx;
 }
 
 .system-chat-list-body>system-chat-card {
