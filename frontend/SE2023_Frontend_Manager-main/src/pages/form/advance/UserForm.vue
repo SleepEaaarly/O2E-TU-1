@@ -199,7 +199,7 @@
           title="Sure to delete?"
           @confirm="() => onDelete(record.key)"
         >
-          <a href="javascript:0;">Delete</a>
+          <a href="javascript:0;">Ban</a>
         </a-popconfirm>
       </template>
     </a-table>
@@ -528,7 +528,7 @@ export default {
           target,
           this.cacheData.filter((item) => key === item.key)[0]
         );
-        delete target.editable;
+        delete target.editable;searchUser
         this.data = newData;
       }
       this.reload()
@@ -575,7 +575,40 @@ export default {
 // >>>>>>> 27da2901a4f9cddd7dcaaa8106ab332cd6de4a7b
     },
     check_user_info(){
-      return false
+      if(this.user_visible){
+        // add user
+        if(this.user_info.username == '' ||
+        this.user_info.password == '' ||
+        this.user_info.email == ''){
+              console.log('More Info')
+              alert('请填写完整信息')
+              return false
+        }
+      }else if(this.expert_visible){
+        // add expert
+        if(this.expert_info.username == '' ||
+        this.expert_info.password == '' ||
+        this.expert_info.email == '' ||
+        this.expert_info.name == '' ||
+        this.expert_info.organization == '' ||
+        this.expert_info.ID_num == ''){
+              alert('请填写完整信息')
+              return false
+        }        
+      }else if(this.company_visible){
+        // add company
+        if(this.company_info.username == '' ||
+        this.company_info.password == '' ||
+        this.company_info.email == '' ||
+        this.company_info.name == '' ||
+        this.company_info.address == ''){
+              alert('请填写完整信息')
+              return false
+        }    
+      }else{
+        console.log('Create Type Error!')
+      }
+      return true
     },
     adminCreateUser(){
       this.user_visible = true;
@@ -600,21 +633,48 @@ export default {
       if(this.user_visible){
         // add user
         console.log(this.user_info)
-        adminCreateUserAPI(this.user_info)
-        this.resetUserInfo()
-        this.user_visible = false
+        adminCreateUserAPI(this.user_info).then((oriRes) => {
+            if(oriRes.data.code == 410){
+              alert('用户名或邮箱已被注册')
+            }else{
+              console.log(oriRes)
+              this.resetUserInfo()
+              this.user_visible = false
+            }
+        }).catch((error) => {
+            console.log(error)
+        });        
+
       }else if(this.expert_visible){
         // add expert
         console.log(this.expert_info)
-        adminCreateExpertAPI(this.expert_info)
-        this.resetExpertInfo()
-        this.expert_visible = false
+        adminCreateExpertAPI(this.expert_info).then((oriRes) => {
+            if(oriRes.data.code == 410){
+              alert('用户名或邮箱已被注册')
+            }else{
+              console.log(oriRes)
+              this.resetExpertInfo()
+              this.expert_visible = false
+            }
+        }).catch((error) => {
+            console.log(error)
+        });  
+
       }else if(this.company_visible){
         // add company
         console.log(this.company_info)
-        adminCreateCompanyAPI(this.company_info)
-        this.resetCompanyInfo()
-        this.company_visible = false
+        adminCreateCompanyAPI(this.company_info).then((oriRes) => {
+            if(oriRes.data.code == 410){
+              alert('用户名或邮箱已被注册')
+            }else{
+              console.log(oriRes)
+              this.resetCompanyInfo()
+              this.company_visible = false
+            }
+        }).catch((error) => {
+            console.log(error)
+        });  
+
       }else{
         console.log('Create Type Error!')
       }
