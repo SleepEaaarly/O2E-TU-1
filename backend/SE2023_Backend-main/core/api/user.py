@@ -166,9 +166,11 @@ def delete_user(request: HttpRequest):
     data: dict = parse_data(request)
     pid = data.get('id')
     if User.objects.filter(pk=pid).exists() is False:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,'Your required user to delete is not found!')
+        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, 'Your required user to delete is not found!')
     user = User.objects.filter(pk=pid).first()
-    User.objects.get(pk=pid).delete()
+    # User.objects.get(pk=pid).delete()
+    user.state = 3
+    user.save()
     return success_api_response({"result": "Ok, all user info has been provided."})
 
 

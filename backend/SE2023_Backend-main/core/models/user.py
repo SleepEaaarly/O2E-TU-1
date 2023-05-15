@@ -30,23 +30,13 @@ STATE_LIST = ['普通用户', '专家认证中', '企业认证中', '封禁中',
 
 BASE_DIR = 'http://127.0.0.1:8000/api/'
 
-'''
-class AdminUser(models.Model):
-    nick_name = models.CharField(max_length=20)
-    email = models.CharField(max_length=30)
-    password = models.CharField(max_length=40)
-    REQUIRED_FIELDS = ['email','nick_name','password']
-
-    def super_authenticate(self,name,password):
-        return self.nick_name == name and self.password == password
-'''
 
 def decode_user_state(state):
     return STATE_LIST[state]
 
+
 def decode_user_state(state):
     return STATE_LIST[state]
-
 
 
 class User(AbstractUser):
