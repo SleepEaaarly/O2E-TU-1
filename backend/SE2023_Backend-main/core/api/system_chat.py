@@ -97,7 +97,7 @@ def get_system_chat(request: HttpRequest):
         # print(m)
         if(m.is_to_system == 1):
             a_message['isme'] = True
-            a_message['user_pic'] = owner.icon.path
+            a_message['user_pic'] = owner.icon.url
         else:
             a_message['isme'] = False
             a_message['user_pic'] = ''
@@ -139,6 +139,7 @@ def get_system_chat(request: HttpRequest):
         'system_chatroom_id': system_chatroom_id
         'message_id': message_id
 """
+
 
 @csrf_exempt
 @jwt_auth()
@@ -183,6 +184,7 @@ def push_system_message(request: HttpRequest):
         - 是否成功
 """
 
+
 @csrf_exempt
 @jwt_auth()
 @require_POST
@@ -219,6 +221,7 @@ def system_message_read(request: HttpRequest):
     Returns:
         - 成功或失败信息
 """
+
 
 @csrf_exempt
 @jwt_auth()
@@ -258,6 +261,7 @@ def alter_systemchat_visible(request: HttpRequest):
     Returns:
         - 结构较为复杂，详情请见设计文档
 """
+
 
 @csrf_exempt
 @jwt_auth()

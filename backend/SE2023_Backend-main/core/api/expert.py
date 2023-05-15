@@ -101,10 +101,6 @@ def setinfo(request:HttpRequest):
     if not phone:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "need valid phone")
     user = User.objects.get(id=id)
-    name_vec = get_hitbert_embedding(name)
-    get_milvus_connection()
-    mid = milvus_insert("O2E_EXPERT_HIT", data=[[name_vec], [int(id)]])
-    disconnect_milvus()
     if user.expert_info is not None:
         expert = user.expert_info
         expert.name = name
@@ -116,7 +112,6 @@ def setinfo(request:HttpRequest):
         expert.phone = phone
         expert.patent = patent
         expert.paper = paper
-        expert.vector_hit = mid[0]
         expert.save()
         user.state = 1
         user.save()
@@ -131,7 +126,6 @@ def setinfo(request:HttpRequest):
         expert.phone = phone
         expert.patent = patent
         expert.paper = paper
-        expert.vector_hit = mid[0]
         expert.save()
         user.expert_info = expert
         user.state = 1
@@ -181,6 +175,7 @@ def refuse_expert(request:HttpRequest, id:int):
     if user.state != 1:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "invalid user state")
     user.state = 0
+    user.expert_info = None
     user.save()
     print(4)
     return success_api_response("success")

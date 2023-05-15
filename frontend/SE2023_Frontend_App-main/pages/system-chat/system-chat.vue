@@ -371,9 +371,10 @@
                 let last_time = 0
                 for (var i = 0; i < result.messages.length; i++) {
                     let message = {}
+
                     message.message = result.messages[i].message
                     message.isme = result.messages[i].isme
-                    message.userpic = result.messages[i].user_pic
+                    message.userpic = 'http://116.63.14.146:8000/api' + result.messages[i].user_pic
                     message.type = result.messages[i].type
                     message.gstime = time.gettime.getChatTime(result.messages[i].created_at, last_time)
                     last_time = result.messages[i].created_at
@@ -388,7 +389,7 @@
                         message.cardInfo = result.messages[i].cardInfo
                     }
                     load_system_chat.messages.push(message)
-                    // console.log(message)
+                    console.log(message)
                 }
                 // console.log(load_system_chat)
                 this.setSystemChat(load_system_chat)
