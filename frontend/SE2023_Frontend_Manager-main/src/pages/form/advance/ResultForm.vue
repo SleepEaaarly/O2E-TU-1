@@ -154,8 +154,13 @@
       <br/>
       <br/>
       <a-table :data-source="data" :columns="columns" :pagination="pagination" :key="itemKey">
-        <template
+        <!-- <template
           v-for="col in ['name', 'pyear', 'field', 'period', 'abstract', 'content']"
+          :slot="col"
+          slot-scope="text, record"
+        > -->
+        <template
+          v-for="col in ['name', 'pyear', 'field', 'period']"
           :slot="col"
           slot-scope="text, record"
         >
@@ -232,18 +237,18 @@
       scopedSlots: { customRender: "period" },
       // onFilter: (value, record) => record.type.indexOf(value) === 0,
     },
-    {
-      title: "摘要",
-      dataIndex: "abstract",
-      width: "20%",
-      scopedSlots: { customRender: "abstract" },
-    },
-    {
-      title: "内容",
-      dataIndex: "content",
-      width: "20%",
-      scopedSlots: { customRender: "content" },
-    },
+    // {
+    //   title: "摘要",
+    //   dataIndex: "abstract",
+    //   width: "20%",
+    //   scopedSlots: { customRender: "abstract" },
+    // },
+    // {
+    //   title: "内容",
+    //   dataIndex: "content",
+    //   width: "20%",
+    //   scopedSlots: { customRender: "content" },
+    // },
     {
       title: "操作",
       dataIndex: "operation",
