@@ -9,7 +9,8 @@
     <Form-item label="标签" prop="tags"><Input type="text" placeholder='请输入至少三个标签(以空格分隔)' v-model.trim="form.tags" /></Form-item>
     <Form-item label="标题" prop="title"><Input type="text" placeholder='请输入标题' v-model="form.title" /></Form-item>
      <Form-item label="论文解读" v-show="true" prop="paper">
-      <editor v-model="form.paper" pasteFilter="true"></editor>
+      <!-- <editor v-model="form.paper" pasteFilter="true"></editor> -->
+      <Input type="text" placeholder='请输入解读文献' v-model="form.paper" />
      </Form-item>
     <Button type="primary" @click="handleSubmit('form')" long>发布</Button>
     </Form>
