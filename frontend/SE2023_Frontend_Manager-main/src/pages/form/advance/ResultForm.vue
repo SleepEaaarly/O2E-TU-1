@@ -29,25 +29,123 @@
         </a-button>
         <a-modal v-model="result_visible" title="添加成果" @ok="handleOk">
           <a-form :form="form" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
-            <a-form-item label="用户名">
+            
+            <a-form-item label="成果标题">
               <a-input
-                placeholder="请输入用户名"
-                v-decorator="['note', { rules: [{ required: true, message: 'Please input your usename!' }] }]"
+                placeholder="请输入成果标题"
+                v-decorator="['note', { rules: [{ required: true, message: '请输入有效的成果标题!' }] }]"
               />
             </a-form-item>
-            <a-form-item label="密码">
+
+            <a-form-item label="成果摘要">
               <a-input
-                placeholder="请输入密码"
-                v-decorator="['note', { rules: [{ required: true, message: 'Please input your password!' }] }]"
-                type="password"
+                type="textarea"
+                placeholder="请输入成果摘要"
               />
             </a-form-item>
-            <a-form-item label="邮箱">
+
+            <a-form-item label="成果作者">
               <a-input
-                placeholder="请输入邮箱"
-                v-decorator="['note', { rules: [{ required: true, message: 'Please input your email!' }] }]"
+                placeholder="多个作者用英文逗号分隔"
               />
             </a-form-item>
+
+
+            <a-form-model-item label="成果领域">
+              <a-select placeholder="请为您的成果确定主要领域方向">
+                <a-select-option value="0">
+                  信息技术
+                </a-select-option>
+                <a-select-option value="1">
+                  装备制造
+                </a-select-option>
+                <a-select-option value="2">
+                  新材料
+                </a-select-option>
+                <a-select-option value="3">
+                  新能源
+                </a-select-option>
+                <a-select-option value="4">
+                  节能环保
+                </a-select-option>
+                <a-select-option value="5">
+                  生物医药
+                </a-select-option>
+                <a-select-option value="6">
+                  科学创意
+                </a-select-option>
+                <a-select-option value="7">
+                  检验检测
+                </a-select-option>
+                <a-select-option value="8">
+                  其他
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+
+            <a-form-model-item label="成果阶段">
+              <a-radio-group>
+                <a-radio value="0">
+                  实验室
+                </a-radio>
+                <a-radio value="1">
+                  样品
+                </a-radio>
+                <a-radio value="2">
+                  中试
+                </a-radio>
+                <a-radio value="3">
+                  产业化
+                </a-radio>
+              </a-radio-group>
+            </a-form-model-item>
+
+            <!-- <a-form-item label="成果示意图">
+              <a-upload
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                list-type="picture-card"
+                :file-list="fileList"
+                @preview="handlePreview"
+                @change="handleChange"
+              >
+                <div v-if="fileList.length < 1">
+                  <a-icon type="plus" />
+                  <div class="ant-upload-text">
+                    Upload
+                  </div>
+                </div>
+              </a-upload>
+              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                <img alt="example" style="width: 100%" :src="previewImage" />
+              </a-modal>
+            </a-form-item> -->
+
+            <a-form-item label="成果内容">
+              <a-input
+                type="textarea"
+                placeholder="介绍成果的内容"
+              />
+            </a-form-item>
+
+            <!-- <a-form-item label="成果详情图">
+              <a-upload
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                list-type="picture-card"
+                :file-list="fileList"
+                @preview="handlePreview"
+                @change="handleChange"
+              >
+                <div v-if="fileList.length < 9">
+                  <a-icon type="plus" />
+                  <div class="ant-upload-text">
+                    Upload
+                  </div>
+                </div>
+              </a-upload>
+              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                <img alt="example" style="width: 100%" :src="previewImage" />
+              </a-modal>
+            </a-form-item> -->
           
           </a-form>
         </a-modal>
