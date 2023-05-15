@@ -320,6 +320,7 @@ def get_all_system_chatrooms(request: HttpRequest):
     
 """
 
+
 @csrf_exempt
 @jwt_auth()
 @require_POST
