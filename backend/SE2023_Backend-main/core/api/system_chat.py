@@ -140,6 +140,7 @@ def get_system_chat(request: HttpRequest):
         'message_id': message_id
 """
 
+
 @csrf_exempt
 @jwt_auth()
 @require_POST
@@ -183,6 +184,7 @@ def push_system_message(request: HttpRequest):
         - 是否成功
 """
 
+
 @csrf_exempt
 @jwt_auth()
 @require_POST
@@ -219,6 +221,7 @@ def system_message_read(request: HttpRequest):
     Returns:
         - 成功或失败信息
 """
+
 
 @csrf_exempt
 @jwt_auth()
@@ -258,6 +261,7 @@ def alter_systemchat_visible(request: HttpRequest):
     Returns:
         - 结构较为复杂，详情请见设计文档
 """
+
 
 @csrf_exempt
 @jwt_auth()
