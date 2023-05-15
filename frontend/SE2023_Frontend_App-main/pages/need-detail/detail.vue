@@ -99,6 +99,11 @@
 		<!-- 悬浮按钮 -->
 		<!-- <uni-fab ref="fab" :pattern="pattern" :content="content" :horizontal="horizontal" :vertical="vertical"
 					:direction="direction" @trigger="trigger" @fabClick="fabClick" /> -->
+		<uni-popup ref="alertDialog" type="dialog">
+			<uni-popup-dialog type="success" confirmText="同意" cancelText="关闭" title="报告已生成，是否跳转到具体页面？"  @confirm="gotoSystemChat"
+				@close="dialogClose">
+			</uni-popup-dialog>
+		</uni-popup>
 	</view>
 </template>
 
@@ -130,6 +135,8 @@
 	import { picUrl } from '@/api/common.js'
 	// import { getUserProfile } from '@/api/home.js'
 	import { getUserInfo } from '@/api/user-space.js'
+	import uniPopup from '@/components/uni_popup_modules/uni-popup/components/uni-popup/uni-popup.vue'
+	import uniPopupDialog from '@/components/uni_popup_modules/uni-popup/components/uni-popup-dialog/uni-popup-dialog.vue'
 	var graceRichText = require('../../components/common/richText.js')
 	export default {
 		components: {
@@ -140,7 +147,9 @@
 			uniRow,
 			uniSection,
 			uniCard,
-			loadMore
+			loadMore,
+			uniPopup,
+			uniPopupDialog
 		},
 		data() {
 			return {
@@ -220,12 +229,21 @@
 		},
 		computed: { ...mapState(['userInfo']) },
 		methods: {
+			gotoSystemChat() {
+				console.log('gogogo')
+				uni.navigateTo({ url: '/pages/system-chat/system-chat?uid=' + this.userInfo.id })
+			},
+			dialogClose() {
+				console.log('点击关闭')
+			},
 			// 生成报告
 			async generateNeedReport() {
 				console.log("generate report1")
 				// 调用生成报告的api，后端负责将报告插入到对应的用户系统聊天之中
+				
 				await requireGenerateCard(this.userInfo.id, this.detail.id)
 				console.log("generate report2")
+				this.$refs.alertDialog.open()
 			},
 			//点击fab后的动作
 			trigger(e) {
