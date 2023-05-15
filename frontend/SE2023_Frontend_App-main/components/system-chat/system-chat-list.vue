@@ -5,7 +5,7 @@
         <view v-if="item.type == 'switch_info'" class="system-chat-time u-f-ajc">您已转换为{{item.message === 'AI' ? "AI" : "人工"}}服务</view>
         <view v-if="item.type !== 'switch_info'" class="system-chat-list u-f" :class="{'system-chat-me': item.isme}">
             <!-- 显示管理员/AI头像但不跳转 -->
-            <image v-if="!item.isme" :src="item.user_pic" mode="widthFix" lazy-load></image>
+            <image v-if="!item.isme" :src="item.user_pic" mode="widthFix" ></image>
             <!-- 消息 -->
             <view class="system-chat-list-body">
                 
@@ -50,6 +50,7 @@
 				></order_message_card>
             </view>
             <!-- 点击头像跳转到自己主页 -->
+            <image v-if="item.isme" :src="item.userpic" @tap="navUserInfo" mode="widthFix"></image>
         </view>
     </view>
 </template>
@@ -126,6 +127,7 @@
 	height: 0;
 	border: 16upx solid #F4F4F4;
 	border-color: transparent #F4F4F4 transparent transparent;
+    /* margin-right: 0; */
 }
 .system-chat-me {
     justify-content: flex-end;
@@ -133,9 +135,13 @@
 .system-chat-me .system-chat-list-body:after {
     left: auto;
 	right: -30upx;
-	border-color: transparent transparent transparent #F4F4F4;
+	border-color: transparent transparent transparent #00ff33;
+    
 }
-
+.system-chat-me .system-chat-list-body {
+    background: #00ff33;
+    margin-right: 12upx;
+}
 .system-chat-list-body>image {
     max-width: 150upx;
 	max-height: 200upx;
