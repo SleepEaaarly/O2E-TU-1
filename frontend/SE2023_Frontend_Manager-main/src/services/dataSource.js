@@ -138,6 +138,21 @@ export const searchUser = (params) => {
   return request(url, METHOD.POST, params)
 }
 
+export const adminCreateUserAPI = (params) => {
+  const url = BASE_URL_IP + `/api/admin/add/user`
+  return request(url, METHOD.POST, params)
+}
+
+export const adminCreateExpertAPI = (params) => {
+  const url = BASE_URL_IP + `/api/admin/add/expert`
+  return request(url, METHOD.POST, params)
+}
+
+export const adminCreateCompanyAPI = (params) => {
+  const url = BASE_URL_IP + `/api/admin/add/enterprise`
+  return request(url, METHOD.POST, params)
+}
+
 export default {
   goodsList,
   goodsColumns,
@@ -158,5 +173,8 @@ export default {
   deleteComment,
   deleteDiscussionComment,
   UserDel,
-  UserModify
+  UserModify,
+  adminCreateCompanyAPI,
+  adminCreateExpertAPI,
+  adminCreateUserAPI
 };
