@@ -1,74 +1,45 @@
 <template>
     <view>
-
-
         <scroll-view id="scrollview" scroll-y :scroll-top="scrollTop"
-        :scroll-with-animation="true"
-        refresher-enabled
-        @refresherrefresh="scrollTopHandle"
-        :refresher-triggered="triggered"
-        :style="{height: style.contentH + 'px'}">
-            <!-- 聊天列表 -->
-            <block v-for="(item, index) in currentSystemChatMsgs" :key="index">
-                <view class="chat-item" v-if="item.type != 'report'">
-                    <system-chat-list 
-                        @goToUserInfo="goToUserInfo" 
-                        :item="item" :index="index" :isHuman="isHuman"></system-chat-list>
-                </view>
-                <!-- <require_message_card v-if="item.type == 'report'"
-                title="请帮我写软工吧"
-                companyName="北京航空航天大学"
-                :companyLogoPath="testpic"
-                intro="Here is a summary of some of the most commonly used methods in machine learning."
-                time="上午 7:43"
-            ></require_message_card> -->
-                <require_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'NEED'"
-                    :id="item.reportInfo.reportId"
-                    :title="item.reportInfo.reportTitle"
-                    :companyName="item.reportInfo.reportName"
-                    :companyLogoPath="item.reportInfo.reportLogoPath"
-                    :intro="item.reportInfo.reportInfo"
-                    :time="item.reportInfo.time"
-                >
-                </require_message_card>
-                
-                <work_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'WORK'"
-                    :id="item.reportInfo.reportId"
-                    :title="item.reportInfo.reportTitle"
-                    :expertName="item.reportInfo.reportName"
-                    :expertLogoPath="item.reportInfo.reportLogoPath"
-                    :intro="item.reportInfo.reportInfo"
-                    :time="item.reportInfo.time"
-                >
-                </work_message_card>
+            :scroll-with-animation="true"
+            refresher-enabled
+            @refresherrefresh="scrollTopHandle"
+            :refresher-triggered="triggered"
+            :style="{height: style.contentH + 'px'}">
+                <!-- 聊天列表 -->
+                <block v-for="(item, index) in currentSystemChatMsgs" :key="index">
+                    <view class="chat-item" v-if="item.type != 'report'">
+                        <system-chat-list 
+                            @goToUserInfo="goToUserInfo" 
+                            :item="item" :index="index" :isHuman="isHuman"></system-chat-list>
+                    </view>
+                    <require_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'NEED'"
+                        :id="item.reportInfo.reportId"
+                        :title="item.reportInfo.reportTitle"
+                        :companyName="item.reportInfo.reportName"
+                        :companyLogoPath="item.reportInfo.reportLogoPath"
+                        :intro="item.reportInfo.reportInfo"
+                        :time="item.reportInfo.time"
+                    >
+                    </require_message_card>
+                    
+                    <work_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'WORK'"
+                        :id="item.reportInfo.reportId"
+                        :title="item.reportInfo.reportTitle"
+                        :expertName="item.reportInfo.reportName"
+                        :expertLogoPath="item.reportInfo.reportLogoPath"
+                        :intro="item.reportInfo.reportInfo"
+                        :time="item.reportInfo.time"
+                    >
+                    </work_message_card>
 
-                <!-- <order_message_card v-if="item.type == 'report' && item.reportInfo.reportType == 'order'">
-                </order_message_card> -->
-
-                <order_message_card v-if="item.type=='report' && item.reportInfo.reportType=='ORDER'"
-					:id="item.reportInfo.reportId"
-					:title="item.reportInfo.reportTitle"
-					:intro="item.reportInfo.reportInfo"
-					:time="item.reportInfo.time"
-				></order_message_card>
-            </block>
-            <!-- <require_message_card
-                title="请帮我写软工吧"
-                companyName="北京航空航天大学"
-                :companyLogoPath="testpic"
-                intro="Here is a summary of some of the most commonly used methods in machine learning."
-                time="上午 7:43"
-            ></require_message_card>
-                <system-chat-list 
-                        @goToUserInfo="goToUserInfo" 
-                        :item="item" :isHuman="isHuman"></system-chat-list>
-            <work_message_card 
-                title="A Summary of Machine Learning" 
-                expertName="占瑞乙" 
-                expertLogoPath="/static/head_zry_fox.jpg"
-                intro="Here is a summary of some of the most commonly used methods in machine learning." 
-                time="上午 7:45">
-            </work_message_card> -->
+                    <order_message_card v-if="item.type=='report' && item.reportInfo.reportType=='ORDER'"
+                        :id="item.reportInfo.reportId"
+                        :title="item.reportInfo.reportTitle"
+                        :intro="item.reportInfo.reportInfo"
+                        :time="item.reportInfo.time"
+                    ></order_message_card>
+                </block>
         </scroll-view>
         <tui-button v-if="!isHuman" @click="openmenu" :size="28" :plain="true">
             当前问题类型为{{questionType==='basic'?"平台功能问题":"其他问题"}}
@@ -124,6 +95,7 @@
         },
         data() {
             return {
+                msgPage: 1,
                 testpic: "/static/head.jpg",
                 aiPic: "/static/head.jpg",
                 picUrl: '',
@@ -306,10 +278,19 @@
                 if (this.triggered) {
                     setTimeout(() => {
                         // 这部分还不太明白学长写的啥意思
+                        if (this.msgPage > (this.currentSystemChatMsgs(msgPage=this.msgPage).length / 20)){
+                            uni.showToast({
+                                title: '没有更多消息了！',
+                                icon: 'none'
+                            })
+                        }
+                        this.triggered = false
                     }, 200)
                     return
                 }
                 this.triggered = true
+                this.msgPage++
+                this.currentSystemChatMsgs(msgPage=this.msgPage)
             },
             pageToBottom(isfirst = false) {    // 页面展示当前聊天的底部
                 let q = uni.createSelectorQuery().in(this)

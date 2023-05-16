@@ -35,6 +35,7 @@ function purifyKeys(item){
 export const getFinishedOrder = async uid => {
 	console.log('getFinishedOrder')
 	let result = await axios.get('user/' + uid + '/order/finished')
+	console.log(result)
 	result = result.data
 	
 	//清洗数据格式
