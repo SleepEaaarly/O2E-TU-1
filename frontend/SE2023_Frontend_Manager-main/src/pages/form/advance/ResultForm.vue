@@ -432,7 +432,9 @@
         console.log('check key')
         console.log(this.editData.key)
         if (col === "name") {
-          this.editData.name = value;
+          alert("暂不允许修改成果名称！")
+          this.reload()
+          // this.editData.name = value;
         } else if (col === 'abstract') {
           this.editData.abstract = value;
         } else if (col === 'field') {
@@ -486,14 +488,15 @@
           title: this.editData.name,
           period: this.editData.period,
           abstract:this.editData.abstract,
-          content: this.data[i].content, 
-          pyear: this.data[i].pyear,
+          content: this.editData.content, 
+          pyear: this.editData.pyear,
           field: this.editData.field,
         };
   
         let that = this
         WorkModify(params)
           .then((res) => {
+            console.log('成功修改')
             this.$message.info("成功修改");
             console.log(res)
           }).then((res) => {

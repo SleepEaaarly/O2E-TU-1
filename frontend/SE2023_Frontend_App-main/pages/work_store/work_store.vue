@@ -95,6 +95,7 @@ import { getWorkList } from "@/api/work_store.js"
 			console.log('works-onShow()')
 			this.finish_getting = false
 			this.recommendList.list = []
+			this.cur_page = 1
 			this.requestData()
 		},
 		onLoad() {		//页面显示,每次打开页面都会调用一次
