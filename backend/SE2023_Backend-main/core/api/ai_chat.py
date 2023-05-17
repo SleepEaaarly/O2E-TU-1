@@ -679,5 +679,6 @@ def answer_free_question(request: HttpRequest):
         print(ret_json['choices'][0]['message']['content'])
         final['answer'] = ret_json['choices'][0]['message']['content']
     except Exception:
-        final['answer'] += "您的问题可能违规。"
+        if(final['answer']==""):
+            final['answer'] += "AI助手暂不能给出该问题的回答"
     return success_api_response(final)

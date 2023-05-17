@@ -308,6 +308,7 @@ def add_enterprise(request: HttpRequest):
 @response_wrapper
 @require_http_methods('POST')
 def set_result(request: HttpRequest):
+    print(0)
     title = request.POST.get('title')
     abstract = request.POST.get('abstract')
     pyear = request.POST.get('pyear').split('-')[0]
@@ -315,51 +316,42 @@ def set_result(request: HttpRequest):
     period = request.POST.get('period')
     id = request.POST.get('id')
     content = request.POST.get('content')
-    picture = request.FILES.get("picture")
-
-    multipic = request.FILES.getlist('multipic')
+    print(1)
     result = Results.objects.get(pk=id)
-    rst_pic_delete(result)
-    all_multipic = ResMultipic.objects.all()
-    res_multipic = result.multipic.all()
-    result.multipic.remove(*all_multipic)
-    for pic in res_multipic:
-        multipic_delete(pic)
-    res_multipic.delete()
+    
 
-    result.save()
     # 改向量
-    if result.state == 1 and title != result.title:
-        title_en = trans_zh2en(title)
-        result.title_eng = title_en
+    # if result.state == 1 and title != result.title:
+    #     title_en = trans_zh2en(title)
+    #     result.title_eng = title_en
 
-        hit_vec = get_hitbert_embedding(title_en)
-        sci_vec = get_scibert_embedding(title_en)
+    #     hit_vec = get_hitbert_embedding(title_en)
+    #     sci_vec = get_scibert_embedding(title_en)
 
-        get_milvus_connection()
+    #     get_milvus_connection()
 
-        milvus_delete("O2E_RESULT_HIT", result.vector_hit)
-        milvus_delete("O2E_RESULT", result.vector_sci)
+    #     milvus_delete("O2E_RESULT_HIT", result.vector_hit)
+    #     milvus_delete("O2E_RESULT", result.vector_sci)
 
 
-        mid_hit = milvus_confirm_item_exist("O2E_RESULT_HIT", "result_id", id)
-        while mid_hit >= 0:
-            print("waiting vec_hit to be delete...")
-            time.sleep(1)
-            mid_hit = milvus_confirm_item_exist("O2E_RESULT_HIT", "result_id", id)
-        mid_hit = milvus_insert("O2E_RESULT_HIT", data=[[hit_vec], [id]])[0]
+    #     mid_hit = milvus_confirm_item_exist("O2E_RESULT_HIT", "result_id", id)
+    #     while mid_hit >= 0:
+    #         print("waiting vec_hit to be delete...")
+    #         time.sleep(1)
+    #         mid_hit = milvus_confirm_item_exist("O2E_RESULT_HIT", "result_id", id)
+    #     mid_hit = milvus_insert("O2E_RESULT_HIT", data=[[hit_vec], [id]])[0]
         
-        mid_sci = milvus_confirm_item_exist("O2E_RESULT", "result_id", id)
-        while mid_sci >= 0:
-            print("waiting vec_sci to be delete...")
-            time.sleep(1)
-            mid_sci = milvus_confirm_item_exist("O2E_RESULT", "result_id", id)
-        mid_sci = milvus_insert("O2E_RESULT", data=[[sci_vec], [id]])[0]
+    #     mid_sci = milvus_confirm_item_exist("O2E_RESULT", "result_id", id)
+    #     while mid_sci >= 0:
+    #         print("waiting vec_sci to be delete...")
+    #         time.sleep(1)
+    #         mid_sci = milvus_confirm_item_exist("O2E_RESULT", "result_id", id)
+    #     mid_sci = milvus_insert("O2E_RESULT", data=[[sci_vec], [id]])[0]
 
-        disconnect_milvus()
+    #     disconnect_milvus()
 
-        result.vector_sci = mid_sci
-        result.vector_hit = mid_hit
+    #     result.vector_sci = mid_sci
+    #     result.vector_hit = mid_hit
 
     result.title = title
     result.abstract = abstract
@@ -367,13 +359,6 @@ def set_result(request: HttpRequest):
     result.field = field
     result.period = period
     result.content = content
-
-    result.picture = picture
-
-    for p in multipic:
-        a = ResMultipic(picture=p)
-        a.save()
-        result.multipic.add(a)
 
     result.save()
     return success_api_response({})
