@@ -97,7 +97,8 @@
                       <i-input type="text" v-model="post.title" placeholder='请输入标题' />
                     </form-item>
                     <form-item label="内容" prop="content" isRealtime=true :cache="false">
-                      <editor ref="editor1" id="editor1" v-model="post.content" isRealtime=true></editor>
+                      <!-- <editor ref="editor1" id="editor1" v-model="post.content" isRealtime=true></editor> -->
+                      <i-input type="textarea" placeholder="内容不超过200字" :maxlength="200" :rows="4" v-model="post.content" />
                     </form-item>
                     <form-item label="解读对象" prop="citation">
                       <i-input type="text" v-model="post.citation" placeholder='请输入参考文献(GB7714格式)' />
