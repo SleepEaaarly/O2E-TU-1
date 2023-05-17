@@ -14,11 +14,11 @@ export default {
     const token = getToken()
     if (token) {
       // 用户已登录，加载 userprofile
-      getUserInfo().then(res => {
-        this.$store.commit('setUserProfile', res.data)
-      }).catch(error => {
-        this.$Modal.error(getErrModalOptions(error))
-      })
+      // getUserInfo().then(res => {
+      //   this.$store.commit('setUserProfile', res.data)
+      // }).catch(error => {
+      //   this.$Modal.error(getErrModalOptions(error))
+      // })
     }
   }
 }

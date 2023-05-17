@@ -180,7 +180,7 @@
                 <div v-else v-for="item in data" :key="item.id">
                   <Row>
                     <i-col span="2">
-                      <Avatar :src="['http://116.63.14.146:8000/api/' + item.icon]" style="width: 100%;height: 100%" />
+                      <Avatar :src="'http://116.63.14.146:8000/api/' + item.icon" style="width: 100%;height: 100%" />
                     </i-col>
                     <i-col span="5">
                       <div class="user-name">
@@ -237,7 +237,7 @@
                 <div v-else v-for="item in data" :key="item.id">
                   <Row>
                     <i-col span="2">
-                      <Avatar :src="['http://116.63.14.146:8000/api/' + item.icon]" style="width: 100%;height: 100%" />
+                      <Avatar :src="'http://116.63.14.146:8000/api/' + item.icon" style="width: 100%;height: 100%" />
                     </i-col>
                     <i-col span="5">
                       <div class="user-name">
@@ -504,7 +504,7 @@ export default {
 
   mounted () {
     this.showModify = true
-    getUserInfo().then(res => {
+    getUserInfo(this.$store.state.user.userId).then(res => {
       console.log(res)
       this.$store.commit('setUserProfile', res.data)
     }).catch(error => {
@@ -522,7 +522,7 @@ export default {
 
     init: async function () {
       if (!this.$store.state.user.userId) {
-        await getUserInfo().then(res => {
+        await getUserInfo(this.$store.state.user.userId).then(res => {
           console.log(res)
           this.$store.commit('setUserProfile', res.data)
         }).catch(error => {

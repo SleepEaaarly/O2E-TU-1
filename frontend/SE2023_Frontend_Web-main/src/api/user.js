@@ -83,7 +83,7 @@ export const myInterpretation = (id, params) => {
 
 export const getUserInfo = (id) => {
   const url = '/api/user/profile'
-  console.log("I am calling get UserInfo")
+  console.log("I am calling get UserInfo " + id)
   if (id) {
     console.log(id)
     return getRequest(url, 'post', { user_id: id })
