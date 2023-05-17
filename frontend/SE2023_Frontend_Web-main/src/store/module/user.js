@@ -40,15 +40,15 @@ export default {
       state.userName = name
     },
     setUserProfile (state, params) {
-      state.userName = params.nickname === '' ? params.username : params.nickname
-      state.userId = params.id
-      state.userEmail = params.email
-      state.userInstitution = params.institution
-      state.userTotalFan = params.total_fan
-      state.userTotalLike = params.total_like
-      state.userTotalPost = params.total_post
-      state.userIsSponsor = params.is_sponsor
-      state.userpic = 'http://116.63.14.146:8000/api/' + params.userpic
+      state.user.userName = params.nickname === '' ? params.username : params.nickname
+      state.user.userId = params.id
+      state.user.userEmail = params.email
+      state.user.userInstitution = params.institution
+      state.user.userTotalFan = params.total_fan
+      state.user.userTotalLike = params.total_like
+      state.user.userTotalPost = params.total_post
+      state.user.userIsSponsor = params.is_sponsor
+      state.user.userpic = 'http://116.63.14.146:8000/api/' + params.userpic
     },
     setAccess (state, access) {
       state.access = access
@@ -116,11 +116,14 @@ export default {
           password: password
         }).then(res => {
           const data = res.data
+          console.log(data)
+          console.log(res)
           commit('setToken', data.access_token)
           commit('setRefreshToken', data.refresh_token)
-          getUserInfo().then(res => {
+          getUserInfo(data.userInfo.id).then(res => {
             commit('setUserProfile', res.data)
           }).catch(error => {
+            console.log("ERROR!!!")
             this.$Modal.error(getErrModalOptions(error))
           })
           resolve()

@@ -48,6 +48,7 @@ export default {
       })
     },
     modify () {
+      console.log(this.$store.state)
       this.$router.push({
         name: 'user_info',
         params: {
