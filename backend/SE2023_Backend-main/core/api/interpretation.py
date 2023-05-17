@@ -34,18 +34,16 @@ def filter_unsafe(string: str):
 @jwt_auth()
 @require_http_methods('POST')
 def createInterpretation(request: HttpRequest):
-    # import pdb
-    # pdb.set_trace()
     data: dict = parse_data(request)
     user = request.user
-
+    print(type(user))
     content: str = filter_unsafe(data.get('content'))
     citation: str = filter_unsafe(data.get('citation'))
     source: str = filter_unsafe(data.get('source'))
     publish_year: int = data.get('published_year')
     title: str = filter_unsafe(data.get('title'))
     tags: list = data.get('tags')
-
+    print(tags)
     # import pdb
     # pdb.set_trace()
     this_interpretation = Interpretation()
@@ -54,6 +52,7 @@ def createInterpretation(request: HttpRequest):
     this_interpretation.title = title
     this_interpretation.publish_year = publish_year
     this_interpretation.save()
+    print("interpretation is saved 1")
     for _tag in tags:
         _tag_name, _tag_type = _tag['name'], _tag['type']
         _tag_matches = Tag.objects.filter(name=_tag_name.lower())
@@ -68,7 +67,7 @@ def createInterpretation(request: HttpRequest):
     this_interpretation.citation = citation
 
     this_interpretation.save()
-
+    print("interpretation is saved 2")
     # notify followers
     for follower_user in user.user_set.all():
         # import pdb

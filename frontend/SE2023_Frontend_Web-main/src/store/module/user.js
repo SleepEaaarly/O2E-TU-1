@@ -40,15 +40,33 @@ export default {
       state.userName = name
     },
     setUserProfile (state, params) {
-      state.user.userName = params.nickname === '' ? params.username : params.nickname
-      state.user.userId = params.id
-      state.user.userEmail = params.email
-      state.user.userInstitution = params.institution
-      state.user.userTotalFan = params.total_fan
-      state.user.userTotalLike = params.total_like
-      state.user.userTotalPost = params.total_post
-      state.user.userIsSponsor = params.is_sponsor
-      state.user.userpic = 'http://116.63.14.146:8000/api/' + params.userpic
+      console.log("enter set User Profile")
+      console.log(params)
+      console.log(params.username)
+      console.log(params.nickname)
+      state.userName = params.username
+      console.log("Now we can get the userName in state.user.userName 2")
+      console.log(state.userName)
+      state.userId = params.id
+      console.log("Now we can get the userId in state.user.userId 2")
+      console.log(state.userId)
+      state.userEmail = params.email
+      console.log("Now we can get the userEmail in state.user.userEmail 2")
+      console.log(state.userEmail)
+      // state.user.userInstitution = params.institution===null ? "" : params.institution
+      state.userTotalFan = params.total_fan
+      console.log("Now we can get the userTotalFan in state.user.userEmail 2")
+      console.log(state.userTotalFan)
+      state.userTotalLike = params.total_like
+      console.log("Now we can get the userTotalLike in state.user.userEmail 2")
+      console.log(state.userTotalLike)
+      state.userTotalPost = params.total_post
+      console.log("Now we can get the userTotalPost in state.user.userEmail 2")
+      console.log(state.userTotalPost)
+      // state.user.userIsSponsor = params.is_sponsor 不存在这个字段
+      state.userpic = 'http://116.63.14.146:8000/api/' + params.userpic
+      console.log("Now we can get the userPic in state.user.userId 2")
+      console.log(state.userpic)
     },
     setAccess (state, access) {
       state.access = access
@@ -119,7 +137,9 @@ export default {
           console.log(data)
           console.log(res)
           commit('setToken', data.access_token)
+          console.log("set Token complete")
           commit('setRefreshToken', data.refresh_token)
+          console.log("set refresh token complete")
           getUserInfo(data.userInfo.id).then(res => {
             commit('setUserProfile', res.data)
           }).catch(error => {

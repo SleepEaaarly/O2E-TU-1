@@ -15,7 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 def get_profile(request: HttpRequest):
     print("enter get profile")
     print(request)
-    data: dict = request.POST.dict()
+    data: dict = parse_data(request)
     # data: dict = parse_data(request)
     print(data)
     if data is not None:
