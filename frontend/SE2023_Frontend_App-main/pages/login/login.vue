@@ -236,7 +236,6 @@
 				uni.switchTab({ url: '/pages/home/home' })
 				return
 			}
-
 			}
 		}
 </script>
