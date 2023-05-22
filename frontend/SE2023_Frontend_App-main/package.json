@@ -10,13 +10,13 @@
   },
   "repository": {
     "type": "git",
-	"url": "git+https://github.com/SE-MCDB/SE2022_Frontend_App.git"
+    "url": "git+https://github.com/SE-MCDB/SE2022_Frontend_App.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-	"url": "https://github.com/SE-MCDB/SE2022_Frontend_App.git"
+    "url": "https://github.com/SE-MCDB/SE2022_Frontend_App.git"
   },
   "homepage": "https://github.com/SE-MCDB/SE2022_Frontend_App#readme"
 }
