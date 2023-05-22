@@ -13,6 +13,7 @@ from pygtrans import Translate
 
 from django.views.decorators.csrf import csrf_exempt
 
+
 @unique
 class ErrorCode(Enum):
     """
