@@ -411,7 +411,8 @@ def finish_order(request: HttpRequest, uid: int, id: int):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist enterprise")
     except Order.DoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "non-exist order")
-
+    print(enterprise)
+    print(order)
     if order.enterprise != enterprise:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "not the enterprise's order")
 

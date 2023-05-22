@@ -677,7 +677,10 @@ def answer_free_question(request: HttpRequest):
         print(response.content.decode('utf-8'))
         ret_json = json.loads(response.content.decode('utf-8'))
         print(ret_json['choices'][0]['message']['content'])
-        final['answer'] = ret_json['choices'][0]['message']['content']
+        answer_str = ret_json['choices'][0]['message']['content']
+        if(len(answer_str)>10000):
+            answer_str = answer_str[:10000]+"..."
+        final['answer'] = answer_str
     except Exception:
         if(final['answer']==""):
             final['answer'] += "AI助手暂不能给出该问题的回答"
