@@ -28,6 +28,7 @@ from core.api.zhitu_utils import get_expertInfo_by_expertId, search_expertID_by_
 import requests
 
 from django.views.decorators.csrf import csrf_exempt
+from core.api.utils import trans_zh2en
 
 
 class ContrastiveSciBERT(nn.Module):
@@ -106,18 +107,19 @@ def get_scibert_embedding(sent):
 def recommend(request: HttpRequest, id: int):
     get_milvus_connection()
     need = Need.objects.get(id=id)
-    keyword = [need.key_word]
+    keyword = [trans_zh2en(w) for w in need.key_word.split(";")]
     key_vector = model.get_embeds(keyword)
-    key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
+    # key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     b = key_vector.detach().numpy().tolist()
-    id_lists = milvus_search(collection_name="O2E_TEMP", query_vectors=b, topk=10,
-                             partition_names=None)[0]
+    id_lists = milvus_search(collection_name="O2E_PAPER", query_vectors=b, topk=10,
+                            partition_names=None)[0]
+
     cites = []
     register_experts = []
     scholarIDs = []
     for id in id_lists:
-        paper = Papers.objects.get(vector=str(id))
-        title = paper.title_eng
+        paper = Papers.objects.get(vector_sci=str(id))
+        title = paper.title
         expert_possible = paper.expert_papers.all()
         for expert in expert_possible:
             cite = 0
@@ -171,7 +173,7 @@ def recommend(request: HttpRequest, id: int):
 
     # 未注册专家推荐
     possible_experts = []
-    id_lists = milvus_search(collection_name="O2E_PAPER", query_vectors=b, topk=3, partition_names=None)[0]
+    # id_lists = milvus_search(collection_name="O2E_PAPER", query_vectors=b, topk=3, partition_names=None)[0]
     s = '['
     for id in id_lists:
         s = s + str(id) + ','
@@ -211,7 +213,7 @@ def need_recommend(request: HttpRequest, id: int):
     for paper in papers:
         titles.append(paper.title_eng)
     key_vector = model.get_embeds(titles)
-    key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
+    # key_vector = key_vector / key_vector.norm(dim=1, keepdim=True)
     key_vector = key_vector.detach().numpy().tolist()
     id_lists = milvus_search(
         "O2E_NEED", query_vectors=key_vector, topk=2, partition_names=None)

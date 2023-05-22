@@ -13,15 +13,20 @@ from django.views.decorators.csrf import csrf_exempt
 @jwt_auth()
 @require_POST
 def get_profile(request: HttpRequest):
+    print("enter get profile")
+    print(request)
     data: dict = parse_data(request)
+    # data: dict = parse_data(request)
+    print(data)
     if data is not None:
         user_id = data.get('user_id')
+        print(user_id)
         if user_id is not None:
             if User.objects.filter(pk=user_id).exists() is False:
                 return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,
                                            'User is not exist')
             user = User.objects.get(pk=user_id)
-
+    print("user=", user)
     all_post = user.created_by.all().distinct()
     total_like = 0
     total_collect = 0

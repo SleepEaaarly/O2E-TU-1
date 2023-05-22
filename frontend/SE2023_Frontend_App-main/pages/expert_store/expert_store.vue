@@ -76,6 +76,7 @@ import loadMore from '../../components/common/load-more.vue'
 		onShow() {		//页面加载,一个页面只会调用一次
 			console.log('experts-onShow()')
 			this.finish_getting = false
+			this.cur_page = 1
 			this.recommendList.list = []
 			this.requestData()
 		},

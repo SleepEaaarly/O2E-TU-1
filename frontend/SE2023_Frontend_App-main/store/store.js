@@ -63,10 +63,10 @@ const store = new Vuex.Store({
 			}
 			return state.chatList[state.msgIndex].messages || []
 		},
-		currentSystemChatMsgs(state) {
+		currentSystemChatMsgs(state, msgPage=1) {
 			let len = state.system_chat.messages ? state.system_chat.messages.length : 0
 			if (len > 20) {
-				return state.system_chat.messages.slice(Math.max(0, len - 20), len)
+				return state.system_chat.messages.slice(Math.max(0, len - 20 * msgPage), len)
 			}
 			return state.system_chat.messages || []
 		}

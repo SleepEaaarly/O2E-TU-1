@@ -154,22 +154,24 @@
       <br/>
       <br/>
       <a-table :data-source="data" :columns="columns" :pagination="pagination" :key="itemKey">
-        <!-- <template
+        <template
           v-for="col in ['name', 'pyear', 'field', 'period', 'abstract', 'content']"
           :slot="col"
           slot-scope="text, record"
-        > -->
-        <template
+        >
+        <!-- <template
           v-for="col in ['name', 'pyear', 'field', 'period']"
           :slot="col"
           slot-scope="text, record"
-        >
-          <div :key="col" style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">
+        > -->
+        
+          <div :key="col" class="ellipsis" style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">
             <a-input
               v-if="record.editable"
               style="margin: -5px 0;"
               :value="text"
               @change="(e) => handleChange(e.target.value, record, col)"
+              class="ellipsis"
             />
             <template v-else>
               {{ text }}
@@ -237,18 +239,20 @@
       scopedSlots: { customRender: "period" },
       // onFilter: (value, record) => record.type.indexOf(value) === 0,
     },
-    // {
-    //   title: "摘要",
-    //   dataIndex: "abstract",
-    //   width: "20%",
-    //   scopedSlots: { customRender: "abstract" },
-    // },
-    // {
-    //   title: "内容",
-    //   dataIndex: "content",
-    //   width: "20%",
-    //   scopedSlots: { customRender: "content" },
-    // },
+    {
+      title: "摘要",
+      dataIndex: "abstract",
+      width: "20%",
+      scopedSlots: { customRender: "abstract" },
+      //class: "my-cell"
+    },
+    {
+      title: "内容",
+      dataIndex: "content",
+      width: "20%",
+      scopedSlots: { customRender: "content" },
+      // class: "my-cell"
+    },
     {
       title: "操作",
       dataIndex: "operation",
@@ -428,7 +432,9 @@
         console.log('check key')
         console.log(this.editData.key)
         if (col === "name") {
-          this.editData.name = value;
+          alert("暂不允许修改成果名称！")
+          this.reload()
+          // this.editData.name = value;
         } else if (col === 'abstract') {
           this.editData.abstract = value;
         } else if (col === 'field') {
@@ -482,14 +488,15 @@
           title: this.editData.name,
           period: this.editData.period,
           abstract:this.editData.abstract,
-          content: this.data[i].content, 
-          pyear: this.data[i].pyear,
+          content: this.editData.content, 
+          pyear: this.editData.pyear,
           field: this.editData.field,
         };
   
         let that = this
         WorkModify(params)
           .then((res) => {
+            console.log('成功修改')
             this.$message.info("成功修改");
             console.log(res)
           }).then((res) => {
@@ -664,5 +671,14 @@
   .editable-row-operations a {
     margin-right: 8px;
   }
+
+  .ellipsis {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  }
+
+  
   </style>
   
