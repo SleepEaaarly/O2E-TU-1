@@ -90,7 +90,7 @@
 				this.require_info.company_name = output.companyInfo.companyName 
 				this.require_info.require_intro = output.requireInfo.requireIntro 
 				this.require_info.company_address = output.companyInfo.companyAddress
-				this.require_info.company_logoPath = picUrl + output.companyInfo.companyLogoPath
+				this.require_info.company_logoPath = "http://116.63.14.146:8000/api" + output.companyInfo.companyLogoPath
 				this.require_info.company_area = output.companyInfo.companyArea
 				this.require_info.require_id = output.requireInfo.requireId 
 				this.require_info.company_id = output.companyInfo.companyId
