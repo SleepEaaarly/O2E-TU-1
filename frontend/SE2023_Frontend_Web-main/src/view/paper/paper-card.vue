@@ -123,6 +123,7 @@ import { getErrModalOptions, getLocalTime } from '@/libs/util'
 import editor from '@/components/editor/editor.vue'
 import Editor from '../../components/editor/editor.vue'
 import comment from '@/components/comment/comment.vue'
+import {saveAS} from 'file-saver'
 export default {
   name: 'PaperCard',
   components: {
@@ -321,7 +322,11 @@ export default {
     },
 
     onOut: function () {
+      console.log("enter onOut")
+      console.log(this.citation)
+      console.log(this.source)
       let str = new Blob([this.citation + '  ' + this.source], { type: 'text/plain;charset=utf-8' })
+      console.log(str)
       saveAs(str, `解读对象.txt`)
     },
 
