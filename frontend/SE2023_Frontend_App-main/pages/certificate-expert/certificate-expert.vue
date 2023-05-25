@@ -284,10 +284,10 @@
 				this.selectedItems = e.detail.value
 			},
 			checkID() {
-				if (this.scholar_ID.length != 18) {
-					return true
-				} else {
+				if (this.ID_num.length === 18) {
 					return false
+				} else {
+					return true
 				}
 			},
 			getFieldString() {
@@ -329,7 +329,7 @@
 					msg: ['请输入正确手机号']
 				},
 				{	
-					name: 'scholar_ID',
+					name: 'ID_num',
 					rule: ['required'],
 					msg: ['请输入身份证号'],
 					validator: [{

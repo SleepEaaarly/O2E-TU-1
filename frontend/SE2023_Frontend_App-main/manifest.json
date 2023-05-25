@@ -53,7 +53,8 @@
         "modules" : {
             "Payment" : {},
             "Push" : {},
-            "OAuth" : {}
+            "OAuth" : {},
+            "Camera" : {}
         },
         /* 模块配置 */
         "distribute" : {
