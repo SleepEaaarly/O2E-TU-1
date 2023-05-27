@@ -179,6 +179,7 @@
             this.pageToBottom(true)
             this.initorder()
             this.initdata()
+            this.refresh()
             readSystemChatMsg(this.userInfo.id)
         },
         // 监听标题栏按钮点击事件
@@ -266,6 +267,9 @@
                 this.timer = setInterval(() => {
                     setTimeout(this.trym, 0)
                 }, 1000 * 5)
+                this.timer2 = setInterval(() => {
+                    this.getData()
+                }, 5000)
             },
             async initorder() { // 获得专家和企业之间的需求和订单信息
 
@@ -325,7 +329,9 @@
             },
             clear() {   // 清除计时器
                 clearInterval(this.timer)
+                clearInterval(this.timer2)
                 this.timer = null
+                this.timer2 = null
             },
             goToUserInfo(uid) { // 进入用户空间
                 uni.navigateTo({url: '../../pages/user-space/user-space?uid=' + uid})
