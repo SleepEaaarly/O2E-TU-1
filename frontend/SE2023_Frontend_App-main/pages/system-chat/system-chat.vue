@@ -193,11 +193,11 @@
         },
         watch: {
             currentSystemChatMsgs(old) {
-                if (this.triggered) {
+                // if (this.triggered) {
 
-                } else {
-                    this.pageToBottom(true)
-                }
+                // } else {
+                //     this.pageToBottom(true)
+                // }
             }
         },
         methods: {
