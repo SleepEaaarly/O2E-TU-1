@@ -137,6 +137,9 @@ export default {
     },
     afterLogin(res) {
       // console.log(res)
+      if (res.data.code == 500) {
+        this.$message.error("账号或密码错误")
+      }
       const positions = [
         {
           CN: "管理员 | O2E-TU-2-后台管理",

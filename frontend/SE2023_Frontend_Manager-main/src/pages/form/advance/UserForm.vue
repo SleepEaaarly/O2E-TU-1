@@ -617,6 +617,7 @@ export default {
     adminCreateUser(){
       this.user_visible = true;
       console.log('Admin Create User');
+      console.log('user_visible')
       // console.log(this.user_visible)
       // console.log(this.expert_visible)
       // console.log(this.company_visible)
@@ -624,6 +625,7 @@ export default {
     adminCreateExpert(){
       this.expert_visible = true;
       console.log('Admin Create expert');
+      
     },
     adminCreateCompany(){
       this.company_visible = true;
@@ -634,21 +636,33 @@ export default {
         return
       }
       console.log('submit')
+
+
+
       if(this.user_visible){
         // add user
+        console.log('user_visible')
         console.log(this.user_info)
+
         adminCreateUserAPI(this.user_info).then((oriRes) => {
+            console.log(oriRes)
             if(oriRes.data.code == 410){
               alert('用户名或邮箱已被注册')
             } else if(oriRes.data.code == 501) {
               alert(oriRes.data.message)
+              // alert('用户名或邮箱已被注册')
+              console.log('用户名或邮箱已被注册')
+              
             }else{
               console.log(oriRes)
               this.resetUserInfo()
               this.user_visible = false
             }
         }).catch((error) => {
+
+
             console.log(error)
+            console.log('error')
         });        
 
       }else if(this.expert_visible){
