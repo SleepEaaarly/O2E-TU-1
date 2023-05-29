@@ -58,3 +58,471 @@ $ yarn build
 [MIT](./LICENSE)
 
 
+
+```
+SE2023_Frontend_Manager-main
+├─ .env
+├─ .env.development
+├─ .gitignore
+├─ babel.config.js
+├─ dist
+│  ├─ css
+│  │  ├─ theme-colors-7603e6b8.css
+│  │  └─ theme-colors-7603e6b8.css.gz
+│  ├─ favicon.ico
+│  ├─ index.html
+│  └─ static
+│     ├─ css
+│     │  ├─ app.2c8e5f56.css
+│     │  ├─ app.2c8e5f56.css.gz
+│     │  ├─ chunk-08aa7af3.4032bd88.css
+│     │  ├─ chunk-08aa7af3.4032bd88.css.gz
+│     │  ├─ chunk-0e186f4d.30934410.css
+│     │  ├─ chunk-13fddaef.f6ceb988.css
+│     │  ├─ chunk-14e59579.c87e810c.css
+│     │  ├─ chunk-14e9a346.00324197.css
+│     │  ├─ chunk-1838e00f.6e4a39f3.css
+│     │  ├─ chunk-2a2fe798.d0b2a332.css
+│     │  ├─ chunk-2d4f6510.ad0af6e9.css
+│     │  ├─ chunk-3382218a.4d8ba024.css
+│     │  ├─ chunk-4394ea40.55384e0e.css
+│     │  ├─ chunk-47964bda.f939c0d7.css
+│     │  ├─ chunk-52ab0850.1380bf16.css
+│     │  ├─ chunk-52ab0850.1380bf16.css.gz
+│     │  ├─ chunk-5df4cc2c.3d338f75.css
+│     │  ├─ chunk-610d7f72.5daddb24.css
+│     │  ├─ chunk-646dcbf6.22adbfad.css
+│     │  ├─ chunk-6b9cdf6e.a60c697d.css
+│     │  ├─ chunk-6cf406df.5541420a.css
+│     │  ├─ chunk-6d5b2ae2.6e4a39f3.css
+│     │  ├─ chunk-6dfa841b.a5bf41a5.css
+│     │  ├─ chunk-6f36d069.5b82055c.css
+│     │  ├─ chunk-6ffa8735.96cd5bc8.css
+│     │  ├─ chunk-71de3e20.e0fd9be1.css
+│     │  ├─ chunk-71df3918.981fb425.css
+│     │  ├─ chunk-a19eefee.f7acf2b3.css
+│     │  ├─ chunk-ca812db0.6e4a39f3.css
+│     │  ├─ chunk-dfab46a8.fdb5ad59.css
+│     │  ├─ chunk-e3eb1086.039347d8.css
+│     │  ├─ chunk-ef18ff4c.86fcd362.css
+│     │  ├─ chunk-f552f9fa.d5261e88.css
+│     │  ├─ chunk-vendors.736cdba8.css
+│     │  └─ chunk-vendors.736cdba8.css.gz
+│     ├─ img
+│     │  └─ logo.9652507e.png
+│     └─ js
+│        ├─ app.be9afe9c.js
+│        ├─ app.be9afe9c.js.gz
+│        ├─ chunk-08aa7af3.1ab5ccdc.js
+│        ├─ chunk-08aa7af3.1ab5ccdc.js.gz
+│        ├─ chunk-0e186f4d.ff47a56e.js
+│        ├─ chunk-0e186f4d.ff47a56e.js.gz
+│        ├─ chunk-13fddaef.c646cff0.js
+│        ├─ chunk-14e59579.0985d1c3.js
+│        ├─ chunk-14e9a346.d55925fd.js
+│        ├─ chunk-1838e00f.28d58b9d.js
+│        ├─ chunk-2a2fe798.5808ad8b.js
+│        ├─ chunk-2d0f0f76.f705b89b.js
+│        ├─ chunk-2d4f6510.205bfa3d.js
+│        ├─ chunk-3382218a.b7c83c5a.js
+│        ├─ chunk-37069a92.6ca53f14.js
+│        ├─ chunk-4394ea40.810d9fe2.js
+│        ├─ chunk-4394ea40.810d9fe2.js.gz
+│        ├─ chunk-47964bda.c2feda92.js
+│        ├─ chunk-47964bda.c2feda92.js.gz
+│        ├─ chunk-52ab0850.cd7efb7a.js
+│        ├─ chunk-52ab0850.cd7efb7a.js.gz
+│        ├─ chunk-5df4cc2c.ce61f42c.js
+│        ├─ chunk-610d7f72.ec3e9dab.js
+│        ├─ chunk-646dcbf6.76fb8031.js
+│        ├─ chunk-6b9cdf6e.e5d4e70f.js
+│        ├─ chunk-6cf406df.6fea7fed.js
+│        ├─ chunk-6d5b2ae2.1f1b1ed3.js
+│        ├─ chunk-6dfa841b.feeb54a2.js
+│        ├─ chunk-6f36d069.f95018d6.js
+│        ├─ chunk-6ffa8735.0a553845.js
+│        ├─ chunk-71de3e20.d3b3c700.js
+│        ├─ chunk-71de3e20.d3b3c700.js.gz
+│        ├─ chunk-71df3918.7bb80f85.js
+│        ├─ chunk-a19eefee.9361901b.js
+│        ├─ chunk-ca812db0.83f72c65.js
+│        ├─ chunk-dfab46a8.20170535.js
+│        ├─ chunk-e3eb1086.e543e301.js
+│        ├─ chunk-ef18ff4c.3f4cacc0.js
+│        ├─ chunk-ef18ff4c.3f4cacc0.js.gz
+│        ├─ chunk-f552f9fa.26af0313.js
+│        ├─ chunk-f552f9fa.26af0313.js.gz
+│        ├─ chunk-vendors.a9a6d141.js
+│        └─ chunk-vendors.a9a6d141.js.gz
+├─ docs
+│  ├─ .vuepress
+│  │  ├─ components
+│  │  │  ├─ Alert.vue
+│  │  │  ├─ Color.vue
+│  │  │  └─ ColorList.vue
+│  │  ├─ config.js
+│  │  ├─ plugins
+│  │  │  └─ alert
+│  │  │     ├─ Alert.vue
+│  │  │     ├─ alertMixin.js
+│  │  │     ├─ clientRootMixin.js
+│  │  │     ├─ enhanceApp.js
+│  │  │     └─ index.js
+│  │  ├─ public
+│  │  │  ├─ favicon.ico
+│  │  │  └─ logo.png
+│  │  └─ styles
+│  │     ├─ index.styl
+│  │     └─ palette.styl
+│  ├─ advance
+│  │  ├─ api.md
+│  │  ├─ async.md
+│  │  ├─ authority.md
+│  │  ├─ chart.md
+│  │  ├─ error.md
+│  │  ├─ guard.md
+│  │  ├─ i18n.md
+│  │  ├─ interceptors.md
+│  │  ├─ login.md
+│  │  ├─ README.md
+│  │  ├─ skill.md
+│  │  └─ theme.md
+│  ├─ assets
+│  │  ├─ admin-layout.png
+│  │  ├─ auth.png
+│  │  ├─ blank-view.png
+│  │  ├─ common-layout.png
+│  │  ├─ menu-demo.png
+│  │  ├─ mode-dark.png
+│  │  ├─ mode-light.png
+│  │  ├─ mode-night.png
+│  │  ├─ new-page-2.png
+│  │  ├─ new-page-us.png
+│  │  ├─ new-page.png
+│  │  ├─ page-layout.png
+│  │  ├─ page-view.png
+│  │  ├─ permission.png
+│  │  └─ tabs-view.png
+│  ├─ develop
+│  │  ├─ layout.md
+│  │  ├─ mock.md
+│  │  ├─ page.md
+│  │  ├─ README.md
+│  │  ├─ router.md
+│  │  ├─ service.md
+│  │  └─ theme.md
+│  ├─ other
+│  │  ├─ community.md
+│  │  ├─ README.md
+│  │  └─ upgrade.md
+│  ├─ README.md
+│  └─ start
+│     ├─ faq.md
+│     ├─ README.md
+│     └─ use.md
+├─ LICENSE
+├─ public
+│  ├─ favicon.ico
+│  └─ index.html
+├─ README.md
+├─ src
+│  ├─ App.vue
+│  ├─ assets
+│  │  └─ img
+│  │     ├─ alipay.png
+│  │     ├─ logo.png
+│  │     ├─ preview-nine.png
+│  │     ├─ preview.png
+│  │     └─ wechatpay.png
+│  ├─ bootstrap.js
+│  ├─ components
+│  │  ├─ cache
+│  │  │  └─ AKeepAlive.js
+│  │  ├─ card
+│  │  │  └─ ChartCard.vue
+│  │  ├─ chart
+│  │  │  ├─ Bar.vue
+│  │  │  ├─ index.less
+│  │  │  ├─ MiniArea.vue
+│  │  │  ├─ MiniBar.vue
+│  │  │  ├─ MiniProgress.vue
+│  │  │  ├─ Radar.vue
+│  │  │  ├─ RankingList.vue
+│  │  │  └─ Trend.vue
+│  │  ├─ chat
+│  │  │  ├─ systemChat.vue
+│  │  │  └─ systemChatBottom.vue
+│  │  ├─ checkbox
+│  │  │  ├─ ColorCheckbox.vue
+│  │  │  ├─ ImgCheckbox.vue
+│  │  │  └─ index.js
+│  │  ├─ exception
+│  │  │  ├─ ExceptionPage.vue
+│  │  │  └─ typeConfig.js
+│  │  ├─ form
+│  │  │  └─ FormRow.vue
+│  │  ├─ input
+│  │  │  └─ IInput.vue
+│  │  ├─ menu
+│  │  │  ├─ Contextmenu.vue
+│  │  │  ├─ index.less
+│  │  │  ├─ menu.js
+│  │  │  └─ SideMenu.vue
+│  │  ├─ page
+│  │  │  └─ header
+│  │  │     ├─ index.less
+│  │  │     └─ PageHeader.vue
+│  │  ├─ result
+│  │  │  └─ Result.vue
+│  │  ├─ setting
+│  │  │  ├─ i18n.js
+│  │  │  ├─ Setting.vue
+│  │  │  └─ SettingItem.vue
+│  │  ├─ table
+│  │  │  ├─ advance
+│  │  │  │  ├─ ActionColumns.vue
+│  │  │  │  ├─ ActionSize.vue
+│  │  │  │  ├─ AdvanceTable.vue
+│  │  │  │  ├─ index.js
+│  │  │  │  └─ SearchArea.vue
+│  │  │  ├─ api
+│  │  │  │  └─ ApiTable.vue
+│  │  │  └─ StandardTable.vue
+│  │  ├─ task
+│  │  │  ├─ TaskGroup.vue
+│  │  │  └─ TaskItem.vue
+│  │  ├─ tool
+│  │  │  ├─ AStepItem.vue
+│  │  │  ├─ AvatarList.vue
+│  │  │  ├─ DetailList.vue
+│  │  │  ├─ Drawer.vue
+│  │  │  ├─ FooterToolBar.vue
+│  │  │  ├─ HeadInfo.vue
+│  │  │  ├─ TagSelect.vue
+│  │  │  └─ TagSelectOption.vue
+│  │  └─ transition
+│  │     └─ PageToggleTransition.vue
+│  ├─ config
+│  │  ├─ config.js
+│  │  ├─ default
+│  │  │  ├─ admin.config.js
+│  │  │  ├─ animate.config.js
+│  │  │  ├─ antd.config.js
+│  │  │  ├─ index.js
+│  │  │  └─ setting.config.js
+│  │  ├─ index.js
+│  │  └─ replacer
+│  │     ├─ index.js
+│  │     └─ resolve.config.js
+│  ├─ layouts
+│  │  ├─ AdminLayout.vue
+│  │  ├─ BlankView.vue
+│  │  ├─ CommonLayout.vue
+│  │  ├─ footer
+│  │  │  └─ PageFooter.vue
+│  │  ├─ header
+│  │  │  ├─ AdminHeader.vue
+│  │  │  ├─ HeaderAvatar.vue
+│  │  │  ├─ HeaderNotice.vue
+│  │  │  ├─ HeaderSearch.vue
+│  │  │  └─ index.less
+│  │  ├─ PageLayout.vue
+│  │  ├─ PageView.vue
+│  │  └─ tabs
+│  │     ├─ i18n.js
+│  │     ├─ index.js
+│  │     ├─ TabsHead.vue
+│  │     └─ TabsView.vue
+│  ├─ main.js
+│  ├─ mock
+│  │  ├─ common
+│  │  │  ├─ activityData.js
+│  │  │  ├─ index.js
+│  │  │  └─ tableData.js
+│  │  ├─ extend
+│  │  │  └─ index.js
+│  │  ├─ goods
+│  │  │  └─ index.js
+│  │  ├─ index.js
+│  │  ├─ project
+│  │  │  └─ index.js
+│  │  ├─ user
+│  │  │  ├─ current.js
+│  │  │  ├─ login.js
+│  │  │  └─ routes.js
+│  │  └─ workplace
+│  │     └─ index.js
+│  ├─ pages
+│  │  ├─ chengguo-certificate
+│  │  │  ├─ ChengguoCard.vue
+│  │  │  └─ ChengguoList.vue
+│  │  ├─ components
+│  │  │  ├─ editor
+│  │  │  │  ├─ AlertMenu.js
+│  │  │  │  ├─ editor.vue
+│  │  │  │  ├─ index.js
+│  │  │  │  └─ tools.js
+│  │  │  ├─ Palette.vue
+│  │  │  ├─ table
+│  │  │  │  ├─ Api.vue
+│  │  │  │  ├─ index.js
+│  │  │  │  └─ Table.vue
+│  │  │  └─ TaskCard.vue
+│  │  ├─ dashboard
+│  │  │  ├─ analysis
+│  │  │  │  ├─ Analysis.vue
+│  │  │  │  ├─ HotSearch.vue
+│  │  │  │  ├─ i18n-search.js
+│  │  │  │  ├─ i18n.js
+│  │  │  │  ├─ index.js
+│  │  │  │  ├─ index.less
+│  │  │  │  └─ SalesData.vue
+│  │  │  └─ workplace
+│  │  │     ├─ HotSearch.vue
+│  │  │     ├─ i18n-search.js
+│  │  │     ├─ i18n.js
+│  │  │     ├─ index.js
+│  │  │     ├─ index.less
+│  │  │     ├─ SalesData.vue
+│  │  │     └─ WorkPlace.vue
+│  │  ├─ detail
+│  │  │  ├─ AdvancedDetail.vue
+│  │  │  └─ BasicDetail.vue
+│  │  ├─ enterprise-certificate
+│  │  │  ├─ EnterpriseCard.vue
+│  │  │  └─ EnterpriseList.vue
+│  │  ├─ exception
+│  │  │  ├─ 403.vue
+│  │  │  ├─ 404.vue
+│  │  │  └─ 500.vue
+│  │  ├─ expert-certificate
+│  │  │  ├─ ExpertCard.vue
+│  │  │  └─ ExpertList.vue
+│  │  ├─ feedback
+│  │  │  └─ feedbackList.vue
+│  │  ├─ form
+│  │  │  ├─ advance
+│  │  │  │  ├─ AdvancedForm.vue
+│  │  │  │  ├─ i18n-repository.js
+│  │  │  │  ├─ i18n-task.js
+│  │  │  │  ├─ i18n-user.js
+│  │  │  │  ├─ i18n.js
+│  │  │  │  ├─ index.js
+│  │  │  │  ├─ interForm.vue
+│  │  │  │  ├─ RepositoryForm.vue
+│  │  │  │  ├─ ResultForm.vue
+│  │  │  │  ├─ TaskForm.vue
+│  │  │  │  └─ UserForm.vue
+│  │  │  ├─ basic
+│  │  │  │  ├─ BasicForm.vue
+│  │  │  │  ├─ i18n.js
+│  │  │  │  └─ index.js
+│  │  │  └─ step
+│  │  │     ├─ i18n.js
+│  │  │     ├─ index.js
+│  │  │     ├─ Step1.vue
+│  │  │     ├─ Step2.vue
+│  │  │     ├─ Step3.vue
+│  │  │     └─ StepForm.vue
+│  │  ├─ list
+│  │  │  ├─ CardList.vue
+│  │  │  ├─ QueryList.vue
+│  │  │  ├─ search
+│  │  │  │  ├─ ApplicationList.vue
+│  │  │  │  ├─ approval.vue
+│  │  │  │  ├─ ArticleList.vue
+│  │  │  │  ├─ comment.vue
+│  │  │  │  ├─ paperCard.vue
+│  │  │  │  ├─ ProjectList.vue
+│  │  │  │  ├─ SearchForm.vue
+│  │  │  │  └─ SearchLayout.vue
+│  │  │  └─ StandardList.vue
+│  │  ├─ login
+│  │  │  ├─ index.js
+│  │  │  └─ Login.vue
+│  │  ├─ need-order
+│  │  │  ├─ ChildForm.vue
+│  │  │  └─ NeedForm.vue
+│  │  ├─ newPage
+│  │  │  ├─ index.js
+│  │  │  ├─ index.less
+│  │  │  └─ NewPage.vue
+│  │  ├─ order-manage
+│  │  │  └─ order-manage.vue
+│  │  ├─ result
+│  │  │  ├─ Error.vue
+│  │  │  └─ Success.vue
+│  │  ├─ system-chat
+│  │  │  ├─ systemChatCard.vue
+│  │  │  └─ systemChatList.vue
+│  │  └─ userTable
+│  │     ├─ index.js
+│  │     ├─ index.less
+│  │     └─ UserTable.vue
+│  ├─ plugins
+│  │  ├─ authority-plugin.js
+│  │  ├─ i18n-extend.js
+│  │  ├─ index.js
+│  │  └─ tabs-page-plugin.js
+│  ├─ router
+│  │  ├─ async
+│  │  │  ├─ config.async.js
+│  │  │  └─ router.map.js
+│  │  ├─ config.js
+│  │  ├─ guards.js
+│  │  ├─ i18n.js
+│  │  └─ index.js
+│  ├─ services
+│  │  ├─ api.js
+│  │  ├─ dataSource.js
+│  │  ├─ enterprise.js
+│  │  ├─ expert.js
+│  │  ├─ feedback.js
+│  │  ├─ index.js
+│  │  ├─ needOrder.js
+│  │  ├─ order.js
+│  │  ├─ paper.js
+│  │  ├─ systemChat.js
+│  │  ├─ testapi.js
+│  │  ├─ user.js
+│  │  └─ work.js
+│  ├─ store
+│  │  ├─ index.js
+│  │  └─ modules
+│  │     ├─ account.js
+│  │     ├─ index.js
+│  │     ├─ setting.js
+│  │     └─ system-chat.js
+│  ├─ theme
+│  │  ├─ antd
+│  │  │  ├─ ant-menu.less
+│  │  │  ├─ ant-message.less
+│  │  │  ├─ ant-table.less
+│  │  │  ├─ ant-time-picker.less
+│  │  │  └─ index.less
+│  │  ├─ default
+│  │  │  ├─ color.less
+│  │  │  ├─ index.less
+│  │  │  ├─ nprogress.less
+│  │  │  └─ style.less
+│  │  ├─ index.less
+│  │  └─ theme.less
+│  └─ utils
+│     ├─ authority-utils.js
+│     ├─ axios-interceptors.js
+│     ├─ colors.js
+│     ├─ formatter.js
+│     ├─ i18n.js
+│     ├─ Objects.js
+│     ├─ request.js
+│     ├─ routerUtil.js
+│     ├─ socket.js
+│     ├─ theme-color-replacer-extend.js
+│     ├─ themeUtil.js
+│     ├─ time.js
+│     └─ util.js
+├─ vue.config.js
+├─ yarn.lock
+└─ yarn.lock.orig
+
+```
