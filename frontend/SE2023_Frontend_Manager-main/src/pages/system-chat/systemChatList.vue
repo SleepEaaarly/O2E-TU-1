@@ -8,7 +8,7 @@
 						<!-- <div class="custom-wrapper" style="background-color: transparent;"> -->
 						<a-modal  v-model="showDetail" title="客服聊天" width="750px" 
 							footer="" ref="chatContent"  class="custom-modal"
-							:mask="true" :maskStyle="{'opacity':'0.2','background':'#FFFFFF','animation':'none'}">
+							:mask="true" :maskStyle="{'opacity':'0.08','background':'#000000','animation':'none'}">
 							<!-- <a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 500px;" > -->
 							<a-card :bordered="false" dis-hover style="overflow-y: scroll; height: 500px;" >
 								<!-- <div v-for="(item, index) in record.messages" :key="index">abc</div> -->
@@ -92,7 +92,7 @@ const columns = [{
 		title: "姓名",
 		dataIndex: "name",
 		scopedSlots: {customRender: "name"},
-		width: "20%",
+		width: "15%",
 	}, {
 		title: "邮箱",
 		dataIndex: "email",
@@ -107,7 +107,7 @@ const columns = [{
 		title: "最新消息",
 		dataIndex: "message",
 		scopedSlots: {customRender: "message"},
-		width: "25%",
+		width: "30%",
 	}, {
 		title: "操作",
 		dataIndex: "operation",
@@ -349,7 +349,7 @@ export default {
 }
 .system-chat-list-body:after {
     position: absolute;
-    left: -30px;
+    left: -25px;
     right: 0;
     top: 30px;
     content: '';
@@ -363,11 +363,11 @@ export default {
 }
 .system-chat-me .system-chat-list-body:after {
     left: auto;
-	right: -30px;
-	border-color: transparent transparent transparent #00ff33;
+	right: -25px;
+	border-color: transparent transparent transparent #95ec69;
 }
 .system-chat-me .system-chat-list-body {
-    background: #00ff33;
+    background: #95ec69;
 	margin-right: 12upx;
 }
 
@@ -400,7 +400,8 @@ export default {
 }
 
 .custom-modal .a-modal-mask {
-  background-color: rgba(0,0,0,0.5); /* 将遮罩层的背景色修改为半透明的黑色 */
+  background-color: rgba(255,255,255,0.5); 
+  /* 将遮罩层的背景色修改为半透明的黑色 */
 }
 
 </style>
