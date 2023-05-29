@@ -137,6 +137,17 @@ export default {
 	mounted() {
 		this.init();
 		this.pageToBottom()
+		this.timer = setInterval(() => {
+			this.loadAllChat()
+			for (let i = 0; i < this.data.length; i++) {
+				if (this.data[i].uId == this.selectData.uId) {
+					this.selectData = this.data[i]
+				}
+			}
+		}, 5000)
+	},
+	beforeDestroy() {
+		clearInterval(this.timer)
 	},
 	onload() {
 		this.init()
@@ -192,8 +203,7 @@ export default {
 		loadAllChat: function() {	// 从后端获取所有数据
 			console.log("load all chat")
 			getSystemChatAll().then((res) => {
-				console.log(res);
-				// TODO：这部分需要看后端返回的数据是什么
+				this.data = []
 				// let d = res.data.data
 				for (let i = 0; i < res.data.system_chat_list.length; i++) {
 					let item = res.data.system_chat_list[i]
@@ -236,7 +246,6 @@ export default {
 								gettime.gettime(res_message.created_at, bef_time)
 							bef_time = res_message.created_at
 						}
-						console.log(res_message.created_at)
 						data_item.messages.push(data_message)
 						last_message = data_message.message
 					}
@@ -245,7 +254,6 @@ export default {
 					// }
 					data_item.time = bef_time
 					data_item.message = last_message
-					console.log(data_item)
 					this.data.push(data_item)
 				}
 				
