@@ -4,7 +4,8 @@ export default {
     user: undefined,
     permissions: null,
     roles: null,
-    routesConfig: null
+    routesConfig: null,
+    page: 1,
   },
   getters: {
     user: state => {
@@ -53,6 +54,9 @@ export default {
         }
       }
       return state.routesConfig
+    },
+    page: state => {
+      return state.page
     }
   },
   mutations: {
@@ -71,6 +75,9 @@ export default {
     setRoutesConfig(state, routesConfig) {
       state.routesConfig = routesConfig
       localStorage.setItem(process.env.VUE_APP_ROUTES_KEY, JSON.stringify(routesConfig))
+    },
+    setPage(state, page) {
+      state.page = page
     }
   }
 }

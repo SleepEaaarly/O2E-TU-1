@@ -363,6 +363,7 @@ export default {
   },
 
   methods: {
+    // ...mapMutations("account", ["setPage"]),
     init: async function() {
       this.loadUser();
     },
@@ -516,7 +517,12 @@ export default {
       let that = this
       UserModify(params)
         .then((res) => {
-          this.$message.info("成功修改");
+          if (res.data.code === 501) {
+            // this.$message.error(res.data.message);
+            alert(res.data.message)
+          } else {
+            this.$message.info("成功修改");
+          }
           console.log(res)
         }).then((res) => {
           that.reload()
@@ -540,7 +546,6 @@ export default {
       // console.log(target.editable
     },
     cancel(key) {
-// <<<<<<< HEAD
       let that = this
       let promise = new Promise(function (resolve, reject) {
             const newData = [...that.data];
@@ -560,23 +565,6 @@ export default {
       promise.then(
           that.reload()
       )
-// =======
-//       const newData = [...this.data];
-//       for (let i = 0; i < newData.length; i++) {
-//         newData[i].editable = false;
-//       }
-//       const target = newData.filter((item) => key === item.key)[0];
-//       this.editingKey = "";
-//       if (target) {
-//         Object.assign(
-//           target,
-//           this.cacheData.filter((item) => key === item.key)[0]
-//         );
-//         console.log(target)
-//         this.data = newData;
-//       }
-//       console.log(data)
-// >>>>>>> 27da2901a4f9cddd7dcaaa8106ab332cd6de4a7b
     },
     check_user_info(){
       if(this.user_visible){
