@@ -14,7 +14,28 @@ from django.views.decorators.csrf import csrf_exempt
 from core.models.results import rst_pic_delete, multipic_delete
 from core.models.user import icon_delete
 from core.api.ai_chat import get_hitbert_embedding
+from urllib import parse
 import time
+import math
+
+
+def check(email: str):
+    import re
+    print(11)
+    pattern = r'^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}$'
+    print(10)
+    if re.match(pattern, email):
+        print(12)
+        return True
+    else:
+        print(13)
+        return False
+
+
+def check1(email: str):
+    if User.objects.filter(email=email).__len__() != 0:
+        return False
+    return True
 
 @csrf_exempt
 @response_wrapper
@@ -167,9 +188,12 @@ def change_result_info(request: HttpRequest):
 @require_http_methods('POST')
 def search_result_by_name(request: HttpRequest):
     data = parse_data(request)
-    title = data.get('title')
+    title = parse.unquote(data.get('title'))
     page = int(data.get('page'))
-    results = Results.objects.filter(Q(title__icontains=title))
+    if title == '' or title is None:
+        results = Results.objects.all()
+    else:
+        results = Results.objects.filter(Q(title__icontains=title))
 
     start = 10 * (page - 1)
     end = 10 * page
@@ -179,7 +203,8 @@ def search_result_by_name(request: HttpRequest):
         d.append(rst.to_dict())
     return success_api_response({
         "page_num": page,
-        "data": d
+        "data": d,
+        "all_page": math.ceil(results.__len__() / 10)
     })
 
 
@@ -188,9 +213,12 @@ def search_result_by_name(request: HttpRequest):
 @require_http_methods('POST')
 def search_user_by_name(request: HttpRequest):
     data: dict = parse_data(request)
-    username = data.get('username')
+    username = parse.unquote(data.get('username'))
     page = int(data.get('page'))
-    users = User.objects.filter(Q(username__icontains=username))
+    if username == '' or username is None:
+        users = User.objects.all()
+    else:
+        users = User.objects.filter(Q(username__icontains=username))
     start = 10 * (page - 1)
     end = 10 * page
     d = list()
@@ -199,7 +227,8 @@ def search_user_by_name(request: HttpRequest):
         print(user.to_dict())
     return success_api_response({
         "page_num": page,
-        "data": d
+        "data": d,
+        "all_page": math.ceil(users.__len__() / 10)
     })
 
 
@@ -222,9 +251,16 @@ def create_a_user(username, password, email):
 @require_http_methods('POST')
 def add_user(request: HttpRequest):
     data: dict = parse_data(request)
+    print(data)
     username = data.get('username')
+    print(1)
+    print(2)
     password = data.get('password')
     email = data.get('email')
+    if check(str(email)) is False:
+        print(3)
+        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
+    print(3)
     try:
         user = create_a_user(username, password, email)
     except Exception:
@@ -242,6 +278,8 @@ def add_expert(request: HttpRequest):
     username = data.get('username')
     password = data.get('password')
     email = data.get('email')
+    if check(str(email)) is False:
+        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
     print('add_expert:password' + password)
     try:
         user = create_a_user(username, password, email)
@@ -280,6 +318,8 @@ def add_enterprise(request: HttpRequest):
     username = data.get('username')
     password = data.get('password')
     email = data.get('email')
+    if check(str(email)) is False:
+        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
     try:
         user = create_a_user(username, password, email)
     except Exception:
@@ -372,6 +412,10 @@ def set_user(request: HttpRequest):
     username = request.POST.get('username')
     password = request.POST.get('password')
     email = request.POST.get('email')
+    if check(str(email)) is False:
+        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
+    if check1(str(email)) is False:
+        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱已存在")
     institution = request.POST.get('institution')
     # icon = request.FILES.get('icon')
     biography = request.POST.get('biography')
@@ -387,4 +431,5 @@ def set_user(request: HttpRequest):
 
     user.save()
     return success_api_response({})
+
 

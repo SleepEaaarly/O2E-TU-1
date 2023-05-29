@@ -1,4 +1,5 @@
 <template>
+	
 	<view class="container">
 		<!-- #ifndef MP -->
 		<view class="tui-status-bar"></view>
@@ -40,6 +41,7 @@
 					<text class="tui-color-primary" @tap="href(2)">注册</text>
 				</view>
 			</view>
+			<u-notify message="用户名不存在或密码错误" :show="show"></u-notify>
 			<view class="tui-btn-box">
 				<tui-button @tap="submit" :disabledGray="true" :disabled="disabled" :shadow="true" shape="circle">登录</tui-button>
 			</view>
@@ -209,9 +211,12 @@
 				})
 				if('code' in data){
 					if (data.code===401) {
-						this.$http.toast('账号或密码错误')
+						this.$http.toast('用户名未注册或账号或密码错误')
+						show=true
 					} else {
+						show=true
 						this.$http.toast('用户未注册')
+						
 					}
 					return
 				}

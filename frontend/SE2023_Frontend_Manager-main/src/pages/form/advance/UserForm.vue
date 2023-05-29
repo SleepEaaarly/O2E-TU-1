@@ -209,6 +209,7 @@
 </template>
 
 <script>
+import { message } from 'antd';
 import { getUserAll,
         UserDel, 
         UserModify,
@@ -455,6 +456,7 @@ export default {
       } else if (col === 'ins') {
         this.editData.ins = value;
       } else if (col === 'email') {
+        /*todo*/
         this.editData.email = value;
       } else if (col === 'type') {
         alert("暂不允许修改用户类型！！")
@@ -521,6 +523,8 @@ export default {
         })
         .catch((error) => {
           this.$message.error("无法修改")
+          /*todo*/
+          this.$message.error(res.data.message)
           console.log(error);
         });
       if (target) {
@@ -634,6 +638,7 @@ export default {
     adminCreateUser(){
       this.user_visible = true;
       console.log('Admin Create User');
+      console.log('user_visible')
       // console.log(this.user_visible)
       // console.log(this.expert_visible)
       // console.log(this.company_visible)
@@ -641,6 +646,7 @@ export default {
     adminCreateExpert(){
       this.expert_visible = true;
       console.log('Admin Create expert');
+      
     },
     adminCreateCompany(){
       this.company_visible = true;
@@ -651,19 +657,33 @@ export default {
         return
       }
       console.log('submit')
+
+
+
       if(this.user_visible){
         // add user
+        console.log('user_visible')
         console.log(this.user_info)
+
         adminCreateUserAPI(this.user_info).then((oriRes) => {
+            console.log(oriRes)
             if(oriRes.data.code == 410){
               alert('用户名或邮箱已被注册')
+            } else if(oriRes.data.code == 501) {
+              alert(oriRes.data.message)
+              // alert('用户名或邮箱已被注册')
+              console.log('用户名或邮箱已被注册')
+              
             }else{
               console.log(oriRes)
               this.resetUserInfo()
               this.user_visible = false
             }
         }).catch((error) => {
+
+
             console.log(error)
+            console.log('error')
         });        
 
       }else if(this.expert_visible){
@@ -672,7 +692,10 @@ export default {
         adminCreateExpertAPI(this.expert_info).then((oriRes) => {
             if(oriRes.data.code == 410){
               alert('用户名或邮箱已被注册')
-            }else{
+            }else if(oriRes.data.code == 501) {
+              alert(oriRes.data.message)
+            }
+            else{
               console.log(oriRes)
               this.resetExpertInfo()
               this.expert_visible = false
@@ -687,6 +710,8 @@ export default {
         adminCreateCompanyAPI(this.company_info).then((oriRes) => {
             if(oriRes.data.code == 410){
               alert('用户名或邮箱已被注册')
+            }else if(oriRes.data.code == 501) {
+              alert(oriRes.data.message)
             }else{
               console.log(oriRes)
               this.resetCompanyInfo()
