@@ -58,6 +58,8 @@ def generate_refresh_token(user: User, refresh_token_delta: int = 6 * 24) -> str
     current_time = timezone.now()
     auth_record = AuthRecord(user=user, login_at=current_time,
                              expires_by=current_time + timedelta(hours=refresh_token_delta))
+    print(user, current_time, current_time+timedelta(hours=refresh_token_delta))
+    print(auth_record)
     auth_record.save()
 
     refresh_token_payload = {
