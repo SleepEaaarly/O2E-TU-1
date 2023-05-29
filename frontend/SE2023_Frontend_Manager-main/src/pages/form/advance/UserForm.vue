@@ -104,7 +104,7 @@
               />
             </a-form-item>
             <a-form-item style="text-align: right;">
-                <a-button  type="primary" @click="handleSubmit"> 确定 </a-button>
+                <a-button  type="primary" @click="handleSubmit" style="margin-left: 50%;"> 确定 </a-button>
             </a-form-item>
           </a-form>
         </a-modal>
@@ -227,13 +227,13 @@ const columns = [
   {
     title: "所属机构",
     dataIndex: "ins",
-    width: "25%",
+    width: "20%",
     scopedSlots: { customRender: "ins" },
   },
   {
     title: "邮箱",
     dataIndex: "email",
-    width: "20%",
+    width: "25%",
     scopedSlots: { customRender: "email" },
   },
   {

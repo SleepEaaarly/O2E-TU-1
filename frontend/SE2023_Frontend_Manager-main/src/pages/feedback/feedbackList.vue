@@ -6,7 +6,8 @@
           <span>
             <a @click="checkFeedback(record)" v-if="record.flag==0">回复</a>
             <a  v-else>已成功回复</a>
-            <a-modal v-model="showDetail" title="回复反馈" @ok="handleOk()" width="750px" :mask-closable="false">
+            <a-modal v-model="showDetail" title="回复反馈" @ok="handleOk()" width="750px" :mask-closable="false"
+            :mask="true" :maskStyle="{'opacity':'0.08','background':'#000000','animation':'none'}">
               <a-card :bordered="false" dis-hover>
                 <a-row>姓名：{{selectData.name}}</a-row>
                 <br/>
