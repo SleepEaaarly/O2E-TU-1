@@ -209,6 +209,7 @@
 </template>
 
 <script>
+import { message } from 'antd';
 import { getUserAll,
         UserDel, 
         UserModify,
@@ -455,6 +456,7 @@ export default {
       } else if (col === 'ins') {
         this.editData.ins = value;
       } else if (col === 'email') {
+        /*todo*/
         this.editData.email = value;
       } else if (col === 'type') {
         alert("暂不允许修改用户类型！！")
@@ -521,6 +523,8 @@ export default {
         })
         .catch((error) => {
           this.$message.error("无法修改")
+          /*todo*/
+          this.$message.error(res.data.message)
           console.log(error);
         });
       if (target) {
@@ -636,6 +640,8 @@ export default {
         adminCreateUserAPI(this.user_info).then((oriRes) => {
             if(oriRes.data.code == 410){
               alert('用户名或邮箱已被注册')
+            } else if(oriRes.data.code == 501) {
+              alert(oriRes.data.message)
             }else{
               console.log(oriRes)
               this.resetUserInfo()
@@ -651,7 +657,10 @@ export default {
         adminCreateExpertAPI(this.expert_info).then((oriRes) => {
             if(oriRes.data.code == 410){
               alert('用户名或邮箱已被注册')
-            }else{
+            }else if(oriRes.data.code == 501) {
+              alert(oriRes.data.message)
+            }
+            else{
               console.log(oriRes)
               this.resetExpertInfo()
               this.expert_visible = false
@@ -666,6 +675,8 @@ export default {
         adminCreateCompanyAPI(this.company_info).then((oriRes) => {
             if(oriRes.data.code == 410){
               alert('用户名或邮箱已被注册')
+            }else if(oriRes.data.code == 501) {
+              alert(oriRes.data.message)
             }else{
               console.log(oriRes)
               this.resetCompanyInfo()

@@ -58,7 +58,11 @@
 						<block slot="left">
 							<view class="left-head">
 								<view style="margin-left: 20%;">
-									<text class="uni-nav-bar-text" @click="showNeedType">{{field_items[field]}}</text>
+									<text class="uni-nav-bar-text" @click="showNeedType"
+									style="text-overflow:ellipsis;
+											overflow:hidden;
+											white-space:nowrap;"
+									>{{field_items[field]}}</text>
 								</view>
 							</view>
 						</block>
