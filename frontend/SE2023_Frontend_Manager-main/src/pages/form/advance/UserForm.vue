@@ -595,6 +595,27 @@ export default {
               alert('请填写完整信息')
               return false
         }        
+        var arrExp = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];//加权因子
+        var arrValid = [1, 0, "X", 9, 8, 7, 6, 5, 4, 3, 2];//校验码
+        if (/^\d{17}\d|x$/i.test(this.expert_info.ID_num)) {
+          var sum = 0, idx;
+          for (var i = 0; i < this.expert_info.ID_num.length - 1; i++) {
+              // 对前17位数字与权值乘积求和
+              sum += parseInt(this.expert_info.ID_num.substr(i, 1), 10) * arrExp[i];
+          }
+          // 计算模（固定算法）
+          idx = sum % 11;
+          // 检验第18为是否与校验码相等
+          if (arrValid[idx] == this.expert_info.ID_num.substr(17, 1).toUpperCase()) {
+            return true;
+          } else {
+            alert('身份证格式有误')
+            return false;
+          }
+        } else {
+          alert('身份证格式有误')
+          return false;
+        }
       }else if(this.company_visible){
         // add company
         if(this.company_info.username == '' ||
