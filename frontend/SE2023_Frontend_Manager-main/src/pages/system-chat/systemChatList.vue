@@ -137,14 +137,14 @@ export default {
 	mounted() {
 		this.init();
 		this.pageToBottom()
-		// this.timer = setInterval(() => {
-		// 	this.loadAllChat()
-		// 	for (let i = 0; i < this.data.length; i++) {
-		// 		if (this.data[i].uId == this.selectData.uId) {
-		// 			this.selectData = this.data[i]
-		// 		}
-		// 	}
-		// }, 5000)
+		this.timer = setInterval(() => {
+			this.loadAllChat()
+			for (let i = 0; i < this.data.length; i++) {
+				if (this.data[i].uId == this.selectData.uId) {
+					this.selectData = this.data[i]
+				}
+			}
+		}, 5000)
 	},
 	beforeDestroy() {
 		clearInterval(this.timer)
