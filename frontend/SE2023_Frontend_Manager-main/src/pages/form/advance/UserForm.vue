@@ -599,6 +599,27 @@ export default {
               alert('请填写完整信息')
               return false
         }        
+        var arrExp = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];//加权因子
+        var arrValid = [1, 0, "X", 9, 8, 7, 6, 5, 4, 3, 2];//校验码
+        if (/^\d{17}\d|x$/i.test(this.expert_info.ID_num)) {
+          var sum = 0, idx;
+          for (var i = 0; i < this.expert_info.ID_num.length - 1; i++) {
+              // 对前17位数字与权值乘积求和
+              sum += parseInt(this.expert_info.ID_num.substr(i, 1), 10) * arrExp[i];
+          }
+          // 计算模（固定算法）
+          idx = sum % 11;
+          // 检验第18为是否与校验码相等
+          if (arrValid[idx] == this.expert_info.ID_num.substr(17, 1).toUpperCase()) {
+            return true;
+          } else {
+            alert('身份证格式有误')
+            return false;
+          }
+        } else {
+          alert('身份证格式有误')
+          return false;
+        }
       }else if(this.company_visible){
         // add company
         if(this.company_info.username == '' ||
@@ -617,6 +638,7 @@ export default {
     adminCreateUser(){
       this.user_visible = true;
       console.log('Admin Create User');
+      console.log('user_visible')
       // console.log(this.user_visible)
       // console.log(this.expert_visible)
       // console.log(this.company_visible)
@@ -624,6 +646,7 @@ export default {
     adminCreateExpert(){
       this.expert_visible = true;
       console.log('Admin Create expert');
+      
     },
     adminCreateCompany(){
       this.company_visible = true;
@@ -634,21 +657,33 @@ export default {
         return
       }
       console.log('submit')
+
+
+
       if(this.user_visible){
         // add user
+        console.log('user_visible')
         console.log(this.user_info)
+
         adminCreateUserAPI(this.user_info).then((oriRes) => {
+            console.log(oriRes)
             if(oriRes.data.code == 410){
               alert('用户名或邮箱已被注册')
             } else if(oriRes.data.code == 501) {
               alert(oriRes.data.message)
+              // alert('用户名或邮箱已被注册')
+              console.log('用户名或邮箱已被注册')
+              
             }else{
               console.log(oriRes)
               this.resetUserInfo()
               this.user_visible = false
             }
         }).catch((error) => {
+
+
             console.log(error)
+            console.log('error')
         });        
 
       }else if(this.expert_visible){
