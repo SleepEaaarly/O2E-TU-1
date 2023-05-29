@@ -415,7 +415,7 @@
 				//console.log("order:"+this.need && this.need.need_id!=0)
 			},
 			async sendm(data){	// 通过 submid 发送数据
-				this.submit(data)
+				await this.submit(data)
 			},
 			scrollTopHandle(){
 				if (this.triggered) {
@@ -491,6 +491,8 @@
 					})
 					return
 				}
+				console.log(this.chatList)
+				console.log(this.msgIndex)
 				let msg =await pushMessage({
 					'cId': this.chatList[this.msgIndex].id,
 					'fromId': this.userInfo.id,
