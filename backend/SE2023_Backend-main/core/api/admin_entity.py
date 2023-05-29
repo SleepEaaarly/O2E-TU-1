@@ -18,6 +18,25 @@ from urllib import parse
 import time
 import math
 
+
+def check(email: str):
+    import re
+    print(11)
+    pattern = r'^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}$'
+    print(10)
+    if re.match(pattern, email):
+        print(12)
+        return True
+    else:
+        print(13)
+        return False
+
+
+def check1(email: str):
+    if User.objects.filter(email=email).__len__() != 0:
+        return False
+    return True
+
 @csrf_exempt
 @response_wrapper
 # @jwt_auth()
@@ -232,13 +251,16 @@ def create_a_user(username, password, email):
 @require_http_methods('POST')
 def add_user(request: HttpRequest):
     data: dict = parse_data(request)
+    print(data)
     username = data.get('username')
-    if check_username(str(username)):
-        return failed_api_response(501, error_msg="用户名已存在")
+    print(1)
+    print(2)
     password = data.get('password')
     email = data.get('email')
-    if check(email) is False:
-        return failed_api_response(501, error_msg="邮箱格式错误")
+    if check(str(email)) is False:
+        print(3)
+        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
+    print(3)
     try:
         user = create_a_user(username, password, email)
     except Exception:
@@ -254,12 +276,10 @@ def add_expert(request: HttpRequest):
     print(0)
     data: dict = parse_data(request)
     username = data.get('username')
-    if check_username(str(username)):
-        return failed_api_response(501, error_msg="用户名已存在")
     password = data.get('password')
     email = data.get('email')
-    if check(email) is False:
-        return failed_api_response(501, error_msg="邮箱格式错误")
+    if check(str(email)) is False:
+        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
     print('add_expert:password' + password)
     try:
         user = create_a_user(username, password, email)
@@ -296,12 +316,10 @@ def add_expert(request: HttpRequest):
 def add_enterprise(request: HttpRequest):
     data: dict = parse_data(request)
     username = data.get('username')
-    if check_username(str(username)):
-        return failed_api_response(501, error_msg="用户名已存在")
     password = data.get('password')
     email = data.get('email')
-    if check(email) is False:
-        return failed_api_response(501, error_msg="邮箱格式错误")
+    if check(str(email)) is False:
+        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
     try:
         user = create_a_user(username, password, email)
     except Exception:
@@ -392,14 +410,12 @@ def set_result(request: HttpRequest):
 def set_user(request: HttpRequest):
     id = request.POST.get('id')
     username = request.POST.get('username')
-    if check_username(str(username)):
-        return failed_api_response(501, error_msg="用户名已存在")
     password = request.POST.get('password')
     email = request.POST.get('email')
-    if check(email) is False:
-        return failed_api_response(501, error_msg="邮箱格式错误")
-    if check1(email) is False:
-        return failed_api_response(501, error_msg="邮箱已存在")
+    if check(str(email)) is False:
+        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
+    if check1(str(email)) is False:
+        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱已存在")
     institution = request.POST.get('institution')
     # icon = request.FILES.get('icon')
     biography = request.POST.get('biography')
@@ -417,24 +433,3 @@ def set_user(request: HttpRequest):
     return success_api_response({})
 
 
-def check(email: str):
-    import re
-    pattern = r'^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}$'
-    if re.match(pattern, email):
-        return True
-    else:
-        return False
-
-
-def check1(email: str):
-    if User.objects.filter(email=email).__len__() != 0:
-        return False
-    else:
-        return True
-
-
-def check_username(username: str):
-    if User.objects.filter(username=username).__len__() != 0:
-        return False
-    else:
-        return True

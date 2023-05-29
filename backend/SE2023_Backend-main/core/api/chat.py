@@ -162,12 +162,14 @@ def get_chat(request: HttpRequest, id: int):
 @require_GET
 @response_wrapper
 def get_chat_list(request: HttpRequest):
+    print("enter get chat list")
     # data: dict = request.GET.dict()
     # if not data:
     #     return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid request args.")
 
     try:
         user = request.user
+        print(user)
     except ObjectDoesNotExist:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Invalid token.")
     rooms = list()

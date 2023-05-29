@@ -11,6 +11,7 @@ from core.models.expert import Expert
 from core.models.enterprise_info import Enterprise_info
 from core.models.results import Results
 from django.views.decorators.csrf import csrf_exempt
+from urllib import parse
 
 @csrf_exempt
 @response_wrapper
@@ -19,6 +20,7 @@ from django.views.decorators.csrf import csrf_exempt
 def search_expert(request: HttpRequest, *args, **kwargs):
     data = request.GET.dict()
     key_word = data.get('key_word')
+    key_word = parse.unquote(data.get('key_word'))
     organization = data.get('organization')
     field = data.get('field')
     title = data.get('title')
@@ -100,6 +102,7 @@ def search_expert(request: HttpRequest, *args, **kwargs):
 def search_enterprise(request: HttpRequest, *args, **kwargs):
     data = request.GET.dict()
     key_word = data.get('key_word')
+    key_word = parse.unquote(data.get('key_word'))
     field = data.get('field')
     address = data.get('address')
 
@@ -181,6 +184,7 @@ def search_enterprise(request: HttpRequest, *args, **kwargs):
 def search_result(request: HttpRequest):
     data = request.GET.dict()
     key_word = data.get('key_word')
+    key_word = parse.unquote(data.get('key_word'))
     period = data.get('period')
     field = data.get('field')
     page = int(data.get('page'))
@@ -260,6 +264,7 @@ def search_result(request: HttpRequest):
 def search_mixture(request: HttpRequest):
     data = request.GET.dict()
     key_word = data.get('key_word')
+    key_word = parse.unquote(data.get('key_word'))
     key_words = ''
     if not (key_word is None or key_word == ''):  # not key_word 是判空，也可以判None
         key_words = key_word.split()

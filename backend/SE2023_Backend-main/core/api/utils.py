@@ -26,6 +26,7 @@ class ErrorCode(Enum):
     WRONG_CONFIRM_CODE = 402
     ITEM_ALREADY_EXISTS = 409
     SERVER_ERROR = 500
+    FIVE_ZERO_ONE = 501
 
 
 def _api_response(success, data) -> dict:

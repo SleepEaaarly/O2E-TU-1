@@ -59,7 +59,7 @@ class SystemMessage(models.Model):
                     type: str):
         try:
             new_message = SystemMessage(content=content,
-                                        owner=odwner,
+                                        owner=owner,
                                         is_to_system=is_to_system,
                                         type = type,
                                         read_state=UNREAD)

@@ -17,6 +17,23 @@ from core.models.auth_record import AuthRecord
 from core.models.user import User, ConfirmString
 from django.views.decorators.csrf import csrf_exempt
 
+
+def check(email: str):
+    import re
+    pattern = r'^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}$'
+    if re.match(pattern, email):
+        return True
+    else:
+        return False
+
+
+def check1(email: str):
+    if User.objects.filter(email=email).__len__() != 0:
+        return False
+    else:
+        return True
+
+
 @csrf_exempt
 @response_wrapper
 @jwt_auth()
