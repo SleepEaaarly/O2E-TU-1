@@ -174,6 +174,15 @@ def delete_user(request: HttpRequest):
     return success_api_response({"result": "Ok, all user info has been provided."})
 
 
+def check(email: str):
+    import re
+    pattern = r'^[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){0,4}$'
+    if re.match(pattern, email):
+        return True
+    else:
+        return False
+
+
 @csrf_exempt
 @response_wrapper
 #@jwt_auth()
@@ -189,14 +198,20 @@ def change_user_info(request: HttpRequest):
     print(pid, institution, username, email)
 
     if User.objects.filter(pk=pid).exists() is False:
-        return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,'Your required user to change is not found!')
+        return success_api_response({'code': 501, 'message': '未搜索到指定用户'})
+        # return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS,'Your required user to change is not found!')
 
     if username != user.username and user.objects.filter(username=username).exists():
-        return failed_api_response(ErrorCode.ITEM_ALREADY_EXISTS, "Username conflicted.")
+        return success_api_response({'code': 501, 'message': '用户名已存在'})
+        # return failed_api_response(ErrorCode.ITEM_ALREADY_EXISTS, "Username conflicted.")
+
+    if check(email) is False:
+        return success_api_response({'code': 501, 'message': '邮箱格式错误'})
 
     if email != user.email and User.objects.filter(email=email).exists():
-        return failed_api_response(ErrorCode.ITEM_ALREADY_EXISTS, "Email conflicted.")
-        
+        return success_api_response({'code': 501, 'message': '邮箱已存在'})
+        # return failed_api_response(ErrorCode.ITEM_ALREADY_EXISTS, "Email conflicted.")
+
     user.username = username
     user.institution = institution
     user.email = email

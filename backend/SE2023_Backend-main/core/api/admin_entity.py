@@ -201,10 +201,10 @@ def search_result_by_name(request: HttpRequest):
     d = list()
     for rst in results:
         d.append(rst.to_dict())
+    d = d[start: end]
     return success_api_response({
-        "page_num": page,
-        "data": d,
-        "all_page": math.ceil(results.__len__() / 10)
+        "page_num": math.ceil(users.__len__() / 10),
+        "data": d
     })
 
 
@@ -214,6 +214,7 @@ def search_result_by_name(request: HttpRequest):
 def search_user_by_name(request: HttpRequest):
     data: dict = parse_data(request)
     username = parse.unquote(data.get('username'))
+    print(username)
     page = int(data.get('page'))
     if username == '' or username is None:
         users = User.objects.all()
@@ -225,10 +226,10 @@ def search_user_by_name(request: HttpRequest):
     for user in users:
         d.append(user.to_dict())
         print(user.to_dict())
+    d = d[start: end]
     return success_api_response({
-        "page_num": page,
-        "data": d,
-        "all_page": math.ceil(users.__len__() / 10)
+        "page_num": math.ceil(users.__len__() / 10),
+        "data": d
     })
 
 

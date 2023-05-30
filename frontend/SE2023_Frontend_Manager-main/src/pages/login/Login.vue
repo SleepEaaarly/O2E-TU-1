@@ -109,8 +109,10 @@ export default {
   methods: {
     ...mapMutations("account", ["setUser", "setPermissions", "setRoles"]),
     onSubmit(e) {
+      console.log('res')
       e.preventDefault();
       this.form.validateFields((err) => {
+        
         if (!err) {
           this.logging = true;
           const name = this.form.getFieldValue("name");
@@ -124,6 +126,7 @@ export default {
           }else{
             login(name, password).then(this.afterLogin)
             .catch((error) => {
+              alert("账号或密码错误")
             this.$message.error("账号或密码错误")
             this.logging=false;
             console.log(error);
@@ -136,9 +139,10 @@ export default {
       });
     },
     afterLogin(res) {
-      // console.log(res)
+      console.log('res')
       if (res.data.code == 500) {
-        this.$message.error("账号或密码错误")
+        alert("账号或密码错误")
+        
       }
       const positions = [
         {
