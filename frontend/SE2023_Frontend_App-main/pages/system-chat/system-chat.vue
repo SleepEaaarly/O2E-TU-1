@@ -270,9 +270,9 @@
                 this.timer = setInterval(() => {
                     setTimeout(this.trym, 0)
                 }, 1000 * 5)
-                // this.timer2 = setInterval(() => {
-                //     this.getData()
-                // }, 5000)
+                this.timer2 = setInterval(() => {
+                    this.getData()
+                }, 5000)
             },
             async initorder() { // 获得专家和企业之间的需求和订单信息
 
