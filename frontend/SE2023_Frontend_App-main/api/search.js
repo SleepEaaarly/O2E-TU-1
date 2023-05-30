@@ -39,7 +39,7 @@ export const  searchNeedList =async (text) => {
 	let headers = {
 		"Authorization":'Bearer ' + uni.getStorageSync('token')
 	}
-	encode_text = encodeURIComponent(text)
+	let encode_text = encodeURIComponent(text)
 	let result = await axios.get('need/search?key_word=' + encode_text , {}, headers)
 	if (result && result.code) {
 		console.log("search_error")
@@ -51,7 +51,7 @@ export const getMixSearch = async (paras) => {
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
-	encode_text = encodeURIComponent(paras.key_word)
+	let encode_text = encodeURIComponent(paras.key_word)
     let ret = await axios.get('search/mixture?key_word=' + encode_text,
         paras,
         headers)

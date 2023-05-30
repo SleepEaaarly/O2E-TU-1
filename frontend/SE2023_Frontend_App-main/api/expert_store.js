@@ -9,7 +9,7 @@ export const getExpertList = async (paras) => {
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
-    encode_text = encodeURIComponent(paras.key_word)
+    let encode_text = encodeURIComponent(paras.key_word)
     let ret = await axios.get('search/expert?key_word=' + encode_text,
         paras,
         headers)

@@ -610,8 +610,9 @@
         this.loading = true;
         data.length=0;
         this.pagination.current = 1;
+        let encode_text = encodeURIComponent(this.searchText)
         var params = {
-          "title": this.searchText,
+          "title": encode_text,
           "page": this.pagination.current
         }
         searchWork(params).then((oriRes) => {

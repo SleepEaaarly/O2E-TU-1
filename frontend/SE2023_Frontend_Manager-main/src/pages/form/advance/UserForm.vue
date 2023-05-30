@@ -806,8 +806,9 @@ export default {
     },
     onSearch(){
       this.pagination.current = 1;
+      let encode_text = encodeURIComponent(this.searchText)
       var params = {
-          "username": this.searchText,
+          "username": encode_text,
           "page": this.pagination.current
       }
       this.selectedType="搜索";
