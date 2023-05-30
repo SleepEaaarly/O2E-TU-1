@@ -521,6 +521,7 @@ export default {
           if (res.data.code === 501) {
             // this.$message.error(res.data.message);
             alert(res.data.message)
+            
           } else {
             this.$message.info("成功修改");
           }
@@ -547,7 +548,7 @@ export default {
       this.reload()
 
 
-      // this.loadUser()
+      this.loadUser()
       // console.log(target.editable
     },
     cancel(key) {
