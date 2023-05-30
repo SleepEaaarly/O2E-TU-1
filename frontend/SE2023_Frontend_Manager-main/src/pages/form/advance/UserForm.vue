@@ -838,7 +838,7 @@ export default {
             editable: false
           });
         }
-        this.totalCnt = res.data.total_count;
+        this.totalCnt = res.page_num;
         
         this.loading = false;
         this.pagination.total = res.page_num * 10;
