@@ -40,7 +40,7 @@
         }
     },
     "networkTimeout" : {
-        "request" : 30000 //uni.request的settimeout
+        "request" : 90000 //uni.request的settimeout
     },
     "app-plus" : {
         "usingComponents" : true,
