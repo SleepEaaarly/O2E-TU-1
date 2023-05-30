@@ -84,7 +84,19 @@ def generate_requirement_report(need_id):
                            content=ret_json['choices'][0]['message']['content'])
     newAIReport.save()
 
+@require_GET
+@csrf_exempt
+@response_wrapper
+def gen_result_report(request: HttpRequest):
+    generate_result_report(request.GET.dict().get('id'))
+    return success_api_response({})
 
+@require_GET
+@csrf_exempt
+@response_wrapper
+def gen_requirement_report(request: HttpRequest):
+    generate_requirement_report(request.GET.dict().get('id'))
+    return success_api_response({})
 """ 调用chatGPT生成成果报告
 
     路径：

@@ -223,19 +223,19 @@
     {
       title: "年份",
       dataIndex: "pyear",
-      width: "10%",
+      width: "8%",
       scopedSlots: { customRender: "pyear" },
     },
     {
       title: "领域",
       dataIndex: "field",
-      width: "10%",
+      width: "8%",
       scopedSlots: { customRender: "field" },
     },
     {
       title: "阶段",
       dataIndex: "period",
-      width: "10%",
+      width: "8%",
       scopedSlots: { customRender: "period" },
       // onFilter: (value, record) => record.type.indexOf(value) === 0,
     },
@@ -249,7 +249,7 @@
     {
       title: "内容",
       dataIndex: "content",
-      width: "20%",
+      width: "26%",
       scopedSlots: { customRender: "content" },
       // class: "my-cell"
     },

@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model
 from .user import User
 from datetime import datetime
 
+from datetime import timedelta
+
 UNREAD = 0
 READ = 1
 
@@ -68,7 +70,8 @@ class SystemMessage(models.Model):
             return -1
     
     def get_create_time(self):
-        return self.created_at.strftime("%Y-%m-%d, %H:%M:%S")
+        to_return = self.created_at + timedelta(hours=8)
+        return to_return.strftime("%Y-%m-%d, %H:%M:%S")
 
     def generate_card(self):
         pass

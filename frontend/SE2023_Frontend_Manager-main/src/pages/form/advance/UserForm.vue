@@ -104,7 +104,7 @@
               />
             </a-form-item>
             <a-form-item style="text-align: right;">
-                <a-button  type="primary" @click="handleSubmit"> 确定 </a-button>
+                <a-button  type="primary" @click="handleSubmit" style="margin-left: 50%;"> 确定 </a-button>
             </a-form-item>
           </a-form>
         </a-modal>
@@ -209,6 +209,7 @@
 </template>
 
 <script>
+import { message } from 'antd';
 import { getUserAll,
         UserDel, 
         UserModify,
@@ -227,13 +228,13 @@ const columns = [
   {
     title: "所属机构",
     dataIndex: "ins",
-    width: "25%",
+    width: "20%",
     scopedSlots: { customRender: "ins" },
   },
   {
     title: "邮箱",
     dataIndex: "email",
-    width: "20%",
+    width: "25%",
     scopedSlots: { customRender: "email" },
   },
   {
@@ -301,42 +302,102 @@ export default {
           this.$forceUpdate()
           console.log('Page-->')
           console.log(page);
-          console.log(this.selectedType);
-          getSelectUser(this.selectedType === "全部" ? 6 : this.selectedType, page).then((oriRes) => {
-            console.log(oriRes);
-            let res = oriRes.data;
-            data.length = 0;
-            for (let i = 0; i < res.data.length; i++) {
-              if (res.data[i].type==0) {
-                this.type="普通用户"
-              } else if (res.data[i].type==1){
-                this.type="专家认证中"
-              } else if (res.data[i].type==2){
-                this.type="企业认证中"
-              }else if (res.data[i].type==3){
-                this.type="封禁中"
-              }else if (res.data[i].type==4){
-                this.type="认证专家"
-              }else if (res.data[i].type==5){
-                this.type="认证企业"
-              }
-              data.push({
-                key: res.data[i].id,
-                name: res.data[i].username,
-                ins: res.data[i].institution,
-                type: this.type,
-                email: res.data[i].email,
-                editable: false
-              });
+          console.log('paginationselectedType='+this.selectedType);
+
+
+          if (this.selectedType=="搜索") {
+            var params = {
+              "username": this.searchText,
+              "page": page
             }
-            this.cacheData = data.map((item) => ({ ...item }));
-            this.totalCnt = res.data.total_count;
-            this.loading = false;
-            // this.itemKey = Math.random();
-            this.pagination.current = page;
-          }).catch((error) => {
-            console.log(error);
-          });
+            searchUser(params).then((oriRes) => {
+              console.log('searching');
+              // console.log(res.data.all_page)
+              console.log(oriRes);
+              let res = oriRes.data
+              
+              console.log(res);
+              data.length = 0;
+              console.log(data);
+
+              console.log("page_max="+res.page_num)
+              console.log("length="+res.data.length)
+              console.log("total="+res.data.total_count)
+
+              
+
+              for (let i = 0; i < res.data.length; i++) {
+                
+                data.push({
+                  key: res.data[i].id,
+                  name: res.data[i].username,
+                  ins: res.data[i].institution,
+                  email: res.data[i].email,
+                  editable: false
+                });
+              }
+
+              this.cacheData = data.map((item) => ({ ...item }));
+              this.totalCnt = res.data.total_count;
+              
+              // this.loading = false;
+              // this.pagination.total = res.page_num * 10;
+              // this.itemKey = Math.random();
+              // this.pagination.current = page;
+
+              // this.totalCnt = res.data.total_count;
+              this.loading = false;
+              // this.itemKey = Math.random();
+              this.pagination.current = page;
+
+            }).catch((error) => {
+              console.log(error);
+            });
+
+          } else {
+            getSelectUser(this.selectedType === "全部" ? 6 : this.selectedType, page).then((oriRes) => {
+              console.log(oriRes);
+              let res = oriRes.data;
+              data.length = 0;
+              for (let i = 0; i < res.data.length; i++) {
+                if (res.data[i].type==0) {
+                  this.type="普通用户"
+                } else if (res.data[i].type==1){
+                  this.type="专家认证中"
+                } else if (res.data[i].type==2){
+                  this.type="企业认证中"
+                }else if (res.data[i].type==3){
+                  this.type="封禁中"
+                }else if (res.data[i].type==4){
+                  this.type="认证专家"
+                }else if (res.data[i].type==5){
+                  this.type="认证企业"
+                }
+                data.push({
+                  key: res.data[i].id,
+                  name: res.data[i].username,
+                  ins: res.data[i].institution,
+                  type: this.type,
+                  email: res.data[i].email,
+                  editable: false
+                });
+              }
+              this.cacheData = data.map((item) => ({ ...item }));
+              this.totalCnt = res.data.total_count;
+              this.loading = false;
+              // this.itemKey = Math.random();
+              this.pagination.current = page;
+            }).catch((error) => {
+              console.log(error);
+            });
+
+
+
+          }
+
+
+
+          
         },
         total: 10
       },
@@ -362,6 +423,7 @@ export default {
   },
 
   methods: {
+    // ...mapMutations("account", ["setPage"]),
     init: async function() {
       this.loadUser();
     },
@@ -407,6 +469,7 @@ export default {
         }
         this.cacheData = data.map((item) => ({ ...item }));
         this.totalCnt = res.data.total_count;
+        console.log("total="+res.data.total_count)
         this.loading = false;
         this.pagination.total = res.page_num;
         console.log(data)
@@ -455,6 +518,7 @@ export default {
       } else if (col === 'ins') {
         this.editData.ins = value;
       } else if (col === 'email') {
+        /*todo*/
         this.editData.email = value;
       } else if (col === 'type') {
         alert("暂不允许修改用户类型！！")
@@ -514,14 +578,24 @@ export default {
       let that = this
       UserModify(params)
         .then((res) => {
-          this.$message.info("成功修改");
+          if (res.data.code === 501) {
+            // this.$message.error(res.data.message);
+            console.log('bug')
+            alert(res.data.message)
+            
+          } else {
+            this.$message.info("成功修改");
+          }
           console.log(res)
         }).then((res) => {
           that.reload()
         })
         .catch((error) => {
           this.$message.error("无法修改")
-          console.log(error);
+          /*todo*/
+          // this.$message.error(res.data.message)
+          console.log("无法修改");
+          alert("修改失败")
         });
       if (target) {
         Object.assign(
@@ -531,12 +605,12 @@ export default {
         delete target.editable;searchUser
         this.data = newData;
       }
+      console.log('111')
       this.reload()
-      // this.loadUser()
+      this.loadUser()
       // console.log(target.editable
     },
     cancel(key) {
-// <<<<<<< HEAD
       let that = this
       let promise = new Promise(function (resolve, reject) {
             const newData = [...that.data];
@@ -556,23 +630,6 @@ export default {
       promise.then(
           that.reload()
       )
-// =======
-//       const newData = [...this.data];
-//       for (let i = 0; i < newData.length; i++) {
-//         newData[i].editable = false;
-//       }
-//       const target = newData.filter((item) => key === item.key)[0];
-//       this.editingKey = "";
-//       if (target) {
-//         Object.assign(
-//           target,
-//           this.cacheData.filter((item) => key === item.key)[0]
-//         );
-//         console.log(target)
-//         this.data = newData;
-//       }
-//       console.log(data)
-// >>>>>>> 27da2901a4f9cddd7dcaaa8106ab332cd6de4a7b
     },
     check_user_info(){
       if(this.user_visible){
@@ -595,6 +652,27 @@ export default {
               alert('请填写完整信息')
               return false
         }        
+        var arrExp = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];//加权因子
+        var arrValid = [1, 0, "X", 9, 8, 7, 6, 5, 4, 3, 2];//校验码
+        if (/^\d{17}\d|x$/i.test(this.expert_info.ID_num)) {
+          var sum = 0, idx;
+          for (var i = 0; i < this.expert_info.ID_num.length - 1; i++) {
+              // 对前17位数字与权值乘积求和
+              sum += parseInt(this.expert_info.ID_num.substr(i, 1), 10) * arrExp[i];
+          }
+          // 计算模（固定算法）
+          idx = sum % 11;
+          // 检验第18为是否与校验码相等
+          if (arrValid[idx] == this.expert_info.ID_num.substr(17, 1).toUpperCase()) {
+            return true;
+          } else {
+            alert('身份证格式有误')
+            return false;
+          }
+        } else {
+          alert('身份证格式有误')
+          return false;
+        }
       }else if(this.company_visible){
         // add company
         if(this.company_info.username == '' ||
@@ -613,6 +691,7 @@ export default {
     adminCreateUser(){
       this.user_visible = true;
       console.log('Admin Create User');
+      console.log('user_visible')
       // console.log(this.user_visible)
       // console.log(this.expert_visible)
       // console.log(this.company_visible)
@@ -620,6 +699,7 @@ export default {
     adminCreateExpert(){
       this.expert_visible = true;
       console.log('Admin Create expert');
+      
     },
     adminCreateCompany(){
       this.company_visible = true;
@@ -630,19 +710,33 @@ export default {
         return
       }
       console.log('submit')
+
+
+
       if(this.user_visible){
         // add user
+        console.log('user_visible')
         console.log(this.user_info)
+
         adminCreateUserAPI(this.user_info).then((oriRes) => {
+            console.log(oriRes)
             if(oriRes.data.code == 410){
               alert('用户名或邮箱已被注册')
+            } else if(oriRes.data.code == 501) {
+              alert(oriRes.data.message)
+              // alert('用户名或邮箱已被注册')
+              console.log('用户名或邮箱已被注册')
+              
             }else{
               console.log(oriRes)
               this.resetUserInfo()
               this.user_visible = false
             }
         }).catch((error) => {
+
+
             console.log(error)
+            console.log('error')
         });        
 
       }else if(this.expert_visible){
@@ -651,7 +745,10 @@ export default {
         adminCreateExpertAPI(this.expert_info).then((oriRes) => {
             if(oriRes.data.code == 410){
               alert('用户名或邮箱已被注册')
-            }else{
+            }else if(oriRes.data.code == 501) {
+              alert(oriRes.data.message)
+            }
+            else{
               console.log(oriRes)
               this.resetExpertInfo()
               this.expert_visible = false
@@ -666,6 +763,8 @@ export default {
         adminCreateCompanyAPI(this.company_info).then((oriRes) => {
             if(oriRes.data.code == 410){
               alert('用户名或邮箱已被注册')
+            }else if(oriRes.data.code == 501) {
+              alert(oriRes.data.message)
             }else{
               console.log(oriRes)
               this.resetCompanyInfo()
@@ -711,26 +810,39 @@ export default {
           "username": this.searchText,
           "page": this.pagination.current
       }
+      this.selectedType="搜索";
       searchUser(params).then((oriRes) => {
+        console.log('searching');
+        // console.log(res.data.all_page)
         console.log(oriRes);
         let res = oriRes.data
+        
         console.log(res);
         data.length = 0;
         console.log(data);
+
+        console.log("page_max="+res.page_num)
+        console.log("length="+res.data.length)
+        console.log("total="+res.data.total_count)
+
+        
+
         for (let i = 0; i < res.data.length; i++) {
+          
           data.push({
             key: res.data[i].id,
             name: res.data[i].username,
             ins: res.data[i].institution,
-            type: res.data[i].state,
             email: res.data[i].email,
             editable: false
           });
         }
         this.totalCnt = res.data.total_count;
+        
         this.loading = false;
-        this.pagination.total = res.page_num;
+        this.pagination.total = res.page_num * 10;
         this.itemKey = Math.random();
+
       }).catch((error) => {
         console.log(error);
       });
@@ -742,7 +854,7 @@ export default {
         return
       }
       console.log(value);
-      console.log(this.selectedType);
+      console.log('selectedType=' + this.selectedType);
       this.pagination.current = 1;
       getSelectUser(this.selectedType, 1).then((oriRes) => {
         console.log(oriRes);
@@ -773,6 +885,7 @@ export default {
             editable: false
           });
         }
+        
         this.totalCnt = res.data.total_count;
         this.loading = false;
         this.pagination.total = res.page_num;

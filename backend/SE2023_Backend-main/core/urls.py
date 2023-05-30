@@ -73,6 +73,7 @@ from core.api.ai_report import generate_requirement_report, generate_result_repo
 
 from core.api.ai_report import generate_requirement_report_card, generate_result_report_card
 
+from core.api.ai_report import gen_requirement_report, gen_result_report
 urlpatterns = [
 
     # user apis
@@ -321,4 +322,6 @@ urlpatterns = [
 
     # test
     path('test', multi_pic_test),
+    path('gen_result_report', gen_result_report),
+    path('gen_requirement_report', gen_requirement_report)
 ]

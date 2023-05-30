@@ -58,6 +58,8 @@ def generate_refresh_token(user: User, refresh_token_delta: int = 6 * 24) -> str
     current_time = timezone.now()
     auth_record = AuthRecord(user=user, login_at=current_time,
                              expires_by=current_time + timedelta(hours=refresh_token_delta))
+    print(user, current_time, current_time+timedelta(hours=refresh_token_delta))
+    print(auth_record)
     auth_record.save()
 
     refresh_token_payload = {
@@ -179,9 +181,12 @@ def obtain_jwt_token(request: HttpRequest):
 
     user = authenticate(username=data.get('username'), password=data.get('password'))
 
+    if user is None:
+        return failed_api_response(ErrorCode.UNAUTHORIZED, "用户名不存在或密码错误")
+
     state = user.state
     if state == 3:
-        return failed_api_response(ErrorCode.REFUSE_ACCESS, "This user is banned!")
+        return failed_api_response(ErrorCode.REFUSE_ACCESS, "用户被封禁")
     print(user)
     '''
     if not user:
@@ -225,6 +230,8 @@ def obtain_jwt_token_admin(request: HttpRequest):
     if user.is_superuser != 1:
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "You are not superuser.")
     print(user)
+    if user is None:
+        return failed_api_response(ErrorCode.UNAUTHORIZED, "用户名不存在或密码错误")
     '''
     if not user:
         user = super_authenticate(data.get('username'), data.get('password'))
