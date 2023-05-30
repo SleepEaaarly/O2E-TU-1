@@ -520,6 +520,7 @@ export default {
         .then((res) => {
           if (res.data.code === 501) {
             // this.$message.error(res.data.message);
+            console.log('bug')
             alert(res.data.message)
             
           } else {
@@ -546,8 +547,6 @@ export default {
       }
       console.log('111')
       this.reload()
-
-
       this.loadUser()
       // console.log(target.editable
     },
