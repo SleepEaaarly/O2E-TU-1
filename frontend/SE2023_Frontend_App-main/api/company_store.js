@@ -11,7 +11,8 @@ export const getCompanyList = async (paras) => {
     let headers = {
         "Authorization": 'Bearer ' + uni.getStorageSync('token')
     }
-    let ret = await axios.get('search/enterprise?key_word=' + paras.key_word,
+    encode_text = encodeURIComponent(paras.key_word)
+    let ret = await axios.get('search/enterprise?key_word=' + encode_text,
         paras,
         headers)
 	let result = ret.data
