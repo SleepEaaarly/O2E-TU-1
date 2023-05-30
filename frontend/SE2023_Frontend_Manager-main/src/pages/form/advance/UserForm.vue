@@ -408,6 +408,7 @@ export default {
         }
         this.cacheData = data.map((item) => ({ ...item }));
         this.totalCnt = res.data.total_count;
+        console.log("total="+res.data.total_count)
         this.loading = false;
         this.pagination.total = res.page_num;
         console.log(data)
@@ -524,8 +525,9 @@ export default {
         .catch((error) => {
           this.$message.error("无法修改")
           /*todo*/
-          this.$message.error(res.data.message)
-          console.log(error);
+          // this.$message.error(res.data.message)
+          console.log("无法修改");
+          alert("修改失败")
         });
       if (target) {
         Object.assign(
@@ -535,7 +537,10 @@ export default {
         delete target.editable;searchUser
         this.data = newData;
       }
+      console.log('111')
       this.reload()
+
+
       // this.loadUser()
       // console.log(target.editable
     },
@@ -737,25 +742,38 @@ export default {
           "page": this.pagination.current
       }
       searchUser(params).then((oriRes) => {
+        console.log('searching');
+        // console.log(res.data.all_page)
         console.log(oriRes);
         let res = oriRes.data
+        
         console.log(res);
         data.length = 0;
         console.log(data);
+
+        console.log("page_max="+res.page_num)
+        console.log("length="+res.data.length)
+        console.log("total="+res.data.total_count)
+
+        let page_max = res.page_num;
+
         for (let i = 0; i < res.data.length; i++) {
+          
           data.push({
             key: res.data[i].id,
             name: res.data[i].username,
             ins: res.data[i].institution,
-            type: res.data[i].state,
             email: res.data[i].email,
             editable: false
           });
         }
-        this.totalCnt = res.data.total_count;
+        //this.totalCnt = res.data.total_count;
+        //this.cacheData = data.map((item) => ({ ...item }));
         this.loading = false;
-        this.pagination.total = res.page_num;
+        this.pagination.total = res.page_num * 10;
+        
         this.itemKey = Math.random();
+
       }).catch((error) => {
         console.log(error);
       });
@@ -798,6 +816,7 @@ export default {
             editable: false
           });
         }
+        
         this.totalCnt = res.data.total_count;
         this.loading = false;
         this.pagination.total = res.page_num;
