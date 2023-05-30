@@ -259,7 +259,7 @@ def add_user(request: HttpRequest):
     email = data.get('email')
     if check(str(email)) is False:
         print(3)
-        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
+        return success_api_response({'code': 501, 'message': "邮箱格式错误"})
     print(3)
     try:
         user = create_a_user(username, password, email)
@@ -279,7 +279,7 @@ def add_expert(request: HttpRequest):
     password = data.get('password')
     email = data.get('email')
     if check(str(email)) is False:
-        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
+        return success_api_response({'code': 501, 'message': "邮箱格式错误"})
     print('add_expert:password' + password)
     try:
         user = create_a_user(username, password, email)
@@ -319,7 +319,7 @@ def add_enterprise(request: HttpRequest):
     password = data.get('password')
     email = data.get('email')
     if check(str(email)) is False:
-        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
+        return success_api_response({'code': 501, 'message': "邮箱格式错误"})
     try:
         user = create_a_user(username, password, email)
     except Exception:
@@ -413,9 +413,9 @@ def set_user(request: HttpRequest):
     password = request.POST.get('password')
     email = request.POST.get('email')
     if check(str(email)) is False:
-        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱格式错误")
+        return success_api_response({'code': 501, 'message': "邮箱格式错误"})
     if check1(str(email)) is False:
-        return failed_api_response(ErrorCode.FIVE_ZERO_ONE, "邮箱已存在")
+        return success_api_response({'code': 501, 'message': "邮箱格式错误"})
     institution = request.POST.get('institution')
     # icon = request.FILES.get('icon')
     biography = request.POST.get('biography')
