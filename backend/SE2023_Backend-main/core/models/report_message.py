@@ -4,6 +4,7 @@ Report message: 报告信息
 from django.db import models
 from .user import User
 from .system_message import SystemMessage
+from datetime import timedelta
 
 UNREAD = 0
 READ = 1
@@ -47,13 +48,13 @@ class ReportMessage(SystemMessage):
                            involved_id: int
                            ):
         try:
-            if(len(info)>1000):
+            if (len(info) > 1000):
                 info = info[:1000]
             new_report_message = ReportMessage(content=info, owner=owner,
-                                             is_to_system=0, read_state=UNREAD,
-                                             report_type=report_type, report_belong_id=involved_id,
-                                             report_title=title, report_name=name, report_logo_path=avatar,
-                                             type='report')
+                                               is_to_system=0, read_state=UNREAD,
+                                               report_type=report_type, report_belong_id=involved_id,
+                                               report_title=title, report_name=name, report_logo_path=avatar,
+                                               type='report')
             # print("report_message step1")
             new_report_message.save()
             # print("report_message step2")
@@ -76,5 +77,5 @@ class ReportMessage(SystemMessage):
             "reportTitle": self.report_title,
             "reportLogoPath": self.report_logo_path,
             "reportInfo": self.content,
-            "time": self.created_at
+            "time": (self.created_at+timedelta(hours=8)).strftime("%Y-%m-%d, %H:%M:%S")
         }
