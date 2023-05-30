@@ -363,6 +363,7 @@ export default {
   },
 
   methods: {
+    // ...mapMutations("account", ["setPage"]),
     init: async function() {
       this.loadUser();
     },
@@ -517,7 +518,12 @@ export default {
       let that = this
       UserModify(params)
         .then((res) => {
-          this.$message.info("成功修改");
+          if (res.data.code === 501) {
+            // this.$message.error(res.data.message);
+            alert(res.data.message)
+          } else {
+            this.$message.info("成功修改");
+          }
           console.log(res)
         }).then((res) => {
           that.reload()
@@ -545,7 +551,6 @@ export default {
       // console.log(target.editable
     },
     cancel(key) {
-// <<<<<<< HEAD
       let that = this
       let promise = new Promise(function (resolve, reject) {
             const newData = [...that.data];
@@ -565,23 +570,6 @@ export default {
       promise.then(
           that.reload()
       )
-// =======
-//       const newData = [...this.data];
-//       for (let i = 0; i < newData.length; i++) {
-//         newData[i].editable = false;
-//       }
-//       const target = newData.filter((item) => key === item.key)[0];
-//       this.editingKey = "";
-//       if (target) {
-//         Object.assign(
-//           target,
-//           this.cacheData.filter((item) => key === item.key)[0]
-//         );
-//         console.log(target)
-//         this.data = newData;
-//       }
-//       console.log(data)
-// >>>>>>> 27da2901a4f9cddd7dcaaa8106ab332cd6de4a7b
     },
     check_user_info(){
       if(this.user_visible){
@@ -604,6 +592,27 @@ export default {
               alert('请填写完整信息')
               return false
         }        
+        var arrExp = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];//加权因子
+        var arrValid = [1, 0, "X", 9, 8, 7, 6, 5, 4, 3, 2];//校验码
+        if (/^\d{17}\d|x$/i.test(this.expert_info.ID_num)) {
+          var sum = 0, idx;
+          for (var i = 0; i < this.expert_info.ID_num.length - 1; i++) {
+              // 对前17位数字与权值乘积求和
+              sum += parseInt(this.expert_info.ID_num.substr(i, 1), 10) * arrExp[i];
+          }
+          // 计算模（固定算法）
+          idx = sum % 11;
+          // 检验第18为是否与校验码相等
+          if (arrValid[idx] == this.expert_info.ID_num.substr(17, 1).toUpperCase()) {
+            return true;
+          } else {
+            alert('身份证格式有误')
+            return false;
+          }
+        } else {
+          alert('身份证格式有误')
+          return false;
+        }
       }else if(this.company_visible){
         // add company
         if(this.company_info.username == '' ||

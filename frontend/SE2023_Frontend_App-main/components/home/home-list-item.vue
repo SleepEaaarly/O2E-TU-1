@@ -68,9 +68,11 @@
 							confirmText: '立刻清除',
 							success: res => {
 								if(res.confirm){
-									let tmp_token = uni.getStorageSync('token')
-									uni.clearStorage()
-									uni.setStorageSync('token',tmp_token)
+									// let tmp_token = uni.getStorage('token')
+									// let tmp_userInfo = uni.getStorage('userInfo')
+									// uni.clearStorage()
+									// uni.setStorage('token',tmp_token)
+									// uni.setStorage('userInfo', tmp_userInfo)
 									uni.showToast({ title: '清除缓存成功！', })
 								}
 							},
