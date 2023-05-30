@@ -302,42 +302,102 @@ export default {
           this.$forceUpdate()
           console.log('Page-->')
           console.log(page);
-          console.log(this.selectedType);
-          getSelectUser(this.selectedType === "全部" ? 6 : this.selectedType, page).then((oriRes) => {
-            console.log(oriRes);
-            let res = oriRes.data;
-            data.length = 0;
-            for (let i = 0; i < res.data.length; i++) {
-              if (res.data[i].type==0) {
-                this.type="普通用户"
-              } else if (res.data[i].type==1){
-                this.type="专家认证中"
-              } else if (res.data[i].type==2){
-                this.type="企业认证中"
-              }else if (res.data[i].type==3){
-                this.type="封禁中"
-              }else if (res.data[i].type==4){
-                this.type="认证专家"
-              }else if (res.data[i].type==5){
-                this.type="认证企业"
-              }
-              data.push({
-                key: res.data[i].id,
-                name: res.data[i].username,
-                ins: res.data[i].institution,
-                type: this.type,
-                email: res.data[i].email,
-                editable: false
-              });
+          console.log('paginationselectedType='+this.selectedType);
+
+
+          if (this.selectedType=="搜索") {
+            var params = {
+              "username": this.searchText,
+              "page": page
             }
-            this.cacheData = data.map((item) => ({ ...item }));
-            this.totalCnt = res.data.total_count;
-            this.loading = false;
-            // this.itemKey = Math.random();
-            this.pagination.current = page;
-          }).catch((error) => {
-            console.log(error);
-          });
+            searchUser(params).then((oriRes) => {
+              console.log('searching');
+              // console.log(res.data.all_page)
+              console.log(oriRes);
+              let res = oriRes.data
+              
+              console.log(res);
+              data.length = 0;
+              console.log(data);
+
+              console.log("page_max="+res.page_num)
+              console.log("length="+res.data.length)
+              console.log("total="+res.data.total_count)
+
+              
+
+              for (let i = 0; i < res.data.length; i++) {
+                
+                data.push({
+                  key: res.data[i].id,
+                  name: res.data[i].username,
+                  ins: res.data[i].institution,
+                  email: res.data[i].email,
+                  editable: false
+                });
+              }
+
+              this.cacheData = data.map((item) => ({ ...item }));
+              this.totalCnt = res.data.total_count;
+              
+              // this.loading = false;
+              // this.pagination.total = res.page_num * 10;
+              // this.itemKey = Math.random();
+              // this.pagination.current = page;
+
+              // this.totalCnt = res.data.total_count;
+              this.loading = false;
+              // this.itemKey = Math.random();
+              this.pagination.current = page;
+
+            }).catch((error) => {
+              console.log(error);
+            });
+
+          } else {
+            getSelectUser(this.selectedType === "全部" ? 6 : this.selectedType, page).then((oriRes) => {
+              console.log(oriRes);
+              let res = oriRes.data;
+              data.length = 0;
+              for (let i = 0; i < res.data.length; i++) {
+                if (res.data[i].type==0) {
+                  this.type="普通用户"
+                } else if (res.data[i].type==1){
+                  this.type="专家认证中"
+                } else if (res.data[i].type==2){
+                  this.type="企业认证中"
+                }else if (res.data[i].type==3){
+                  this.type="封禁中"
+                }else if (res.data[i].type==4){
+                  this.type="认证专家"
+                }else if (res.data[i].type==5){
+                  this.type="认证企业"
+                }
+                data.push({
+                  key: res.data[i].id,
+                  name: res.data[i].username,
+                  ins: res.data[i].institution,
+                  type: this.type,
+                  email: res.data[i].email,
+                  editable: false
+                });
+              }
+              this.cacheData = data.map((item) => ({ ...item }));
+              this.totalCnt = res.data.total_count;
+              this.loading = false;
+              // this.itemKey = Math.random();
+              this.pagination.current = page;
+            }).catch((error) => {
+              console.log(error);
+            });
+
+
+
+          }
+
+
+
+          
         },
         total: 10
       },
@@ -750,6 +810,7 @@ export default {
           "username": this.searchText,
           "page": this.pagination.current
       }
+      this.selectedType="搜索";
       searchUser(params).then((oriRes) => {
         console.log('searching');
         // console.log(res.data.all_page)
@@ -764,7 +825,7 @@ export default {
         console.log("length="+res.data.length)
         console.log("total="+res.data.total_count)
 
-        let page_max = res.page_num;
+        
 
         for (let i = 0; i < res.data.length; i++) {
           
@@ -776,11 +837,10 @@ export default {
             editable: false
           });
         }
-        //this.totalCnt = res.data.total_count;
-        //this.cacheData = data.map((item) => ({ ...item }));
+        this.totalCnt = res.data.total_count;
+        
         this.loading = false;
         this.pagination.total = res.page_num * 10;
-        
         this.itemKey = Math.random();
 
       }).catch((error) => {
@@ -794,7 +854,7 @@ export default {
         return
       }
       console.log(value);
-      console.log(this.selectedType);
+      console.log('selectedType=' + this.selectedType);
       this.pagination.current = 1;
       getSelectUser(this.selectedType, 1).then((oriRes) => {
         console.log(oriRes);
