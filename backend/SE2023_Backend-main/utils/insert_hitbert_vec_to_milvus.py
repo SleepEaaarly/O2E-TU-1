@@ -1,5 +1,5 @@
 from sql_util import get_all_entity, update_sci_vector, update_hit_vector
-from core.api.milvus_utils import get_milvus_connection, milvus_insert, disconnect_milvus, milvus_query_paper_by_id, \
+from milvus_utils import get_milvus_connection, milvus_insert, disconnect_milvus, milvus_query_paper_by_id, \
     get_milvus_collection
 import torch
 import torch.nn as nn
@@ -34,30 +34,30 @@ class HitBert:
         return self.encode(sent)[0].cpu().numpy().tolist()
 
 
-d_name = "core_results"    # 换成专家、企业的表
-c_name = "O2E_RESULT_HIT"
+d_name = "core_question"    # 换成专家、企业的表
+c_name = "SET_QUESTION_HIT"
 rst = get_all_entity(d_name)
-# inp = [[r[1], r[0]] for r in rst]
-inp = [[r[1], r[0], r[9]] for r in rst]
+inp = [[r[1], r[0]] for r in rst]
+# inp = [[r[1], r[0], r[9]] for r in rst]
 # print(pap_titles)
 hit = HitBert(hitModelPath="hfl/chinese-bert-wwm-ext", device="cpu")
 
-# for i in inp:
-#     get_milvus_connection()
-#     vector = hit.encode_2_list(i[0])    # 可能不对，检查一下
-#     # vector = vector / vector.norm(dim=1, keepdim=True)
-#     # v = vector.tolist()[0]
-#     mid = milvus_insert(c_name, data=[[vector], [i[1]]])
-#     disconnect_milvus()
-#     update_hit_vector(d_name, str(mid[0]), i[1])
-
 for i in inp:
-    if i[2] == 1:
-        get_milvus_connection()
-        vector = hit.encode_2_list(i[0])    # 可能不对，检查一下
-        # vector = vector / vector.norm(dim=1, keepdim=True)
-        # v = vector.tolist()[0]
-        mid = milvus_insert(c_name, data=[[vector], [i[1]]])
-        disconnect_milvus()
-        update_hit_vector(d_name, str(mid[0]), i[1])
+    get_milvus_connection()
+    vector = hit.encode_2_list(i[0])    # 可能不对，检查一下
+    # vector = vector / vector.norm(dim=1, keepdim=True)
+    # v = vector.tolist()[0]
+    mid = milvus_insert(c_name, data=[[vector], [i[1]]])
+    disconnect_milvus()
+    update_hit_vector(d_name, str(mid[0]), i[1])
+
+# for i in inp:
+#     if i[2] == 1:
+#         get_milvus_connection()
+#         vector = hit.encode_2_list(i[0])    # 可能不对，检查一下
+#         # vector = vector / vector.norm(dim=1, keepdim=True)
+#         # v = vector.tolist()[0]
+#         mid = milvus_insert(c_name, data=[[vector], [i[1]]])
+#         disconnect_milvus()
+#         update_hit_vector(d_name, str(mid[0]), i[1])
 

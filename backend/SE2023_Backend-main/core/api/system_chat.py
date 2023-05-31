@@ -21,6 +21,8 @@ from core.models import SwitchMessage, ImageMessage
 from core.models.report_message import ReportMessage
 
 from django.views.decorators.csrf import csrf_exempt
+
+import time
 """
     create system chatroom
     [method]: POST
@@ -91,7 +93,7 @@ def get_system_chat(request: HttpRequest):
         return failed_api_response(ErrorCode.INVALID_REQUEST_ARGS, "Bad System Chatroom ID.")
     ret_data = {}
     messages = []
-    # print(owner)
+    print(owner)
     for m in system_chatroom.messages.all():
         a_message = {}
         # print(m)

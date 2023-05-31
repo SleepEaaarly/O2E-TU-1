@@ -189,6 +189,7 @@ def change_result_info(request: HttpRequest):
 def search_result_by_name(request: HttpRequest):
     data = parse_data(request)
     title = parse.unquote(data.get('title'))
+    print(title)
     page = int(data.get('page'))
     if title == '' or title is None:
         results = Results.objects.all()
@@ -197,13 +198,12 @@ def search_result_by_name(request: HttpRequest):
 
     start = 10 * (page - 1)
     end = 10 * page
-
     d = list()
     for rst in results:
         d.append(rst.to_dict())
     d = d[start: end]
     return success_api_response({
-        "page_num": math.ceil(users.__len__() / 10),
+        "page_num": math.ceil(results.__len__() / 10),
         "data": d
     })
 
