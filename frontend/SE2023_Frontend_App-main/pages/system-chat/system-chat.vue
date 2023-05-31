@@ -369,17 +369,20 @@
                     message.gstime = time.gettime.getChatTime(result.messages[i].created_at, last_time)
                     last_time = result.messages[i].created_at
                     if (message.type == 'report') {
+                        console.log(time.gettime.getChatTime(result.messages[i].created_at, 0))
                         message.reportInfo = result.messages[i].reportInfo
                         message.reportInfo.avatar = "http://116.63.14.146:8000/api" + message.reportInfo.avatar
+                        console.log(message.reportInfo.time)
+                        message.reportInfo.time = time.gettime.getChatTime(result.messages[i].created_at, 0)
                     }
                     if (message.type == 'card') {
-                        console.log("card start")
-                        console.log(result.messages[i])
-                        console.log("card end")
+                        // console.log("card start")
+                        // console.log(result.messages[i])
+                        // console.log("card end")
                         message.cardInfo = result.messages[i].cardInfo
                     }
                     load_system_chat.messages.push(message)
-                    console.log(message)
+                    // console.log(message)
                 }
                 // console.log(load_system_chat)
                 this.setSystemChat(load_system_chat)

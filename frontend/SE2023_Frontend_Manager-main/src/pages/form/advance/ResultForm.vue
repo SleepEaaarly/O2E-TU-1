@@ -27,7 +27,7 @@
         >
                 添加成果
         </a-button> -->
-        <a-modal v-model="result_visible" title="添加成果" @ok="handleOk">
+        <!-- <a-modal v-model="result_visible" title="添加成果" @ok="handleOk">
           <a-form :form="result_info" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }" @submit="handleSubmit">
             
             <a-form-item label="成果标题">
@@ -120,12 +120,12 @@
               </a-modal>
             </a-form-item> -->
 
-            <a-form-item label="成果内容">
+            <!-- <a-form-item label="成果内容">
               <a-input
                 type="textarea"
                 placeholder="介绍成果的内容"
               />
-            </a-form-item>
+            </a-form-item> -->
 
             <!-- <a-form-item label="成果详情图">
               <a-upload
@@ -147,8 +147,8 @@
               </a-modal>
             </a-form-item> -->
           
-          </a-form>
-        </a-modal>
+          <!-- </a-form>
+        </a-modal> -->
         
       </a-space>
       <br/>
@@ -388,7 +388,7 @@
         }
             
         this.cacheData = data.map((item) => ({ ...item }));
-        this.totalCnt = res.data.total_count;
+        this.totalCnt = res.page_num;
         this.loading = false;
         this.pagination.total = res.page_num;
         console.log(data)
@@ -610,11 +610,13 @@
         this.loading = true;
         data.length=0;
         this.pagination.current = 1;
+        let encode_text = encodeURIComponent(this.searchText)
         var params = {
-          "title": this.searchText,
+          "title": encode_text,
           "page": this.pagination.current
         }
         searchWork(params).then((oriRes) => {
+          console.log(oriRes)
           // const target = data.filter((item) => key === item.key)[0];
           // this.editingKey = key;
           // if (target) {
@@ -650,9 +652,9 @@
         }
             
         this.cacheData = data.map((item) => ({ ...item }));
-        this.totalCnt = res.data.total_count;
+        this.totalCnt = res.data.page_num;
         this.loading = false;
-        this.pagination.total = res.page_num;
+        this.pagination.total = res.page_num * 10;
         console.log(data)
         console.log(this.cacheData)
         }).catch((error) => {

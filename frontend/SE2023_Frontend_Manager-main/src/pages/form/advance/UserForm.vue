@@ -806,8 +806,9 @@ export default {
     },
     onSearch(){
       this.pagination.current = 1;
+      let encode_text = encodeURIComponent(this.searchText)
       var params = {
-          "username": this.searchText,
+          "username": encode_text,
           "page": this.pagination.current
       }
       this.selectedType="搜索";
@@ -837,7 +838,7 @@ export default {
             editable: false
           });
         }
-        this.totalCnt = res.data.total_count;
+        this.totalCnt = res.page_num;
         
         this.loading = false;
         this.pagination.total = res.page_num * 10;
