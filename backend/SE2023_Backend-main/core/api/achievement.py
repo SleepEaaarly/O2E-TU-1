@@ -233,9 +233,9 @@ def agree_result(request: HttpRequest, id: int):
     print('debug 2')
 
     get_milvus_connection()
-    mid_hit = milvus_confirm_item_exist("O2E_RESULT_HIT", "result_id", id)
-    if mid_hit < 0:
-        mid_hit = milvus_insert("O2E_RESULT_HIT", data=[[hit_vec], [id]])[0]
+    # mid_hit = milvus_confirm_item_exist("O2E_RESULT_HIT", "result_id", id)
+    # if mid_hit < 0:
+    #     mid_hit = milvus_insert("O2E_RESULT_HIT", data=[[hit_vec], [id]])[0]
         
     print('debug 2.5')
     mid_sci = milvus_confirm_item_exist("O2E_RESULT", "result_id", id)
@@ -245,7 +245,7 @@ def agree_result(request: HttpRequest, id: int):
 
     disconnect_milvus()
     result.vector_sci = mid_sci
-    result.vector_hit = mid_hit
+    # result.vector_hit = mid_hit
     # print('debug 4')
     result.save()
     # 审核通过后将生成成果报告

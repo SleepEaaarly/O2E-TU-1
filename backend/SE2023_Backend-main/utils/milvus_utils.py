@@ -50,7 +50,6 @@ def create_milvus_collection(db_id_name, collection_name, vec_dim):
     )
 
 
-
 def del_milvus_collection(name):
     """
     删除指定collection
@@ -107,7 +106,6 @@ def milvus_insert(collection_name, data, partition_name=None):
     :param data: 待插⼊的数据，list-like(list, tuple)
     :return: Milvus⽣成的ids
     """
-
     collection = get_milvus_collection(collection_name)
     try:
         res = collection.insert(partition_name=partition_name, data=data)
@@ -131,7 +129,6 @@ def milvus_delete(collection_name, milvus_id: str):
         return res
     except Exception as e:
         print(e)
-
 
 
 def milvus_search(collection_name, partition_names, query_vectors, topk, eps=0, expr=None):
@@ -280,37 +277,47 @@ def milvus_query_result_hit_by_id(query):
 
 
 if __name__ == '__main__':
-    from pymilvus import drop_collection, list_collections, loading_progress, utility
+    from pymilvus import drop_collection, list_collections, loading_progress, utility, index_building_progress, Index
     get_milvus_connection()
-    names = ["O2E_RESULT"]
-    # names = ["O2E_RESULT", "O2E_PAPER", "O2E_NEED",
-    #          "O2E_RESULT_HIT", "SET_QUESTION_HIT",
-    #          "O2E_EXPERT_HIT", "O2E_ENTERPRISE_HIT"]
-    id_names = ["result_id"]
-    # id_names = ["result_id", "paper_id", "need_id",
-    #             "result_id", "question_id",
-    #             "expert_id", "enterprise_id"]
-    for name, id_name in zip(names, id_names):
-        vim = 768 if "HIT" in name else 128
-        drop_collection(name)
-        create_milvus_collection(id_name, name, vim)
-    # print(names)
+    # # names = ["O2E_RESULT_HIT", "O2E_EXPERT_HIT", "O2E_ENTERPRISE_HIT"]
+    names = ["O2E_RESULT", "O2E_PAPER", "O2E_NEED", "SET_QUESTION_HIT"]
+    # # id_names = ["result_id", "expert_id", "enterprise_id"]
+    id_names = ["result_id", "paper_id", "need_id", "question_id"]
+    # for name, id_name in zip(names, id_names):
+    #     vim = 768 if "HIT" in name else 128
+    #     drop_collection(name)
+    #     create_milvus_collection(id_name, name, vim)
+    names = list_collections()
+    print(names)
     # for name in names:
     #     print()
     #     discribe_milvus_collection(name)
-    # collection_name = "O2E_RESULT_HIT"
+    # collection_name = "O2E_RESULT"
     #
     # milvus_delete(collection_name, "441254677606311614")
     # db_id_name = "result_id"
     # list_milvus_entities(collection_name, db_id_name)
-    for collection_name in names:
-        try:
-            collection = get_milvus_collection(collection_name)
-            # loading_progress(collection_name, partition_names=None, using='default')
-            collection.load()
-        except Exception as e:
-            print(e)
+    for collection_name, id_name in zip(names, id_names):
+        # try:
+        #     collection = get_milvus_collection(collection_name)
+        #     # loading_progress(collection_name, partition_names=None, using='default')
+        #     collection.load()
+            
+        #     # collection.create_index(
+        #     #     field_name="vector", 
+        #     #     index_params={
+        #     #         "metric_type":"L2",
+        #     #         "index_type":"IVF_FLAT",
+        #     #         "params":{"nlist":1024}
+        #     #     },
+        #     #     index_name=id_name[:-2] + "index"
+        #     # )
+        # except Exception as e:
+        #     print(e)
 
-    # print(connections.list_connections())
-    # print(utility.load_state(collection_name))
+
+        # print(index_building_progress(collection_name, index_name='', using='default'))
+        print(utility.load_state(collection_name))
+
+
     disconnect_milvus()

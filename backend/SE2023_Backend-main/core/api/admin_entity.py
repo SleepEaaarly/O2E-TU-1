@@ -89,7 +89,7 @@ def delete_result(request: HttpRequest):
     print("delete_result 2", result)
     if result.state == 1:
         get_milvus_connection()
-        milvus_delete("O2E_RESULT_HIT", result.vector_hit)
+        # milvus_delete("O2E_RESULT_HIT", result.vector_hit)
         milvus_delete("O2E_RESULT", result.vector_sci)
         disconnect_milvus()
     print("delete_result 3")
@@ -349,17 +349,28 @@ def add_enterprise(request: HttpRequest):
 @response_wrapper
 @require_http_methods('POST')
 def set_result(request: HttpRequest):
-    print(0)
-    title = request.POST.get('title')
-    abstract = request.POST.get('abstract')
-    pyear = request.POST.get('pyear').split('-')[0]
-    field = request.POST.get('field')
-    period = request.POST.get('period')
-    id = request.POST.get('id')
-    content = request.POST.get('content')
+    print(request.POST)
+    data: dict = parse_data(request)
+    # print("data:")
+    # print(data)
+    # title = request.get('title')
+    # abstract = request.POST.get('abstract')
+    # pyear = request.POST.get('pyear').split('-')[0] if request.POST.get('pyear') else None
+    # field = request.POST.get('field')
+    # period = request.POST.get('period')
+    # id = request.POST.get('id')
+    # content = request.POST.get('content')
+    title = data['title']
+    abstract = data['abstract']
+    pyear = data['pyear'].split('-')[0] if data['pyear'] else None
+    field = data['field']
+    period = data['period']
+    id = data['id']
+    content = data['content']
+    # print(title, abstract, pyear, field, period, id, content)
     print(1)
     result = Results.objects.get(pk=id)
-    
+    print(result)
 
     # 改向量
     # if result.state == 1 and title != result.title:
